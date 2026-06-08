@@ -200,7 +200,7 @@ def download_google_sheet(url, output_path):
         else:
             return False, f"Tải thất bại (Mã lỗi: {response.status_code}). Vui lòng kiểm tra quyền chia sẻ link (phải để ở chế độ 'Người có liên kết có quyền xem')."
     except Exception as e:
-        return False, f"Lỗi kết nối khi tải: {str(e)}"
+        return False, mask_url(f"Lỗi kết nối khi tải: {str(e)}")
 
 # Helper function to clean strings for merge
 def clean_str(val):
