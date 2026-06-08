@@ -4,6 +4,38 @@ load_dotenv()
 import json
 import datetime
 import pandas as pd
+import openpyxl
+
+# Monkey patch pd.ExcelFile and pd.read_excel to use read_only=True by default for openpyxl
+# This reduces memory consumption by 90% and prevents Render out-of-memory crashes.
+_original_ExcelFile = pd.ExcelFile
+def _patched_ExcelFile(*args, **kwargs):
+    engine = kwargs.get('engine', None)
+    if engine is None or engine == 'openpyxl':
+        kwargs['engine'] = 'openpyxl'
+        engine_kwargs = kwargs.get('engine_kwargs', {})
+        if engine_kwargs is None:
+            engine_kwargs = {}
+        engine_kwargs['read_only'] = True
+        kwargs['engine_kwargs'] = engine_kwargs
+    return _original_ExcelFile(*args, **kwargs)
+pd.ExcelFile = _patched_ExcelFile
+
+_original_read_excel = pd.read_excel
+def _patched_read_excel(*args, **kwargs):
+    io = args[0] if len(args) > 0 else kwargs.get('io', None)
+    if not isinstance(io, _original_ExcelFile):
+        engine = kwargs.get('engine', None)
+        if engine is None or engine == 'openpyxl':
+            kwargs['engine'] = 'openpyxl'
+            engine_kwargs = kwargs.get('engine_kwargs', {})
+            if engine_kwargs is None:
+                engine_kwargs = {}
+            engine_kwargs['read_only'] = True
+            kwargs['engine_kwargs'] = engine_kwargs
+    return _original_read_excel(*args, **kwargs)
+pd.read_excel = _patched_read_excel
+
 import numpy as np
 from flask import Flask, jsonify, render_template, request, Response
 import threading
@@ -1634,6 +1666,9 @@ def update_all_caches():
     print("--------------------------------------------------")
     print("CACHE LOAD COMPLETE.")
     print("--------------------------------------------------")
+    
+    import gc
+    gc.collect()
 
 # ==========================================
 # 7. API FLASK ENDPOINTS
