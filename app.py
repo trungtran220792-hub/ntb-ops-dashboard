@@ -1416,6 +1416,8 @@ def get_dataframes(force=False, raw_gtc=None, raw_ltc=None, raw_co_cau=None, raw
     global DF_GTC_CACHE, DF_LTC_CACHE, DF_CO_CAU_CACHE, DF_AGING_CACHE, DF_TREO_CACHE
     import gc
     if force or DF_GTC_CACHE is None or DF_LTC_CACHE is None or DF_CO_CAU_CACHE is None or DF_AGING_CACHE is None or DF_TREO_CACHE is None:
+        if not force:
+            raise RuntimeError("Dữ liệu đang được tải vào bộ nhớ đệm hoặc chưa được đồng bộ. Vui lòng đợi vài giây hoặc nhấn nút Đồng bộ dữ liệu.")
         bc_to_am = {}
         bc_to_prov = {}
         
@@ -2879,20 +2881,24 @@ def get_volume_creation():
         traceback.print_exc()
         return jsonify({"error": f"Lỗi xử lý báo cáo volume tạo đơn: {str(e)}"}), 500
 
+def startup_cache_init():
+    update_all_caches()
+    try:
+        # Initialize history with a sync if it is empty
+        history = load_history()
+        if not history and BACKLOG_CACHE_RAW:
+            aging = BACKLOG_CACHE_RAW["aging"]
+            treo = BACKLOG_CACHE_RAW["treo"]
+            if "error" not in aging and "error" not in treo:
+                add_to_history(aging, treo)
+    except Exception as e:
+        print(f"Error initializing history: {e}")
+
+# Optimize to run cache initialization on startup thread upon import (for Gunicorn)
+# But in local debug mode, only run it once to prevent double execution
+if not app.debug or os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
+    threading.Thread(target=startup_cache_init, daemon=True).start()
+
 if __name__ == '__main__':
-    # Optimize to only run heavy startup tasks once when Flask debug mode is active
-    if not app.debug or os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
-        def startup_cache_init():
-            update_all_caches()
-            with CACHE_LOCK:
-                # Initialize history with a sync if it is empty
-                history = load_history()
-                if not history and BACKLOG_CACHE_RAW:
-                    aging = BACKLOG_CACHE_RAW["aging"]
-                    treo = BACKLOG_CACHE_RAW["treo"]
-                    if "error" not in aging and "error" not in treo:
-                        add_to_history(aging, treo)
-        threading.Thread(target=startup_cache_init, daemon=True).start()
-            
     print("Dashboard server starts on http://0.0.0.0:5000/")
     app.run(debug=False, host='0.0.0.0', port=5000)
