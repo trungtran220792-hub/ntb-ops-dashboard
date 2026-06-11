@@ -1,0 +1,65 @@
+def process_operational_report(df_gtc=None, df_ltc=None):
+-    file_path = resolve_path('Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', write=False)
+-    
++def process_operational_report(df_gtc=None, df_ltc=None, df_tts=None, am=None, province=None, po=None, date=None):
+     try:
++        if df_gtc is None:
++            df_gtc = safe_read_csv(resolve_path('ops_gtc.csv', write=False))
++        if df_ltc is None:
++            df_ltc = safe_read_csv(resolve_path('ops_ltc.csv', write=False))
++        if df_tts is None:
++            df_tts = safe_read_csv(resolve_path('ops_tts.csv', write=False))
++            df_tts = clean_ops_df(df_tts, "tts")
++            
+         if df_gtc is None or df_ltc is None:
+-            if not os.path.exists(file_path):
+-                return {"error": f"Không tìm thấy file: {os.path.basename(file_path)}"}
+-            with pd.ExcelFile(file_path) as xls:
+-                if df_gtc is None:
+-                    df_gtc = read_ops_sheet(xls, "gtc")
+-                if df_ltc is None:
+-                    df_ltc = read_ops_sheet(xls, "ltc")
++            return {"error": "Không tìm thấy dữ liệu vận hành (ops_gtc.csv hoặc ops_ltc.csv)."}
++            
++        # Apply filters to GTC, LTC, TTS if provided
++        if am:
++            am_str = str(am).strip()
++            if 'mapped_am' in df_gtc.columns or 'AM' in df_gtc.columns:
++                am_col = 'mapped_am' if 'mapped_am' in df_gtc.columns else 'AM'
++                df_gtc = df_gtc[df_gtc[am_col].astype(str).str.strip() == am_str]
++            if 'mapped_am' in df_ltc.columns or 'AM' in df_ltc.columns:
++                am_col = 'mapped_am' if 'mapped_am' in df_ltc.columns else 'AM'
++                df_ltc = df_ltc[df_ltc[am_col].astype(str).str.strip() == am_str]
++            if df_tts is not None and ('mapped_am' in df_tts.columns or 'AM' in df_tts.columns):
++                am_col = 'mapped_am' if 'mapped_am' in df_tts.columns else 'AM'
++                df_tts = df_tts[df_tts[am_col].astype(str).str.strip() == am_str]
++                
++        if province:
++            prov_str = str(province).strip()
++            if 'mapped_prov' in df_gtc.columns or 'Tỉnh' in df_gtc.columns:
++                prov_col = 'mapped_prov' if 'mapped_prov' in df_gtc.columns else 'Tỉnh'
++                df_gtc = df_gtc[df_gtc[prov_col].astype(str).str.strip() == prov_str]
++            if 'mapped_prov' in df_ltc.columns or 'Tỉnh' in df_ltc.columns:
++                prov_col = 'mapped_prov' if 'mapped_prov' in df_ltc.columns else 'Tỉnh'
++                df_ltc = df_ltc[df_ltc[prov_col].astype(str).str.strip() == prov_str]
++            if df_tts is not None and ('mapped_prov' in df_tts.columns or 'Tỉnh' in df_tts.columns):
++                prov_col = 'mapped_prov' if 'mapped_prov' in df_tts.columns else 'Tỉnh'
++                df_tts = df_tts[df_tts[prov_col].astype(str).str.strip() == prov_str]
++                
++        if po:
++            po_str = str(po).strip()
++            if 'clean_bc' in df_gtc.columns or 'Chi tiết' in df_gtc.columns:
++                po_col = 'clean_bc' if 'clean_bc' in df_gtc.columns else 'Chi tiết'
++                if po_col == 'clean_bc':
++                    df_gtc = df_gtc[df_gtc[po_col].astype(str).str.strip() == po_str.lower()]
++                else:
++                    df_gtc = df_gtc[df_gtc[po_col].astype(str).str.strip() == po_str]
++            if 'clean_bc' in df_ltc.columns or 'Chi tiết' in df_ltc.columns:
++                po_col = 'clean_bc' if 'clean_bc' in df_ltc.columns else 'Chi tiết'
++                if po_col == 'clean_bc':
++                    df_ltc = df_ltc[df_ltc[po_col].astype(str).str.strip() == po_str.lower()]
++                else:
++                    df_ltc = df_ltc[df_ltc[po_col].astype(str).str.strip() == po_str]
++            if df_tts is not None and ('clean_bc' in df_tts.columns or 'Chi tiết' in df_tts.columns):
++                po_col = 'clean_bc' if 'clean_bc' in df_tts.columns else 'Chi tiết'
++                if po_c

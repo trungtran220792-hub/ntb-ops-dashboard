@@ -1,0 +1,192 @@
+Matches count: 33
+
+Match 0:
+kpi-card">
+                        <div class="kpi-header">
+                            <span>Tỷ lệ LTC (Lần đầu)</span>
+                            <i class="fa-solid fa-paper-plane"></i>
+              
+
+Match 1:
+ center;">% GTC</th>
+                                    <th style="text-align: center;">Sản lượng (LTC)</th>
+                                    <th style="text-align: center;">% LTC</th>
+              
+
+Match 2:
+center;">Sản lượng (LTC)</th>
+                                    <th style="text-align: center;">% LTC</th>
+                                    <th style="text-align: center;">% TTC</th>
+               
+
+Match 3:
+v class="ntb-kpi-grid" style="flex-grow: 1; padding: 5px;">
+                            <!-- ROW 1: LTC -->
+                            <div class="ntb-kpi-card" style="border-left: 3px solid var(--color
+
+Match 4:
+der-left: 3px solid var(--color-indigo);">
+                                <div class="kpi-label">% LTC</div>
+                                <div class="kpi-value" id="ntb-kpi-ltc-overall">0%</div>
+    
+
+Match 5:
+der-left: 3px solid var(--color-indigo);">
+                                <div class="kpi-label">% LTC (LĐ)</div>
+                                <div class="kpi-value" id="ntb-kpi-ltc-lamdong">0%</div>
+
+Match 6:
+der-left: 3px solid var(--color-indigo);">
+                                <div class="kpi-label">% LTC (BT)</div>
+                                <div class="kpi-value" id="ntb-kpi-ltc-binhthuan">0%</di
+
+Match 7:
+div>
+
+                <!-- Section 2 -->
+                <div class="ntb-section-title">2. Snapshot LTC</div>
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-
+
+Match 8:
+-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 24px;">
+                    <!-- Line Chart: %LTC xu hướng -->
+                    <div class="card" style="margin-bottom: 0;">
+                     
+
+Match 9:
+gin-bottom: 0;">
+                        <div class="card-header">
+                            <h3>%LTC xu hướng</h3>
+                        </div>
+                        <div id="chart-ntb-ltc-trend" 
+
+Match 10:
+n-height: 280px; padding: 10px;"></div>
+                    </div>
+                    <!-- Right: %LTC overview cards with trend comparison -->
+                    <div class="card"
+                    
+
+Match 11:
+                  <div class="ntb-trend-kpi-card">
+                            <div class="label">% LTC Toàn vùng</div>
+                            <div class="value" id="ntb-trend-ltc-val">- %</div>
+   
+
+Match 12:
+          <div class="ntb-trend-kpi-card-sub">
+                                <div class="label">% LTC (LĐ)</div>
+                                <div class="value" id="ntb-trend-ltc-ld-val">- %</div>
+ 
+
+Match 13:
+          <div class="ntb-trend-kpi-card-sub">
+                                <div class="label">% LTC (BT)</div>
+                                <div class="value" id="ntb-trend-ltc-bt-val">- %</div>
+ 
+
+Match 14:
+      </div>
+                    </div>
+                </div>
+
+                <!-- Matrix Table: %LTC theo bưu cục -->
+                <div class="card" style="margin-bottom: 24px;">
+                  
+
+Match 15:
+"display: flex; justify-content: space-between; align-items: center;">
+                        <h3>%LTC theo bưu cục</h3>
+                        <span style="font-size: 12px; color: var(--text-muted); f
+
+Match 16:
+">
+                    <div class="card-header">
+                        <h3>Biểu đồ xu hướng GTC & LTC qua các ngày</h3>
+                    </div>
+                    <div id="chart-ops-trend" style="m
+
+Match 17:
+card">
+                        <div class="card-header">
+                            <h3>10 Bưu cục LTC TỐT NHẤT</h3>
+                        </div>
+                        <div class="table-responsive">
+
+Match 18:
+                                     <th>Sản lượng</th>
+                                        <th>LTC %</th>
+                                        <th>Leadtime</th>
+                                  
+
+Match 19:
+card">
+                        <div class="card-header">
+                            <h3>10 Bưu cục LTC TỆ NHẤT</h3>
+                        </div>
+                        <div class="table-responsive">
+
+
+Match 20:
+                                     <th>Sản lượng</th>
+                                        <th>LTC %</th>
+                                        <th>Leadtime</th>
+                                  
+
+Match 21:
+
+                `;
+            }
+
+            const ltcDeltas = getCompareDeltas(ops.trend_ltc, '% LTC');
+            const ltcCompEl = document.getElementById('kpi-ltc-comparison');
+            if (ltc
+
+Match 22:
+r['% GTC'])) : [];
+            const ltcVals = ops.trend_ltc ? ops.trend_ltc.map(r => roundNum(r['% LTC'])) : [];
+            const vols = ops.trend_gtc ? ops.trend_gtc.map(r => r.Volume) : [];
+
+        
+
+Match 23:
+
+                    { name: '% GTC', type: 'line', data: gtcVals },
+                    { name: '% LTC', type: 'line', data: ltcVals },
+                    { name: 'Sản lượng đơn', type: 'column', data:
+
+Match 24:
+tiết', '% GTC'], true);
+            populateTable('table-best-ltc', ops.top_10_ltc, ['Chi tiết', '% LTC'], true, true);
+            populateTable('table-worst-ltc', ops.worst_10_ltc, ['Chi tiết', '% LTC'
+
+Match 25:
+ LTC'], true, true);
+            populateTable('table-worst-ltc', ops.worst_10_ltc, ['Chi tiết', '% LTC'], true, true);
+        }
+
+        // ==========================================
+        // RENDER:
+
+Match 26:
+g()}</td>
+                            <td style="text-align: center;"><span class="badge ${provData.LTC_pct >= 80 ? 'badge-success' : 'badge-danger'}">${provData.LTC_pct}%</span></td>
+                   
+
+Match 27:
+enter;"><span class="badge ${provData.LTC_pct >= 80 ? 'badge-success' : 'badge-danger'}">${provData.LTC_pct}%</span></td>
+                            <td style="text-align: center;"><span class="badge ba
+
+Match 28:
+mpCategories = compVols.map(v => v.province);
+                const ltcSeries = compVols.map(v => v.LTC);
+                const gtcSeries = compVols.map(v => v.GTC);
+                const ttcSeries = com
+
+Match 29:
+alse }, background: 'transparent' },
+                    series: [
+                        { name: 'LTC', data: ltcSeries },
+                        { name: 'GTC', data: gtcSeries },
+                    
+

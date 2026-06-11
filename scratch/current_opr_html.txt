@@ -1,0 +1,96 @@
+2410:                         </div>
+2411:                     </div>
+2412:                 </div>
+2413:             </div>
+2414: 
+2415:             <!-- TAB 3: OPR TTS -->
+2416:             <div id="tab-opr" class="content-panel">
+2417:                 <div class="kpi-grid">
+2418:                     <div class="kpi-card">
+2419:                         <div class="kpi-header"><span>Tổng đơn OPR</span></div>
+2420:                         <div class="kpi-value" id="opr-total-vol">0</div>
+2421:                     </div>
+2422:                     <div class="kpi-card success">
+2423:                         <div class="kpi-header"><span>Đơn đúng hạn</span></div>
+2424:                         <div class="kpi-value" id="opr-total-ot">0</div>
+2425:                     </div>
+2426:                     <div class="kpi-card danger">
+2427:                         <div class="kpi-header"><span>Đơn trễ hạn</span></div>
+2428:                         <div class="kpi-value" id="opr-total-late">0</div>
+2429:                     </div>
+2430:                 </div>
+2431: 
+2432:                 <div class="columns-layout">
+2433:                     <!-- OPR by Time slots -->
+2434:                     <div class="card">
+2435:                         <div class="card-header">
+2436:                             <h3>% OPR theo khung giờ tạo đơn</h3>
+2437:                         </div>
+2438:                         <div id="chart-opr-slots" style="min-height: 250px;"></div>
+2439:                     </div>
+2440:                     <!-- OPR by AM -->
+2441:                     <div class="card">
+2442:                         <div class="card-header">
+2443:                             <h3>Biểu đồ OPR xếp hạng lỗi trễ của AM</h3>
+2444:                         </div>
+2445:                         <div id="chart-opr-am" style="min-height: 250px;"></div>
+2446:                     </div>
+2447:                 </div>
+2448: 
+2449:                 <div class="columns-layout">
+2450:                     <!-- Error Reasons weight -->
+2451:                     <div class="card" style="flex-grow: 1.5;">
+2452:                         <div class="card-header">
+2453:                             <h3>Tỷ trọng và lý do trễ hạn OPR</h3>
+2454:                         </div>
+2455:                         <div class="table-responsive">
+2456:                             <table class="custom-table" id="table-opr-errors">
+2457:                                 <thead>
+2458:                                     <tr>
+2459:                                         <th>Lý do trễ</th>
+2460:                                         <th>Số đơn trễ</th>
+2461:                                         <th>Tỷ trọng %</th>
+2462:                                     </tr>
+2463:                                 </thead>
+2464:                                 <tbody></tbody>
+2465:                             </table>
+2466:                         </div>
+2467:                     </div>
+2468:                 </div>
+2469: 
+2470:                 <!-- Detail list of day N-1 errors -->
+2471:                 <div class="card">
+2472:                     <div class="card-header">
+2473:                         <h3>Tra cứu Chi tiết Đơn lỗi ngày N-1 (AM Check Shop)</h3>
+2474:                     </div>
+2475:                     <div class="table-responsive">
+2476:                         <table class="custom-table" id="table-opr-details">
+2477:                             <thead>
+2478:                                 <tr>
+2479:                                     <th>Mã vận đơn</th>
+2480:                                     <th>Tỉnh</th>
+2481:                                     <th>Kho/Bưu cục lấy</th>
+2482:                                     <th>Tên Shop</th>
+2483:                                     <th>AM phụ trách</th>
+2484:                                     <th>Lý do trễ</th>
+2485:                                     <th>Khung giờ tạo</th>
+2486:                                 </tr>
+2487:                             </thead>
+2488:                             <tbody></tbody>
+2489:                         </table>
+2490:                     </div>
+2491:                     <div class="pagination" id="opr-details-pagination">
+2492:                         <button class="btn btn-secondary" onclick="prevPage('opr')">Trước</button>
+2493:                         <span id="opr-page-num">1 / 1</span>
+2494:                         <button class="btn btn-secondary" onclick="nextPage('opr')">Sau</button>
+2495:                     </div>
+2496:                 </div>
+2497:             </div>
+2498: 
+2499:             <!-- TAB 4: BACKLOG AGING > 5 DAYS -->
+2500:             <!-- TAB 4: BACKLOG DASHBOARD (GIÁM SÁT BACKLOG) -->
+2501:             <div id="tab-backlog" class="content-panel">
+2502:                 <!-- Sub tabs navigation -->
+2503:                 <div class="sub-tabs-bar">
+2504:                     <button class="sub-tab-btn active" id="btn-backlog-summary" onclick="switchSubTab('backlog-summary')">
+2505:                         <i class="fa-solid fa-chart-pie"></i> Tổng quan Backlog

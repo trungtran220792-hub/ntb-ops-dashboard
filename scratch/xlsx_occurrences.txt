@@ -1,0 +1,81 @@
+L676: file_path = resolve_path('Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', write=False)
+L877: file_path = resolve_path('OPR TTS.xlsx', write=False)
+L888: df_opr = load_sheet_cached('OPR TTS.xlsx', 'OPR', lambda p: pd.read_excel(p, sheet_name="OPR"))
+L890: df_oe = load_sheet_cached('OPR TTS.xlsx', 'OE_madh', lambda p: pd.read_excel(p, sheet_name="OE_madh"))
+L892: df_rawopr = load_sheet_cached('OPR TTS.xlsx', 'rawopr', lambda p: pd.read_excel(p, sheet_name="rawopr"))
+L1032: file_path = resolve_path('Aging _5 ngày.xlsx', write=False)
+L1039: df_raw = load_sheet_cached('Aging _5 ngày.xlsx', 'Đơn giao aging trên 5 ngày', lambda p: pd.read_excel(p, sheet_name="Đơn giao aging trên 5 ngày"))
+L1041: df_co_cau = load_sheet_cached('Aging _5 ngày.xlsx', 'Cơ cấu', lambda p: pd.read_excel(p, sheet_name="Cơ cấu"))
+L1114: file_path = resolve_path('Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx', write=False)
+L1121: df_raw = load_sheet_cached('Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx', 'stuck', lambda p: pd.read_excel(p, sheet_name="stuck"))
+L1123: df_co_cau = load_sheet_cached('Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx', 'Cơ cấu', lambda p: pd.read_excel(p, sheet_name="Cơ cấu"))
+L1264: file_path = resolve_path('buu_cuc_bat_on.xlsx', write=False)
+L1281: df_raw = load_sheet_cached('buu_cuc_bat_on.xlsx', f'raw_{sheet_name}', lambda p: pd.read_excel(p, sheet_name=sheet_name, header=None))
+L1333: # Ensure we have clean mappings from co_cau_ntb.xlsx
+L1338: co_cau_path = resolve_path('co_cau_ntb.xlsx', write=False)
+L1341: df_cc = load_sheet_cached('co_cau_ntb.xlsx', 'Sheet1', lambda p: pd.read_excel(p, sheet_name='Sheet1'))
+L1363: print(f"Error reading co_cau_ntb.xlsx in process_unstable_po: {e}")
+L1454: file_path = resolve_path('off_tuyen_spe.xlsx', write=False)
+L1471: df_raw = load_sheet_cached('off_tuyen_spe.xlsx', sheet_name, lambda p: pd.read_excel(p, sheet_name=sheet_name))
+L1578: return {"error": f"Lỗi xử lý file off_tuyen_spe.xlsx: {str(e)}"}
+L1721: file_path = resolve_path('buu_cuc_bat_on.xlsx', write=False)
+L1737: df_raw = load_sheet_cached('buu_cuc_bat_on.xlsx', f'raw_{sheet_name}', lambda p: pd.read_excel(p, sheet_name=sheet_name, header=None))
+L1772: file_path = resolve_path('vols_tao_don.xlsx', write=False)
+L1779: df = load_sheet_cached('vols_tao_don.xlsx', sheet_name, lambda p: pd.read_excel(p, sheet_name=sheet_name))
+L1785: print(f"Error loading vols_tao_don.xlsx: {e}")
+L1808: f".cache_Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx_gtc.pkl",
+L1809: f".cache_Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx_ltc.pkl",
+L1810: f".cache_Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx_co_cau.pkl",
+L1811: f".cache_Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx_tts.pkl",
+L1812: f".cache_Aging _5 ngày.xlsx_Đơngiaoagingtrên5ngày.pkl",
+L1813: f".cache_Aging _5 ngày.xlsx_Cơcấu.pkl",
+L1814: f".cache_Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx_stuck.pkl",
+L1815: f".cache_Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx_Cơcấu.pkl"
+L1830: raw_gtc = load_sheet_cached('Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', 'gtc', lambda p: load_ops_sheet_raw(p, 'gtc'))
+L1832: raw_ltc = load_sheet_cached('Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', 'ltc', lambda p: load_ops_sheet_raw(p, 'ltc'))
+L1834: raw_co_cau = load_sheet_cached('Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', 'co_cau', lambda p: load_ops_sheet_raw(p, 'co_cau'))
+L1837: raw_tts = load_sheet_cached('Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', 'tts', lambda p: load_ops_sheet_raw(p, 'tts'))
+L1883: raw_aging = load_sheet_cached('Aging _5 ngày.xlsx', 'Đơn giao aging trên 5 ngày', lambda p: pd.read_excel(p, sheet_name="Đơn giao aging trên 5 ngày"))
+L1885: raw_co_cau_aging = load_sheet_cached('Aging _5 ngày.xlsx', 'Cơ cấu', lambda p: pd.read_excel(p, sheet_name="Cơ cấu"))
+L1914: raw_treo = load_sheet_cached('Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx', 'stuck', lambda p: pd.read_excel(p, sheet_name="stuck"))
+L1916: raw_co_cau_treo = load_sheet_cached('Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx', 'Cơ cấu', lambda p: pd.read_excel(p, sheet_name="Cơ cấu"))
+L2041: # Auto-update co_cau_ntb.xlsx from cached 'Cơ cấu' sheet of Báo cáo Vận hành
+L2060: co_cau_dest = resolve_path('co_cau_ntb.xlsx', write=True)
+L2062: print("Successfully auto-updated co_cau_ntb.xlsx from Ops report.")
+L2065: print(f"Error auto-updating co_cau_ntb.xlsx: {clean_err}")
+L2447: 'Aging _5 ngày.xlsx',
+L2448: 'Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx',
+L2449: 'OPR TTS.xlsx',
+L2450: 'Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx',
+L2451: 'buu_cuc_bat_on.xlsx',
+L2452: 'co_cau_ntb.xlsx',
+L2453: 'off_tuyen_spe.xlsx',
+L2454: 'vols_tao_don.xlsx'
+L2480: 'Aging _5 ngày.xlsx',
+L2481: 'Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx',
+L2482: 'OPR TTS.xlsx',
+L2483: 'Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx',
+L2484: 'buu_cuc_bat_on.xlsx',
+L2485: 'co_cau_ntb.xlsx',
+L2486: 'off_tuyen_spe.xlsx',
+L2487: 'vols_tao_don.xlsx'
+L2493: if not (file.filename.endswith('.xlsx') or file.filename.endswith('.xls')):
+L2494: return jsonify({"error": "Định dạng file không hợp lệ. Chỉ hỗ trợ file Excel (.xlsx, .xls)."}), 400
+L2523: ("ops_url", 'Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', "Báo cáo Vận hành"),
+L2524: ("opr_url", 'OPR TTS.xlsx', "OPR TTS"),
+L2525: ("aging_url", 'Aging _5 ngày.xlsx', "Aging > 5 ngày"),
+L2526: ("treo_url", 'Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx', "Treo luân chuyển"),
+L2527: ("bat_on_url", 'buu_cuc_bat_on.xlsx', "Bưu cục bất ổn"),
+L2528: ("off_spe_url", 'off_tuyen_spe.xlsx', "OFF tuyến SPE"),
+L2529: ("tao_don_url", 'vols_tao_don.xlsx', "Volume tạo đơn")
+L3509: path = resolve_path('co_cau_ntb.xlsx', write=False)
+L3511: return jsonify({"error": "Không tìm thấy file co_cau_ntb.xlsx"})
+L3532: 'Aging _5 ngày.xlsx',
+L3533: 'Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx',
+L3534: 'OPR TTS.xlsx',
+L3535: 'Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx',
+L3536: 'buu_cuc_bat_on.xlsx',
+L3537: 'co_cau_ntb.xlsx',
+L3538: 'off_tuyen_spe.xlsx',
+L3539: 'vols_tao_don.xlsx'
+L3564: return jsonify({"error": "Không tìm thấy file vols_tao_don.xlsx. Vui lòng cấu hình Google Sheet và đồng bộ!"}), 404

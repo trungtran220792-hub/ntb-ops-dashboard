@@ -1,0 +1,341 @@
+4460:                     tr.innerHTML = `
+4461:                         <td>${escapeHTML(r[keys[0]])}</td>
+4462:                         <td>${r.Volume.toLocaleString()}</td>
+4463:                         <td><span class="badge ${valClass}">${valText}</span></td>
+4464:                         <td>${roundNum(r.Leadtime)}h</td>
+4465:                     `;
+4466:                     tbody.appendChild(tr);
+4467:                 });
+4468:             };
+4469: 
+4470:             populateTable('table-best-gtc', ops.top_10_gtc, ['Chi tiết', '% GTC'], true);
+4471:             populateTable('table-worst-gtc', ops.worst_10_gtc, ['Chi tiết', '% GTC'], true);
+4472:             populateTable('table-best-ltc', ops.top_10_ltc, ['Chi tiết', '% LTC'], true, true);
+4473:             populateTable('table-worst-ltc', ops.worst_10_ltc, ['Chi tiết', '% LTC'], true, true);
+4474:         }
+4475: 
+4476:         // ==========================================
+4477:         // RENDER: OPR TTS DASHBOARD (TAB 3)
+4478:         // ==========================================
+4479:         let oprSlotsChart = null;
+4480:         let oprAmChart = null;
+4481: 
+4482:         function renderOprDashboard() {
+4483:             const opr = globalData.opr;
+4484: 
+4485:             document.getElementById('opr-total-vol').innerText = (opr.total_volume || 0).toLocaleString();
+4486:             document.getElementById('opr-total-ot').innerText = (opr.total_ontime || 0).toLocaleString();
+4487:             document.getElementById('opr-total-late').innerText = (opr.total_late || 0).toLocaleString();
+4488: 
+4489:             // Render OPR Time slots bar chart
+4490:             const slots = opr.time_slots ? opr.time_slots.map(r => r['Khung giờ tạo'] || r['khung_gio_tao_don']) : [];
+4491:             const slotOpr = opr.time_slots ? opr.time_slots.map(r => roundNum(r['% OPR'])) : [];
+4492: 
+4493:             const slotsOptions = {
+4494:                 chart: { type: 'bar', height: 250, toolbar: { show: false }, background: 'transparent' },
+4495:                 series: [{ name: '% OPR', data: slotOpr }],
+4496:                 xaxis: { categories: slots, labels: { style: { colors: '#64748b' } } },
+4497:                 yaxis: { max: 100, labels: { style: { colors: '#64748b' } } },
+4498:                 colors: ['#007bc3'],
+4499:                 plotOptions: { bar: { borderRadius: 4, columnWidth: '40%' } },
+4500:                 theme: { mode: 'light' },
+4501:                 annotations: {
+4502:                     yaxis: [{ y: 80, borderColor: '#ef4444', label: { text: 'KPI 80%', style: { color: '#ffffff', background: '#ef4444' } } }]
+4503:                 }
+4504:             };
+4505: 
+4506:             if (oprSlotsChart) oprSlotsChart.destroy();
+4507:             oprSlotsChart = new ApexCharts(document.querySelector("#chart-opr-slots"), slotsOptions);
+4508:             oprSlotsChart.render();
+4509: 
+4510:             // Render OPR by AM rankings
+4511:             const ams = opr.am_performance ? opr.am_performance.map(r => r.AM) : [];
+4512:             const amOpr = opr.am_performance ? opr.am_performance.map(r => roundNum(r['% OPR'])) : [];
+4513: 
+4514:             const amOptions = {
+4515:                 chart: { type: 'bar', height: 250, toolbar: { show: false }, background: 'transparent' },
+4516:                 series: [{ name: '% OPR', data: amOpr }],
+4517:                 xaxis: { categories: ams, labels: { style: { colors: '#64748b' } } },
+4518:                 yaxis: { max: 100, labels: { style: { colors: '#64748b' } } },
+4519:                 colors: ['#ff5f00'],
+4520:                 plotOptions: { bar: { borderRadius: 4, horizontal: true, barHeight: '60%' } },
+4521:                 theme: { mode: 'light' },
+4522:                 annotations: {
+4523:                     xaxis: [{ x: 80, borderColor: '#ef4444', label: { text: 'KPI 80%', style: { color: '#ffffff', background: '#ef4444' } } }]
+4524:                 }
+4525:             };
+4526: 
+4527:             if (oprAmChart) oprAmChart.destroy();
+4528:             oprAmChart = new ApexCharts(document.querySelector("#chart-opr-am"), amOptions);
+4529:             oprAmChart.render();
+4530: 
+4531:             // Populate Error reasons table
+4532:             const tbodyErrors = document.querySelector('#table-opr-errors tbody');
+4533:             tbodyErrors.innerHTML = '';
+4534:             if (opr.error_reasons) {
+4535:                 opr.error_reasons.forEach(r => {
+4536:                     const tr = document.createElement('tr');
+4537:                     tr.innerHTML = `
+4538:                         <td>${r.ly_do_tre_12h}</td>
+4539:                         <td>${r.late_orders.toLocaleString()}</td>
+4540:                         <td><span class="badge badge-danger">${roundNum(r.weight)}%</span></td>
+4541:                     `;
+4542:                     tbodyErrors.appendChild(tr);
+4543:                 });
+4544:             }
+4545: 
+4546:             // Set details search data
+4547:             filteredData.oe_details = opr.oe_details || [];
+4548:             applyFilters(); // applying local filters will render the page
+4549:         }
+4550: 
+4551:         function renderOprDetailsTable() {
+4552:             const tbody = document.querySelector('#table-opr-details tbody');
+4553:             tbody.innerHTML = '';
+4554: 
+4555:             const page = paginationState.opr.current;
+4556:             const perPage = paginationState.opr.perPage;
+4557:             const start = (page - 1) * perPage;
+4558:             const end = start + perPage;
+4559:             const list = filteredData.oe_details.slice(start, end);
+4560: 
+4561:             if (list.length === 0) {
+4562:                 tbody.innerHTML = '<tr><td colspan="7" style="text-align:center">Không tìm thấy đơn lỗi nào khớp với điều kiện</td></tr>';
+4563:                 document.getElementById('opr-page-num').innerText = '1 / 1';
+4564:                 return;
+4565:             }
+4566: 
+4567:             list.forEach(r => {
+4568:                 const tr = document.createElement('tr');
+4569:                 tr.innerHTML = `
+4570:                     <td><strong>${escapeHTML(r.madh)}</strong></td>
+4571:                     <td>${escapeHTML(r.tutinh || '')}</td>
+4572:                     <td>${escapeHTML(r.kholay || '')}</td>
+4573:                     <td>${escapeHTML(r.sellername || '')}</td>
+4574:                     <td>${escapeHTML(r.AM || '')}</td>
+4575:                     <td><span class="badge badge-warning">${r.ly_do_tre_12h || ''}</span></td>
+4576:                     <td>${r.khung_gio_tao_don || ''}</td>
+4577:                 `;
+4578:                 tbody.appendChild(tr);
+4579:             });
+4580: 
+4581:             const totalPages = Math.ceil(filteredData.oe_details.length / perPage);
+4582:             document.getElementById('opr-page-num').innerText = `${page} / ${totalPages}`;
+4583:         }
+4584: 
+4585:         // ==========================================
+4586:         // RENDER: BACKLOG AGING > 5 DAYS (TAB 4)
+4587:         // ==========================================
+4588:         function renderAgingDashboard() {
+4589:             const bl = globalData.backlog.aging;
+4590: 
+4591:             document.getElementById('aging-total-vol').innerText = (bl.total_backlog || 0).toLocaleString();
+4592: 
+4593:             const trendEl = document.getElementById('aging-trend-diff');
+4594:             const diff = bl.diff_total || 0;
+4595:             if (diff > 0) {
+4596:                 trendEl.innerHTML = `<span class="trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +${diff} đơn</span> so với mốc so sánh`;
+4597:             } else if (diff < 0) {
+4598:                 trendEl.innerHTML = `<span class="trend-down"><i class="fa-solid fa-arrow-trend-down"></i> ${diff} đơn</span> so với mốc so sánh`;
+4599:             } else {
+4600:                 trendEl.innerHTML = `<span class="trend-neutral">Không đổi</span> so với mốc so sánh`;
+4601:             }
+4602: 
+4603:             // Populate AM aging summary
+4604:             const tbodyAm = document.querySelector('#table-aging-am tbody');
+4605:             tbodyAm.innerHTML = '';
+4606:             if (bl.am_summary) {
+4607:                 bl.am_summary.forEach(r => {
+4608:                     const tr = document.createElement('tr');
+4609:                     const diffText = r.diff > 0 ? `+${r.diff}` : r.diff < 0 ? `${r.diff}` : 'Không đổi';
+4610:                     const diffClass = r.diff > 0 ? 'trend-up' : r.diff < 0 ? 'trend-down' : 'trend-neutral';
+4611: 
+4612:                     tr.innerHTML = `
+4613:                         <td><strong>${escapeHTML(r.final_am)}</strong></td>
+4614:                         <td>${r["5 - 8 ngày"]}</td>
+4615:                         <td>${r["8 - 15 ngày"]}</td>
+4616:                         <td>${r["Trên 15 ngày"]}</td>
+4617:                         <td><strong>${r.Total}</strong></td>
+4618:                         <td><span class="${diffClass}">${diffText}</span></td>
+4619:                     `;
+4620:                     tbodyAm.appendChild(tr);
+4621:                 });
+4622:             }
+4623: 
+4624:             // Populate PO aging summary
+4625:             const tbodyPo = document.querySelector('#table-aging-po tbody');
+4626:             tbodyPo.innerHTML = '';
+4627:             if (bl.po_summary) {
+4628:                 bl.po_summary.forEach(r => {
+4629:                     const tr = document.createElement('tr');
+4630:                     const diffText = r.diff > 0 ? `+${r.diff}` : r.diff < 0 ? `${r.diff}` : 'Không đổi';
+4631:                     const diffClass = r.diff > 0 ? 'trend-up' : r.diff < 0 ? 'trend-down' : 'trend-neutral';
+4632: 
+4633:                     tr.innerHTML = `
+4634:                         <td>${escapeHTML(r.BC)}</td>
+4635:                         <td>${escapeHTML(r.final_province)}</td>
+4636:                         <td>${escapeHTML(r.final_am)}</td>
+4637:                         <td>${r["5 - 8 ngày"]}</td>
+4638:                         <td>${r["8 - 15 ngày"]}</td>
+4639:                         <td>${r["Trên 15 ngày"]}</td>
+4640:                         <td><strong>${r.Total}</strong></td>
+4641:                         <td><span class="${diffClass}">${diffText}</span></td>
+4642:                     `;
+4643:                     tbodyPo.appendChild(tr);
+4644:                 });
+4645:             }
+4646: 
+4647:             filteredData.aging_details = bl.raw_records || [];
+4648:             applyFilters();
+4649:         }
+4650: 
+4651:         function renderAgingDetailsTable() {
+4652:             const tbody = document.querySelector('#table-aging-details tbody');
+4653:             tbody.innerHTML = '';
+4654: 
+4655:             const page = paginationState.aging.current;
+4656:             const perPage = paginationState.aging.perPage;
+4657:             const start = (page - 1) * perPage;
+4658:             const end = start + perPage;
+4659:             const list = filteredData.aging_details.slice(start, end);
+4660: 
+4661:             if (list.length === 0) {
+4662:                 tbody.innerHTML = '<tr><td colspan="8" style="text-align:center">Không tìm thấy đơn tồn đọng nào khớp điều kiện</td></tr>';
+4663:                 document.getElementById('aging-page-num').innerText = '1 / 1';
+4664:                 return;
+4665:             }
+4666: 
+4667:             list.forEach(r => {
+4668:                 const tr = document.createElement('tr');
+4669:                 let bracketClass = 'badge-secondary';
+4670:                 if (r.aging_bracket === '8 - 15 ngày') bracketClass = 'badge-warning';
+4671:                 else if (r.aging_bracket === 'Trên 15 ngày') bracketClass = 'badge-danger';
+4672: 
+4673:                 tr.innerHTML = `
+4674:                     <td><strong>${escapeHTML(r['Mã đơn'])}</strong></td>
+4675:                     <td>${escapeHTML(r.final_province || '')}</td>
+4676:                     <td>${escapeHTML(r.BC || '')}</td>
+4677:                     <td>${escapeHTML(r['Tệp khách'] || '')}</td>
+4678:                     <td>${escapeHTML(r.final_am || '')}</td>
+4679:                     <td><span class="badge ${bracketClass}">${roundNum(r['Số ngày đã nhập BC'])} ngày</span></td>
+4680:                     <td>${r['Số lần giao']}</td>
+4681:                     <td><span class="badge badge-secondary">${escapeHTML(r['Trạng thái'] || '')}</span></td>
+4682:                 `;
+4683:                 tbody.appendChild(tr);
+4684:             });
+4685: 
+4686:             const totalPages = Math.ceil(filteredData.aging_details.length / perPage);
+4687:             document.getElementById('aging-page-num').innerText = `${page} / ${totalPages}`;
+4688:         }
+4689: 
+4690:         // ==========================================
+4691:         // RENDER: PENDING TRANSIT DASHBOARD (TAB 5)
+4692:         // ==========================================
+4693:         function renderTreoDashboard() {
+4694:             const bl = globalData.backlog.treo;
+4695: 
+4696:             document.getElementById('treo-total-vol').innerText = (bl.total_backlog || 0).toLocaleString();
+4697:             document.getElementById('treo-total-giao').innerText = (bl.total_giao || 0).toLocaleString();
+4698:             document.getElementById('treo-total-tra').innerText = (bl.total_tra || 0).toLocaleString();
+4699: 
+4700:             // Total Trend
+4701:             const setDiffTrend = (elementId, diff) => {
+4702:                 const el = document.getElementById(elementId);
+4703:                 if (diff > 0) {
+4704:                     el.innerHTML = `<span class="trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +${diff} đơn</span>`;
+4705:                 } else if (diff < 0) {
+4706:                     el.innerHTML = `<span class="trend-down"><i class="fa-solid fa-arrow-trend-down"></i> ${diff} đơn</span>`;
+4707:                 } else {
+4708:                     el.innerHTML = `<span class="trend-neutral">Không đổi</span>`;
+4709:                 }
+4710:             };
+4711: 
+4712:             setDiffTrend('treo-trend-diff', bl.diff_total || 0);
+4713:             setDiffTrend('treo-trend-giao', bl.diff_giao || 0);
+4714:             setDiffTrend('treo-trend-tra', bl.diff_tra || 0);
+4715: 
+4716:             // Treo Giao AM summary table
+4717:             const tbodyGiao = document.querySelector('#table-treo-giao-am tbody');
+4718:             tbodyGiao.innerHTML = '';
+4719:             if (bl.giao_am_summary) {
+4720:                 bl.giao_am_summary.forEach(r => {
+4721:                     const tr = document.createElement('tr');
+4722:                     const diffText = r.diff > 0 ? `+${r.diff}` : r.diff < 0 ? `${r.diff}` : 'Không đổi';
+4723:                     const diffClass = r.diff > 0 ? 'trend-up' : r.diff < 0 ? 'trend-down' : 'trend-neutral';
+4724: 
+4725:                     tr.innerHTML = `
+4726:                         <td><strong>${escapeHTML(r.final_am)}</strong></td>
+4727:                         <td>${r["36 - 72h"]}</td>
+4728:                         <td>${r["72 - 120h"]}</td>
+4729:                         <td>${r["120 - 192h"]}</td>
+4730:                         <td>${r["192h+"]}</td>
+4731:                         <td><strong>${r.Total}</strong></td>
+4732:                         <td><span class="${diffClass}">${diffText}</span></td>
+4733:                     `;
+4734:                     tbodyGiao.appendChild(tr);
+4735:                 });
+4736:             }
+4737: 
+4738:             // Treo Tra AM summary table
+4739:             const tbodyTra = document.querySelector('#table-treo-tra-am tbody');
+4740:             tbodyTra.innerHTML = '';
+4741:             if (bl.tra_am_summary) {
+4742:                 bl.tra_am_summary.forEach(r => {
+4743:                     const tr = document.createElement('tr');
+4744:                     const diffText = r.diff > 0 ? `+${r.diff}` : r.diff < 0 ? `${r.diff}` : 'Không đổi';
+4745:                     const diffClass = r.diff > 0 ? 'trend-up' : r.diff < 0 ? 'trend-down' : 'trend-neutral';
+4746: 
+4747:                     tr.innerHTML = `
+4748:                         <td><strong>${escapeHTML(r.final_am)}</strong></td>
+4749:                         <td>${r["36 - 72h"]}</td>
+4750:                         <td>${r["72 - 120h"]}</td>
+4751:                         <td>${r["120 - 192h"]}</td>
+4752:                         <td>${r["192h+"]}</td>
+4753:                         <td><strong>${r.Total}</strong></td>
+4754:                         <td><span class="${diffClass}">${diffText}</span></td>
+4755:                     `;
+4756:                     tbodyTra.appendChild(tr);
+4757:                 });
+4758:             }
+4759: 
+4760:             filteredData.treo_details = bl.raw_records || [];
+4761:             applyFilters();
+4762:         }
+4763: 
+4764:         function renderTreoDetailsTable() {
+4765:             const tbody = document.querySelector('#table-treo-details tbody');
+4766:             tbody.innerHTML = '';
+4767: 
+4768:             const page = paginationState.treo.current;
+4769:             const perPage = paginationState.treo.perPage;
+4770:             const start = (page - 1) * perPage;
+4771:             const end = start + perPage;
+4772:             const list = filteredData.treo_details.slice(start, end);
+4773: 
+4774:             if (list.length === 0) {
+4775:                 tbody.innerHTML = '<tr><td colspan="8" style="text-align:center">Không tìm thấy đơn treo luân chuyển nào khớp điều kiện</td></tr>';
+4776:                 document.getElementById('treo-page-num').innerText = '1 / 1';
+4777:                 return;
+4778:             }
+4779: 
+4780:             list.forEach(r => {
+4781:                 const tr = document.createElement('tr');
+4782:                 let bracketClass = 'badge-secondary';
+4783:                 if (r.treo_bracket === '72 - 120h') bracketClass = 'badge-warning';
+4784:                 else if (r.treo_bracket === '120 - 192h' || r.treo_bracket === '192h+') bracketClass = 'badge-danger';
+4785: 
+4786:                 const typeClass = r['Loại đơn'] === 'Luân chuyển giao' ? 'badge-success' : 'badge-warning';
+4787: 
+4788:                 tr.innerHTML = `
+4789:                     <td><strong>${escapeHTML(r['Mã đơn hàng'])}</strong></td>
+4790:                     <td>${escapeHTML(r.final_province || '')}</td>
+4791:                     <td>${escapeHTML(r.warehouse_name || '')}</td>
+4792:                     <td><span class="badge ${typeClass}">${escapeHTML(r['Loại đơn'] || '')}</span></td>
+4793:                     <td>${escapeHTML(r.final_am || '')}</td>
+4794:                     <td>${r['Thời gian tồn đọng'] || ''}h</td>
+4795:                     <td><span class="badge ${bracketClass}">${r.treo_bracket || ''}</span></td>
+4796:                     <td><span class="badge badge-secondary">${escapeHTML(r['Trạng thái'] || '')}</span></td>
+4797:                 `;
+4798:                 tbody.appendChild(tr);
+4799:             });
+4800: 

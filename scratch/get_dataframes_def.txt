@@ -1,0 +1,100 @@
+L1802: def get_dataframes(force=False, raw_gtc=None, raw_ltc=None, raw_co_cau=None, raw_aging=None, raw_co_cau_aging=None, raw_treo=None, raw_co_cau_treo=None, raw_tts=None):
+L1803:     global DF_GTC_CACHE, DF_LTC_CACHE, DF_CO_CAU_CACHE, DF_AGING_CACHE, DF_TREO_CACHE, DF_TTS_CACHE
+L1804:     import gc
+L1805:     if force or DF_GTC_CACHE is None or DF_LTC_CACHE is None or DF_CO_CAU_CACHE is None or DF_AGING_CACHE is None or DF_TREO_CACHE is None or DF_TTS_CACHE is None:
+L1806:         if not force:
+L1807:             required_pickles = [
+L1808:                 f".cache_Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx_gtc.pkl",
+L1809:                 f".cache_Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx_ltc.pkl",
+L1810:                 f".cache_Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx_co_cau.pkl",
+L1811:                 f".cache_Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx_tts.pkl",
+L1812:                 f".cache_Aging _5 ngày.xlsx_Đơngiaoagingtrên5ngày.pkl",
+L1813:                 f".cache_Aging _5 ngày.xlsx_Cơcấu.pkl",
+L1814:                 f".cache_Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx_stuck.pkl",
+L1815:                 f".cache_Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx_Cơcấu.pkl"
+L1816:             ]
+L1817:             all_pickles_exist = all(os.path.exists(resolve_path(p, write=False)) for p in required_pickles)
+L1818:             if not all_pickles_exist:
+L1819:                 raise RuntimeError("Dữ liệu đang được tải vào bộ nhớ đệm hoặc chưa được đồng bộ. Vui lòng đợi vài giây hoặc nhấn nút Đồng bộ dữ liệu.")
+L1820:         bc_to_am = {}
+L1821:         bc_to_prov = {}
+L1822:         
+L1823:         # 1. Load and process Báo cáo Vận hành
+L1824:         if raw_gtc is None or raw_ltc is None or raw_co_cau is None or raw_tts is None:
+L1825:             def load_ops_sheet_raw(p, stype):
+L1826:                 with pd.ExcelFile(p) as xls:
+L1827:                     return read_ops_sheet(xls, stype)
+L1828:             
+L1829:             if raw_gtc is None:
+L1830:                 raw_gtc = load_sheet_cached('Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', 'gtc', lambda p: load_ops_sheet_raw(p, 'gtc'))
+L1831:             if raw_ltc is None:
+L1832:                 raw_ltc = load_sheet_cached('Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', 'ltc', lambda p: load_ops_sheet_raw(p, 'ltc'))
+L1833:             if raw_co_cau is None:
+L1834:                 raw_co_cau = load_sheet_cached('Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', 'co_cau', lambda p: load_ops_sheet_raw(p, 'co_cau'))
+L1835:             if raw_tts is None:
+L1836:                 try:
+L1837:                     raw_tts = load_sheet_cached('Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', 'tts', lambda p: load_ops_sheet_raw(p, 'tts'))
+L1838:                 except Exception as e:
+L1839:                     print(f"Lỗi đọc sheet TTS trong get_dataframes: {e}")
+L1840:                     raw_tts = None
+L1841:                         
+L1842:         df_gtc = raw_gtc[raw_gtc['Cấp Quản Lý'] != 'Grand Total'].dropna(subset=["Volume"]).copy()
+L1843:         df_gtc['Leadtime'] = pd.to_numeric(df_gtc['Leadtime'], errors='coerce')
+L1844:         
+L1845:         df_ltc = raw_ltc[raw_ltc['Cấp quản lý'] != 'Grand Total'].dropna(subset=["Volume"]).copy()
+L1846:         df_ltc['Leadtime'] = pd.to_numeric(df_ltc['Leadtime'], errors='coerce')
+L1847:         
+L1848:         df_tts = None
+L1849:         if raw_tts is not None:
+L1850:             df_tts = raw_tts[raw_tts['Cấp Quản Lý'] != 'Grand Total'].dropna(subset=["Volume"]).copy()
+L1851:             df_tts['Leadtime'] = pd.to_numeric(df_tts['Leadtime'], errors='coerce')
+L1852:             
+L1853:         df_co_cau = raw_co_cau.copy()
+L1854:         
+L1855:         # Map co_cau
+L1856:         for _, r in df_co_cau.iterrows():
+L1857:             bc = str(r.get('BC', '')).strip().lower()
+L1858:             buucuc = str(r.get('Bưu cục', '')).strip().lower()
+L1859:             am = str(r.get('Am', r.get('ID - Họ Tên Am', ''))).strip()
+L1860:             prov = str(r.get('Tỉnh', '')).strip()
+L1861:             if prov == 'Bình Phước':
+L1862:                 prov = 'Lâm Đồng'
+L1863:             if bc and bc != 'nan':
+L1864:                 if am and am.lower() != 'nan':
+L1865:                     bc_to_am[bc] = am
+L1866:                 if prov and prov.lower() != 'nan':
+L1867:                     bc_to_prov[bc] = prov
+L1868:             if buucuc and buucuc != 'nan':
+L1869:                 if am and am.lower() != 'nan':
+L1870:                     bc_to_am[buucuc] = am
+L1871:                 if prov and prov.lower() != 'nan':
+L1872:                     bc_to_prov[buucuc] = prov
+L1873:                 
+L1874:         # Delete raw and clean memory
+L1875:         del raw_gtc, raw_ltc, raw_co_cau
+L1876:         if raw_tts is not None:
+L1877:             del raw_tts
+L1878:         gc.collect()
+L1879:         
+L1880:         # 2. Load and process Aging
+L1881:         if raw_aging is None or raw_co_cau_aging is None:
+L1882:             if raw_aging is None:
+L1883:                 raw_aging = load_sheet_cached('Aging _5 ngày.xlsx', 'Đơn giao aging trên 5 ngày', lambda p: pd.read_excel(p, sheet_name="Đơn giao aging trên 5 ngày"))
+L1884:             if raw_co_cau_aging is None:
+L1885:                 raw_co_cau_aging = load_sheet_cached('Aging _5 ngày.xlsx', 'Cơ cấu', lambda p: pd.read_excel(p, sheet_name="Cơ cấu"))
+L1886:                     
+L1887:         df_aging = raw_aging.copy()
+L1888:         df_co_cau_aging = raw_co_cau_aging.copy()
+L1889:         
+L1890:         for _, r in df_co_cau_aging.iterrows():
+L1891:             bc = str(r.get('BC', '')).strip().lower()
+L1892:             buucuc = str(r.get('Bưu cục', '')).strip().lower()
+L1893:             am = str(r.get('Am', r.get('ID - Họ Tên Am', ''))).strip()
+L1894:             prov = str(r.get('Tỉnh', '')).strip()
+L1895:             if prov == 'Bình Phước':
+L1896:                 prov = 'Lâm Đồng'
+L1897:             if bc and bc != 'nan':
+L1898:                 if am and am.lower() != 'nan':
+L1899:                     bc_to_am[bc] = am
+L1900:                 if prov and prov.lower() != 'nan':
+L1901:                     bc_to_prov[bc] = prov

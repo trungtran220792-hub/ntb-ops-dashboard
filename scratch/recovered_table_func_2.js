@@ -1,0 +1,157 @@
+function renderNtbAnalysisTable(type) {
+            const tableBody = document.getElementById(`tbody-ntb-${type}-analysis`);
+            if (!tableBody) return;
+            
+            if (!cachedNtbMatrixData || !cachedNtbMatrixData[type]) {
+                tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có dữ liệu</td></tr>`;
+                return;
+            }
+            
+            const matrix = cachedNtbMatrixData[type];
+            const timeGroupEl = document.getElementById('ntb-time-group');
+            const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';
+            
+            let targetDate = cachedNtbSummaryData ? cachedNtbSummaryData.latest_date : null;
+            let targetDateKey = targetDate;
+            if (targetDateKey && timeGroup === 'tuan') {
+                targetDateKey = targetDateKey.split(' ')[0];
+            }
+            
+            if (!matrix.dates || matrix.dates.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có cấu hình ngày</td></tr>`;
+                return;
+            }
+            
+            let dateKey = targetDateKey;
+            if (!matrix.dates.includes(dateKey)) {
+                dateKey = matrix.dates[0];
+            }
+            
+            const groupType = ntbGroupType[type];
+            const searchText = (ntbSearchText[type] || '').toLowerCase().trim();
+            const sortCol = ntbSortCol[type];
+            const sortAsc = ntbSortAsc[type];
+            
+            let items = [];
+            const target = type === 'ltc' ? 80 : 60;
+            
+            if (groupType === 'po') {
+                const amTh = document.getElementById(`th-${type}-am-header`);
+                if (amTh) amTh.style.display = '';
+                
+                matrix.rows.forEach(row => {
+                    row.pos.forE
+<truncated 2097 bytes>
+--- REPLACEMENT CONTENT ---
+"        function matchNtbRegion(amName, regionKey) {
+            if (regionKey === 'overall') return true;
+            const mapping = {
+                'lam_dong': ['lâm đồng', 'lam dong'],
+                'binh_thuan': ['bình thuận', 'binh thuan'],
+                'khanh_hoa': ['khánh hòa', 'khanh hoa'],
+                'dak_nong': ['đắk nông', 'dak nong'],
+                'ninh_thuan': ['ninh thuận', 'ninh thuan']
+            };
+            const targets = mapping[regionKey];
+            if (!targets) return true;
+            const nameLower = amName.toLowerCase();
+            return targets.some(target => nameLower.includes(target));
+        }
+
+        function renderNtbAnalysisTable(type) {
+            const tableBody = document.getElementById(`tbody-ntb-${type}-analysis`);
+            if (!tableBody) return;
+            
+            if (!cachedNtbMatrixData || !cachedNtbMatrixData[type]) {
+                tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có dữ liệu</td></tr>`;
+                return;
+            }
+            
+            const matrix = cachedNtbMatrixData[type];
+            const timeGroupEl = document.getElementById('ntb-time-group');
+            const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';
+            
+            let targetDate = cachedNtbSummaryData ? cachedNtbSummaryData.latest_date : null;
+            let targetDateKey = targetDate;
+            if (targetDateKey && timeGroup === 'tuan') {
+                targetDateKey = targetDateKey.split(' ')[0];
+            }
+            
+            if (!matrix.dates || matrix.dates.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có cấu hình ngày</td></tr>`;
+                return;
+            }
+            
+            let dateKey = targetDateKey;
+            if (!matrix.dates.includes(dat
+<truncated 2978 bytes>
+
+================================================================================
+
+
+
+=========================================
+FILE: 92726133-7314-4954-9f94-c885d0c26df2_133.txt
+=========================================
+--- STEP 133 | Tool: replace_file_content ---
+Description: "Redesign quality index layout in index.html to separate Volume/Backlog charts and add a premium full-width interactive quality dashboard card with capsule province tabs and detailed LTC, GTC, TTC cards."
+Instruction: "Replace the old 3-column Section 1 quality index layout with a two-row layout consisting of a top row for charts and a full-width bottom row for interactive capsule tabs and cards."
+--- TARGET CONTENT ---
+"                <!-- Section 1 -->
+                <div class="ntb-section-title">1. Hôm nay (chỉ số tại thời điểm hiện tại)</div>
+                <div style="display: grid; grid-template-columns: 1.2fr 1.2fr 1fr; gap: 16px; margin-bottom: 24px;">
+                    <!-- Card 1: Completed Volume -->
+                    <div class="card" style="margin-bottom: 0;">
+                        <div class="card-header">
+                            <h3>Số đơn hoàn thành</h3>
+                        </div>
+                        <div id="chart-ntb-completed" style="min-height: 280px; padding: 10px;"></div>
+                    </div>
+                    <!-- Card 2: Backlog by AM -->
+                    <div class="card" style="margin-bottom: 0;">
+                        <div class="card-header">
+                            <h3>Số đơn chưa hoàn thành theo kế hoạch</h3>
+                        </div>
+                        <div id="chart-ntb-backlog-am" style="min-height: 280px; padding: 10px;"></div>
+                    </div>
+                    <!-- Card 3: 9-KPI Grid -->
+                    <div class="card"
+                        style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: stretch;">
+                        <div class="card-header">
+                            <h3>Chỉ số chất lượng</h3>
+                        </div>
+                        <div class="ntb-kpi-grid" style="flex-grow: 1; padding: 5px;">
+                            <!-- ROW 1: LTC -->
+                            <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-indigo);">
+                                <div class="kpi-label">% LTC</div>
+                                <div class="kpi-value" id="ntb-kpi-ltc-overall">0%</div>
+                                <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+          
+<truncated 6004 bytes>
+--- REPLACEMENT CONTENT ---
+"                <!-- Section 1 -->
+                <div class="ntb-section-title">1. Hôm nay (chỉ số tại thời điểm hiện tại)</div>
+                
+                <style>
+                    .regional-capsule-select .capsule-btn:hover {
+                        color: var(--text-primary) !important;
+                        background: rgba(226, 232, 240, 0.6);
+                    }
+                    .regional-capsule-select .capsule-btn.active {
+                        color: white !important;
+                        background: var(--color-ghn-orange) !important;
+                        box-shadow: 0 2px 6px rgba(255, 95, 0, 0.25);
+                    }
+                    .quality-metric-card {
+                        transition: transform 0.2s ease, box-shadow 0.2s ease;
+                    }
+                    .quality-metric-card:hover {
+                        transform: translateY(-2px);
+                        box-shadow: var(--shadow-md) !important;
+                    }
+                </style>
+
+                <!-- Top Row: Volume and Backlog Charts -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                    <!-- Card 1: Completed Volume -->
+                    <div class="card" styl

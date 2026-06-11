@@ -1,0 +1,84 @@
+function renderNtbAnalysisTable(type) {\n            const tableBody = document.getElementById(`tbody-ntb-${type}-analysis`);\n            if (!tableBody) return;\n            \n            if (!cachedNtbMatrixData || !cachedNtbMatrixData[type]) {\n                tableBody.innerHTML = `<tr><td colspan=\"8\" style=\"text-align: center; color: var(--text-muted); padding: 20px;\">Không có dữ liệu</td></tr>`;\n                return;\n            }\n            \n            const matrix = cachedNtbMatrixData[type];\n            const timeGroupEl = document.getElementById('ntb-time-group');\n            const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';\n            \n            let targetDate = cachedNtbSummaryData ? cachedNtbSummaryData.latest_date : null;\n            let targetDateKey = targetDate;\n            if (targetDateKey && timeGroup === 'tuan') {\n                targetDateKey = targetDateKey.split(' ')[0];\n            }\n            \n            if (!matrix.dates || matrix.dates.length === 0) {\n                tableBody.innerHTML = `<tr><td colspan=\"8\" style=\"text-align: center; color: var(--text-muted); padding: 20px;\">Không có cấu hình ngày</td></tr>`;\n                return;\n            }\n            \n            let dateKey = targetDateKey;\n            if (!matrix.dates.includes(dateKey)) {\n                dateKey = matrix.dates[0];\n            }\n            \n            const groupType = ntbGroupType[type];\n        
+<truncated 8647 bytes>
+========================================
+
+========================================
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 - STEP 1169 - TOOL: view_file
+Matched: ['switchNtbRegion']
+Description: None
+Instruction: None
+========================================
+
+========================================
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 - STEP 1171 - TOOL: replace_file_content
+Matched: ['switchNtbRegion', 'renderNtbKpiCards']
+Description: "Modify switchNtbRegion to trigger re-rendering of LTC and GTC analysis tables on region capsule change"
+Instruction: "Call renderNtbAnalysisTable for both ltc and gtc inside switchNtbRegion"
+--- TARGET CONTENT ---
+"        function switchNtbRegion(regionKey, btnEl) {\n            activeNtbRegion = regionKey;\n            \n            // Toggle active state in UI\n            document.querySelectorAll('#ntb-region-capsules .capsule-btn').forEach(btn => {\n                btn.classList.remove('active');\n            });\n            if (btnEl) {\n                btnEl.classList.add('active');\n            }\n            \n            // Re-render KPI cards instantly from cache\n            renderNtbKpiCards();\n        }"
+--- REPLACEMENT CONTENT ---
+"        function switchNtbRegion(regionKey, btnEl) {\n            activeNtbRegion = regionKey;\n            \n            // Toggle active state in UI\n            document.querySelectorAll('#ntb-region-capsules .capsule-btn').forEach(btn => {\n                btn.classList.remove('active');\n            });\n            if (btnEl) {\n                btnEl.classList.add('active');\n            }\n            \n            // Re-render KPI cards instantly from cache\n            renderNtbKpiCards();\n            \n            // Re-render analysis tables instantly from cache\n            renderNtbAnalysisTable('ltc');\n            renderNtbAnalysisTable('gtc');\n        }"
+========================================
+
+========================================
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 - STEP 1177 - TOOL: replace_file_content
+Matched: ['cachedNtbMatrixData']
+Description: "Add matchNtbRegion helper and filter rows by activeNtbRegion capsule in renderNtbAnalysisTable"
+Instruction: "Define matchNtbRegion function and insert filter checks in both po and am groups in renderNtbAnalysisTable"
+--- TARGET CONTENT ---
+"        function renderNtbAnalysisTable(type) {\n            const tableBody = document.getElementById(`tbody-ntb-${type}-analysis`);\n            if (!tableBody) return;\n            \n            if (!cachedNtbMatrixData || !cachedNtbMatrixData[type]) {\n                tableBody.innerHTML = `<tr><td colspan=\"8\" style=\"text-align: center; color: var(--text-muted); padding: 20px;\">Không có dữ liệu</td></tr>`;\n                return;\n            }\n            \n            const matrix = cachedNtbMatrixData[type];\n            const timeGroupEl = document.getElementById('ntb-time-group');\n            const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';\n            \n            let targetDate = cachedNtbSummaryData ? cachedNtbSummaryData.latest_date : null;\n            let targetDateKey = targetDate;\n            if (targetDateKey && timeGroup === 'tuan') {\n                targetDateKey = targetDateKey.split(' ')[0];\n            }\n            \n            if (!matrix.dates || matrix.dates.length === 0) {\n                tableBody.innerHTML = `<tr><td colspan=\"8\" style=\"text-align: center; color: var(--text-muted); padding: 20px;\">Không có cấu hình ngày</td></tr>`;\n                return;\n            }\n            \n            let dateKey = targetDateKey;\n            if (!matrix.dates.includes(dateKey)) {\n                dateKey = matrix.dates[0];\n            }\n            \n            const groupType = ntbGroupType[type];\n            const searchText = (ntbSearchText[type] || '').toLowerCase().trim();\n            const sortCol = ntbSortCol[type];\n            const sortAsc = ntbSortAsc[type];\n            \n            let items = [];\n            const target = type === 'ltc' ? 80 : 60;\n            \n            if (groupType === 'po') {\n                const amTh = document.getElementById(`th-${type}-am-header`);\n                if (amTh) amTh.style.display = '';\n                \n                matrix.rows.forEach(row => {\n                    row.pos.forE
+<truncated 2097 bytes>
+--- REPLACEMENT CONTENT ---
+"        function matchNtbRegion(amName, regionKey) {\n            if (regionKey === 'overall') return true;\n            const mapping = {\n                'lam_dong': ['lâm đồng', 'lam dong'],\n                'binh_thuan': ['bình thuận', 'binh thuan'],\n                'khanh_hoa': ['khánh hòa', 'khanh hoa'],\n                'dak_nong': ['đắk nông', 'dak nong'],\n                'ninh_thuan': ['ninh thuận', 'ninh thuan']\n            };\n            const targets = mapping[regionKey];\n            if (!targets) return true;\n            const nameLower = amName.toLowerCase();\n            return targets.some(target => nameLower.includes(target));\n        }\n\n        function renderNtbAnalysisTable(type) {\n            const tableBody = document.getElementById(`tbody-ntb-${type}-analysis`);\n            if (!tableBody) return;\n            \n            if (!cachedNtbMatrixData || !cachedNtbMatrixData[type]) {\n                tableBody.innerHTML = `<tr><td colspan=\"8\" style=\"text-align: center; color: var(--text-muted); padding: 20px;\">Không có dữ liệu</td></tr>`;\n                return;\n            }\n            \n            const matrix = cachedNtbMatrixData[type];\n            const timeGroupEl = document.getElementById('ntb-time-group');\n            const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';\n            \n            let targetDate = cachedNtbSummaryData ? cachedNtbSummaryData.latest_date : null;\n            let targetDateKey = targetDate;\n            if (targetDateKey && timeGroup === 'tuan') {\n                targetDateKey = targetDateKey.split(' ')[0];\n            }\n            \n            if (!matrix.dates || matrix.dates.length === 0) {\n                tableBody.innerHTML = `<tr><td colspan=\"8\" style=\"text-align: center; color: var(--text-muted); padding: 20px;\">Không có cấu hình ngày</td></tr>`;\n                return;\n            }\n            \n            let dateKey = targetDateKey;\n            if (!matrix.dates.includes(dat
+<truncated 2978 bytes>
+========================================
+
+========================================
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 - STEP 1233 - TOOL: write_to_file
+Matched: ['renderNtbKpiCards']
+Description: "Update task list status to marked all items as completed"
+Instruction: None
+========================================
+
+========================================
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 - STEP 1339 - TOOL: write_to_file
+Matched: ['renderNtbKpiCards']
+Description: "Find and print renderNtbKpiCards in templates/index.html"
+Instruction: None
+========================================
+
+========================================
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 - STEP 1341 - TOOL: run_command
+Matched: ['renderNtbKpiCards']
+Description: None
+Instruction: None
+========================================
+
+========================================
+CONV: 9372904b-335a-4bb3-83f3-9f8d90d80b91 - STEP 676 - TOOL: grep_search
+Matched: ['renderNtbKpiCards']
+Description: None
+Instruction: None
+========================================
+
+========================================
+CONV: 9372904b-335a-4bb3-83f3-9f8d90d80b91 - STEP 678 - TOOL: view_file
+Matched: ['renderNtbKpiCards']
+Description: None
+Instruction: None
+========================================
+
+========================================
+CONV: 9372904b-335a-4bb3-83f3-9f8d90d80b91 - STEP 680 - TOOL: view_file
+Matched: ['renderNtbKpiCards']
+Description: None
+Instruction: None
+========================================
+
+========================================
+CONV: 9372904b-335a-4bb3-83f3-9f8d90d80b91 - STEP 682 - TOOL: view_file
+Matched: ['renderNtbKpiCards']
+Description: None
+Instruction: None
+========================================
+

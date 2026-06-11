@@ -1,0 +1,120 @@
+L2296: @app.route('/api/opr')
+L2297: @requires_permission('tab-opr')
+L2298: def get_opr():
+L2299:     am = request.args.get('am')
+L2300:     province = request.args.get('province')
+L2301:     post_office = request.args.get('post_office')
+L2302:     
+L2303:     if am or province or post_office:
+L2304:         # Dynamically compute OPR report with filters applied
+L2305:         filtered_report = process_opr_report(am=am, province=province, post_office=post_office)
+L2306:         return jsonify(clean_nan(filtered_report))
+L2307:         
+L2308:     global OPR_CACHE
+L2309:     with CACHE_LOCK:
+L2310:         if OPR_CACHE is None:
+L2311:             OPR_CACHE = process_opr_report()
+L2312:     return jsonify(clean_nan(OPR_CACHE))
+L2313: 
+L2314: @app.route('/api/backlog')
+L2315: @requires_permission('tab-backlog')
+L2316: def get_backlog():
+L2317:     global BACKLOG_CACHE_RAW
+L2318:     with CACHE_LOCK:
+L2319:         if BACKLOG_CACHE_RAW is None:
+L2320:             aging = process_aging_backlog()
+L2321:             treo = process_treo_backlog()
+L2322:             BACKLOG_CACHE_RAW = {
+L2323:                 "aging": aging,
+L2324:                 "treo": treo
+L2325:             }
+L2326:         
+L2327:     if "error" in BACKLOG_CACHE_RAW["aging"]:
+L2328:         return jsonify({"error": BACKLOG_CACHE_RAW["aging"]["error"]})
+L2329:     if "error" in BACKLOG_CACHE_RAW["treo"]:
+L2330:         return jsonify({"error": BACKLOG_CACHE_RAW["treo"]["error"]})
+L2331:         
+L2332:     history = load_history()
+L2333:     baseline_ts = request.args.get("baseline")
+L2334:     baseline_entry = None
+L2335:     
+L2336:     if history:
+L2337:         if baseline_ts:
+L2338:             for entry in history:
+L2339:                 if entry["timestamp"] == baseline_ts:
+L2340:                     baseline_entry = entry
+L2341:                     break
+L2342:         else:
+L2343:             if len(history) >= 2:
+L2344:                 baseline_entry = history[-2]
+L2345:             else:
+L2346:                 baseline_entry = history[-1]
+L2347:                 
+L2348:     import copy
+L2349:     current_data = copy.deepcopy(BACKLOG_CACHE_RAW)
+L2350:     current_data["baseline_timestamp"] = baseline_entry["timestamp"] if baseline_entry else None
+L2351:     current_data = calculate_trend(current_data, baseline_entry)
+L2352:     
+L2353:     return jsonify(clean_nan(current_data))
+L2354: 
+L2355: @app.route('/api/history')
+L2356: @requires_permission('tab-backlog')
+L2357: def get_history():
+L2358:     history = load_history()
+L2359:     timestamps = [entry["timestamp"] for entry in history]
+L2360:     return jsonify(timestamps[::-1])
+L2361: 
+L2362: @app.route('/api/user-role')
+L2363: @requires_auth
+L2364: def get_user_role():
+L2365:     username = session.get('username')
+L2366:     if not username and request.authorization:
+L2367:         username = request.authorization.username
+L2368:     role = 'admin' if is_admin() else 'staff'
+L2369:     users = load_users()
+L2370:     user = users.get(username, {})
+L2371:     permissions = user.get("permissions", [])
+L2372:     return jsonify({"username": username, "role": role, "permissions": permissions})
+L2373: 
+L2374: def mask_url(url):
+L2375:     if not url:
+L2376:         return ""
+L2377:     match = re.search(r'/spreadsheets/d/([a-zA-Z0-9-_]+)', url)
+L2378:     if not match:
+L2379:         return url
+L2380:     spreadsheet_id = match.group(1)
+L2381:     if len(spreadsheet_id) > 10:
+L2382:         masked_id = spreadsheet_id[:4] + "****************" + spreadsheet_id[-4:]
+L2383:     else:
+L2384:         masked_id = "********"
+L2385:     masked_url = url.replace(spreadsheet_id, masked_id)
+L2386:     return masked_url
+L2387: 
+L2388: @app.route('/api/config', methods=['GET', 'POST'])
+L2389: @requires_permission('tab-sync')
+L2390: def manage_config():
+L2391:     if request.method == 'POST':
+L2392:         if not is_admin():
+L2393:             return jsonify({"error": "Quyền truy cập bị từ chối. Chỉ tài khoản admin mới được phép lưu cấu hình."}), 403
+L2394:         try:
+L2395:             data = request.json or {}
+L2396:             current_config = load_config()
+L2397:             
+L2398:             config = {}
+L2399:             for k in ["ops_url", "opr_url", "aging_url", "treo_url", "bat_on_url", "off_spe_url", "tao_don_url"]:
+L2400:                 val = data.get(k, "").strip()
+L2401:                 if not val:
+L2402:                     config[k] = ""
+L2403:                 elif "*" in val or "Ẩn" in val or "hidden" in val.lower():
+L2404:                     config[k] = current_config.get(k, "")
+L2405:                 else:
+L2406:                     if not (val.startswith("https://docs.google.com/spreadsheets/") or val.startswith("http://docs.google.com/spreadsheets/")):
+L2407:                         return jsonify({"error": f"Link Google Sheet không hợp lệ cho {k}. Phải bắt đầu bằng https://docs.google.com/spreadsheets/"}), 400
+L2408:                     config[k] = val
+L2409:             
+L2410:             if save_config(config):
+L2411:                 masked_config = {k: mask_url(v) for k, v in config.items()}
+L2412:                 return jsonify({"success": True, "config": masked_config})
+L2413:             else:
+L2414:                 return jsonify({"error": "Không thể ghi cấu hình."}), 500
+L2415:         except Exception as e:

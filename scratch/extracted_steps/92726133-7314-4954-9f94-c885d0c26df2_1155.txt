@@ -1,0 +1,10 @@
+--- STEP 1155 | Tool: replace_file_content ---
+Description: "Define cachedNtbMatrixData and table filter/sorting states as global JS variables"
+Instruction: "Insert cachedNtbMatrixData, ntbGroupType, ntbSearchText, ntbSortCol, and ntbSortAsc global variables"
+--- TARGET CONTENT ---
+"        // Caching fetched data\n        let cachedNtbSummaryData = null;\n        let cachedNtbTrendsData = null;\n        let activeNtbRegion = 'overall';"
+--- REPLACEMENT CONTENT ---
+"        // Caching fetched data\n        let cachedNtbSummaryData = null;\n        let cachedNtbTrendsData = null;\n        let cachedNtbMatrixData = null;\n        let activeNtbRegion = 'overall';\n\n        let ntbGroupType = { ltc: 'po', gtc: 'po' };\n        let ntbSearchText = { ltc: '', gtc: '' };\n        let ntbSortCol = { ltc: 'pick_vol', gtc: 'pick_vol' };\n        let ntbSortAsc = { ltc: false, gtc: false };"
+
+================================================================================
+

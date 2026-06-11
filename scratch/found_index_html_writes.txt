@@ -1,0 +1,608 @@
+CONV: 0d711590-0357-43ee-a937-04cabf62a0ba | Step: 64 | Tool: replace_file_content
+Description: "Redesign OPR TTS tab: Add OPR Overall KPI card, add style section headers, style charts, style error reasons table with custom progress bars, and replace old waybill details table with a Google Sheet CTA card linking to the spreadsheet."
+Instruction: "Replace old OPR TTS tab HTML code with modern layout, including KPI overall card and CTA button link."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 0d711590-0357-43ee-a937-04cabf62a0ba | Step: 73 | Tool: replace_file_content
+Description: "Redesign OPR dashboard and error reasons rendering; deprecate OPR details table rendering since it is replaced by Google Sheet link."
+Instruction: "Replace OPR javascript rendering methods with updated Overall KPI support and progress bar styling."
+Contains switchNtbRegion: False | Contains renderOprDashboard: True
+--> This log has the keys!
+  Target len: 2067 (truncated: True)
+  Replacement len: 2067 (truncated: True)
+--------------------------------------------------
+CONV: 0d711590-0357-43ee-a937-04cabf62a0ba | Step: 151 | Tool: replace_file_content
+Description: "Add sort capsules to OPR AM ranking chart card header in index.html."
+Instruction: "Update card-header style and structure to include sorting toggle buttons for the AM OPR chart."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 0d711590-0357-43ee-a937-04cabf62a0ba | Step: 157 | Tool: replace_file_content
+Description: "Define sorting and dynamic loading for OPR tab in index.html."
+Instruction: "Insert loadOprData, setAmOprSort, and renderOprAmChartOnly functions, and update renderOprDashboard."
+Contains switchNtbRegion: False | Contains renderOprDashboard: True
+--> This log has the keys!
+  Target len: 2067 (truncated: True)
+  Replacement len: 2065 (truncated: True)
+--------------------------------------------------
+CONV: 0d711590-0357-43ee-a937-04cabf62a0ba | Step: 161 | Tool: replace_file_content
+Description: "Trigger loadOprData in applyFilters."
+Instruction: "Add loadOprData call to applyFilters."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 0d711590-0357-43ee-a937-04cabf62a0ba | Step: 184 | Tool: replace_file_content
+Description: "Remove applyFilters call from renderOprDashboard."
+Instruction: "Remove applyFilters call from end of renderOprDashboard."
+Contains switchNtbRegion: False | Contains renderOprDashboard: True
+--> This log has the keys!
+  Target len: 141 (truncated: False)
+  Replacement len: 112 (truncated: False)
+--------------------------------------------------
+CONV: 0d711590-0357-43ee-a937-04cabf62a0ba | Step: 186 | Tool: replace_file_content
+Description: "Replace applyFilters call with renderAgingDetailsTable in renderAgingDashboard."
+Instruction: "Update renderAgingDashboard to call renderAgingDetailsTable directly."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 0d711590-0357-43ee-a937-04cabf62a0ba | Step: 188 | Tool: replace_file_content
+Description: "Replace applyFilters with renderTreoDetailsTable in renderTreoDashboard."
+Instruction: "Update renderTreoDashboard to call renderTreoDetailsTable directly."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 0d711590-0357-43ee-a937-04cabf62a0ba | Step: 192 | Tool: replace_file_content
+Description: "Trigger initial applyFilters at the end of loadAllData function."
+Instruction: "Insert applyFilters call at the end of loadAllData."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 0d711590-0357-43ee-a937-04cabf62a0ba | Step: 544 | Tool: replace_file_content
+Description: "Fix chart sorting and enhance OPR AM chart aesthetics by placing data labels outside, adjusting grid lines, and using updateOptions instead of destroy"
+Instruction: "Replace setAmOprSort and renderOprAmChartOnly in templates/index.html"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 0d711590-0357-43ee-a937-04cabf62a0ba | Step: 931 | Tool: replace_file_content
+Description: "Update index.html configuration form to present 14 CSV inputs grouped by topic"
+Instruction: "Replace the old 7 Excel inputs with 14 new GID-specific CSV inputs, logically grouped into sections."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 0d711590-0357-43ee-a937-04cabf62a0ba | Step: 937 | Tool: replace_file_content
+Description: "Update configuration load and save functions in index.html to handle 14 CSV keys"
+Instruction: "Replace old configuration fields with the 14 new CSV endpoint URL fields in both loadGoogleSheetsConfig and saveGoogleSheetsConfig JS functions."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 0d711590-0357-43ee-a937-04cabf62a0ba | Step: 941 | Tool: replace_file_content
+Description: "Update file card icon and upload file accepts in index.html for CSV support"
+Instruction: "Change file icon to conditionally display fa-file-csv for CSV files and accept .csv extensions on input."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 0d711590-0357-43ee-a937-04cabf62a0ba | Step: 953 | Tool: replace_file_content
+Description: "Update loadFilesStatus innerHTML in index.html to support CSV files"
+Instruction: "Update card.innerHTML in loadFilesStatus to use fa-file-csv for CSV files and accept .csv extension on file input."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 0d711590-0357-43ee-a937-04cabf62a0ba | Step: 959 | Tool: replace_file_content
+Description: "Update loadFilesStatus function to display CSV icon and support CSV upload"
+Instruction: "Update icon display and accept attribute in loadFilesStatus card HTML template."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 0d711590-0357-43ee-a937-04cabf62a0ba | Step: 994 | Tool: replace_file_content
+Description: "Update the file card HTML in templates/index.html to display CSV icon when filename ends in .csv, and allow csv file upload."
+Instruction: "Replace the file card innerHTML block to support CSV files and icons"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 0d711590-0357-43ee-a937-04cabf62a0ba | Step: 998 | Tool: replace_file_content
+Description: "Remove backslashes from template literal expressions in templates/index.html to ensure JS parses them correctly."
+Instruction: "Remove the backslashes before dollar signs in the template literal block"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 12824642-463c-46a9-9dc4-473af4f03ce9 | Step: 42 | Tool: replace_file_content
+Description: "Remove '(Giao TC)' from the GTC KPI card header and remove the 'Target: 60.0%' line in templates/index.html."
+Instruction: "Remove '(Giao TC)' from the card title and remove the target trend element for GTC card."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 12824642-463c-46a9-9dc4-473af4f03ce9 | Step: 298 | Tool: replace_file_content
+Description: "Add 'Tỷ lệ gán tất cả hàng' KPI card right after 'Tỷ lệ GTC' card in templates/index.html"
+Instruction: "Insert the new KPI card html after GTC card close div."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 12824642-463c-46a9-9dc4-473af4f03ce9 | Step: 302 | Tool: replace_file_content
+Description: "Update renderOverviewDashboard javascript to populate 'Tỷ lệ gán' card and its comparisons."
+Instruction: "Update the metrics fill and comparison fill to include kpi-gan."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 12824642-463c-46a9-9dc4-473af4f03ce9 | Step: 940 | Tool: multi_replace_file_content
+Description: "Add the 'Tỷ lệ ODR TTS' KPI card to index.html grid and bind its value and DoD/WoW comparisons in renderOverviewDashboard"
+Instruction: "Add ODR TTS card html structure and its javascript bindings in index.html"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 12824642-463c-46a9-9dc4-473af4f03ce9 | Step: 1141 | Tool: replace_file_content
+Description: "Add Tỷ lệ gán TTS card in KPI grid layout in templates/index.html"
+Instruction: "Insert Tỷ lệ gán TTS card after Tỷ lệ gán tất cả hàng card in templates/index.html"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 12824642-463c-46a9-9dc4-473af4f03ce9 | Step: 1149 | Tool: replace_file_content
+Description: "Bind kpi-gan-tts element in JavaScript in templates/index.html"
+Instruction: "Bind ops.overall_gan_tts to kpi-gan-tts element in templates/index.html"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 12824642-463c-46a9-9dc4-473af4f03ce9 | Step: 1153 | Tool: replace_file_content
+Description: "Populate comparisons dynamically for kpi-gan-tts on the UI in templates/index.html"
+Instruction: "Add JavaScript block to calculate and set comparisons for kpi-gan-tts-comparison in templates/index.html"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 12824642-463c-46a9-9dc4-473af4f03ce9 | Step: 1393 | Tool: multi_replace_file_content
+Description: "Move Giới thiệu NTB to the top of the sidebar, set it as the default active tab, and update related active panel states and JS fallbacks."
+Instruction: "Modify index.html to make Giới thiệu NTB the first/default tab."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 2e22f1cd-2a51-4aea-8353-3802192aa830 | Step: 87 | Tool: replace_file_content
+Description: "Add map visual styles including S-shape miniature styling, projection line styles, dot hover transitions, and pulse-glow animations for warehouses."
+Instruction: "Insert the new map CSS classes after province-card class"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 2e22f1cd-2a51-4aea-8353-3802192aa830 | Step: 93 | Tool: replace_file_content
+Description: "Update index.html administrative map markup to introduce miniature Vietnam map, detailed NTB paths, dots layer placeholder, and map legends."
+Instruction: "Replace the old SVG map with the new dual-map SVG layout and legend."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 2e22f1cd-2a51-4aea-8353-3802192aa830 | Step: 95 | Tool: replace_file_content
+Description: "Replace the administrative map with S-shape Vietnam and zoomed NTB provinces layout."
+Instruction: "Replace old SVG map with new dual-map SVG layout and legend."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 2e22f1cd-2a51-4aea-8353-3802192aa830 | Step: 105 | Tool: replace_file_content
+Description: "Implement dynamically loaded map dots, separating warehouses from post offices, golden spiral placement algorithm, smooth card highlights, and linked tree node expansions."
+Instruction: "Replace old loadNtbStructure and map event listeners with updated version calling renderMapPoints and smooth interaction behaviors."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4197bb12-00f6-4080-b4d6-133d5f826d8e | Step: 194 | Tool: replace_file_content
+Description: "Update CSS variables in templates/index.html to implement a clean, premium light mode theme."
+Instruction: "Replace dark theme CSS variables with light theme equivalents."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4197bb12-00f6-4080-b4d6-133d5f826d8e | Step: 198 | Tool: replace_file_content
+Description: "Change the sidebar brand text gradient to use dark slate colors instead of white/light gray so it is highly visible on the light sidebar."
+Instruction: "Change text gradient background from white-based to slate-based."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4197bb12-00f6-4080-b4d6-133d5f826d8e | Step: 202 | Tool: replace_file_content
+Description: "Update header title color and input background/border colors to match the light theme design."
+Instruction: "Change h1 color to text-primary and inputs background to white."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4197bb12-00f6-4080-b4d6-133d5f826d8e | Step: 206 | Tool: replace_file_content
+Description: "Update KPI value color from white to text-primary to render nicely in light mode."
+Instruction: "Change color of kpi-value to text-primary."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4197bb12-00f6-4080-b4d6-133d5f826d8e | Step: 210 | Tool: replace_file_content
+Description: "Update card header text color from white to text-primary for high contrast in light mode."
+Instruction: "Change h3 color inside card-header to text-primary."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4197bb12-00f6-4080-b4d6-133d5f826d8e | Step: 214 | Tool: replace_file_content
+Description: "Update loader colors, badges, and detail row text to fit the light mode color hierarchy."
+Instruction: "Change background values and text colors from dark-mode to light-mode values."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4197bb12-00f6-4080-b4d6-133d5f826d8e | Step: 218 | Tool: replace_file_content
+Description: "Change file card and h4 text color to fit the light theme layout."
+Instruction: "Change file-card background to white and h4 color to text-primary."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4197bb12-00f6-4080-b4d6-133d5f826d8e | Step: 232 | Tool: replace_file_content
+Description: "Change shiftsOptions colors and theme to light mode in index.html."
+Instruction: "Change theme to light and label colors to slate-500."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4197bb12-00f6-4080-b4d6-133d5f826d8e | Step: 236 | Tool: replace_file_content
+Description: "Change backlogPieOptions legend color and theme to light mode in index.html."
+Instruction: "Change theme to light and legend label color to slate-500."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4197bb12-00f6-4080-b4d6-133d5f826d8e | Step: 240 | Tool: replace_file_content
+Description: "Change trendOptions colors, theme, and labels style to light mode in index.html."
+Instruction: "Change theme to light, highlight colors to premium light theme, and label/legend colors to slate-500."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4197bb12-00f6-4080-b4d6-133d5f826d8e | Step: 244 | Tool: replace_file_content
+Description: "Change slotsOptions colors and theme to light mode in index.html."
+Instruction: "Change theme to light and label colors to slate-500."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4197bb12-00f6-4080-b4d6-133d5f826d8e | Step: 246 | Tool: replace_file_content
+Description: "Change amOptions colors and theme to light mode in index.html."
+Instruction: "Change theme to light, labels color to slate-500, and chart bar color to indigo."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4197bb12-00f6-4080-b4d6-133d5f826d8e | Step: 514 | Tool: replace_file_content
+Description: "Add Chỉ số NTB tab to the sidebar menu in index.html"
+Instruction: "Insert a new menu list item for tab-ntb-summary after tab-dashboard."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4197bb12-00f6-4080-b4d6-133d5f826d8e | Step: 518 | Tool: replace_file_content
+Description: "Insert the tab-ntb-summary HTML panel container before tab-operational in index.html"
+Instruction: "Insert tab-ntb-summary content block before tab-operational block."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4197bb12-00f6-4080-b4d6-133d5f826d8e | Step: 522 | Tool: replace_file_content
+Description: "Add NTB tab styling to index.html style block"
+Instruction: "Insert NTB dashboard styles before the closing style tag."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4197bb12-00f6-4080-b4d6-133d5f826d8e | Step: 528 | Tool: replace_file_content
+Description: "Insert the NTB dashboard JavaScript functions at the end of the script block in index.html"
+Instruction: "Insert NTB JS logic before the closing script tag."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4197bb12-00f6-4080-b4d6-133d5f826d8e | Step: 536 | Tool: replace_file_content
+Description: "Hook NTB summary loading inside tab switching, DOM load, and loadAllData in index.html"
+Instruction: "Hook loadNtbSummaryData in DOMContentLoaded and loadAllData."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4197bb12-00f6-4080-b4d6-133d5f826d8e | Step: 540 | Tool: replace_file_content
+Description: "Call loadNtbSummaryData inside applyFilters in index.html"
+Instruction: "Append loadNtbSummaryData() call at the end of applyFilters function."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4336314d-71dd-4e55-8828-c64201e3d4a3 | Step: 407 | Tool: replace_file_content
+Description: "Move Giới thiệu NTB to the top of the sidebar navigation and make it active"
+Instruction: "Move Giới thiệu NTB menu item above Tổng quan, and set it to active by default"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4336314d-71dd-4e55-8828-c64201e3d4a3 | Step: 409 | Tool: replace_file_content
+Description: "Change the initial header page-title to GIỚI THIỆU VÙNG NAM TRUNG BỘ"
+Instruction: "Change page-title text to GIỚI THIỆU VÙNG NAM TRUNG BỘ"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4336314d-71dd-4e55-8828-c64201e3d4a3 | Step: 415 | Tool: multi_replace_file_content
+Description: "Toggle default active state of Introduction and Dashboard content panels in index.html"
+Instruction: "Set tab-introduction class to active and tab-dashboard class to inactive (remove active class)"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4336314d-71dd-4e55-8828-c64201e3d4a3 | Step: 417 | Tool: replace_file_content
+Description: "Replace seven Google Sheet URL input fields with a single Consolidated Google Sheet URL input field"
+Instruction: "Replace the sheet URLs inputs block with a single sheet-consolidated-url input block"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4336314d-71dd-4e55-8828-c64201e3d4a3 | Step: 863 | Tool: replace_file_content
+Description: "Restored the customized overview KPI cards layout, adding Tỷ lệ gán tất cả hàng, Tỷ lệ gán TTS, and Tỷ lệ ODR TTS cards, and removing target/unnecessary text from GTC."
+Instruction: "Replace overview KPI cards html layout."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4336314d-71dd-4e55-8828-c64201e3d4a3 | Step: 871 | Tool: replace_file_content
+Description: "Bound new metrics (kpi-gan, kpi-gan-tts, kpi-odr) and populated their WoW/DoD comparison values in renderOverviewDashboard()."
+Instruction: "Update javascript bindings inside renderOverviewDashboard() function in templates/index.html to populate new KPI cards and metrics."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4336314d-71dd-4e55-8828-c64201e3d4a3 | Step: 877 | Tool: replace_file_content
+Description: "Cleaned up duplicate template syntax lines at the end of the odrCompEl section."
+Instruction: "Remove the trailing duplicated javascript block."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4336314d-71dd-4e55-8828-c64201e3d4a3 | Step: 895 | Tool: replace_file_content
+Description: "Updated manual upload validation and status icons to use green fa-file-csv exclusively for .csv files."
+Instruction: "Update loadFilesStatus and uploadFile javascript functions to restrict to .csv files and render green CSV icons."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 4336314d-71dd-4e55-8828-c64201e3d4a3 | Step: 921 | Tool: replace_file_content
+Description: "Updated loadGoogleSheetsConfig and saveGoogleSheetsConfig JS bindings to save consolidated_url only."
+Instruction: "Modify loadGoogleSheetsConfig and saveGoogleSheetsConfig javascript in templates/index.html to use sheet-consolidated-url."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 66e97270-e669-47a1-92b8-dcecfba0c2f6 | Step: 98 | Tool: replace_file_content
+Description: "Remove Backlog KPI card from the Overview tab kpi-grid"
+Instruction: "Remove the kpi-card danger section for Backlog KPI from the kpi-grid in tab-dashboard"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 66e97270-e669-47a1-92b8-dcecfba0c2f6 | Step: 102 | Tool: replace_file_content
+Description: "Remove Backlog distribution donut chart from the Overview tab columns-layout"
+Instruction: "Remove the Backlog distribution chart card from columns-layout in tab-dashboard"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 66e97270-e669-47a1-92b8-dcecfba0c2f6 | Step: 118 | Tool: replace_file_content
+Description: "Replace tab-aging and tab-treo with the new combined tab-backlog structure featuring sub-tabs"
+Instruction: "Combine tab-aging and tab-treo into a single tab-backlog structure with inner sub-panels (Summary, Aging, Treo)"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 66e97270-e669-47a1-92b8-dcecfba0c2f6 | Step: 126 | Tool: replace_file_content
+Description: "Add CSS styling for sub-tabs and sub-panels inside templates/index.html"
+Instruction: "Insert sub-tabs and sub-panel styling before the closing style tag in index.html"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 66e97270-e669-47a1-92b8-dcecfba0c2f6 | Step: 136 | Tool: replace_file_content
+Description: "Replace individual backlog menu items with a single backlog monitoring menu item"
+Instruction: "Combine individual backlog sidebar menu items into a single Backlog Monitoring item"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 66e97270-e669-47a1-92b8-dcecfba0c2f6 | Step: 142 | Tool: replace_file_content
+Description: "Update JS tab switching and header subtitle updates, and add switchSubTab function"
+Instruction: "Update updateHeaderSubtitle and switchTab JS functions, and add switchSubTab JS function in index.html"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 66e97270-e669-47a1-92b8-dcecfba0c2f6 | Step: 154 | Tool: replace_file_content
+Description: "Update renderOverviewDashboard function to fill mini backlog summary cards in index.html"
+Instruction: "Update renderOverviewDashboard function to fill mini backlog summary card values in index.html"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 7d9f5d93-35c9-4995-9a9c-828a90ac51c8 | Step: 174 | Tool: replace_file_content
+Description: "Insert missing closing curly brace for renderVolumeCreation function to resolve JS compilation error"
+Instruction: "Add closing curly brace on line 4795 to close function renderVolumeCreation"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 8b418f5d-0bf1-4369-ac63-f3565bd77f7d | Step: 448 | Tool: multi_replace_file_content
+Description: "Hide baseline dropdown in Overview tab, replace sync label with Report Date, and add n-1 and Cung ky Thu comparisons in Overview cards"
+Instruction: "Hide comparison selector on Overview tab, display Report Date on Overview tab, and add comparisons (n-1 and same day of week last week) in GTC, LTC, OPR, and Backlog cards in Overview dashboard."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 8b418f5d-0bf1-4369-ac63-f3565bd77f7d | Step: 472 | Tool: replace_file_content
+Description: "Hide global filters row on Overview tab since KPIs and overview charts represent region-wide aggregates"
+Instruction: "Remove tab-dashboard from isOpsTab so that the filters are not visible on the Overview Dashboard tab."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 8b418f5d-0bf1-4369-ac63-f3565bd77f7d | Step: 494 | Tool: replace_file_content
+Description: "Add style=\"display: none;\" to global-filters section so it is hidden on startup by default"
+Instruction: "Add style=\"display: none;\" to the global-filters section declaration to prevent it from showing on page load before a tab switch happens."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 8c4a74de-9016-4159-9f42-08c9862c9b0d | Step: 34 | Tool: multi_replace_file_content
+Description: "Remove the chart for incomplete orders (backlog by AM) from the NTB summary dashboard, making the completed volume chart occupy full width."
+Instruction: "Remove the chart element from HTML and comment out the ApexCharts rendering code for 'chart-ntb-backlog-am'."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 8c4a74de-9016-4159-9f42-08c9862c9b0d | Step: 38 | Tool: replace_file_content
+Description: "Comment out the backlog chart JavaScript initialization since the HTML element has been removed."
+Instruction: "Comment out the backlog chart initialization and options setup in JavaScript."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 8c4a74de-9016-4159-9f42-08c9862c9b0d | Step: 46 | Tool: replace_file_content
+Description: "Change the section title from '1. Hôm nay (chỉ số tại thời điểm hiện tại)' to 'Sản Lượng theo Tỉnh'."
+Instruction: "Update the section header text at line 2127."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 133 | Tool: replace_file_content
+Description: "Redesign quality index layout in index.html to separate Volume/Backlog charts and add a premium full-width interactive quality dashboard card with capsule province tabs and detailed LTC, GTC, TTC cards."
+Instruction: "Replace the old 3-column Section 1 quality index layout with a two-row layout consisting of a top row for charts and a full-width bottom row for interactive capsule tabs and cards."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 147 | Tool: replace_file_content
+Description: "Replace Javascript code in index.html to manage capsule province switching, dynamic quality KPI card rendering, 2-week weighted averages, and 7-day sparkline charts."
+Instruction: "Replace the old loadNtbSummaryData JS block with the new dynamic tab-switching and ApexCharts sparkline rendering logic."
+Contains switchNtbRegion: True | Contains renderOprDashboard: False
+--> This log has the keys!
+  Target len: 2072 (truncated: True)
+  Replacement len: 2055 (truncated: True)
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 351 | Tool: multi_replace_file_content
+Description: "Update templates/index.html to support weekly time group selection, dynamically update comparison labels, and send time group request parameters."
+Instruction: "Replace selector, card subheaders, sparkline titles, and JavaScript rendering methods in templates/index.html to support week view."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 587 | Tool: replace_file_content
+Description: "Redesign Section 1 HTML in index.html to support week-based comparisons and capsule region selectors"
+Instruction: "Replace the old 9-KPI grid and filters layout with the new interactive capsules, card grid, and sparkline containers."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 593 | Tool: replace_file_content
+Description: "Implement NTB dashboard tab JS logic supporting week filtering, regional selections, sparklines and key normalization"
+Instruction: "Replace the old loadNtbSummaryData function and its inner kpis grid updater with caching, regional switcher, sparklines, and week/day dynamic switching logic."
+Contains switchNtbRegion: True | Contains renderOprDashboard: False
+--> This log has the keys!
+  Target len: 2072 (truncated: True)
+  Replacement len: 2051 (truncated: True)
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 837 | Tool: replace_file_content
+Description: "Restore kpi-gan, kpi-gan-tts, and kpi-odr html cards in the overview kpi grid in templates/index.html."
+Instruction: "Insert missing overview kpi cards: Gán, Gán TTS, ODR TTS in index.html."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 843 | Tool: replace_file_content
+Description: "Restore Javascript bindings and comparisons for gán, gán TTS, and ODR TTS metrics in templates/index.html."
+Instruction: "Add JS bindings for kpi-gan, kpi-gan-tts, kpi-odr and their comparison elements."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 899 | Tool: multi_replace_file_content
+Description: "Move 'Giới thiệu NTB' to the top of the sidebar, set it as the default active tab, update default page title, and update JS routing fallbacks in index.html."
+Instruction: "Move Giới thiệu tab to the top of sidebar, set it active on load, and update page title."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 1011 | Tool: replace_file_content
+Description: "Re-structure NTB tab quality cards to support dynamic two-row comparisons (n-3 / same-day last week for Day, n-1 / n-2 for Week)."
+Instruction: "Update comparison rows in LTC, GTC, TTC cards to be dynamic in index.html."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 1107 | Tool: replace_file_content
+Description: "Close header div tag and format the quality cards grid container start tag"
+Instruction: "Close the header flexbox div before starting the grid of metric cards"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 1111 | Tool: replace_file_content
+Description: "Clean up trailing divs and formatting leftover comparison items from CARD 3 in templates/index.html"
+Instruction: "Replace the redundant/duplicate comparison elements and improperly closed divs with the correct closing tags for CARD 3, the grid container, and the main card container"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 1115 | Tool: replace_file_content
+Description: "Remove the right-side trend KPI card in Snapshot LTC section and set chart grid to full width (1fr)"
+Instruction: "Change grid columns to 1fr and remove the right-side overview card in Section 2"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 1119 | Tool: replace_file_content
+Description: "Remove the right-side trend KPI card in Snapshot GTC section and set chart grid to full width (1fr)"
+Instruction: "Change grid columns to 1fr and remove the right-side overview card in Section 3"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 1123 | Tool: replace_file_content
+Description: "Add CSS styling for the toggle capsules inside quality index cards section"
+Instruction: "Insert styles for .ntb-toggle-capsules and .ntb-capsule before style end tag"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 1127 | Tool: replace_file_content
+Description: "Replace old LTC matrix table with interactive rank & analysis layout supporting toggles, search, and sorting"
+Instruction: "Replace old matrix card with premium analysis report container containing capsules toggle, search box, and interactive table headers"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 1131 | Tool: replace_file_content
+Description: "Replace old GTC matrix table with interactive rank & analysis layout supporting toggles, search, and sorting"
+Instruction: "Replace old GTC matrix card with premium analysis report container containing capsules toggle, search box, and interactive table headers"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 1155 | Tool: replace_file_content
+Description: "Define cachedNtbMatrixData and table filter/sorting states as global JS variables"
+Instruction: "Insert cachedNtbMatrixData, ntbGroupType, ntbSearchText, ntbSortCol, and ntbSortAsc global variables"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 1157 | Tool: replace_file_content
+Description: "Update renderNtbKpiCards to map day comparisons (n-1, n-3, cùng kỳ) and week comparisons (selected, prev, 2-weeks-ago) to new card elements"
+Instruction: "Replace metric card UI update functions to match the revised HTML structure of the comparison rows"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 1167 | Tool: replace_file_content
+Description: "Replace old trend card update function and matrix tables rendering logic with cachedNtbMatrixData rendering and analysis handlers"
+Instruction: "Remove updateTrendKPI, renderMatrixTable, and toggleAmGroup, replacing them with renderNtbAnalysisTable, setNtbGroupType, handleNtbSearch, and handleNtbSort. Update the fetch section of loadNtbSummaryData to call renderNtbAnalysisTable instead."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 1171 | Tool: replace_file_content
+Description: "Modify switchNtbRegion to trigger re-rendering of LTC and GTC analysis tables on region capsule change"
+Instruction: "Call renderNtbAnalysisTable for both ltc and gtc inside switchNtbRegion"
+Contains switchNtbRegion: True | Contains renderOprDashboard: False
+--> This log has the keys!
+  Target len: 516 (truncated: False)
+  Replacement len: 681 (truncated: False)
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 1177 | Tool: replace_file_content
+Description: "Add matchNtbRegion helper and filter rows by activeNtbRegion capsule in renderNtbAnalysisTable"
+Instruction: "Define matchNtbRegion function and insert filter checks in both po and am groups in renderNtbAnalysisTable"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 1405 | Tool: replace_file_content
+Description: "Modify targets in quality cards and rename % TTC to % ODR TTS in templates/index.html"
+Instruction: "Update target labels for LTC, GTC, and rename/retarget TTC to ODR TTS in quality-metric-cards"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 1407 | Tool: replace_file_content
+Description: "Rename % TTC header to % ODR TTS in overview table in templates/index.html"
+Instruction: "Change column header % TTC to % ODR TTS in table-overview-provinces"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 1411 | Tool: replace_file_content
+Description: "Update GTC, LTC, and ODR TTS targets and badge styling in overview table JS in templates/index.html"
+Instruction: "Update targets for GTC, LTC, and ODR TTS (TTC) in overview table row generator JS"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 1415 | Tool: replace_file_content
+Description: "Update target rates for ranking tables in templates/index.html"
+Instruction: "Change target variables for LTC and GTC ranking tables to 90% and 65%"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 1419 | Tool: replace_file_content
+Description: "Add Khánh Hòa, Đắk Nông, and Ninh Thuận to trend line charts and update color palette in templates/index.html"
+Instruction: "Add missing provinces to ApexCharts trends arrays and update colors palette to have 6 items"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 1441 | Tool: replace_file_content
+Description: "Remove target evaluation status column from LTC table in templates/index.html"
+Instruction: "Remove Đánh giá header column and change colspan from 8 to 7 in table-ntb-ltc-analysis"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 1445 | Tool: replace_file_content
+Description: "Remove target evaluation status column from GTC table in templates/index.html"
+Instruction: "Remove Đánh giá header column and change colspan from 8 to 7 in table-ntb-gtc-analysis"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 1449 | Tool: replace_file_content
+Description: "Remove status evaluation column and formatting in ranking table generator in templates/index.html"
+Instruction: "Remove status column, update colspans, remove statusBadge, and set PCT text color to default in renderNtbAnalysisTable function"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: 92726133-7314-4954-9f94-c885d0c26df2 | Step: 1453 | Tool: replace_file_content
+Description: "Remove target metrics for LTC and GTC cards, set to - in templates/index.html"
+Instruction: "Change target values for LTC and GTC cards to - in templates/index.html"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: a788e49e-ea70-44f0-b4f3-cca94ebf0728 | Step: 128 | Tool: replace_file_content
+Description: "Add custom CSS styles for login cards, forms, and user management tables in templates/index.html."
+Instruction: "Insert custom CSS style rules for Login and User Management."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: a788e49e-ea70-44f0-b4f3-cca94ebf0728 | Step: 134 | Tool: replace_file_content
+Description: "Insert the custom login overlay HTML and update the sidebar menu items with IDs and a logout button."
+Instruction: "Replace the body template section to include the login container and add IDs/logout button to the sidebar."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: a788e49e-ea70-44f0-b4f3-cca94ebf0728 | Step: 140 | Tool: replace_file_content
+Description: "Append User Management panel card to the end of tab-sync panel in templates/index.html."
+Instruction: "Insert User Management card inside tab-sync."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: a788e49e-ea70-44f0-b4f3-cca94ebf0728 | Step: 144 | Tool: replace_file_content
+Description: "Add credentials option to getFetchOptions helper in templates/index.html to support local cross-origin credentials."
+Instruction: "Modify getFetchOptions in templates/index.html."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: a788e49e-ea70-44f0-b4f3-cca94ebf0728 | Step: 148 | Tool: replace_file_content
+Description: "Implement checkUserRole, handleLoginSubmit, handleLogout, gateMenuTabs, and User CRUD operations in templates/index.html. Update DOMContentLoaded listener to only load data when successfully logged in."
+Instruction: "Replace checkUserRole and DOMContentLoaded listener with complete login, logout, permission gating, and user CRUD methods."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: a788e49e-ea70-44f0-b4f3-cca94ebf0728 | Step: 156 | Tool: replace_file_content
+Description: "Replace checkUserRole and DOMContentLoaded listener in templates/index.html to implement login, logout, sidebar tab gating, and user CRUD logic."
+Instruction: "Replace the old checkUserRole and window listener with the new auth and user management logic."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: a788e49e-ea70-44f0-b4f3-cca94ebf0728 | Step: 160 | Tool: replace_file_content
+Description: "Replace the old user role check script with comprehensive session, login, and user management logic in templates/index.html."
+Instruction: "Update checkUserRole function and DOMContentLoaded listener in templates/index.html."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: a788e49e-ea70-44f0-b4f3-cca94ebf0728 | Step: 334 | Tool: replace_file_content
+Description: "Replace Lucide Zap icon on the login screen with the actual GHN logo image"
+Instruction: "Replace Lucide Zap icon with GHN Logo img element"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: a788e49e-ea70-44f0-b4f3-cca94ebf0728 | Step: 794 | Tool: replace_file_content
+Description: "Update LTC card labels in index.html to remove '(Lần đầu)' and change the description to 'Tỷ lệ lấy hàng thành công'."
+Instruction: "Update LTC card title and subtext in templates/index.html"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: c0f7dc60-d2dc-43b5-8b85-c21aa7e425d6 | Step: 36 | Tool: write_to_file
+Description: "Created index.html with the sidebar slicers, dashboard panel components, charts placeholders, and modal."
+Instruction: None
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: c33e4038-d233-469a-b6a2-4e38c418d2dd | Step: 342 | Tool: replace_file_content
+Description: "Add filters, heatmap matrix, line trends chart, province daily chart, and growth treemap to the tab-volume-creation panel in index.html"
+Instruction: "Replace the tab-volume-creation panel with the expanded interactive filters, table, and charts containers"
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: c33e4038-d233-469a-b6a2-4e38c418d2dd | Step: 348 | Tool: replace_file_content
+Description: "Implement full client-side rendering logic for Volume Creation dashboard. This includes dynamically rendering pivot tables, a heatmap matrix table with HSL background colors, expand/collapse detail rows, line chart, bar chart, and growth treemap using ApexCharts, and supporting cascade dynamic filters."
+Instruction: "Replace renderVolumeCreation with the full upgraded implementation and related helper functions for Volume Creation tab rendering and filtering."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: c33e4038-d233-469a-b6a2-4e38c418d2dd | Step: 352 | Tool: replace_file_content
+Description: "Upgraded renderVolumeCreation function with cascade filtering, HSL heatmap matrix rendering, row expand/collapse, and ApexCharts line/bar/treemap."
+Instruction: "Replace renderVolumeCreation function with the new full implementation including cascaded filtering and charts rendering."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: ce12faa5-b6f2-42d1-9536-0b533bc66284 | Step: 108 | Tool: replace_file_content
+Description: "Update syncData() to poll /api/sync/status endpoint asynchronously. This shows real-time progress to the user and avoids HTTP timeout errors during file download and processing on Render."
+Instruction: "Replace syncData function with an asynchronous polling implementation."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: f27598f6-b781-4f7f-a9b9-0bb4477e2630 | Step: 105 | Tool: replace_file_content
+Description: "Update renderOverviewDashboard in templates/index.html to dynamically render OPR TTS delta values for n-1 and cùng kỳ Thứ comparisons."
+Instruction: "Dynamically render OPR comparison delta values on the dashboard."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: f27598f6-b781-4f7f-a9b9-0bb4477e2630 | Step: 186 | Tool: replace_file_content
+Description: "Update ntb-date-select dropdown population in templates/index.html to clear and reload with the new latest date during synchronization."
+Instruction: "Update ntb-date-select dropdown to clear and update on sync."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: f27598f6-b781-4f7f-a9b9-0bb4477e2630 | Step: 212 | Tool: replace_file_content
+Description: "Modify loadNtbSummaryData in templates/index.html to read the selected date, pass it to the backend api, and populate the ntb-date-select dropdown with the complete list of available dates."
+Instruction: "Populate the date dropdown with all available dates and pass selected date to api."
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------
+CONV: fbdb50fc-d00f-4a3d-bc35-31f5b42f07a4 | Step: 405 | Tool: write_to_file
+Description: "Creating Flask frontend template index.html with interactive charts, dynamic filters, pagination, and baseline comparison dropdown"
+Instruction: None
+Contains switchNtbRegion: False | Contains renderOprDashboard: False
+--------------------------------------------------

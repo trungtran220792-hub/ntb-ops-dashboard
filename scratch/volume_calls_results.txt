@@ -1,0 +1,42 @@
+renderVolumeCreation calls:
+          renderUnstablePo(unstableData);
+                renderOffSpe(offSpeData);
+                renderVolumeCreation(volCreationData);
+
+            } catch (err) {
+                console.error(err);
+                alert("Lỗi tải dữ liệu. Hãy đồng bộ lại dữ liệu!");
+            } finally {
+    
+--------------------------------------------------
+pulateVolFilters(data.filters, province, district, ward, po, customer, potype);
+                    renderVolumeCreation(data);
+                }
+            } catch (err) {
+                console.error("Lỗi khi lọc volume:", err);
+            } finally {
+                hideLoading();
+            
+--------------------------------------------------
+   hideLoading();
+                isVolFiltering = false;
+            }
+        }
+
+        function renderVolumeCreation(data) {
+            const dateEl = document.getElementById('volume-creation-report-date');
+            const kpiValEl = document.getElementById('kpi-volume-creation');
+           
+--------------------------------------------------
+
+Filter change handlers / load calls for volume:
+L1791: <li class="menu-item" id="nav-tab-volume-creation" onclick="switchTab('tab-volume-creation', this)">
+L2128: <div class="kpi-card info" id="kpi-volume-creation-card" style="cursor: pointer;" onclick="switchTab('tab-volume-creation', document.querySelector('[onclick*=\'tab-volume-creation\']'))">
+L2987: <select id="vol-filter-province" class="select-input" style="width: 100%;" onchange="onVolFilterChange('province')">
+L2993: <select id="vol-filter-district" class="select-input" style="width: 100%;" onchange="onVolFilterChange('district')">
+L2999: <select id="vol-filter-ward" class="select-input" style="width: 100%;" onchange="onVolFilterChange('ward')">
+L3005: <select id="vol-filter-po" class="select-input" style="width: 100%;" onchange="onVolFilterChange('po')">
+L3011: <select id="vol-filter-customer" class="select-input" style="width: 100%;" onchange="onVolFilterChange('customer')">
+L3017: <select id="vol-filter-potype" class="select-input" style="width: 100%;" onchange="onVolFilterChange('potype')">
+L3023: <select id="vol-filter-daterange" class="select-input" style="width: 100%;" onchange="onVolFilterChange('daterange')">
+L5336: function renderVolumeCreation(data) {

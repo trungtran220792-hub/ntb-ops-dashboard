@@ -1,0 +1,35 @@
+646: '        df_gtc = df_gtc.dropna(subset=["Volume"]).copy()\n'
+647: "        df_gtc['Leadtime'] = pd.to_numeric(df_gtc['Leadtime'], errors='coerce')\n"
+648: '        \n'
+649: '        df_ltc = df_ltc.dropna(subset=["Volume"]).copy()\n'
+650: "        df_ltc['Leadtime'] = pd.to_numeric(df_ltc['Leadtime'], errors='coerce')\n"
+651: '        \n'
+652: '        # Calculate overall metrics\n'
+653: "        df_gtc['% GTC'] = normalize_pct_col(df_gtc['% GTC'])\n"
+654: "        df_gtc['% Gán'] = normalize_pct_col(df_gtc['% Gán'])\n"
+655: "        df_gtc['% Chuyển trả'] = normalize_pct_col(df_gtc['% Chuyển trả'])\n"
+656: "        df_ltc['%LTC'] = normalize_pct_col(df_ltc['%LTC'])\n"
+657: '        \n'
+658: "        df_gtc['delivered_vol'] = df_gtc['Volume'] * df_gtc['% GTC']\n"
+659: "        df_gtc['assigned_vol'] = df_gtc['Volume'] * df_gtc['% Gán']\n"
+660: "        df_gtc['return_vol'] = df_gtc['Volume'] * df_gtc['% Chuyển trả']\n"
+661: '        \n'
+662: "        if 'Sản Lượng Lấy Thành Công' in df_ltc.columns:\n"
+663: "            df_ltc['Sản Lượng Lấy Thành Công'] = pd.to_numeric(df_ltc['Sản Lượng Lấy Thành Công'], errors='coerce').fillna(0)\n"
+664: "            df_ltc['ltc_vol'] = df_ltc['Sản Lượng Lấy Thành Công']\n"
+665: '        else:\n'
+666: "                    # Center mapping or read from column K ('Sản Lượng Lấy Thành Công') if it exists\n"
+667: '        df_ltc.columns = [c.strip() for c in df_ltc.columns]\n'
+668: "        if 'Sản Lượng Lấy Thành Công' in df_ltc.columns:\n"
+669: "            df_ltc['ltc_vol'] = pd.to_numeric(df_ltc['Sản Lượng Lấy Thành Công'], errors='coerce').fillna(df_ltc['Volume'] * df_ltc['%LTC'])\n"
+670: '        else:\n'
+671: "            df_ltc['ltc_vol'] = df_ltc['Volume'] * df_ltc['%LTC']\n"
+672: '        \n'
+673: '        # Align dates: ensure df_ltc contains rows for any dates present in df_gtc to avoid null/zero reporting\n'
+674: '        if len(df_gtc) > 0 and len(df_ltc) > 0:\n'
+675: "            gtc_dates = df_gtc['Time'].dropna().unique()\n"
+676: "            ltc_dates = df_ltc['Time'].dropna().unique()\n"
+677: '            missing_ltc_dates = [d for d in gtc_dates if d not in ltc_dates]\n'
+678: '            if missing_ltc_dates and len(ltc_dates) > 0:\n'
+679: '                try:\n'
+680: "                    ltc_dates_sorted = sorted(ltc_dates, key=lambda x: pd.to_datetime(str(x).split(' - ')[0]))\n"

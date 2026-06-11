@@ -1,0 +1,15 @@
+def get_sync_status():
+    global SYNC_STATUS
+    return jsonify(SYNC_STATUS)
+
+
+@app.route('/api/nhan-su', methods=['GET'])
+@requires_permission('tab-dashboard')
+def api_nhan_su():
+    try:
+        ns_path = resolve_path('ops_nhan_su.csv', write=False)
+        if not os.path.exists(ns_path):
+            return jsonify({"error": "Không tìm thấy file ops_nhan_su.csv. Vui lòng thực hiện Đồng bộ dữ liệu."}), 404
+            
+        df_ns = safe_read_csv(ns_path)
+        if df_ns is None or df_ns.empty:

@@ -1,0 +1,100 @@
+L1453: def process_off_spe():
+L1454:     file_path = resolve_path('off_tuyen_spe.xlsx', write=False)
+L1455:     if not os.path.exists(file_path):
+L1456:         return {"error": f"Không tìm thấy file: {os.path.basename(file_path)}. Vui lòng đồng bộ hoặc tải lên."}
+L1457:     
+L1458:     try:
+L1459:         with pd.ExcelFile(file_path) as xls_meta:
+L1460:             sheet_names = xls_meta.sheet_names
+L1461:             
+L1462:         sheet_name = None
+L1463:         for s in sheet_names:
+L1464:             s_lower = s.lower()
+L1465:             if "off" in s_lower:
+L1466:                 sheet_name = s
+L1467:                 break
+L1468:         if not sheet_name:
+L1469:             sheet_name = sheet_names[0]
+L1470:             
+L1471:         df_raw = load_sheet_cached('off_tuyen_spe.xlsx', sheet_name, lambda p: pd.read_excel(p, sheet_name=sheet_name))
+L1472:         
+L1473:         # Remove empty rows or rows that have all NaN
+L1474:         df_raw = df_raw.dropna(how='all')
+L1475:         
+L1476:         # Find columns dynamically
+L1477:         col_tinh = next((c for c in df_raw.columns if "tỉnh" in c.lower() or "tinh" in c.lower() or "province" in c.lower()), None)
+L1478:         col_quan = next((c for c in df_raw.columns if "quận" in c.lower() or "huyện" in c.lower() or "quan" in c.lower() or "huyen" in c.lower() or "district" in c.lower()), None)
+L1479:         col_phuong = next((c for c in df_raw.columns if "phường" in c.lower() or "xã" in c.lower() or "phuong" in c.lower() or "xa" in c.lower() or "ward" in c.lower()), None)
+L1480:         col_bc = next((c for c in df_raw.columns if "bưu cục" in c.lower() or "buu cuc" in c.lower() or "post" in c.lower() or "bc" in c.lower()), None)
+L1481:         col_ketqua = next((c for c in df_raw.columns if "kết quả" in c.lower() or "ket qua" in c.lower() or "update" in c.lower()), None)
+L1482:         col_capdown = next((c for c in df_raw.columns if "cap" in c.lower() or "down" in c.lower() or "%" in c.lower()), None)
+L1483:         col_time_off = next((c for c in df_raw.columns if "thời gian tắt" in c.lower() or "thoi gian tat" in c.lower() or "tg tắt" in c.lower() or "tg tat" in c.lower()), None)
+L1484:         col_time_on = next((c for c in df_raw.columns if "thời gian mở" in c.lower() or "thoi gian mo" in c.lower() or "tg mở" in c.lower() or "tg mo" in c.lower()), None)
+L1485:         col_note = next((c for c in df_raw.columns if "note" in c.lower() or "ghi chú" in c.lower() or "ghi chu" in c.lower()), None)
+L1486:         
+L1487:         # Fallback to indices if columns not found dynamically
+L1488:         cols = list(df_raw.columns)
+L1489:         if not col_tinh and len(cols) > 0: col_tinh = cols[0]
+L1490:         if not col_quan and len(cols) > 1: col_quan = cols[1]
+L1491:         if not col_phuong and len(cols) > 2: col_phuong = cols[2]
+L1492:         if not col_bc and len(cols) > 3: col_bc = cols[3]
+L1493:         if not col_ketqua and len(cols) > 4: col_ketqua = cols[4]
+L1494:         if not col_capdown and len(cols) > 5: col_capdown = cols[5]
+L1495:         if not col_time_off and len(cols) > 6: col_time_off = cols[6]
+L1496:         if not col_time_on and len(cols) > 7: col_time_on = cols[7]
+L1497:         if not col_note and len(cols) > 8: col_note = cols[8]
+L1498:         
+L1499:         df_table = df_raw.dropna(subset=[col_tinh, col_bc], how='all')
+L1500:         
+L1501:         processed_records = []
+L1502:         total_off = 0
+L1503:         total_pending = 0
+L1504:         
+L1505:         # Map standard dates if they look like timestamp objects
+L1506:         def clean_date_str(val):
+L1507:             if pd.isna(val):
+L1508:                 return ""
+L1509:             if isinstance(val, (datetime.datetime, pd.Timestamp)):
+L1510:                 return val.strftime("%d-%m-%Y")
+L1511:             val_str = str(val).strip()
+L1512:             # If timestamp string, format it
+L1513:             if "00:00:00" in val_str:
+L1514:                 val_str = val_str.replace(" 00:00:00", "")
+L1515:             return val_str
+L1516:             
+L1517:         for _, r in df_table.iterrows():
+L1518:             tinh_val = str(r[col_tinh]).strip() if col_tinh and pd.notna(r[col_tinh]) else "Không xác định"
+L1519:             quan_val = str(r[col_quan]).strip() if col_quan and pd.notna(r[col_quan]) else ""
+L1520:             phuong_val = str(r[col_phuong]).strip() if col_phuong and pd.notna(r[col_phuong]) else ""
+L1521:             bc_val = str(r[col_bc]).strip() if col_bc and pd.notna(r[col_bc]) else ""
+L1522:             
+L1523:             # Status:
+L1524:             # - Column E has "duyệt" => Đang OFF
+L1525:             # - Column E empty => Đang chờ duyệt
+L1526:             kq_raw = r[col_ketqua] if col_ketqua else ""
+L1527:             kq_val = str(kq_raw).strip().lower() if pd.notna(kq_raw) else ""
+L1528:             
+L1529:             if pd.isna(kq_raw) or not kq_val:
+L1530:                 status_val = "Đang chờ duyệt"
+L1531:                 total_pending += 1
+L1532:             elif "duyệt" in kq_val:
+L1533:                 status_val = "Đang OFF"
+L1534:                 total_off += 1
+L1535:             else:
+L1536:                 status_val = "Đang chờ duyệt"
+L1537:                 total_pending += 1
+L1538:                 
+L1539:             capdown_val = ""
+L1540:             if col_capdown and pd.notna(r[col_capdown]):
+L1541:                 try:
+L1542:                     val_float = float(r[col_capdown])
+L1543:                     if val_float <= 1.0:
+L1544:                         capdown_val = f"{int(val_float * 100)}%"
+L1545:                     else:
+L1546:                         capdown_val = f"{int(val_float)}%"
+L1547:                 except:
+L1548:                     capdown_val = str(r[col_capdown]).strip()
+L1549:                     
+L1550:             time_off_val = clean_date_str(r[col_time_off]) if col_time_off else ""
+L1551:             time_on_val = clean_date_str(r[col_time_on]) if col_time_on else ""
+L1552:             note_val = str(r[col_note]).strip() if col_note and pd.notna(r[col_note]) else ""

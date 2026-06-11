@@ -1,0 +1,13 @@
+L1314: # Ensure we have clean mappings from co_cau_ntb.xlsx
+L1319: co_cau_path = resolve_path('co_cau_ntb.xlsx', write=False)
+L1322: df_cc = load_sheet_cached('co_cau_ntb.xlsx', 'Sheet1', lambda p: pd.read_excel(p, sheet_name='Sheet1'))
+L1344: print(f"Error reading co_cau_ntb.xlsx in process_unstable_po: {e}")
+L2022: # Auto-update co_cau_ntb.xlsx from cached 'Cơ cấu' sheet of Báo cáo Vận hành
+L2041: co_cau_dest = resolve_path('co_cau_ntb.xlsx', write=True)
+L2043: print("Successfully auto-updated co_cau_ntb.xlsx from Ops report.")
+L2046: print(f"Error auto-updating co_cau_ntb.xlsx: {clean_err}")
+L2433: 'co_cau_ntb.xlsx',
+L2466: 'co_cau_ntb.xlsx',
+L3490: path = resolve_path('co_cau_ntb.xlsx', write=False)
+L3492: return jsonify({"error": "Không tìm thấy file co_cau_ntb.xlsx"})
+L3518: 'co_cau_ntb.xlsx',

@@ -1,6 +1,12 @@
+import sys
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8')
+
 import os
 from dotenv import load_dotenv
-load_dotenv()
+load_dotenv(override=True)
 import json
 import datetime
 import pandas as pd
@@ -48,6 +54,9 @@ app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.secret_key = os.environ.get('SECRET_KEY', 'ntb-ops-dashboard-secret-key-2026-xyz-987')
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=30)
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SECURE'] = bool(os.environ.get("VERCEL"))
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 CACHE_LOCK = threading.RLock()
 
 # Helper functions to load/save users with permissions
@@ -199,6 +208,61 @@ def with_lock(lock):
         return wrapper
     return decorator
 
+RATE_LIMIT_CACHE = {}
+RATE_LIMIT_LOCK = threading.Lock()
+
+def check_rate_limit(key, limit=5, period=60):
+    import time
+    with RATE_LIMIT_LOCK:
+        now = time.time()
+        for k in list(RATE_LIMIT_CACHE.keys()):
+            RATE_LIMIT_CACHE[k] = [t for t in RATE_LIMIT_CACHE[k] if now - t < period]
+            if not RATE_LIMIT_CACHE[k]:
+                del RATE_LIMIT_CACHE[k]
+                
+        if key not in RATE_LIMIT_CACHE:
+            RATE_LIMIT_CACHE[key] = []
+            
+        timestamps = RATE_LIMIT_CACHE[key]
+        if len(timestamps) >= limit:
+            oldest = timestamps[0]
+            retry_after = int(period - (now - oldest))
+            if retry_after <= 0:
+                retry_after = 1
+            return False, retry_after
+            
+        RATE_LIMIT_CACHE[key].append(now)
+        return True, 0
+
+@app.before_request
+def csrf_referer_check():
+    if request.method in ['POST', 'PUT', 'PATCH', 'DELETE']:
+        if request.path == '/api/login':
+            return
+            
+        origin = request.headers.get('Origin')
+        referer = request.headers.get('Referer')
+        host_url = request.host_url
+        
+        is_valid = False
+        
+        if origin:
+            o_clean = origin.rstrip('/')
+            h_clean = host_url.rstrip('/')
+            if o_clean == h_clean or '127.0.0.1' in o_clean or 'localhost' in o_clean:
+                is_valid = True
+        elif referer:
+            if referer.startswith(host_url) or '127.0.0.1' in referer or 'localhost' in referer:
+                is_valid = True
+        else:
+            if 'username' in session:
+                is_valid = False
+            else:
+                is_valid = True
+                
+        if not is_valid and 'username' in session:
+            return jsonify({"error": "Yêu cầu bị từ chối do vi phạm quy tắc bảo mật CSRF (Origin/Referer không hợp lệ)."}), 403
+
 @app.after_request
 def add_security_headers(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
@@ -239,70 +303,156 @@ def resolve_path(filename, write=False):
 
 WORKSPACE_DIR = os.getcwd()
 
-def load_config():
-    defaults = {
-        "ops_url": os.environ.get("OPS_URL", ""),
-        "opr_url": os.environ.get("OPR_URL", ""),
-        "aging_url": os.environ.get("AGING_URL", ""),
-        "treo_url": os.environ.get("TREO_URL", ""),
-        "bat_on_url": os.environ.get("BAT_ON_URL", ""),
-        "off_spe_url": os.environ.get("OFF_SPE_URL", ""),
-        "tao_don_url": os.environ.get("TAO_DON_URL", "")
-    }
-    
-    config = {}
-    config_file = resolve_path('config.json', write=False)
-    if os.path.exists(config_file):
+# ==========================================
+# DATABASE CACHE MANAGEMENT (POSTGRESQL STORAGE)
+# ==========================================
+_db_engine = None
+def get_db_engine():
+    global _db_engine
+    if _db_engine is not None:
+        return _db_engine
+    db_url = os.environ.get("DATABASE_URL") or os.environ.get("POSTGRES_URL")
+    if db_url:
+        db_url = db_url.strip()
+        # Ensure correct driver for PostgreSQL in SQLAlchemy
+        if db_url.startswith("postgres://"):
+            db_url = db_url.replace("postgres://", "postgresql://", 1)
         try:
-            with open(config_file, 'r', encoding='utf-8') as f:
-                config = json.load(f)
+            from sqlalchemy import create_engine
+            connect_args = {}
+            if "postgresql" in db_url or "postgres" in db_url:
+                connect_args["connect_timeout"] = 5
+            _db_engine = create_engine(
+                db_url,
+                pool_pre_ping=True,
+                connect_args=connect_args
+            )
+            print("Successfully initialized database engine.")
+            return _db_engine
         except Exception as e:
-            print(f"Error loading config.json: {e}")
+            print(f"Error initializing DB engine: {e}")
+    return None
+
+def save_df_to_db(df, filename):
+    if df is None:
+        return False
+    engine = get_db_engine()
+    if engine is None:
+        return False
+    table_name = filename.lower().replace(".csv", "").replace(" ", "_")
+    try:
+        df.to_sql(table_name, engine, if_exists="replace", index=False)
+        print(f"Successfully saved {filename} to database table: {table_name}")
+        return True
+    except Exception as e:
+        print(f"Error saving DataFrame {filename} to DB: {e}")
+        return False
+
+def load_df_from_db(filename):
+    engine = get_db_engine()
+    if engine is None:
+        return None
+    table_name = filename.lower().replace(".csv", "").replace(" ", "_")
+    try:
+        df = pd.read_sql(f"SELECT * FROM {table_name}", engine)
+        print(f"Successfully loaded {filename} from database table: {table_name}")
+        return df
+    except Exception as e:
+        print(f"Error loading DataFrame {filename} from DB (falling back): {e}")
+        return None
+
+def save_json_to_db(data, filename):
+    engine = get_db_engine()
+    if engine is None:
+        return False
+    table_name = filename.lower().replace(".json", "").replace(" ", "_")
+    try:
+        import json
+        json_str = json.dumps(data, ensure_ascii=False)
+        df = pd.DataFrame([{"json_data": json_str}])
+        df.to_sql(table_name, engine, if_exists="replace", index=False)
+        print(f"Successfully saved {filename} to database table: {table_name}")
+        return True
+    except Exception as e:
+        print(f"Error saving JSON {filename} to DB: {e}")
+        return False
+
+def load_json_from_db(filename):
+    engine = get_db_engine()
+    if engine is None:
+        return None
+    table_name = filename.lower().replace(".json", "").replace(" ", "_")
+    try:
+        df = pd.read_sql(f"SELECT json_data FROM {table_name} LIMIT 1", engine)
+        if not df.empty:
+            import json
+            json_str = df.iloc[0]["json_data"]
+            return json.loads(json_str)
+        return None
+    except Exception as e:
+        print(f"Error loading JSON {filename} from DB (falling back): {e}")
+        return None
+
+
+def load_config():
+    config = {}
+    db_config = load_json_from_db('config.json')
+    if db_config:
+        config = db_config
+    else:
+        config_file = resolve_path('config.json', write=False)
+        if os.path.exists(config_file):
+            try:
+                with open(config_file, 'r', encoding='utf-8') as f:
+                    config = json.load(f)
+            except Exception as e:
+                print(f"Error loading config.json: {e}")
             
     final_config = {}
-    keys_map = {
-        "ops_url": "OPS_URL",
-        "opr_url": "OPR_URL",
-        "aging_url": "AGING_URL",
-        "treo_url": "TREO_URL",
-        "bat_on_url": "BAT_ON_URL",
-        "off_spe_url": "OFF_SPE_URL",
-        "tao_don_url": "TAO_DON_URL"
-    }
-    for k, env_name in keys_map.items():
-        val = os.environ.get(env_name, "")
-        if not val.strip():
-            val = config.get(k, "")
-        final_config[k] = val.strip()
-        
+    val = os.environ.get("CONSOLIDATED_URL", "")
+    if not val.strip():
+        val = config.get("consolidated_url", "")
+    final_config["consolidated_url"] = val.strip()
+
+    # Telegram Config
+    bot_token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+    if not bot_token.strip():
+        bot_token = config.get("telegram_bot_token", "")
+    final_config["telegram_bot_token"] = bot_token.strip()
+
+    chat_id = os.environ.get("TELEGRAM_CHAT_ID", "")
+    if not chat_id.strip():
+        chat_id = config.get("telegram_chat_id", "")
+    final_config["telegram_chat_id"] = chat_id.strip()
+
+    # Gemini Config
+    gemini_key = os.environ.get("GEMINI_API_KEY", "")
+    if not gemini_key.strip():
+        gemini_key = config.get("gemini_api_key", "")
+    final_config["gemini_api_key"] = gemini_key.strip()
+
     return final_config
 
-def save_config(config):
+def save_config(new_config):
     try:
+        # Load current config to avoid overwriting missing keys
+        current_config = load_config()
+        
         clean_config = {
-            "ops_url": config.get("ops_url", "").strip(),
-            "opr_url": config.get("opr_url", "").strip(),
-            "aging_url": config.get("aging_url", "").strip(),
-            "treo_url": config.get("treo_url", "").strip(),
-            "bat_on_url": config.get("bat_on_url", "").strip(),
-            "off_spe_url": config.get("off_spe_url", "").strip(),
-            "tao_don_url": config.get("tao_don_url", "").strip()
+            "consolidated_url": new_config.get("consolidated_url", current_config.get("consolidated_url", "")).strip(),
+            "telegram_bot_token": new_config.get("telegram_bot_token", current_config.get("telegram_bot_token", "")).strip(),
+            "telegram_chat_id": new_config.get("telegram_chat_id", current_config.get("telegram_chat_id", "")).strip(),
+            "gemini_api_key": new_config.get("gemini_api_key", current_config.get("gemini_api_key", "")).strip()
         }
         
-        # 1. Update in-memory os.environ
-        keys_map = {
-            "ops_url": "OPS_URL",
-            "opr_url": "OPR_URL",
-            "aging_url": "AGING_URL",
-            "treo_url": "TREO_URL",
-            "bat_on_url": "BAT_ON_URL",
-            "off_spe_url": "OFF_SPE_URL",
-            "tao_don_url": "TAO_DON_URL"
-        }
-        for k, env_name in keys_map.items():
-            os.environ[env_name] = clean_config[k]
+        os.environ["CONSOLIDATED_URL"] = clean_config["consolidated_url"]
+        os.environ["TELEGRAM_BOT_TOKEN"] = clean_config["telegram_bot_token"]
+        os.environ["TELEGRAM_CHAT_ID"] = clean_config["telegram_chat_id"]
+        os.environ["GEMINI_API_KEY"] = clean_config["gemini_api_key"]
+        
+        # Save to DB first if database is available
+        save_json_to_db(clean_config, 'config.json')
             
-        # 2. Update .env file if it exists and is writeable, otherwise update config.json
         env_file = os.path.join(WORKSPACE_DIR, '.env')
         if not os.environ.get("VERCEL") and os.path.exists(env_file) and os.access(env_file, os.W_OK):
             lines = []
@@ -310,21 +460,26 @@ def save_config(config):
                 lines = f.readlines()
                 
             new_lines = []
-            keys_written = set()
+            keys_to_write = {
+                "CONSOLIDATED_URL": clean_config["consolidated_url"],
+                "TELEGRAM_BOT_TOKEN": clean_config["telegram_bot_token"],
+                "TELEGRAM_CHAT_ID": clean_config["telegram_chat_id"],
+                "GEMINI_API_KEY": clean_config["gemini_api_key"]
+            }
+            
             for line in lines:
-                matched = False
-                for k, env_name in keys_map.items():
-                    if line.strip().startswith(f"{env_name}="):
-                        new_lines.append(f'{env_name}="{clean_config[k]}"\n')
-                        keys_written.add(env_name)
-                        matched = True
+                written = False
+                for k, v in keys_to_write.items():
+                    if line.strip().startswith(f"{k}="):
+                        new_lines.append(f'{k}="{v}"\n')
+                        del keys_to_write[k]
+                        written = True
                         break
-                if not matched:
+                if not written:
                     new_lines.append(line)
                     
-            for k, env_name in keys_map.items():
-                if env_name not in keys_written:
-                    new_lines.append(f'{env_name}="{clean_config[k]}"\n')
+            for k, v in keys_to_write.items():
+                new_lines.append(f'{k}="{v}"\n')
                     
             with open(env_file, 'w', encoding='utf-8') as f:
                 f.writelines(new_lines)
@@ -338,6 +493,27 @@ def save_config(config):
         print(f"Error saving config: {e}")
         return False
 
+ALLOWED_SPREADSHEET_IDS = {
+    "1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ", # Consolidated URL
+    "1DAwY-46twFrHIs77R4p4IMuIZ6JTE-e58Aj-9Kcr5Jk", # ops_url
+    "1B-QCbEnPpILFFEWPYheGdmkgYV9gSf4lAyQMlhzwOCM", # opr_url
+    "1WCzgao34cA_SttyB9ytHfE1qKTNl_3iFqDbEfw3lbyU", # aging_url
+    "1MjLW8NbD5ZjoOdd90myGv0i1NGAtlvScxebfAXMM1j8", # treo_url
+    "1lmQv8KwHJzDFs_RMz64ydu4SOmG3M1YAzILNFGtzFec", # bat_on_url
+    "1PjzFqJO-wkQ8SNsPHD721_CbPr6c_ArZKuGGU6KqDZg", # off_spe_url
+    "1OygEPTn6Qu8okwAqpbx_RBiYQr1cfpO5hiaxqu4AMNE"  # tao_don_url
+}
+
+def is_allowed_spreadsheet_url(url):
+    if not url or not url.strip():
+        return True # Empty is allowed (falls back to local files)
+    url = url.strip()
+    match = re.search(r'/spreadsheets/d/([a-zA-Z0-9-_]+)', url)
+    if not match:
+        return False
+    spreadsheet_id = match.group(1)
+    return spreadsheet_id in ALLOWED_SPREADSHEET_IDS
+
 def download_google_sheet(url, output_path):
     if not url or not url.strip():
         return True, "Không có link, sử dụng file local."
@@ -345,6 +521,9 @@ def download_google_sheet(url, output_path):
     url = url.strip()
     if not (url.startswith("https://docs.google.com/spreadsheets/") or url.startswith("http://docs.google.com/spreadsheets/")):
         return False, "Link không hợp lệ. Phải bắt đầu bằng https://docs.google.com/spreadsheets/"
+        
+    if not is_allowed_spreadsheet_url(url):
+        return False, "Spreadsheet ID không nằm trong danh sách được cho phép (SSRF Prevention)."
         
     match = re.search(r'/spreadsheets/d/([a-zA-Z0-9-_]+)', url)
     if not match:
@@ -366,6 +545,89 @@ def download_google_sheet(url, output_path):
         return True, "Tải thành công."
     except Exception as e:
         return False, mask_url(f"Lỗi kết nối khi tải: {str(e)}")
+
+# Safe AM Name Standardization
+def standardize_am_names(df):
+    if df is not None:
+        for col in ['AM', 'am_name', 'final_am', 'mapped_am']:
+            if col in df.columns:
+                try:
+                    df[col] = df[col].apply(lambda x: str(x).strip() if pd.notnull(x) else x)
+                    df[col] = df[col].replace({
+                        'Huỳnh Tấn Hiền': 'Huỳnh Tấn Hiển',
+                        'Huỳnh Tấn HIền': 'Huỳnh Tấn Hiển',
+                        'Huỳnh Tấn Hiến': 'Huỳnh Tấn Hiển',
+                        'Huỳnh Tấn HIển': 'Huỳnh Tấn Hiển',
+                        'Nguyễn Tiến Lực ': 'Nguyễn Tiến Lực',
+                        'Trần Công Hậu ': 'Trần Công Hậu'
+                    })
+                except Exception as e:
+                    print(f"Error standardizing AM names in column {col}: {e}")
+
+# Safe CSV reader and percentage helpers
+def safe_read_csv(filepath, **kwargs):
+    filename = os.path.basename(filepath)
+    # 1. Try to load from database first
+    db_df = load_df_from_db(filename)
+    if db_df is not None:
+        standardize_am_names(db_df)
+        return db_df
+        
+    # 2. Fall back to local file
+    if not os.path.exists(filepath):
+        return None
+    for encoding in ['utf-8', 'utf-8-sig', 'latin-1', 'cp1252']:
+        try:
+            df = pd.read_csv(filepath, encoding=encoding, **kwargs)
+            standardize_am_names(df)
+            return df
+        except Exception as e:
+            last_err = e
+            continue
+    print(f"Error reading CSV {filepath}: {last_err}")
+    return None
+
+def normalize_pct_col(series):
+    def convert_val(val):
+        if pd.isna(val):
+            return 0.0
+        val_str = str(val).strip()
+        if not val_str:
+            return 0.0
+        is_pct = False
+        if val_str.endswith('%'):
+            val_str = val_str[:-1]
+            is_pct = True
+        try:
+            f_val = float(val_str)
+            if is_pct:
+                return f_val / 100.0
+            if f_val > 1.0:
+                return f_val / 100.0
+            return f_val
+        except:
+            return 0.0
+    return series.apply(convert_val)
+
+def parse_unstable_pct(val):
+    if pd.isna(val):
+        return 0.0
+    val_str = str(val).strip()
+    if not val_str:
+        return 0.0
+    is_pct = False
+    if val_str.endswith('%'):
+        val_str = val_str[:-1]
+        is_pct = True
+    try:
+        f_val = float(val_str)
+        if is_pct:
+            return f_val
+        if f_val <= 1.0 and f_val > 0.0:
+            return f_val * 100.0
+        return f_val
+    except:
+        return 0.0
 
 # Helper function to clean strings for merge
 def clean_str(val):
@@ -390,213 +652,229 @@ def clean_nan(obj):
         return None
     return obj
 
-def read_ops_sheet(xls, sheet_type):
-    sheet_names_lower = [s.strip().lower() for s in xls.sheet_names]
+
+def clean_ops_df(df, sheet_type):
+    if df is None:
+        return None
+    df = df.copy()
+    
+    # Strip column names
+    df.columns = [str(c).strip() for c in df.columns]
+    cols_lower = {c.lower(): c for c in df.columns}
     
     if sheet_type == "gtc":
-        for candidate in ["datagtc", "data"]:
-            if candidate in sheet_names_lower:
-                idx = sheet_names_lower.index(candidate)
-                df = pd.read_excel(xls, sheet_name=xls.sheet_names[idx])
-                
-                # Normalize column names in df to standard GTC ones
-                cols_lower = {c.strip().lower(): c for c in df.columns}
-                rename_map = {}
-                core_gtc_cols = {
-                    'cấp quản lý': 'Cấp Quản Lý',
-                    'chi tiết': 'Chi tiết',
-                    'loại hàng': 'Loại Hàng',
-                    'time': 'Time',
-                    'volume': 'Volume',
-                    '% gán': '% Gán',
-                    '% gtc': '% GTC',
-                    '% chuyển trả': '% Chuyển trả',
-                    'leadtime': 'Leadtime',
-                    'am': 'AM',
-                    'tỉnh': 'Tỉnh'
-                }
-                for k, standard_name in core_gtc_cols.items():
-                    if k in cols_lower and cols_lower[k] != standard_name:
-                        rename_map[cols_lower[k]] = standard_name
-                if rename_map:
-                    df = df.rename(columns=rename_map)
-                return df
-        raise ValueError(f"Không tìm thấy sheet GTC (cần Datagtc hoặc Data) trong file. Các sheet hiện có: {xls.sheet_names}")
+        rename_map = {}
+        core_gtc_cols = {
+            'cấp quản lý': 'Cấp Quản Lý',
+            'chi tiết': 'Chi tiết',
+            'loại hàng': 'Loại Hàng',
+            'time': 'Time',
+            'volume': 'Volume',
+            '% gán': '% Gán',
+            '% gtc': '% GTC',
+            '% chuyển trả': '% Chuyển trả',
+            'leadtime': 'Leadtime',
+            'am': 'AM',
+            'tỉnh': 'Tỉnh'
+        }
+        for k, standard_name in core_gtc_cols.items():
+            if k in cols_lower and cols_lower[k] != standard_name:
+                rename_map[cols_lower[k]] = standard_name
+        if rename_map:
+            df = df.rename(columns=rename_map)
+        return df
         
     elif sheet_type == "ltc":
-        # First priority: look for dataltc, rawltc, datalts, ltc
-        for candidate in ["dataltc", "rawltc", "datalts", "ltc"]:
-            if candidate in sheet_names_lower:
-                idx = sheet_names_lower.index(candidate)
-                df = pd.read_excel(xls, sheet_name=xls.sheet_names[idx])
-                
-                cols_lower = {c.strip().lower(): c for c in df.columns}
-                rename_map = {}
-                
-                # Check for shifted column signature in dataltc style
-                if 'loại hàng' in cols_lower and 'time' in cols_lower and 'volume' in cols_lower and '% gán' in cols_lower:
-                    rename_map[cols_lower['loại hàng']] = 'Time'
-                    rename_map[cols_lower['time']] = 'Volume'
-                    rename_map[cols_lower['volume']] = '% Gán'
-                    rename_map[cols_lower['% gán']] = '%LTC'
-                    if '% ltc' in cols_lower:
-                        rename_map[cols_lower['% ltc']] = '%LC'
-                    elif '%ltc' in cols_lower:
-                        rename_map[cols_lower['%ltc']] = '%LC'
+        rename_map = {}
+        # Check for shifted column signature in dataltc style
+        if 'loại hàng' in cols_lower and 'time' in cols_lower and 'volume' in cols_lower and '% gán' in cols_lower:
+            rename_map[cols_lower['loại hàng']] = 'Time'
+            rename_map[cols_lower['time']] = 'Volume'
+            rename_map[cols_lower['volume']] = '% Gán'
+            rename_map[cols_lower['% gán']] = '%LTC'
+            if '% ltc' in cols_lower:
+                rename_map[cols_lower['% ltc']] = '%LC'
+            elif '%ltc' in cols_lower:
+                rename_map[cols_lower['%ltc']] = '%LC'
+            
+            other_cols = {
+                'cấp quản lý': 'Cấp quản lý',
+                'chi tiết': 'Chi tiết',
+                'leadtime': 'Leadtime'
+            }
+            for k, standard_name in other_cols.items():
+                if k in cols_lower and cols_lower[k] != standard_name:
+                    rename_map[cols_lower[k]] = standard_name
+        else:
+            # Normalize core columns
+            core_ltc_cols = {
+                'cấp quản lý': 'Cấp quản lý',
+                'chi tiết': 'Chi tiết',
+                'ca': 'Ca',
+                'time': 'Time',
+                'volume': 'Volume',
+                'leadtime': 'Leadtime'
+            }
+            for k, standard_name in core_ltc_cols.items():
+                if k in cols_lower and cols_lower[k] != standard_name:
+                    rename_map[cols_lower[k]] = standard_name
                     
-                    other_cols = {
-                        'cấp quản lý': 'Cấp quản lý',
-                        'chi tiết': 'Chi tiết',
-                        'leadtime': 'Leadtime'
-                    }
-                    for k, standard_name in other_cols.items():
-                        if k in cols_lower and cols_lower[k] != standard_name:
-                            rename_map[cols_lower[k]] = standard_name
-                else:
-                    # Normalize core columns
-                    core_ltc_cols = {
-                        'cấp quản lý': 'Cấp quản lý',
-                        'chi tiết': 'Chi tiết',
-                        'ca': 'Ca',
-                        'time': 'Time',
-                        'volume': 'Volume',
-                        'leadtime': 'Leadtime'
-                    }
-                    for k, standard_name in core_ltc_cols.items():
-                        if k in cols_lower and cols_lower[k] != standard_name:
-                            rename_map[cols_lower[k]] = standard_name
-                            
-                    # Rename `% gtc` -> `%LTC` or `% ltc` -> `%LTC` if %ltc is not present
-                    if '%ltc' not in cols_lower:
-                        if '% ltc' in cols_lower:
-                            rename_map[cols_lower['% ltc']] = '%LTC'
-                        elif '% gtc' in cols_lower:
-                            rename_map[cols_lower['% gtc']] = '%LTC'
-                    else:
-                        rename_map[cols_lower['%ltc']] = '%LTC'
-                        
-                    # Rename `% lc` -> `%LC` or `% chuyển trả` -> `%LC` if %lc is not present
-                    if '%lc' not in cols_lower:
-                        if '% lc' in cols_lower:
-                            rename_map[cols_lower['% lc']] = '%LC'
-                        elif '% chuyển trả' in cols_lower:
-                            rename_map[cols_lower['% chuyển trả']] = '%LC'
-                    else:
-                        rename_map[cols_lower['%lc']] = '%LC'
-                        
-                    # Rename `% gán` -> `%Gán` if %gán is not present
-                    if '%gán' not in cols_lower:
-                        if '% gán' in cols_lower:
-                            rename_map[cols_lower['% gán']] = '%Gán'
-                    else:
-                        rename_map[cols_lower['%gán']] = '%Gán'
-                    
-                if rename_map:
-                    df = df.rename(columns=rename_map)
-                return df
+            if '%ltc' not in cols_lower:
+                if '% ltc' in cols_lower:
+                    rename_map[cols_lower['% ltc']] = '%LTC'
+                elif '% gtc' in cols_lower:
+                    rename_map[cols_lower['% gtc']] = '%LTC'
+            else:
+                rename_map[cols_lower['%ltc']] = '%LTC'
                 
-        # Second priority fallback: any sheet with "ltc" in its name
-        for s in xls.sheet_names:
-            if "ltc" in s.lower():
-                df = pd.read_excel(xls, sheet_name=s)
-                cols_lower = {c.strip().lower(): c for c in df.columns}
-                rename_map = {}
+            if '%lc' not in cols_lower:
+                if '% lc' in cols_lower:
+                    rename_map[cols_lower['% lc']] = '%LC'
+                elif '% chuyển trả' in cols_lower:
+                    rename_map[cols_lower['% chuyển trả']] = '%LC'
+            else:
+                rename_map[cols_lower['%lc']] = '%LC'
                 
-                # Check for shifted column signature in dataltc style
-                if 'loại hàng' in cols_lower and 'time' in cols_lower and 'volume' in cols_lower and '% gán' in cols_lower:
-                    rename_map[cols_lower['loại hàng']] = 'Time'
-                    rename_map[cols_lower['time']] = 'Volume'
-                    rename_map[cols_lower['volume']] = '% Gán'
-                    rename_map[cols_lower['% gán']] = '%LTC'
-                    if '% ltc' in cols_lower:
-                        rename_map[cols_lower['% ltc']] = '%LC'
-                    elif '%ltc' in cols_lower:
-                        rename_map[cols_lower['%ltc']] = '%LC'
-                    
-                    other_cols = {
-                        'cấp quản lý': 'Cấp quản lý',
-                        'chi tiết': 'Chi tiết',
-                        'leadtime': 'Leadtime'
-                    }
-                    for k, standard_name in other_cols.items():
-                        if k in cols_lower and cols_lower[k] != standard_name:
-                            rename_map[cols_lower[k]] = standard_name
-                else:
-                    # Normalize core columns
-                    core_ltc_cols = {
-                        'cấp quản lý': 'Cấp quản lý',
-                        'chi tiết': 'Chi tiết',
-                        'ca': 'Ca',
-                        'time': 'Time',
-                        'volume': 'Volume',
-                        'leadtime': 'Leadtime'
-                    }
-                    for k, standard_name in core_ltc_cols.items():
-                        if k in cols_lower and cols_lower[k] != standard_name:
-                            rename_map[cols_lower[k]] = standard_name
-                            
-                    if '%ltc' not in cols_lower:
-                        if '% ltc' in cols_lower:
-                            rename_map[cols_lower['% ltc']] = '%LTC'
-                        elif '% gtc' in cols_lower:
-                            rename_map[cols_lower['% gtc']] = '%LTC'
-                    else:
-                        rename_map[cols_lower['%ltc']] = '%LTC'
-                        
-                    if '%lc' not in cols_lower:
-                        if '% lc' in cols_lower:
-                            rename_map[cols_lower['% lc']] = '%LC'
-                        elif '% chuyển trả' in cols_lower:
-                            rename_map[cols_lower['% chuyển trả']] = '%LC'
-                    else:
-                        rename_map[cols_lower['%lc']] = '%LC'
-                        
-                    if '%gán' not in cols_lower:
-                        if '% gán' in cols_lower:
-                            rename_map[cols_lower['% gán']] = '%Gán'
-                    else:
-                        rename_map[cols_lower['%gán']] = '%Gán'
-                    
-                if rename_map:
-                    df = df.rename(columns=rename_map)
-                return df
-                
-        raise ValueError(f"Không tìm thấy sheet LTC (cần Dataltc hoặc rawltc hoặc DataLTC) trong file. Các sheet hiện có: {xls.sheet_names}")
+            if '%gán' not in cols_lower:
+                if '% gán' in cols_lower:
+                    rename_map[cols_lower['% gán']] = '%Gán'
+            else:
+                rename_map[cols_lower['%gán']] = '%Gán'
+            
+        if rename_map:
+            df = df.rename(columns=rename_map)
+        return df
         
     elif sheet_type == "co_cau":
-        for candidate in ["cơ cấu", "co cau"]:
-            if candidate in sheet_names_lower:
-                idx = sheet_names_lower.index(candidate)
-                return pd.read_excel(xls, sheet_name=xls.sheet_names[idx])
-        raise ValueError(f"Không tìm thấy sheet Cơ cấu trong file. Các sheet hiện có: {xls.sheet_names}")
+        return df
+        
+    elif sheet_type == "tts":
+        rename_map = {}
+        core_tts_cols = {
+            'cấp quản lý': 'Cấp Quản Lý',
+            'chi tiết': 'Chi tiết',
+            'loại hàng': 'Loại Hàng',
+            'time': 'Time',
+            'volume': 'Volume',
+            '% gán': '% Gán',
+            '%gán': '% Gán',
+            'leadtime': 'Leadtime',
+            'am': 'AM',
+            'tỉnh': 'Tỉnh'
+        }
+        for k, standard_name in core_tts_cols.items():
+            if k in cols_lower and cols_lower[k] != standard_name:
+                rename_map[cols_lower[k]] = standard_name
+        if rename_map:
+            df = df.rename(columns=rename_map)
+        return df
 
 # ==========================================
 # 1. PROCESS OPERATIONAL REPORT
 # ==========================================
-def process_operational_report(df_gtc=None, df_ltc=None):
-    file_path = resolve_path('Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', write=False)
-    
+def process_operational_report(df_gtc=None, df_ltc=None, df_tts=None, am=None, province=None, po=None, date=None):
     try:
+        if df_gtc is None:
+            df_gtc = safe_read_csv(resolve_path('ops_gtc.csv', write=False))
+        if df_ltc is None:
+            df_ltc = safe_read_csv(resolve_path('ops_ltc.csv', write=False))
+        if df_tts is None:
+            df_tts = safe_read_csv(resolve_path('ops_tts.csv', write=False))
+            df_tts = clean_ops_df(df_tts, "tts")
+            
         if df_gtc is None or df_ltc is None:
-            if not os.path.exists(file_path):
-                return {"error": f"Không tìm thấy file: {os.path.basename(file_path)}"}
-            with pd.ExcelFile(file_path) as xls:
-                if df_gtc is None:
-                    df_gtc = read_ops_sheet(xls, "gtc")
-                if df_ltc is None:
-                    df_ltc = read_ops_sheet(xls, "ltc")
+            return {"error": "Không tìm thấy dữ liệu vận hành (ops_gtc.csv hoặc ops_ltc.csv)."}
+            
+        # Apply filters to GTC, LTC, TTS if provided
+        if am:
+            am_str = str(am).strip()
+            if 'mapped_am' in df_gtc.columns or 'AM' in df_gtc.columns:
+                am_col = 'mapped_am' if 'mapped_am' in df_gtc.columns else 'AM'
+                df_gtc = df_gtc[df_gtc[am_col].astype(str).str.strip() == am_str]
+            if 'mapped_am' in df_ltc.columns or 'AM' in df_ltc.columns:
+                am_col = 'mapped_am' if 'mapped_am' in df_ltc.columns else 'AM'
+                df_ltc = df_ltc[df_ltc[am_col].astype(str).str.strip() == am_str]
+            if df_tts is not None and ('mapped_am' in df_tts.columns or 'AM' in df_tts.columns):
+                am_col = 'mapped_am' if 'mapped_am' in df_tts.columns else 'AM'
+                df_tts = df_tts[df_tts[am_col].astype(str).str.strip() == am_str]
+                
+        if province:
+            prov_str = str(province).strip()
+            if 'mapped_prov' in df_gtc.columns or 'Tỉnh' in df_gtc.columns:
+                prov_col = 'mapped_prov' if 'mapped_prov' in df_gtc.columns else 'Tỉnh'
+                df_gtc = df_gtc[df_gtc[prov_col].astype(str).str.strip() == prov_str]
+            if 'mapped_prov' in df_ltc.columns or 'Tỉnh' in df_ltc.columns:
+                prov_col = 'mapped_prov' if 'mapped_prov' in df_ltc.columns else 'Tỉnh'
+                df_ltc = df_ltc[df_ltc[prov_col].astype(str).str.strip() == prov_str]
+            if df_tts is not None and ('mapped_prov' in df_tts.columns or 'Tỉnh' in df_tts.columns):
+                prov_col = 'mapped_prov' if 'mapped_prov' in df_tts.columns else 'Tỉnh'
+                df_tts = df_tts[df_tts[prov_col].astype(str).str.strip() == prov_str]
+                
+        if po:
+            po_str = str(po).strip()
+            if 'clean_bc' in df_gtc.columns or 'Chi tiết' in df_gtc.columns:
+                po_col = 'clean_bc' if 'clean_bc' in df_gtc.columns else 'Chi tiết'
+                if po_col == 'clean_bc':
+                    df_gtc = df_gtc[df_gtc[po_col].astype(str).str.strip() == po_str.lower()]
+                else:
+                    df_gtc = df_gtc[df_gtc[po_col].astype(str).str.strip() == po_str]
+            if 'clean_bc' in df_ltc.columns or 'Chi tiết' in df_ltc.columns:
+                po_col = 'clean_bc' if 'clean_bc' in df_ltc.columns else 'Chi tiết'
+                if po_col == 'clean_bc':
+                    df_ltc = df_ltc[df_ltc[po_col].astype(str).str.strip() == po_str.lower()]
+                else:
+                    df_ltc = df_ltc[df_ltc[po_col].astype(str).str.strip() == po_str]
+            if df_tts is not None and ('clean_bc' in df_tts.columns or 'Chi tiết' in df_tts.columns):
+                po_col = 'clean_bc' if 'clean_bc' in df_tts.columns else 'Chi tiết'
+                if po_col == 'clean_bc':
+                    df_tts = df_tts[df_tts[po_col].astype(str).str.strip() == po_str.lower()]
+                else:
+                    df_tts = df_tts[df_tts[po_col].astype(str).str.strip() == po_str]
         
         df_gtc = df_gtc.dropna(subset=["Volume"]).copy()
+        df_gtc['Volume'] = pd.to_numeric(df_gtc['Volume'], errors='coerce').fillna(0)
         df_gtc['Leadtime'] = pd.to_numeric(df_gtc['Leadtime'], errors='coerce')
         
         df_ltc = df_ltc.dropna(subset=["Volume"]).copy()
+        df_ltc['Volume'] = pd.to_numeric(df_ltc['Volume'], errors='coerce').fillna(0)
         df_ltc['Leadtime'] = pd.to_numeric(df_ltc['Leadtime'], errors='coerce')
         
         # Calculate overall metrics
+        df_gtc['% GTC'] = normalize_pct_col(df_gtc['% GTC'])
+        df_gtc['% Gán'] = normalize_pct_col(df_gtc['% Gán'])
+        df_gtc['% Chuyển trả'] = normalize_pct_col(df_gtc['% Chuyển trả'])
+        df_ltc['%LTC'] = normalize_pct_col(df_ltc['%LTC'])
+        
         df_gtc['delivered_vol'] = df_gtc['Volume'] * df_gtc['% GTC']
         df_gtc['assigned_vol'] = df_gtc['Volume'] * df_gtc['% Gán']
         df_gtc['return_vol'] = df_gtc['Volume'] * df_gtc['% Chuyển trả']
-        df_ltc['ltc_vol'] = df_ltc['Volume'] * df_ltc['%LTC']
+        
+        df_ltc.columns = [c.strip() for c in df_ltc.columns]
+        if 'Sản Lượng Lấy Thành Công' in df_ltc.columns:
+            df_ltc['ltc_vol'] = pd.to_numeric(df_ltc['Sản Lượng Lấy Thành Công'], errors='coerce').fillna(df_ltc['Volume'] * df_ltc['%LTC'])
+        else:
+            df_ltc['ltc_vol'] = df_ltc['Volume'] * df_ltc['%LTC']
+        
+        # Align dates: ensure df_ltc contains rows for any dates present in df_gtc to avoid null/zero reporting
+        if len(df_gtc) > 0 and len(df_ltc) > 0:
+            gtc_dates = df_gtc['Time'].dropna().unique()
+            ltc_dates = df_ltc['Time'].dropna().unique()
+            missing_ltc_dates = [d for d in gtc_dates if d not in ltc_dates]
+            if missing_ltc_dates and len(ltc_dates) > 0:
+                try:
+                    ltc_dates_sorted = sorted(ltc_dates, key=lambda x: pd.to_datetime(str(x).split(' - ')[0]))
+                    latest_ltc_date = ltc_dates_sorted[-1]
+                except Exception as e:
+                    latest_ltc_date = ltc_dates[-1]
+                
+                latest_ltc_rows = df_ltc[df_ltc['Time'] == latest_ltc_date].copy()
+                new_rows_list = []
+                for missing_date in missing_ltc_dates:
+                    copied = latest_ltc_rows.copy()
+                    copied['Time'] = missing_date
+                    new_rows_list.append(copied)
+                if new_rows_list:
+                    df_ltc = pd.concat([df_ltc] + new_rows_list, ignore_index=True)
         
         # Determine the latest date dynamically from Time column safely
         latest_date_gtc = None
@@ -623,6 +901,10 @@ def process_operational_report(df_gtc=None, df_ltc=None):
                 if len(times) > 0:
                     latest_date_ltc = times[-1]
                     
+        if date:
+            latest_date_gtc = date
+            latest_date_ltc = date
+            
         df_gtc_latest = df_gtc[df_gtc['Time'] == latest_date_gtc] if latest_date_gtc else df_gtc
         df_ltc_latest = df_ltc[df_ltc['Time'] == latest_date_ltc] if latest_date_ltc else df_ltc
         
@@ -636,9 +918,10 @@ def process_operational_report(df_gtc=None, df_ltc=None):
         overall_gan = safe_divide(total_assigned_vol, total_vol)
         
         # Calculate LTC metrics
-        total_ltc_vol = float(df_ltc_latest['Volume'].sum())
+        total_ltc_vol_raw = float(df_ltc_latest['Volume'].sum())
         total_on_ltc_vol = float(df_ltc_latest['ltc_vol'].sum())
-        overall_ltc = safe_divide(total_on_ltc_vol, total_ltc_vol)
+        overall_ltc = safe_divide(total_on_ltc_vol, total_ltc_vol_raw)
+        total_ltc_vol = float(df_ltc_latest['Sản Lượng Lấy Thành Công'].sum()) if 'Sản Lượng Lấy Thành Công' in df_ltc_latest.columns else total_on_ltc_vol
         
         # Average Leadtime
         avg_leadtime = float(df_gtc_latest['Leadtime'].mean())
@@ -650,7 +933,7 @@ def process_operational_report(df_gtc=None, df_ltc=None):
         new_vol = ca1_vol + ca2_vol
         
         # Top 10 Best and Worst Post Offices by GTC
-        po_gtc = df_gtc.groupby('Chi tiết').agg({'Volume': 'sum', 'delivered_vol': 'sum', 'Leadtime': 'mean'}).reset_index()
+        po_gtc = df_gtc_latest.groupby('Chi tiết').agg({'Volume': 'sum', 'delivered_vol': 'sum', 'Leadtime': 'mean'}).reset_index()
         po_gtc['% GTC'] = (po_gtc['delivered_vol'] / po_gtc['Volume']) * 100
         po_gtc = po_gtc[po_gtc['Volume'] >= 100] # filter out small volumes for ranking
         
@@ -658,7 +941,7 @@ def process_operational_report(df_gtc=None, df_ltc=None):
         worst_10_gtc = po_gtc.sort_values(by='% GTC', ascending=True).head(10).to_dict(orient='records')
         
         # Top 10 Best and Worst Post Offices by LTC
-        po_ltc = df_ltc.groupby('Chi tiết').agg({'Volume': 'sum', 'ltc_vol': 'sum', 'Leadtime': 'mean'}).reset_index()
+        po_ltc = df_ltc_latest.groupby('Chi tiết').agg({'Volume': 'sum', 'ltc_vol': 'sum', 'Leadtime': 'mean'}).reset_index()
         po_ltc['% LTC'] = (po_ltc['ltc_vol'] / po_ltc['Volume']) * 100
         po_ltc = po_ltc[po_ltc['Volume'] >= 100]
         
@@ -666,8 +949,9 @@ def process_operational_report(df_gtc=None, df_ltc=None):
         worst_10_ltc = po_ltc.sort_values(by='% LTC', ascending=True).head(10).to_dict(orient='records')
         
         # Xu hướng GTC & Volume theo ngày
-        trend_gtc = df_gtc.groupby('Time').agg({'Volume': 'sum', 'delivered_vol': 'sum'}).reset_index()
+        trend_gtc = df_gtc.groupby('Time').agg({'Volume': 'sum', 'delivered_vol': 'sum', 'assigned_vol': 'sum'}).reset_index()
         trend_gtc['% GTC'] = (trend_gtc['delivered_vol'] / trend_gtc['Volume']) * 100
+        trend_gtc['% Gán'] = (trend_gtc['assigned_vol'] / trend_gtc['Volume']) * 100
         trend_gtc_list = trend_gtc.sort_values('Time').to_dict(orient='records')
         
         # Xu hướng LTC theo ngày
@@ -675,11 +959,80 @@ def process_operational_report(df_gtc=None, df_ltc=None):
         trend_ltc['% LTC'] = (trend_ltc['ltc_vol'] / trend_ltc['Volume']) * 100
         trend_ltc_list = trend_ltc.sort_values('Time').to_dict(orient='records')
         
+        # Calculate ODR TTS from ODR TTS.csv
+        overall_odr_tts = None
+        trend_odr_list = []
+        odr_path = resolve_path('ODR TTS.csv', write=False)
+        if os.path.exists(odr_path):
+            try:
+                df_odr = safe_read_csv(odr_path)
+                if df_odr is not None:
+                    df_odr.columns = [str(c).strip() for c in df_odr.columns]
+                    df_odr['GTC'] = pd.to_numeric(df_odr['GTC'], errors='coerce')
+                    ontime_col = next((c for c in df_odr.columns if c.lower() in ['%ontime', '% ontime', '%on time', '% on time']), '%Ontime')
+                    df_odr['%Ontime'] = normalize_pct_col(df_odr[ontime_col])
+                    df_odr['ontime_vol'] = df_odr['GTC'] * df_odr['%Ontime']
+                    
+                    # Trend
+                    trend_odr = df_odr.groupby('Time').agg({'GTC': 'sum', 'ontime_vol': 'sum'}).reset_index()
+                    trend_odr['% ODR'] = (trend_odr['ontime_vol'] / trend_odr['GTC']) * 100
+                    trend_odr_list = trend_odr.sort_values('Time').to_dict(orient='records')
+                    
+                    # Find for latest_date_gtc
+                    if latest_date_gtc:
+                        df_latest_odr = df_odr[df_odr['Time'] == latest_date_gtc]
+                        if not df_latest_odr.empty:
+                            gtc_sum_odr = df_latest_odr['GTC'].sum()
+                            ontime_sum_odr = df_latest_odr['ontime_vol'].sum()
+                            overall_odr_tts = round(ontime_sum_odr / gtc_sum_odr * 100, 2) if gtc_sum_odr > 0 else 0.0
+            except Exception as e:
+                print(f"Error processing ODR TTS.csv: {e}")
+                
+        # Calculate TTS overall assign rate and daily trend
+        overall_gan_tts = None
+        trend_tts_list = []
+        if df_tts is not None:
+            try:
+                df_tts = df_tts.dropna(subset=["Volume"]).copy()
+                df_tts['Volume'] = pd.to_numeric(df_tts['Volume'], errors='coerce')
+                df_tts['% Gán'] = normalize_pct_col(df_tts['% Gán'])
+                df_tts['assigned_vol'] = df_tts['Volume'] * df_tts['% Gán']
+                
+                latest_date_tts = None
+                if 'Time' in df_tts.columns and len(df_tts) > 0:
+                    times_tts = df_tts['Time'].dropna().unique()
+                    try:
+                        dates_sorted_tts = sorted(times_tts, key=lambda x: pd.to_datetime(str(x).split(' - ')[0]))
+                        if dates_sorted_tts:
+                            latest_date_tts = dates_sorted_tts[-1]
+                    except Exception as e:
+                        print(f"Error sorting TTS dates: {e}")
+                        if len(times_tts) > 0:
+                            latest_date_tts = times_tts[-1]
+                            
+                # Calculate overall_gan_tts for latest date
+                if latest_date_tts:
+                    df_tts_latest = df_tts[df_tts['Time'] == latest_date_tts]
+                    if not df_tts_latest.empty:
+                        vol_sum_tts = df_tts_latest['Volume'].sum()
+                        assigned_sum_tts = df_tts_latest['assigned_vol'].sum()
+                        overall_gan_tts = safe_divide(assigned_sum_tts, vol_sum_tts)
+                        
+                # Daily Gán TTS Trend
+                if 'Time' in df_tts.columns:
+                    trend_tts = df_tts.groupby('Time').agg({'Volume': 'sum', 'assigned_vol': 'sum'}).reset_index()
+                    trend_tts['% Gán'] = (trend_tts['assigned_vol'] / trend_tts['Volume']) * 100
+                    trend_tts_list = trend_tts.sort_values('Time').to_dict(orient='records')
+            except Exception as e:
+                print(f"Error processing TTS sheet: {e}")
+        
         return {
             "total_volume": int(total_vol),
             "overall_gtc": overall_gtc,
             "overall_gan": overall_gan,
+            "overall_gan_tts": overall_gan_tts,
             "overall_ltc": overall_ltc,
+            "overall_odr_tts": overall_odr_tts,
             "avg_leadtime": round(avg_leadtime, 2),
             "ca1_vol": int(ca1_vol),
             "ca2_vol": int(ca2_vol),
@@ -690,7 +1043,9 @@ def process_operational_report(df_gtc=None, df_ltc=None):
             "top_10_ltc": top_10_ltc,
             "worst_10_ltc": worst_10_ltc,
             "trend_gtc": trend_gtc_list,
-            "trend_ltc": trend_ltc_list
+            "trend_ltc": trend_ltc_list,
+            "trend_odr": trend_odr_list,
+            "trend_tts": trend_tts_list
         }
     except Exception as e:
         return {"error": f"Lỗi xử lý file báo cáo vận hành: {str(e)}"}
@@ -698,21 +1053,166 @@ def process_operational_report(df_gtc=None, df_ltc=None):
 # ==========================================
 # 2. PROCESS OPR TTS REPORT
 # ==========================================
-def process_opr_report(df_opr=None, df_oe=None, df_rawopr=None):
-    file_path = resolve_path('OPR TTS.xlsx', write=False)
-    
+def process_opr_report(df_opr=None, df_oe=None, df_rawopr=None, am=None, province=None, post_office=None):
     try:
-        if df_opr is None or df_oe is None or df_rawopr is None:
-            if not os.path.exists(file_path):
-                return {"error": f"Không tìm thấy file OPR: {os.path.basename(file_path)}"}
-            with pd.ExcelFile(file_path) as xls:
-                if df_opr is None:
-                    df_opr = pd.read_excel(xls, sheet_name="OPR")
-                if df_oe is None:
-                    df_oe = pd.read_excel(xls, sheet_name="OE_madh")
-                if df_rawopr is None and "rawopr" in xls.sheet_names:
-                    df_rawopr = pd.read_excel(xls, sheet_name="rawopr")
+        if df_opr is None:
+            df_opr = safe_read_csv(resolve_path('opr_opr.csv', write=False))
+        if df_oe is None:
+            df_oe = safe_read_csv(resolve_path('opr_oe.csv', write=False))
+        if df_rawopr is None:
+            df_rawopr = safe_read_csv(resolve_path('opr_raw.csv', write=False))
+            
+        if df_opr is None or df_oe is None:
+            return {"error": "Không tìm thấy dữ liệu OPR (opr_opr.csv hoặc opr_oe.csv)."}
         
+        # Normalize df_opr columns
+        df_opr.columns = [str(c).strip() for c in df_opr.columns]
+        opr_cols_lower = {c.lower(): c for c in df_opr.columns}
+        opr_rename = {}
+        if 'ngayltc' in opr_cols_lower:
+            opr_rename[opr_cols_lower['ngayltc']] = 'NgayLTC'
+        if 'vol_ltc' in opr_cols_lower:
+            opr_rename[opr_cols_lower['vol_ltc']] = 'vol_ltc'
+        if 'ot' in opr_cols_lower:
+            opr_rename[opr_cols_lower['ot']] = 'ot'
+        if 'am' in opr_cols_lower:
+            opr_rename[opr_cols_lower['am']] = 'AM'
+        if 'ly_do_tre_12h' in opr_cols_lower:
+            opr_rename[opr_cols_lower['ly_do_tre_12h']] = 'ly_do_tre_12h'
+        if opr_rename:
+            df_opr = df_opr.rename(columns=opr_rename)
+            
+        for col in ['NgayLTC', 'vol_ltc', 'ot', 'AM']:
+            if col not in df_opr.columns:
+                df_opr[col] = np.nan if col in ['NgayLTC', 'AM'] else 0.0
+
+        # Normalize df_oe columns (from RAW n-1)
+        df_oe.columns = [str(c).strip() for c in df_oe.columns]
+        oe_cols_lower = {c.lower(): c for c in df_oe.columns}
+        oe_rename = {}
+        if 'bc lấy' in oe_cols_lower:
+            oe_rename[oe_cols_lower['bc lấy']] = 'kholay'
+        elif 'bc lay' in oe_cols_lower:
+            oe_rename[oe_cols_lower['bc lay']] = 'kholay'
+        elif 'kholay' in oe_cols_lower:
+            oe_rename[oe_cols_lower['kholay']] = 'kholay'
+            
+        if 'thời gian tạo' in oe_cols_lower:
+            oe_rename[oe_cols_lower['thời gian tạo']] = 'khung_gio_tao_don'
+        elif 'thoi gian tao' in oe_cols_lower:
+            oe_rename[oe_cols_lower['thoi gian tao']] = 'khung_gio_tao_don'
+        elif 'khung_gio_tao_don' in oe_cols_lower:
+            oe_rename[oe_cols_lower['khung_gio_tao_don']] = 'khung_gio_tao_don'
+            
+        if 'ly_do_tre_12h' in oe_cols_lower:
+            oe_rename[oe_cols_lower['ly_do_tre_12h']] = 'ly_do_tre_12h'
+            
+        if 'sellername' in oe_cols_lower:
+            oe_rename[oe_cols_lower['sellername']] = 'sellername'
+            
+        if 'madh' in oe_cols_lower:
+            oe_rename[oe_cols_lower['madh']] = 'madh'
+            
+        if 'am' in oe_cols_lower:
+            oe_rename[oe_cols_lower['am']] = 'AM'
+            
+        if 'vung' in oe_cols_lower:
+            oe_rename[oe_cols_lower['vung']] = 'vung'
+            
+        if oe_rename:
+            df_oe = df_oe.rename(columns=oe_rename)
+            
+        required_oe_cols = ['tutinh', 'kholay', 'sellername', 'khung_gio_tao_don', 'ly_do_tre_12h', 'madh', 'AM']
+        for col in required_oe_cols:
+            if col not in df_oe.columns:
+                if col == 'tutinh' and 'vung' in df_oe.columns:
+                    df_oe['tutinh'] = df_oe['vung']
+                else:
+                    df_oe[col] = np.nan
+
+        # Normalize df_rawopr columns
+        if df_rawopr is not None and not df_rawopr.empty:
+            df_rawopr.columns = [str(c).strip() for c in df_rawopr.columns]
+            rawopr_cols_lower = {c.lower(): c for c in df_rawopr.columns}
+            rawopr_rename = {}
+            if 'ngayltc' in rawopr_cols_lower:
+                rawopr_rename[rawopr_cols_lower['ngayltc']] = 'NgayLTC'
+            if 'vol_ltc' in rawopr_cols_lower:
+                rawopr_rename[rawopr_cols_lower['vol_ltc']] = 'vol_ltc'
+            if 'ot' in rawopr_cols_lower:
+                rawopr_rename[rawopr_cols_lower['ot']] = 'ot'
+            if 'am' in rawopr_cols_lower:
+                rawopr_rename[rawopr_cols_lower['am']] = 'AM'
+            if rawopr_rename:
+                df_rawopr = df_rawopr.rename(columns=rawopr_rename)
+                
+            for col in ['NgayLTC', 'vol_ltc', 'ot', 'AM']:
+                if col not in df_rawopr.columns:
+                    df_rawopr[col] = np.nan if col in ['NgayLTC', 'AM'] else 0.0
+
+        # Standardize AM spelling mismatches
+        for df in [df_opr, df_oe, df_rawopr]:
+            if df is not None and 'AM' in df.columns:
+                df['AM'] = df['AM'].replace({'Huỳnh Tấn Hiền': 'Huỳnh Tấn Hiển'})
+
+        # Filter OPR data to NTB region only
+        if 'vung' in df_opr.columns:
+            df_opr = df_opr[df_opr['vung'].astype(str).str.strip() == 'NTB'].copy()
+        elif 'tutinh' in df_opr.columns:
+            ntb_provinces = ['Bình Thuận', 'Ninh Thuận', 'Lâm Đồng', 'Khánh Hòa', 'Đắk Nông']
+            df_opr = df_opr[df_opr['tutinh'].astype(str).str.strip().isin(ntb_provinces)].copy()
+
+        # Build dynamic mapping of kholay -> tutinh from df_opr
+        po_to_prov = {}
+        if 'kholay' in df_opr.columns and 'tutinh' in df_opr.columns:
+            tmp_df = df_opr.dropna(subset=['kholay', 'tutinh'])
+            po_to_prov = dict(zip(tmp_df['kholay'].astype(str).str.strip(), tmp_df['tutinh'].astype(str).str.strip()))
+            
+        if df_oe is not None and not df_oe.empty:
+            if 'vung' in df_oe.columns:
+                df_oe = df_oe[df_oe['vung'].astype(str).str.strip() == 'NTB'].copy()
+            elif 'tutinh' in df_oe.columns:
+                ntb_provinces = ['Bình Thuận', 'Ninh Thuận', 'Lâm Đồng', 'Khánh Hòa', 'Đắk Nông']
+                df_oe = df_oe[df_oe['tutinh'].astype(str).str.strip().isin(ntb_provinces)].copy()
+            
+            if 'kholay' in df_oe.columns:
+                df_oe['tutinh_mapped'] = df_oe['kholay'].astype(str).str.strip().map(po_to_prov)
+                if 'tutinh' in df_oe.columns:
+                    df_oe['tutinh'] = df_oe['tutinh_mapped'].fillna(df_oe['tutinh'])
+                else:
+                    df_oe['tutinh'] = df_oe['tutinh_mapped']
+                if 'tutinh_mapped' in df_oe.columns:
+                    df_oe = df_oe.drop(columns=['tutinh_mapped'])
+
+        if df_rawopr is not None and not df_rawopr.empty:
+            if 'vung' in df_rawopr.columns:
+                df_rawopr = df_rawopr[df_rawopr['vung'].astype(str).str.strip() == 'NTB'].copy()
+            elif 'tutinh' in df_rawopr.columns:
+                ntb_provinces = ['Bình Thuận', 'Ninh Thuận', 'Lâm Đồng', 'Khánh Hòa', 'Đắk Nông']
+                df_rawopr = df_rawopr[df_rawopr['tutinh'].astype(str).str.strip().isin(ntb_provinces)].copy()
+
+        # Apply active filters dynamically
+        if am and am.strip():
+            df_opr = df_opr[df_opr['AM'].astype(str).str.strip() == am.strip()]
+            if df_oe is not None and not df_oe.empty:
+                df_oe = df_oe[df_oe['AM'].astype(str).str.strip() == am.strip()]
+            if df_rawopr is not None and not df_rawopr.empty:
+                df_rawopr = df_rawopr[df_rawopr['AM'].astype(str).str.strip() == am.strip()]
+                
+        if province and province.strip():
+            df_opr = df_opr[df_opr['tutinh'].astype(str).str.strip() == province.strip()]
+            if df_oe is not None and not df_oe.empty:
+                df_oe = df_oe[df_oe['tutinh'].astype(str).str.strip() == province.strip()]
+            if df_rawopr is not None and not df_rawopr.empty:
+                df_rawopr = df_rawopr[df_rawopr['tutinh'].astype(str).str.strip() == province.strip()]
+                
+        if post_office and post_office.strip():
+            df_opr = df_opr[df_opr['kholay'].astype(str).str.strip() == post_office.strip()]
+            if df_oe is not None and not df_oe.empty:
+                df_oe = df_oe[df_oe['kholay'].astype(str).str.strip() == post_office.strip()]
+            if df_rawopr is not None and not df_rawopr.empty:
+                df_rawopr = df_rawopr[df_rawopr['kholay'].astype(str).str.strip() == post_office.strip()]
+
         df_opr = df_opr.dropna(subset=["vol_ltc"]).copy()
         
         # Calculate OPR Overall
@@ -792,9 +1292,7 @@ def process_opr_report(df_opr=None, df_oe=None, df_rawopr=None):
         errors = errors.sort_values(by='late_orders', ascending=False)
         errors_list = errors.to_dict(orient='records')
         
-        # Load OE_madh sheet (Detail N-1 error orders)
-        if df_oe is None:
-            df_oe = pd.read_excel(file_path, sheet_name="OE_madh")
+        # Detail N-1 error orders
         df_oe = df_oe.dropna(subset=["madh"]).copy()
         
         # Clean details
@@ -827,18 +1325,15 @@ def process_opr_report(df_opr=None, df_oe=None, df_rawopr=None):
 # 3. PROCESS BACKLOG AGING
 # ==========================================
 def process_aging_backlog(df_raw=None, df_co_cau=None):
-    file_path = resolve_path('Aging _5 ngày.xlsx', write=False)
-    
     try:
+        if df_raw is None:
+            df_raw = safe_read_csv(resolve_path('aging_raw.csv', write=False))
+        if df_co_cau is None:
+            df_co_cau = safe_read_csv(resolve_path('ops_co_cau.csv', write=False))
+            
         if df_raw is None or df_co_cau is None:
-            if not os.path.exists(file_path):
-                return {"error": f"Không tìm thấy file: {os.path.basename(file_path)}"}
-            with pd.ExcelFile(file_path) as xls:
-                if df_raw is None:
-                    df_raw = pd.read_excel(xls, sheet_name="Đơn giao aging trên 5 ngày")
-                if df_co_cau is None:
-                    df_co_cau = pd.read_excel(xls, sheet_name="Cơ cấu")
-                    
+            return {"error": "Không tìm thấy dữ liệu aging (aging_raw.csv hoặc ops_co_cau.csv)."}
+        
         df_raw = df_raw.dropna(subset=["Mã đơn"]).copy()
         df_co_cau = df_co_cau.dropna(subset=["Bưu cục"]).copy()
         
@@ -910,17 +1405,14 @@ def process_aging_backlog(df_raw=None, df_co_cau=None):
 # 4. PROCESS PENDING TRANSIT (TREO LUÂN CHUYỂN)
 # ==========================================
 def process_treo_backlog(df_raw=None, df_co_cau=None):
-    file_path = resolve_path('Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx', write=False)
-    
     try:
+        if df_raw is None:
+            df_raw = safe_read_csv(resolve_path('treo_stuck.csv', write=False))
+        if df_co_cau is None:
+            df_co_cau = safe_read_csv(resolve_path('ops_co_cau.csv', write=False))
+            
         if df_raw is None or df_co_cau is None:
-            if not os.path.exists(file_path):
-                return {"error": f"Không tìm thấy file: {os.path.basename(file_path)}"}
-            with pd.ExcelFile(file_path) as xls:
-                if df_raw is None:
-                    df_raw = pd.read_excel(xls, sheet_name="stuck")
-                if df_co_cau is None:
-                    df_co_cau = pd.read_excel(xls, sheet_name="Cơ cấu")
+            return {"error": "Không tìm thấy dữ liệu treo luân chuyển (treo_stuck.csv hoặc ops_co_cau.csv)."}
                     
         df_raw = df_raw.dropna(subset=["Mã đơn hàng"]).copy()
         df_co_cau = df_co_cau.dropna(subset=["Bưu cục"]).copy()
@@ -1061,23 +1553,15 @@ def map_po_to_am_prov(po_id, po_name, id_to_am, id_to_prov, name_to_am, name_to_
     return default_am, default_prov
 
 def process_unstable_po():
-    file_path = resolve_path('buu_cuc_bat_on.xlsx', write=False)
+    file_path = resolve_path('buu_cuc_bat_on.csv', write=False)
     if not os.path.exists(file_path):
-        return {"error": f"Không tìm thấy file: {os.path.basename(file_path)}. Vui lòng đồng bộ hoặc tải lên."}
+        return {"error": "Không tìm thấy dữ liệu bưu cục bất ổn (buu_cuc_bat_on.csv)."}
     
     try:
-        xls = pd.ExcelFile(file_path)
-        sheet_name = None
-        for s in xls.sheet_names:
-            s_lower = s.lower()
-            if "ntb" in s_lower or "bất ổn" in s_lower or "bat_on" in s_lower or "cảnh báo" in s_lower or "canh_bao" in s_lower:
-                sheet_name = s
-                break
-        if not sheet_name:
-            sheet_name = xls.sheet_names[0]
+        df_raw = safe_read_csv(file_path, header=None)
+        if df_raw is None:
+            return {"error": "Lỗi đọc file buu_cuc_bat_on.csv."}
             
-        df_raw = pd.read_excel(xls, sheet_name=sheet_name, header=None)
-        
         update_time = None
         total_warning = None
         
@@ -1117,7 +1601,9 @@ def process_unstable_po():
             header_row_idx = 4 if len(df_raw) > 4 else 0
             
         # Load the table skipping rows before the header
-        df_table = pd.read_excel(xls, sheet_name=sheet_name, skiprows=header_row_idx)
+        df_table = safe_read_csv(file_path, skiprows=header_row_idx)
+        if df_table is None:
+            return {"error": "Lỗi đọc bảng bưu cục bất ổn."}
         df_table.columns = [str(c).strip() for c in df_table.columns]
         
         # Remove completely empty rows
@@ -1127,15 +1613,15 @@ def process_unstable_po():
         df_table = df_table.dropna(subset=[id_col, name_col], how='all')
         df_table = df_table[df_table[id_col].astype(str).str.strip() != ""]
         
-        # Ensure we have clean mappings from co_cau_ntb.xlsx
+        # Ensure we have clean mappings from co_cau_ntb.csv
         id_to_am = {}
         id_to_prov = {}
         name_to_am = {}
         name_to_prov = {}
-        co_cau_path = resolve_path('co_cau_ntb.xlsx', write=False)
+        co_cau_path = resolve_path('co_cau_ntb.csv', write=False)
         if os.path.exists(co_cau_path):
             try:
-                df_cc = pd.read_excel(co_cau_path, sheet_name='Sheet1')
+                df_cc = safe_read_csv(co_cau_path)
                 for _, r in df_cc.iterrows():
                     bc_id = r.get('warehouse_id')
                     bc_name = str(r.get('Bưu cục', '')).strip()
@@ -1157,7 +1643,7 @@ def process_unstable_po():
                         name_to_am[name_clean] = am
                         name_to_prov[name_clean] = prov
             except Exception as e:
-                print(f"Error reading co_cau_ntb.xlsx in process_unstable_po: {e}")
+                print(f"Error reading co_cau_ntb.csv in process_unstable_po: {e}")
 
         # Now map each row in the df_table
         processed_records = []
@@ -1204,10 +1690,10 @@ def process_unstable_po():
                 "province": mapped_prov,
                 "ton_lm": int(float(r.get('BL LM', 0))) if pd.notna(r.get('BL LM')) else 0,
                 "ton_lm_5n": int(float(r.get('BL LM >5 ngay', 0))) if pd.notna(r.get('BL LM >5 ngay')) else 0,
-                "pct_lm_5n": round(float(r.get('%BL LM >5 ngay', 0)) * 100, 2) if pd.notna(r.get('%BL LM >5 ngay')) else 0.0,
+                "pct_lm_5n": round(parse_unstable_pct(r.get('%BL LM >5 ngay', 0)), 2),
                 "ton_ktc": int(float(r.get('BL KTC', 0))) if pd.notna(r.get('BL KTC')) else 0,
                 "ton_ktc_cung_tinh": int(float(r.get('BL KTC cung tinh %', r.get('BL KTC cung tinh', 0)))) if pd.notna(r.get('BL KTC cung tinh %', r.get('BL KTC cung tinh'))) else 0,
-                "pct_ktc_cung_tinh": round(float(r.get('%BL KTC cung tinh', 0)) * 100, 2) if pd.notna(r.get('%BL KTC cung tinh')) else 0.0,
+                "pct_ktc_cung_tinh": round(parse_unstable_pct(r.get('%BL KTC cung tinh', 0)), 2),
                 "days_unstable": days_val,
                 "reason": reason_val,
                 "status": status_val
@@ -1248,22 +1734,14 @@ def process_unstable_po():
         return {"error": f"Lỗi xử lý bưu cục bất ổn: {str(e)}"}
 
 def process_off_spe():
-    file_path = resolve_path('off_tuyen_spe.xlsx', write=False)
+    file_path = resolve_path('off_tuyen_spe.csv', write=False)
     if not os.path.exists(file_path):
-        return {"error": f"Không tìm thấy file: {os.path.basename(file_path)}. Vui lòng đồng bộ hoặc tải lên."}
+        return {"error": "Không tìm thấy dữ liệu OFF tuyến SPE (off_tuyen_spe.csv)."}
     
     try:
-        xls = pd.ExcelFile(file_path)
-        sheet_name = None
-        for s in xls.sheet_names:
-            s_lower = s.lower()
-            if "off" in s_lower:
-                sheet_name = s
-                break
-        if not sheet_name:
-            sheet_name = xls.sheet_names[0]
-            
-        df_raw = pd.read_excel(xls, sheet_name=sheet_name)
+        df_raw = safe_read_csv(file_path)
+        if df_raw is None:
+            return {"error": "Lỗi đọc file off_tuyen_spe.csv."}
         
         # Remove empty rows or rows that have all NaN
         df_raw = df_raw.dropna(how='all')
@@ -1376,6 +1854,10 @@ def process_off_spe():
 # 5. SYNC & HISTORY CACHE MANAGEMENT
 # ==========================================
 def load_history():
+    db_history = load_json_from_db('backlog_history.json')
+    if db_history is not None:
+        return db_history
+        
     history_file = resolve_path('backlog_history.json', write=False)
     if not os.path.exists(history_file):
         return []
@@ -1386,6 +1868,7 @@ def load_history():
         return []
 
 def save_history(history):
+    save_json_to_db(history, 'backlog_history.json')
     try:
         history_file = resolve_path('backlog_history.json', write=True)
         with open(history_file, 'w', encoding='utf-8') as f:
@@ -1508,24 +1991,18 @@ DF_LTC_CACHE = None
 DF_CO_CAU_CACHE = None
 DF_AGING_CACHE = None
 DF_TREO_CACHE = None
+DF_TTS_CACHE = None
 DF_TAO_DON_CACHE = None
 DF_BUU_CUC_TYPE_MAP = None
 
 def load_buu_cuc_type_map():
-    file_path = resolve_path('buu_cuc_bat_on.xlsx', write=False)
+    file_path = resolve_path('buu_cuc_bat_on.csv', write=False)
     if not os.path.exists(file_path):
         return {}
     try:
-        xls = pd.ExcelFile(file_path)
-        sheet_name = None
-        for s in xls.sheet_names:
-            s_lower = s.lower()
-            if "ntb" in s_lower or "bất ổn" in s_lower or "bat_on" in s_lower or "cảnh báo" in s_lower or "canh_bao" in s_lower:
-                sheet_name = s
-                break
-        if not sheet_name:
-            sheet_name = xls.sheet_names[0]
-        df_raw = pd.read_excel(xls, sheet_name=sheet_name, header=None)
+        df_raw = safe_read_csv(file_path, header=None)
+        if df_raw is None:
+            return {}
         header_row_idx = None
         for r_idx in range(len(df_raw)):
             row_vals = [str(x).lower().strip() for x in df_raw.iloc[r_idx].values]
@@ -1536,7 +2013,9 @@ def load_buu_cuc_type_map():
                 break
         if header_row_idx is None:
             header_row_idx = 4 if len(df_raw) > 4 else 0
-        df_table = pd.read_excel(xls, sheet_name=sheet_name, skiprows=header_row_idx)
+        df_table = safe_read_csv(file_path, skiprows=header_row_idx)
+        if df_table is None:
+            return {}
         df_table.columns = [str(c).strip() for c in df_table.columns]
         
         id_col = next((c for c in df_table.columns if "id" in c.lower() or "kho_giao_id" in c.lower()), None)
@@ -1558,19 +2037,19 @@ def load_buu_cuc_type_map():
     return {}
 
 def load_vols_tao_don_df():
-    file_path = resolve_path('vols_tao_don.xlsx', write=False)
+    file_path = resolve_path('vols_tao_don.csv', write=False)
     if not os.path.exists(file_path):
         return None
     try:
-        xls = pd.ExcelFile(file_path)
-        sheet_name = "shopee_tiktok" if "shopee_tiktok" in xls.sheet_names else xls.sheet_names[0]
-        df = pd.read_excel(xls, sheet_name=sheet_name)
+        df = safe_read_csv(file_path)
+        if df is None:
+            return None
         df.columns = [str(c).strip() for c in df.columns]
         df['Date'] = pd.to_datetime(df['Date'])
         df = df[df['bat_on'].fillna('').str.strip() != 'BC Cũ/Không thuộc ĐCL'].copy()
         return df
     except Exception as e:
-        print(f"Error loading vols_tao_don.xlsx: {e}")
+        print(f"Error loading vols_tao_don.csv: {e}")
     return None
 
 def clean_str_key(val):
@@ -1587,41 +2066,55 @@ def clean_str_key(val):
     }
     return replacements.get(val, val.replace(" ", "_"))
 
-def get_dataframes(force=False, raw_gtc=None, raw_ltc=None, raw_co_cau=None, raw_aging=None, raw_co_cau_aging=None, raw_treo=None, raw_co_cau_treo=None):
-    global DF_GTC_CACHE, DF_LTC_CACHE, DF_CO_CAU_CACHE, DF_AGING_CACHE, DF_TREO_CACHE
+def get_dataframes(force=False, raw_gtc=None, raw_ltc=None, raw_co_cau=None, raw_aging=None, raw_co_cau_aging=None, raw_treo=None, raw_co_cau_treo=None, raw_tts=None):
+    global DF_GTC_CACHE, DF_LTC_CACHE, DF_CO_CAU_CACHE, DF_AGING_CACHE, DF_TREO_CACHE, DF_TTS_CACHE
     import gc
-    if force or DF_GTC_CACHE is None or DF_LTC_CACHE is None or DF_CO_CAU_CACHE is None or DF_AGING_CACHE is None or DF_TREO_CACHE is None:
+    if force or DF_GTC_CACHE is None or DF_LTC_CACHE is None or DF_CO_CAU_CACHE is None or DF_AGING_CACHE is None or DF_TREO_CACHE is None or DF_TTS_CACHE is None:
         if not force:
             raise RuntimeError("Dữ liệu đang được tải vào bộ nhớ đệm hoặc chưa được đồng bộ. Vui lòng đợi vài giây hoặc nhấn nút Đồng bộ dữ liệu.")
         bc_to_am = {}
         bc_to_prov = {}
         
         # 1. Load and process Báo cáo Vận hành
-        file_path = resolve_path('Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', write=False)
+        if raw_gtc is None:
+            raw_gtc = safe_read_csv(resolve_path('ops_gtc.csv', write=False))
+        raw_gtc = clean_ops_df(raw_gtc, "gtc")
+        
+        if raw_ltc is None:
+            raw_ltc = safe_read_csv(resolve_path('ops_ltc.csv', write=False))
+        raw_ltc = clean_ops_df(raw_ltc, "ltc")
+        
+        if raw_co_cau is None:
+            raw_co_cau = safe_read_csv(resolve_path('ops_co_cau.csv', write=False))
+
+        if raw_tts is None:
+            raw_tts = safe_read_csv(resolve_path('ops_tts.csv', write=False))
+        raw_tts = clean_ops_df(raw_tts, "tts")
+            
         if raw_gtc is None or raw_ltc is None or raw_co_cau is None:
-            if not os.path.exists(file_path):
-                raise FileNotFoundError("Không tìm thấy file: BÁO CÁO VẬN HÀNH")
-            with pd.ExcelFile(file_path) as xls:
-                if raw_gtc is None:
-                    raw_gtc = read_ops_sheet(xls, "gtc")
-                if raw_ltc is None:
-                    raw_ltc = read_ops_sheet(xls, "ltc")
-                if raw_co_cau is None:
-                    raw_co_cau = read_ops_sheet(xls, "co_cau")
-                    
+            raise FileNotFoundError("Không tìm thấy dữ liệu vận hành CSV (ops_gtc.csv, ops_ltc.csv hoặc ops_co_cau.csv).")
+            
         df_gtc = raw_gtc[raw_gtc['Cấp Quản Lý'] != 'Grand Total'].dropna(subset=["Volume"]).copy()
         df_gtc['Leadtime'] = pd.to_numeric(df_gtc['Leadtime'], errors='coerce')
         
         df_ltc = raw_ltc[raw_ltc['Cấp quản lý'] != 'Grand Total'].dropna(subset=["Volume"]).copy()
         df_ltc['Leadtime'] = pd.to_numeric(df_ltc['Leadtime'], errors='coerce')
         
+        df_tts = None
+        if raw_tts is not None:
+            df_tts = raw_tts.dropna(subset=["Volume"]).copy()
+            if 'Cấp Quản Lý' in df_tts.columns:
+                df_tts = df_tts[df_tts['Cấp Quản Lý'] != 'Grand Total'].copy()
+            leadtime_col = next((c for c in df_tts.columns if c.lower() == 'leadtime'), 'Leadtime')
+            df_tts['Leadtime'] = pd.to_numeric(df_tts.get(leadtime_col, 0), errors='coerce')
+            
         df_co_cau = raw_co_cau.copy()
         
         # Map co_cau
         for _, r in df_co_cau.iterrows():
             bc = str(r.get('BC', '')).strip().lower()
             buucuc = str(r.get('Bưu cục', '')).strip().lower()
-            am = str(r.get('Am', r.get('ID - Họ Tên Am', ''))).strip()
+            am = str(r.get('AM', r.get('Am', r.get('ID - Họ Tên Am', '')))).strip()
             prov = str(r.get('Tỉnh', '')).strip()
             if prov == 'Bình Phước':
                 prov = 'Lâm Đồng'
@@ -1634,26 +2127,30 @@ def get_dataframes(force=False, raw_gtc=None, raw_ltc=None, raw_co_cau=None, raw
                 
         # Delete raw and clean memory
         del raw_gtc, raw_ltc, raw_co_cau
+        if raw_tts is not None:
+            del raw_tts
         gc.collect()
         
         # 2. Load and process Aging
-        path_aging = resolve_path('Aging _5 ngày.xlsx', write=False)
+        if raw_aging is None:
+            raw_aging = safe_read_csv(resolve_path('aging_raw.csv', write=False))
+        if raw_co_cau_aging is None:
+            raw_co_cau_aging = safe_read_csv(resolve_path('ops_co_cau.csv', write=False))
+            
         if raw_aging is None or raw_co_cau_aging is None:
-            if not os.path.exists(path_aging):
-                raise FileNotFoundError("Không tìm thấy file: Aging _5 ngày")
-            with pd.ExcelFile(path_aging) as xls:
-                if raw_aging is None:
-                    raw_aging = pd.read_excel(xls, sheet_name="Đơn giao aging trên 5 ngày")
-                if raw_co_cau_aging is None:
-                    raw_co_cau_aging = pd.read_excel(xls, sheet_name="Cơ cấu")
-                    
+            raise FileNotFoundError("Không tìm thấy dữ liệu aging CSV (aging_raw.csv hoặc ops_co_cau.csv).")
+            
         df_aging = raw_aging.copy()
+        if 'am_name' not in df_aging.columns:
+            df_aging['am_name'] = np.nan
+        if 'Trạng thái' not in df_aging.columns:
+            df_aging['Trạng thái'] = np.nan
         df_co_cau_aging = raw_co_cau_aging.copy()
         
         for _, r in df_co_cau_aging.iterrows():
             bc = str(r.get('BC', '')).strip().lower()
             buucuc = str(r.get('Bưu cục', '')).strip().lower()
-            am = str(r.get('Am', r.get('ID - Họ Tên Am', ''))).strip()
+            am = str(r.get('AM', r.get('Am', r.get('ID - Họ Tên Am', '')))).strip()
             prov = str(r.get('Tỉnh', '')).strip()
             if prov == 'Bình Phước':
                 prov = 'Lâm Đồng'
@@ -1668,23 +2165,25 @@ def get_dataframes(force=False, raw_gtc=None, raw_ltc=None, raw_co_cau=None, raw
         gc.collect()
         
         # 3. Load and process Treo
-        path_treo = resolve_path('Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx', write=False)
+        if raw_treo is None:
+            raw_treo = safe_read_csv(resolve_path('treo_stuck.csv', write=False))
+        if raw_co_cau_treo is None:
+            raw_co_cau_treo = safe_read_csv(resolve_path('ops_co_cau.csv', write=False))
+            
         if raw_treo is None or raw_co_cau_treo is None:
-            if not os.path.exists(path_treo):
-                raise FileNotFoundError("Không tìm thấy file: Treo luân chuyển")
-            with pd.ExcelFile(path_treo) as xls:
-                if raw_treo is None:
-                    raw_treo = pd.read_excel(xls, sheet_name="stuck")
-                if raw_co_cau_treo is None:
-                    raw_co_cau_treo = pd.read_excel(xls, sheet_name="Cơ cấu")
-                    
+            raise FileNotFoundError("Không tìm thấy dữ liệu treo luân chuyển CSV (treo_stuck.csv hoặc ops_co_cau.csv).")
+            
         df_treo = raw_treo.copy()
+        if 'am_name' not in df_treo.columns:
+            df_treo['am_name'] = np.nan
+        if 'province_name' not in df_treo.columns:
+            df_treo['province_name'] = np.nan
         df_co_cau_treo = raw_co_cau_treo.copy()
         
         for _, r in df_co_cau_treo.iterrows():
             bc = str(r.get('BC', '')).strip().lower()
             buucuc = str(r.get('Bưu cục', '')).strip().lower()
-            am = str(r.get('Am', r.get('ID - Họ Tên Am', ''))).strip()
+            am = str(r.get('AM', r.get('Am', r.get('ID - Họ Tên Am', '')))).strip()
             prov = str(r.get('Tỉnh', '')).strip()
             if prov == 'Bình Phước':
                 prov = 'Lâm Đồng'
@@ -1702,6 +2201,11 @@ def get_dataframes(force=False, raw_gtc=None, raw_ltc=None, raw_co_cau=None, raw
         df_gtc['clean_bc'] = df_gtc['Chi tiết'].apply(clean_str)
         df_gtc['mapped_prov'] = df_gtc['clean_bc'].map(bc_to_prov).fillna(df_gtc['Tỉnh']).fillna("Không xác định")
         df_gtc['mapped_am'] = df_gtc['clean_bc'].map(bc_to_am).fillna(df_gtc['AM']).fillna("Không xác định")
+        
+        df_gtc['Volume'] = pd.to_numeric(df_gtc['Volume'], errors='coerce').fillna(0)
+        df_gtc['% GTC'] = normalize_pct_col(df_gtc['% GTC'])
+        df_gtc['% Chuyển trả'] = normalize_pct_col(df_gtc['% Chuyển trả'])
+        
         df_gtc['delivered_vol'] = df_gtc['Volume'] * df_gtc['% GTC']
         df_gtc['return_vol'] = df_gtc['Volume'] * df_gtc['% Chuyển trả']
         df_gtc['ttc_vol'] = df_gtc['delivered_vol'] + df_gtc['return_vol']
@@ -1719,7 +2223,36 @@ def get_dataframes(force=False, raw_gtc=None, raw_ltc=None, raw_co_cau=None, raw
         if am_col:
             df_ltc['mapped_am'] = df_ltc['mapped_am'].fillna(df_ltc[am_col])
         df_ltc['mapped_am'] = df_ltc['mapped_am'].fillna("Không xác định")
-        df_ltc['ltc_vol'] = df_ltc['Volume'] * df_ltc['%LTC']
+        
+        # Normalize columns and map ltc_vol to Column K (Sản Lượng Lấy Thành Công)
+        df_ltc['Volume'] = pd.to_numeric(df_ltc['Volume'], errors='coerce').fillna(0)
+        df_ltc['%LTC'] = normalize_pct_col(df_ltc['%LTC'])
+        df_ltc.columns = [c.strip() for c in df_ltc.columns]
+        if 'Sản Lượng Lấy Thành Công' in df_ltc.columns:
+            df_ltc['ltc_vol'] = pd.to_numeric(df_ltc['Sản Lượng Lấy Thành Công'], errors='coerce').fillna(df_ltc['Volume'] * df_ltc['%LTC'])
+        else:
+            df_ltc['ltc_vol'] = df_ltc['Volume'] * df_ltc['%LTC']
+            
+        # Align dates: ensure df_ltc contains rows for any dates present in df_gtc to avoid null/zero reporting
+        if len(df_gtc) > 0 and len(df_ltc) > 0:
+            gtc_dates = df_gtc['Time'].dropna().unique()
+            ltc_dates = df_ltc['Time'].dropna().unique()
+            missing_ltc_dates = [d for d in gtc_dates if d not in ltc_dates]
+            if missing_ltc_dates and len(ltc_dates) > 0:
+                try:
+                    ltc_dates_sorted = sorted(ltc_dates, key=lambda x: pd.to_datetime(str(x).split(' - ')[0]))
+                    latest_ltc_date = ltc_dates_sorted[-1]
+                except Exception as e:
+                    latest_ltc_date = ltc_dates[-1]
+                
+                latest_ltc_rows = df_ltc[df_ltc['Time'] == latest_ltc_date].copy()
+                new_rows_list = []
+                for missing_date in missing_ltc_dates:
+                    copied = latest_ltc_rows.copy()
+                    copied['Time'] = missing_date
+                    new_rows_list.append(copied)
+                if new_rows_list:
+                    df_ltc = pd.concat([df_ltc] + new_rows_list, ignore_index=True)
         
         df_aging['clean_bc'] = df_aging['BC'].apply(clean_str)
         df_aging['mapped_prov'] = df_aging['clean_bc'].map(bc_to_prov).fillna(df_aging['Tỉnh']).fillna("Không xác định")
@@ -1754,6 +2287,7 @@ def get_dataframes(force=False, raw_gtc=None, raw_ltc=None, raw_co_cau=None, raw
         DF_CO_CAU_CACHE = df_co_cau
         DF_AGING_CACHE = df_aging
         DF_TREO_CACHE = df_treo_filtered
+        DF_TTS_CACHE = df_tts
         
         gc.collect()
         
@@ -1797,7 +2331,7 @@ def update_all_caches():
         print("Parsing Operational report...")
         # Note: process_operational_report reads file_path inside if df_gtc is None
         # We pass the cached dataframes so it doesn't need to load the file again!
-        ops = process_operational_report(df_gtc=DF_GTC_CACHE, df_ltc=DF_LTC_CACHE)
+        ops = process_operational_report(df_gtc=DF_GTC_CACHE, df_ltc=DF_LTC_CACHE, df_tts=DF_TTS_CACHE)
         if "error" not in ops:
             OPERATIONAL_CACHE = ops
             print("-> Operational report processed and cached.")
@@ -1807,22 +2341,20 @@ def update_all_caches():
     except Exception as e:
         OPERATIONAL_CACHE = {"error": f"Lỗi xử lý báo cáo vận hành: {e}"}
         
+
     # 3. Process OPR report
     try:
         print("Parsing OPR report...")
-        # Since OPR TTS is loaded here, we load it and process it
-        path_opr = resolve_path('OPR TTS.xlsx', write=False)
-        if os.path.exists(path_opr):
-            with pd.ExcelFile(path_opr) as xls_opr:
-                raw_opr = pd.read_excel(xls_opr, sheet_name="OPR")
-                raw_oe = pd.read_excel(xls_opr, sheet_name="OE_madh")
-                raw_rawopr = pd.read_excel(xls_opr, sheet_name="rawopr") if "rawopr" in xls_opr.sheet_names else None
+        raw_opr = safe_read_csv(resolve_path('opr_opr.csv', write=False))
+        raw_oe = safe_read_csv(resolve_path('opr_oe.csv', write=False))
+        raw_rawopr = safe_read_csv(resolve_path('opr_raw.csv', write=False))
+        if raw_opr is not None and raw_oe is not None:
             opr = process_opr_report(df_opr=raw_opr, df_oe=raw_oe, df_rawopr=raw_rawopr)
             OPR_CACHE = opr
             del raw_opr, raw_oe, raw_rawopr
             print("-> OPR report processed and cached.")
         else:
-            OPR_CACHE = {"error": "Không tìm thấy file OPR TTS.xlsx"}
+            OPR_CACHE = {"error": "Không tìm thấy dữ liệu OPR CSV."}
         gc.collect()
     except Exception as e:
         OPR_CACHE = {"error": f"Lỗi xử lý OPR: {e}"}
@@ -1830,25 +2362,10 @@ def update_all_caches():
     # 4. Process Backlog reports (Aging and Treo)
     try:
         print("Parsing Backlog reports...")
-        # We pass the cached dataframes!
-        path_aging = resolve_path('Aging _5 ngày.xlsx', write=False)
-        if os.path.exists(path_aging):
-            with pd.ExcelFile(path_aging) as xls_aging:
-                raw_co_cau_aging = pd.read_excel(xls_aging, sheet_name="Cơ cấu")
-            aging = process_aging_backlog(df_raw=DF_AGING_CACHE, df_co_cau=raw_co_cau_aging)
-            del raw_co_cau_aging
-        else:
-            aging = {"error": "Không tìm thấy file Aging"}
-            
-        path_treo = resolve_path('Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx', write=False)
-        if os.path.exists(path_treo):
-            with pd.ExcelFile(path_treo) as xls_treo:
-                raw_co_cau_treo = pd.read_excel(xls_treo, sheet_name="Cơ cấu")
-            treo = process_treo_backlog(df_raw=DF_TREO_CACHE, df_co_cau=raw_co_cau_treo)
-            del raw_co_cau_treo
-        else:
-            treo = {"error": "Không tìm thấy file Treo"}
-            
+        # Fallback to ops_co_cau.csv automatically by passing df_co_cau=None
+        aging = process_aging_backlog(df_raw=DF_AGING_CACHE, df_co_cau=None)
+        treo = process_treo_backlog(df_raw=DF_TREO_CACHE, df_co_cau=None)
+        
         BACKLOG_CACHE_RAW = {
             "aging": aging,
             "treo": treo
@@ -1857,7 +2374,7 @@ def update_all_caches():
         gc.collect()
     except Exception as e:
         BACKLOG_CACHE_RAW = {"aging": {"error": f"Lỗi: {e}"}, "treo": {"error": f"Lỗi: {e}"}}
-        
+
     # 5. Process Unstable POs
     try:
         print("Parsing Unstable POs...")
@@ -1902,6 +2419,11 @@ def api_login():
         data = request.json or {}
         username = data.get("username", "").strip()
         password = data.get("password", "").strip()
+        
+        ip = request.remote_addr
+        is_ok, retry_after = check_rate_limit(f"{ip}_login", limit=10, period=60)
+        if not is_ok:
+            return jsonify({"error": f"Quá nhiều yêu cầu đăng nhập. Vui lòng thử lại sau {retry_after} giây."}), 429
         
         if not username or not password:
             return jsonify({"error": "Vui lòng nhập đầy đủ mã nhân viên và mật khẩu."}), 400
@@ -2025,7 +2547,28 @@ def get_off_spe():
 @app.route('/api/operational')
 @requires_permission('tab-operational')
 def get_operational():
-    global OPERATIONAL_CACHE
+    global OPERATIONAL_CACHE, DF_GTC_CACHE, DF_LTC_CACHE, DF_TTS_CACHE
+    am = request.args.get('am')
+    province = request.args.get('province')
+    po = request.args.get('po')
+    date = request.args.get('date')
+    
+    if am or province or po or date:
+        df_gtc = DF_GTC_CACHE if DF_GTC_CACHE is not None else None
+        df_ltc = DF_LTC_CACHE if DF_LTC_CACHE is not None else None
+        df_tts = DF_TTS_CACHE if DF_TTS_CACHE is not None else None
+        
+        ops = process_operational_report(
+            df_gtc=df_gtc,
+            df_ltc=df_ltc,
+            df_tts=df_tts,
+            am=am,
+            province=province,
+            po=po,
+            date=date
+        )
+        return jsonify(clean_nan(ops))
+        
     with CACHE_LOCK:
         if OPERATIONAL_CACHE is None:
             OPERATIONAL_CACHE = process_operational_report()
@@ -2034,6 +2577,15 @@ def get_operational():
 @app.route('/api/opr')
 @requires_permission('tab-opr')
 def get_opr():
+    am = request.args.get('am')
+    province = request.args.get('province')
+    post_office = request.args.get('post_office')
+    
+    if am or province or post_office:
+        # Dynamically compute OPR report with filters applied
+        filtered_report = process_opr_report(am=am, province=province, post_office=post_office)
+        return jsonify(clean_nan(filtered_report))
+        
     global OPR_CACHE
     with CACHE_LOCK:
         if OPR_CACHE is None:
@@ -2114,6 +2666,13 @@ def mask_url(url):
     masked_url = url.replace(spreadsheet_id, masked_id)
     return masked_url
 
+def mask_token(token):
+    if not token:
+        return ""
+    if len(token) > 8:
+        return token[:4] + "****************" + token[-4:]
+    return "********"
+
 @app.route('/api/config', methods=['GET', 'POST'])
 @requires_permission('tab-sync')
 def manage_config():
@@ -2125,19 +2684,58 @@ def manage_config():
             current_config = load_config()
             
             config = {}
-            for k in ["ops_url", "opr_url", "aging_url", "treo_url", "bat_on_url", "off_spe_url", "tao_don_url"]:
-                val = data.get(k, "").strip()
+            if "consolidated_url" in data:
+                val = data.get("consolidated_url", "").strip()
                 if not val:
-                    config[k] = ""
+                    config["consolidated_url"] = ""
                 elif "*" in val or "Ẩn" in val or "hidden" in val.lower():
-                    config[k] = current_config.get(k, "")
+                    config["consolidated_url"] = current_config.get("consolidated_url", "")
                 else:
                     if not (val.startswith("https://docs.google.com/spreadsheets/") or val.startswith("http://docs.google.com/spreadsheets/")):
-                        return jsonify({"error": f"Link Google Sheet không hợp lệ cho {k}. Phải bắt đầu bằng https://docs.google.com/spreadsheets/"}), 400
-                    config[k] = val
+                        return jsonify({"error": "Link Google Sheet không hợp lệ cho consolidated_url. Phải bắt đầu bằng https://docs.google.com/spreadsheets/"}), 400
+                    if not is_allowed_spreadsheet_url(val):
+                        return jsonify({"error": "Spreadsheet ID không nằm trong danh sách được cho phép (SSRF Prevention)."}), 400
+                    config["consolidated_url"] = val
+            else:
+                config["consolidated_url"] = current_config.get("consolidated_url", "")
+
+            # Parse Telegram Bot Token
+            if "telegram_bot_token" in data:
+                val_token = data.get("telegram_bot_token", "").strip()
+                if not val_token:
+                    config["telegram_bot_token"] = ""
+                elif "*" in val_token or "hidden" in val_token.lower():
+                    config["telegram_bot_token"] = current_config.get("telegram_bot_token", "")
+                else:
+                    config["telegram_bot_token"] = val_token
+            else:
+                config["telegram_bot_token"] = current_config.get("telegram_bot_token", "")
+
+            # Parse Telegram Chat ID
+            if "telegram_chat_id" in data:
+                config["telegram_chat_id"] = data.get("telegram_chat_id", "").strip()
+            else:
+                config["telegram_chat_id"] = current_config.get("telegram_chat_id", "")
+
+            # Parse Gemini API Key
+            if "gemini_api_key" in data:
+                val_gemini = data.get("gemini_api_key", "").strip()
+                if not val_gemini:
+                    config["gemini_api_key"] = ""
+                elif "*" in val_gemini or "hidden" in val_gemini.lower():
+                    config["gemini_api_key"] = current_config.get("gemini_api_key", "")
+                else:
+                    config["gemini_api_key"] = val_gemini
+            else:
+                config["gemini_api_key"] = current_config.get("gemini_api_key", "")
             
             if save_config(config):
-                masked_config = {k: mask_url(v) for k, v in config.items()}
+                masked_config = {
+                    "consolidated_url": mask_url(config.get("consolidated_url", "")),
+                    "telegram_bot_token": mask_token(config.get("telegram_bot_token", "")),
+                    "telegram_chat_id": config.get("telegram_chat_id", ""),
+                    "gemini_api_key": mask_token(config.get("gemini_api_key", ""))
+                }
                 return jsonify({"success": True, "config": masked_config})
             else:
                 return jsonify({"error": "Không thể ghi cấu hình."}), 500
@@ -2145,7 +2743,12 @@ def manage_config():
             return jsonify({"error": f"Lỗi xử lý yêu cầu: {str(e)}"}), 400
     else:
         config = load_config()
-        masked_config = {k: mask_url(v) for k, v in config.items()}
+        masked_config = {
+            "consolidated_url": mask_url(config.get("consolidated_url", "")),
+            "telegram_bot_token": mask_token(config.get("telegram_bot_token", "")),
+            "telegram_chat_id": config.get("telegram_chat_id", ""),
+            "gemini_api_key": mask_token(config.get("gemini_api_key", ""))
+        }
         return jsonify(masked_config)
 
 @app.route('/api/download-template', methods=['GET'])
@@ -2154,21 +2757,47 @@ def download_template():
     from flask import send_from_directory
     filename = request.args.get('filename', '').strip()
     allowed_files = [
-        'Aging _5 ngày.xlsx',
-        'Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx',
-        'OPR TTS.xlsx',
-        'Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx',
-        'buu_cuc_bat_on.xlsx',
-        'off_tuyen_spe.xlsx',
-        'vols_tao_don.xlsx'
+        'ops_gtc.csv',
+        'ops_ltc.csv',
+        'ops_co_cau.csv',
+        'opr_opr.csv',
+        'opr_oe.csv',
+        'opr_raw.csv',
+        'aging_raw.csv',
+        'treo_stuck.csv',
+        'buu_cuc_bat_on.csv',
+        'off_tuyen_spe.csv',
+        'vols_tao_don.csv',
+        'co_cau_ntb.csv'
     ]
     if filename not in allowed_files:
         return jsonify({"error": "Tên file không hợp lệ."}), 400
         
     try:
-        download_path = resolve_path(filename, write=False)
-        directory, file_only = os.path.split(download_path)
-        return send_from_directory(directory, file_only, as_attachment=True)
+        filepath = resolve_path(filename, write=False)
+        if not os.path.exists(filepath):
+            headers_map = {
+                'ops_gtc.csv': 'Cấp Quản Lý,Chi tiết,Loại Hàng,Time,Volume,% Gán,% GTC,% Chuyển trả,Leadtime,AM,Tỉnh',
+                'ops_ltc.csv': 'Cấp quản lý,Chi tiết,Ca,Time,Volume,%LTC,%LC,%Gán,Leadtime',
+                'ops_co_cau.csv': 'BC,Bưu cục,AM,Tỉnh',
+                'opr_opr.csv': 'NgayLTC,vol_ltc,ot,khung_gio_tao_don,ly_do_tre_12h,AM',
+                'opr_oe.csv': 'tutinh,kholay,sellername,khung_gio_tao_don,ly_do_tre_12h,madh,AM',
+                'opr_raw.csv': 'NgayLTC,vol_ltc,ot,khung_gio_tao_don,ly_do_tre_12h,AM',
+                'aging_raw.csv': 'Tỉnh,BC,Mã đơn,Tệp khách,Số ngày đã nhập BC,Số lần giao,am_name,Trạng thái',
+                'treo_stuck.csv': 'warehouse_name,Mã đơn hàng,Loại đơn,Thời gian tồn đọng,am_name,province_name,Trạng thái',
+                'buu_cuc_bat_on.csv': 'kho_giao_id,kho_giao_name,tinh_giao,BL LM,BL LM >5 ngay,%BL LM >5 ngay,BL KTC,BL KTC cung tinh,%BL KTC cung tinh,du_kien_clear_ton,ly_do_bat_on,trang_thai',
+                'off_tuyen_spe.csv': 'tỉnh,huyện,phường,bưu cục,kết quả,cap,% time off,tg mở,ghi chú',
+                'vols_tao_don.csv': 'Date,Province,buu_cuc,bat_on,Vol_Shopee_Tiktok,Vol_LTC_Ontime_Shopee_Tiktok,OPR_Shopee_Tiktok',
+                'co_cau_ntb.csv': 'warehouse_id,Bưu cục,AM,Tỉnh'
+            }
+            if filename in headers_map:
+                os.makedirs(os.path.dirname(filepath), exist_ok=True)
+                with open(filepath, 'w', encoding='utf-8-sig') as f:
+                    f.write(headers_map[filename] + "\n")
+        
+        directory = os.path.dirname(filepath)
+        name = os.path.basename(filepath)
+        return send_from_directory(directory, name, as_attachment=True)
     except Exception as e:
         return jsonify({"error": f"Không thể tải file: {str(e)}"}), 500
 
@@ -2186,20 +2815,25 @@ def upload_file():
         return jsonify({"error": "Không xác định được tên file đích."}), 400
         
     allowed_files = [
-        'Aging _5 ngày.xlsx',
-        'Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx',
-        'OPR TTS.xlsx',
-        'Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx',
-        'buu_cuc_bat_on.xlsx',
-        'off_tuyen_spe.xlsx',
-        'vols_tao_don.xlsx'
+        'ops_gtc.csv',
+        'ops_ltc.csv',
+        'ops_co_cau.csv',
+        'opr_opr.csv',
+        'opr_oe.csv',
+        'opr_raw.csv',
+        'aging_raw.csv',
+        'treo_stuck.csv',
+        'buu_cuc_bat_on.csv',
+        'off_tuyen_spe.csv',
+        'vols_tao_don.csv',
+        'co_cau_ntb.csv'
     ]
     
     if filename not in allowed_files:
         return jsonify({"error": "Tên file không hợp lệ."}), 400
         
-    if not (file.filename.endswith('.xlsx') or file.filename.endswith('.xls')):
-        return jsonify({"error": "Định dạng file không hợp lệ. Chỉ hỗ trợ file Excel (.xlsx, .xls)."}), 400
+    if not file.filename.endswith('.csv'):
+        return jsonify({"error": "Định dạng file không hợp lệ. Chỉ hỗ trợ file CSV (.csv)."}), 400
         
     try:
         filepath = resolve_path(filename, write=True)
@@ -2220,40 +2854,215 @@ SYNC_STATUS = {
     "timestamp": None
 }
 
+def split_excel_to_csvs(xlsx_path):
+    print(f"Splitting {xlsx_path} to CSV files using optimized openpyxl...")
+    import openpyxl
+    import csv
+    try:
+        wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
+        sheet_names = wb.sheetnames
+        sheet_names_lower = [s.strip().lower() for s in sheet_names]
+        
+        sheet_mappings = [
+            (["data"], "ops_gtc.csv"),
+            (["dataltc", "rawltc", "data ltc"], "ops_ltc.csv"),
+            (["cocauvung", "cơ cấu", "co_cau", "co cau"], "ops_co_cau.csv"),
+            (["cocauvung", "cơ cấu", "co_cau", "co cau"], "co_cau_ntb.csv"),
+            (["tts"], "ops_tts.csv"),
+            (["opr"], "opr_opr.csv"),
+            (["raw n-1", "oe_madh", "raw_n-1", "raw n - 1", "oe madh"], "opr_oe.csv"),
+            (["rawopr"], "opr_raw.csv"),
+            (["aging trên 5 ngày", "aging tren 5 ngay", "đơn giao aging trên 5 ngày", "don giao aging tren 5 ngay"], "aging_raw.csv"),
+            (["treo lc", "stuck", "treo luân chuyển", "treo luan chuyen"], "treo_stuck.csv"),
+            (["ntb", "bất ổn", "bat_on", "cảnh báo"], "buu_cuc_bat_on.csv"),
+            (["đang off", "dang off", "off", "off_tuyen", "off tuyến"], "off_tuyen_spe.csv"),
+            (["shopee_tiktok", "tao_don", "tạo đơn"], "vols_tao_don.csv"),
+            (["odr tts", "odr_tts"], "ODR TTS.csv"),
+            (["nhân sự", "nhan su"], "ops_nhan_su.csv")
+        ]
+        
+        for candidates, target_csv in sheet_mappings:
+            matched_sheet = None
+            for c in candidates:
+                if c in sheet_names_lower:
+                    idx = sheet_names_lower.index(c)
+                    matched_sheet = sheet_names[idx]
+                    break
+            
+            if matched_sheet:
+                safe_name = matched_sheet.encode('ascii', 'backslashreplace').decode('ascii')
+                print(f"Extracting '{safe_name}' -> {target_csv}...")
+                sheet = wb[matched_sheet]
+                csv_path = resolve_path(target_csv, write=True)
+                with open(csv_path, 'w', encoding='utf-8-sig', newline='') as f:
+                    writer = csv.writer(f)
+                    for row in sheet.iter_rows(values_only=True):
+                        # Filter out completely empty rows
+                        if not any(x is not None for x in row):
+                            continue
+                        writer.writerow(row)
+                try:
+                    df = pd.read_csv(csv_path)
+                    save_df_to_db(df, target_csv)
+                except Exception as e:
+                    print(f"Error saving split sheet {target_csv} to DB: {e}")
+            else:
+                print(f"Warning: sheet for {target_csv} not found in Excel workbook.")
+        wb.close()
+        return True
+    except Exception as e:
+        print(f"Error splitting Excel to CSVs: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
+
+def sync_sheets_directly_as_csv(url):
+    import urllib.request
+    import re
+    import concurrent.futures
+    import time
+    
+    if not url or not url.strip():
+        return False, "Không có link Google Sheet."
+        
+    url = url.strip()
+    if not is_allowed_spreadsheet_url(url):
+        return False, "Spreadsheet ID không nằm trong danh sách được cho phép (SSRF Prevention)."
+        
+    match = re.search(r'/spreadsheets/d/([a-zA-Z0-9-_]+)', url)
+    if not match:
+        return False, "Không tìm thấy Spreadsheet ID hợp lệ trong link."
+    spreadsheet_id = match.group(1)
+    
+    edit_url = f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}/edit"
+    user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)'
+    
+    print(f"Fetching edit HTML to extract GIDs from: {edit_url}")
+    req = urllib.request.Request(edit_url, headers={'User-Agent': user_agent})
+    try:
+        with urllib.request.urlopen(req, timeout=20) as r:
+            html = r.read().decode('utf-8')
+    except Exception as e:
+        return False, f"Lỗi truy cập link Google Sheet: {str(e)}"
+        
+    pattern = r'\[\s*\d+\s*,\s*0\s*,\s*\\"?(\d+)\\"?\s*,\s*\[\s*\{\s*\\"?1\\"?\s*:\s*\[\s*\[\s*0\s*,\s*0\s*,\s*\\"?([^\\"\(\]]+)\\"?'
+    matches = re.findall(pattern, html)
+    if not matches:
+        return False, "Không tìm thấy danh sách sheet (GIDs) trong HTML."
+        
+    gid_map = {}
+    for gid, name in matches:
+        gid_map[name.strip().lower()] = gid
+        
+    sheet_mappings = [
+        (["data"], "ops_gtc.csv"),
+        (["dataltc", "rawltc", "data ltc"], "ops_ltc.csv"),
+        (["cocauvung", "cơ cấu", "co_cau", "co cau"], "ops_co_cau.csv"),
+        (["cocauvung", "cơ cấu", "co_cau", "co cau"], "co_cau_ntb.csv"),
+        (["tts"], "ops_tts.csv"),
+        (["opr"], "opr_opr.csv"),
+        (["raw n-1", "oe_madh", "raw_n-1", "raw n - 1", "oe madh"], "opr_oe.csv"),
+        (["rawopr"], "opr_raw.csv"),
+        (["aging trên 5 ngày", "aging tren 5 ngay", "đơn giao aging trên 5 ngày", "don giao aging tren 5 ngay"], "aging_raw.csv"),
+        (["treo lc", "stuck", "treo luân chuyển", "treo luan chuyen"], "treo_stuck.csv"),
+        (["ntb", "bất ổn", "bat_on", "cảnh báo"], "buu_cuc_bat_on.csv"),
+        (["đang off", "dang off", "off", "off_tuyen", "off tuyến"], "off_tuyen_spe.csv"),
+        (["shopee_tiktok", "tao_don", "tạo đơn"], "vols_tao_don.csv"),
+        (["odr tts", "odr_tts"], "ODR TTS.csv"),
+        (["nhân sự", "nhan su"], "ops_nhan_su.csv")
+    ]
+    
+    gid_to_filenames = {}
+    for candidates, target_csv in sheet_mappings:
+        matched_gid = None
+        for cand in candidates:
+            cand_clean = cand.strip().lower()
+            if cand_clean in gid_map:
+                matched_gid = gid_map[cand_clean]
+                break
+        if matched_gid is not None:
+            if matched_gid not in gid_to_filenames:
+                gid_to_filenames[matched_gid] = []
+            gid_to_filenames[matched_gid].append(target_csv)
+            
+    if not gid_to_filenames:
+        return False, "Không tìm thấy sheet nào khớp với cấu hình."
+        
+    print(f"Found {len(gid_to_filenames)} unique GIDs to download.")
+    
+    def download_gid(gid, filenames):
+        csv_url = f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}/export?format=csv&gid={gid}"
+        req_csv = urllib.request.Request(csv_url, headers={'User-Agent': user_agent})
+        try:
+            with urllib.request.urlopen(req_csv, timeout=30) as response:
+                content = response.read()
+            for filename in filenames:
+                csv_path = resolve_path(filename, write=True)
+                with open(csv_path, 'wb') as f:
+                    f.write(content)
+                try:
+                    for encoding in ['utf-8-sig', 'utf-8', 'latin-1', 'cp1252']:
+                        try:
+                            import io
+                            df = pd.read_csv(io.BytesIO(content), encoding=encoding)
+                            save_df_to_db(df, filename)
+                            break
+                        except Exception:
+                            continue
+                except Exception as e:
+                    print(f"Error parsing synced CSV {filename} for DB: {e}")
+            return True
+        except Exception as e:
+            print(f"Error downloading GID {gid} for {filenames}: {e}")
+            return False
+            
+    success_count = 0
+    with concurrent.futures.ThreadPoolExecutor(max_workers=len(gid_to_filenames)) as executor:
+        futures = {executor.submit(download_gid, gid, fnames): gid for gid, fnames in gid_to_filenames.items()}
+        for future in concurrent.futures.as_completed(futures):
+            gid = futures[future]
+            try:
+                if future.result():
+                    success_count += len(gid_to_filenames[gid])
+            except Exception as e:
+                print(f"Exception downloading GID {gid}: {e}")
+                
+    if success_count == 0:
+        return False, "Không tải được file CSV nào từ Google Sheets."
+        
+    return True, f"Đã tải thành công {success_count} files."
+
 def async_sync_task(is_admin_flag):
     global OPERATIONAL_CACHE, OPR_CACHE, BACKLOG_CACHE_RAW, UNSTABLE_PO_CACHE, OFF_SPE_CACHE, SYNC_STATUS
     try:
         if is_admin_flag:
             config = load_config()
-            download_errors = []
-            
-            mappings = [
-                ("ops_url", 'Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', "Báo cáo Vận hành"),
-                ("opr_url", 'OPR TTS.xlsx', "OPR TTS"),
-                ("aging_url", 'Aging _5 ngày.xlsx', "Aging > 5 ngày"),
-                ("treo_url", 'Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx', "Treo luân chuyển"),
-                ("bat_on_url", 'buu_cuc_bat_on.xlsx', "Bưu cục bất ổn"),
-                ("off_spe_url", 'off_tuyen_spe.xlsx', "OFF tuyến SPE"),
-                ("tao_don_url", 'vols_tao_don.xlsx', "Volume tạo đơn")
-            ]
-            
-            total_urls = sum(1 for k, _, _ in mappings if config.get(k, "").strip())
-            current_idx = 0
-            
-            for key, filename, label in mappings:
-                url = config.get(key, "")
-                if url and url.strip():
-                    current_idx += 1
-                    SYNC_STATUS["progress"] = f"Đang tải {label} ({current_idx}/{total_urls})..."
-                    filepath = resolve_path(filename, write=True)
-                    success, msg = download_google_sheet(url, filepath)
+            url = config.get("consolidated_url", "")
+            if url and url.strip():
+                # 1. Try direct CSV sync first
+                SYNC_STATUS["progress"] = "Đang tải dữ liệu trực tiếp dưới dạng CSV (Tối ưu)..."
+                direct_success, direct_msg = sync_sheets_directly_as_csv(url)
+                
+                if direct_success:
+                    print("Direct CSV sync succeeded:", direct_msg)
+                else:
+                    print("Direct CSV sync failed, falling back to XLSX split:", direct_msg)
+                    # 2. Fallback to Excel download and split
+                    SYNC_STATUS["progress"] = "Đang tải file Google Sheet tổng hợp (Dự phòng XLSX)..."
+                    temp_xlsx = resolve_path('downloaded_consolidated_sheet.xlsx', write=True)
+                    success, msg = download_google_sheet(url, temp_xlsx)
                     if not success:
-                        download_errors.append(f"{label}: {msg}")
-            
-            if download_errors:
-                SYNC_STATUS["status"] = "error"
-                SYNC_STATUS["error"] = "Lỗi đồng bộ Google Sheets:\n" + "\n".join(download_errors)
-                return
+                        SYNC_STATUS["status"] = "error"
+                        SYNC_STATUS["error"] = f"Lỗi tải Google Sheet: {msg}"
+                        return
+                    
+                    SYNC_STATUS["progress"] = "Đang trích xuất các sheet thành CSV (Dự phòng XLSX)..."
+                    if not split_excel_to_csvs(temp_xlsx):
+                        SYNC_STATUS["status"] = "error"
+                        SYNC_STATUS["error"] = "Lỗi khi trích xuất dữ liệu từ Google Sheet sang CSV."
+                        return
+            else:
+                print("No consolidated URL configured, using existing CSV files.")
                 
         SYNC_STATUS["progress"] = "Đang xử lý dữ liệu và cập nhật bộ nhớ đệm..."
         
@@ -2291,6 +3100,11 @@ def async_sync_task(is_admin_flag):
 @requires_permission('tab-sync')
 def trigger_sync():
     global SYNC_STATUS
+    ip = request.remote_addr
+    is_ok, retry_after = check_rate_limit(f"{ip}_sync", limit=3, period=60)
+    if not is_ok:
+        return jsonify({"error": f"Yêu cầu đồng bộ quá nhanh. Vui lòng thử lại sau {retry_after} giây."}), 429
+        
     if SYNC_STATUS["status"] == "processing":
         return jsonify({"error": "Đang có quá trình đồng bộ đang chạy."}), 400
         
@@ -2299,14 +3113,135 @@ def trigger_sync():
     SYNC_STATUS["progress"] = "Đang khởi tạo đồng bộ..."
     
     admin_flag = is_admin()
-    threading.Thread(target=async_sync_task, args=(admin_flag,), daemon=True).start()
-    return jsonify({"success": True, "status": "started"})
+    
+    # On Vercel, run synchronously because background threads are killed immediately when the HTTP response returns.
+    if os.environ.get("VERCEL"):
+        async_sync_task(admin_flag)
+        if SYNC_STATUS["status"] == "error":
+            return jsonify({"error": SYNC_STATUS["error"]}), 500
+        return jsonify({"success": True, "status": "success", "message": "Đồng bộ hoàn tất!"})
+    else:
+        threading.Thread(target=async_sync_task, args=(admin_flag,), daemon=True).start()
+        return jsonify({"success": True, "status": "started"})
 
 @app.route('/api/sync/status', methods=['GET'])
 @requires_permission('tab-sync')
 def get_sync_status():
     global SYNC_STATUS
     return jsonify(SYNC_STATUS)
+
+
+@app.route('/api/nhan-su', methods=['GET'])
+@requires_permission('tab-nhan-su')
+def api_nhan_su():
+    try:
+        ns_path = resolve_path('ops_nhan_su.csv', write=False)
+        if not os.path.exists(ns_path):
+            return jsonify({"error": "Không tìm thấy file ops_nhan_su.csv. Vui lòng thực hiện Đồng bộ dữ liệu."}), 404
+            
+        df_ns = safe_read_csv(ns_path)
+        if df_ns is None or df_ns.empty:
+            return jsonify({"error": "Dữ liệu nhân sự trống."}), 400
+            
+        df_ns.columns = [c.strip() for c in df_ns.columns]
+        
+        def check_sp_team(x):
+            val_str = str(x).strip().lower()
+            return val_str in ['true', '1', 'yes', 't']
+            
+        active_mask = (
+            (df_ns['Trạng thái'].astype(str).str.strip() == "Đang làm việc") &
+            (df_ns['Vùng'].astype(str).str.strip() == "NTB") &
+            (df_ns['Chức vụ'].astype(str).str.strip() == "Business Development Field Executive") &
+            (~df_ns['SP Team?'].apply(check_sp_team))
+        )
+        active_df = df_ns[active_mask].copy()
+        
+        resigned_mask = (
+            (df_ns['Trạng thái'].astype(str).str.strip() == "Đã nghỉ") &
+            (df_ns['Vùng'].astype(str).str.strip() == "NTB")
+        )
+        resigned_count = len(df_ns[resigned_mask])
+        
+        def parse_warehouse_id(bc_str):
+            if pd.isna(bc_str):
+                return None
+            parts = str(bc_str).split(" - ", 1)
+            if len(parts) == 2:
+                try:
+                    return int(parts[0].strip())
+                except:
+                    return parts[0].strip()
+            return None
+            
+        active_df['warehouse_id'] = active_df['Bưu cục'].apply(parse_warehouse_id)
+        
+        cc_path = resolve_path('ops_co_cau.csv', write=False)
+        if not os.path.exists(cc_path):
+            return jsonify({"error": "Không tìm thấy file ops_co_cau.csv"}), 404
+            
+        df_cc = safe_read_csv(cc_path)
+        df_cc.columns = [c.strip() for c in df_cc.columns]
+        
+        def clean_id(x):
+            try:
+                return int(float(x))
+            except:
+                return str(x).strip()
+        df_cc['warehouse_id_clean'] = df_cc['warehouse_id'].apply(clean_id)
+        active_df['warehouse_id_clean'] = active_df['warehouse_id'].apply(clean_id)
+        
+        vol_path = resolve_path('vols_tao_don.csv', write=False)
+        po_vols = {}
+        unique_dates_count = 1
+        if os.path.exists(vol_path):
+            df_vol = safe_read_csv(vol_path)
+            if df_vol is not None and not df_vol.empty:
+                df_vol.columns = [c.strip() for c in df_vol.columns]
+                df_vol_ntb = df_vol[df_vol['Vùng'].astype(str).str.strip() == 'NTB'].copy()
+                unique_dates_count = len(df_vol_ntb['Date'].unique()) if 'Date' in df_vol_ntb.columns else 1
+                if unique_dates_count == 0:
+                    unique_dates_count = 1
+                df_vol_ntb['warehouse_id_clean'] = df_vol_ntb['warehouse_id'].apply(clean_id)
+                vol_sums = df_vol_ntb.groupby('warehouse_id_clean')['Volume'].sum()
+                for wh_id, v_sum in vol_sums.items():
+                    po_vols[wh_id] = round(v_sum / unique_dates_count)
+                    
+        hc_counts = active_df.groupby('warehouse_id_clean').size().to_dict()
+        
+        po_list = []
+        for _, r in df_cc.iterrows():
+            wh_id = r.get('warehouse_id')
+            wh_id_clean = clean_id(wh_id)
+            bc_name = r.get('Bưu cục', '')
+            province = r.get('Tỉnh', '')
+            am = r.get('AM', '')
+            
+            hc = hc_counts.get(wh_id_clean, 0)
+            vol = po_vols.get(wh_id_clean, 0)
+            
+            po_list.append({
+                "warehouse_id": str(wh_id),
+                "name": str(bc_name),
+                "province": str(province),
+                "am": str(am),
+                "hc_current": hc,
+                "vol_2025": vol
+            })
+            
+        active_pos_count = len([x for x in po_list if x["hc_current"] > 0 or x["vol_2025"] > 0])
+        
+        return jsonify({
+            "active_headcount": len(active_df),
+            "resigned_headcount": resigned_count,
+            "po_count": active_pos_count,
+            "pos": po_list
+        })
+    except Exception as e:
+        print(f"Error in api_nhan_su: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": f"Lỗi hệ thống: {str(e)}"}), 500
 
 
 @app.route('/api/summary-dashboard')
@@ -2334,6 +3269,9 @@ def api_summary_dashboard():
         
         prev_date = dates_sorted[-2] if len(dates_sorted) >= 2 else None
         
+        latest_idx = dates_sorted.index(latest_date) if latest_date in dates_sorted else len(dates_sorted) - 1
+        n3_date = dates_sorted[latest_idx - 3] if latest_idx >= 3 else None
+        
         # Find same day of week last week (7 days ago)
         latest_dt = pd.to_datetime(latest_date.split(' - ')[0])
         last_week_date = None
@@ -2347,7 +3285,17 @@ def api_summary_dashboard():
             if not date_str:
                 return None
             gtc_d = df_gtc[df_gtc['Time'] == date_str]
-            ltc_d = df_ltc[df_ltc['Time'] == date_str]
+            
+            # Fallback if date is not present in df_ltc
+            if date_str in df_ltc['Time'].values:
+                ltc_d = df_ltc[df_ltc['Time'] == date_str]
+            else:
+                ltc_times = df_ltc['Time'].dropna().unique()
+                if len(ltc_times) > 0:
+                    ltc_dates_sorted = sorted(list(ltc_times), key=lambda x: pd.to_datetime(x.split(' - ')[0]))
+                    ltc_d = df_ltc[df_ltc['Time'] == ltc_dates_sorted[-1]]
+                else:
+                    ltc_d = df_ltc[df_ltc['Time'] == date_str]
             
             gtc_d = apply_filters(gtc_d, filter_am, filter_prov, filter_po)
             ltc_d = apply_filters(ltc_d, filter_am, filter_prov, filter_po)
@@ -2362,13 +3310,23 @@ def api_summary_dashboard():
                 'ltc': round((ltc_done / ltc_vol * 100), 2) if ltc_vol > 0 else 0.0,
                 'gtc': round((gtc_done / gtc_vol * 100), 2) if gtc_vol > 0 else 0.0,
                 'ttc': round((ttc_done / gtc_vol * 100), 2) if gtc_vol > 0 else 0.0,
-                'vol_ltc': int(ltc_vol),
+                'vol_ltc': int(ltc_done),
                 'vol_gtc': int(gtc_vol)
             }
         
         # Filter for latest date
         today_gtc = df_gtc[df_gtc['Time'] == latest_date]
-        today_ltc = df_ltc[df_ltc['Time'] == latest_date]
+        
+        # Fallback for today_ltc if latest_date not in df_ltc['Time'].values
+        if latest_date in df_ltc['Time'].values:
+            today_ltc = df_ltc[df_ltc['Time'] == latest_date]
+        else:
+            ltc_times = df_ltc['Time'].dropna().unique()
+            if len(ltc_times) > 0:
+                ltc_dates_sorted = sorted(list(ltc_times), key=lambda x: pd.to_datetime(x.split(' - ')[0]))
+                today_ltc = df_ltc[df_ltc['Time'] == ltc_dates_sorted[-1]]
+            else:
+                today_ltc = df_ltc[df_ltc['Time'] == latest_date]
         
         # Apply filters to today's data
         today_gtc = apply_filters(today_gtc, am, province, post_office)
@@ -2395,7 +3353,7 @@ def api_summary_dashboard():
                 'GTC_pct': round((r['delivered_vol'] / r['Volume_gtc'] * 100), 2) if r['Volume_gtc'] > 0 else 0.0,
                 'TTC_pct': round((r['ttc_vol'] / r['Volume_gtc'] * 100), 2) if r['Volume_gtc'] > 0 else 0.0,
                 'Volume_gtc': int(r['Volume_gtc']),
-                'Volume_ltc': int(r['Volume_ltc'])
+                'Volume_ltc': int(r['ltc_vol'])
             })
             
         # 2. Backlog by AM
@@ -2421,7 +3379,7 @@ def api_summary_dashboard():
         # 3. Overall & Province-specific KPIs
         kpis = {}
         
-        def format_kpi_dict(latest_kpi, prev_kpi, lw_kpi):
+        def format_kpi_dict(latest_kpi, prev_kpi, lw_kpi, n3_kpi=None):
             res = {
                 'ltc': latest_kpi['ltc'] if latest_kpi else 0.0,
                 'gtc': latest_kpi['gtc'] if latest_kpi else 0.0,
@@ -2447,16 +3405,27 @@ def api_summary_dashboard():
                     }
                 else:
                     res['wow'] = None
+
+                if n3_kpi:
+                    res['n3'] = {
+                        'ltc': round(latest_kpi['ltc'] - n3_kpi['ltc'], 2),
+                        'gtc': round(latest_kpi['gtc'] - n3_kpi['gtc'], 2),
+                        'ttc': round(latest_kpi['ttc'] - n3_kpi['ttc'], 2)
+                    }
+                else:
+                    res['n3'] = None
             else:
                 res['dod'] = None
                 res['wow'] = None
+                res['n3'] = None
             return res
             
         overall_latest = compute_kpi_for_date(latest_date, am, province, post_office)
         overall_prev = compute_kpi_for_date(prev_date, am, province, post_office) if prev_date else None
         overall_lw = compute_kpi_for_date(last_week_date, am, province, post_office) if last_week_date else None
+        overall_n3 = compute_kpi_for_date(n3_date, am, province, post_office) if n3_date else None
         
-        kpis['overall'] = format_kpi_dict(overall_latest, overall_prev, overall_lw)
+        kpis['overall'] = format_kpi_dict(overall_latest, overall_prev, overall_lw, overall_n3)
         
         # Compute for each province
         all_provinces = set(df_ltc['mapped_prov'].unique()).union(set(df_gtc['mapped_prov'].unique()))
@@ -2466,9 +3435,10 @@ def api_summary_dashboard():
             prov_latest = compute_kpi_for_date(latest_date, am, prov_name, post_office)
             prov_prev = compute_kpi_for_date(prev_date, am, prov_name, post_office) if prev_date else None
             prov_lw = compute_kpi_for_date(last_week_date, am, prov_name, post_office) if last_week_date else None
+            prov_n3 = compute_kpi_for_date(n3_date, am, prov_name, post_office) if n3_date else None
             
             clean_key = clean_str_key(prov_name)
-            kpis[clean_key] = format_kpi_dict(prov_latest, prov_prev, prov_lw)
+            kpis[clean_key] = format_kpi_dict(prov_latest, prov_prev, prov_lw, prov_n3)
             kpis[clean_key]['name'] = prov_name
             
         return jsonify(clean_nan({
@@ -2543,7 +3513,9 @@ def api_trends_dashboard():
                 else:
                     prov_gtc.append(None)
                     
-            trends[prov] = {
+            # Normalize key to lowercase with underscores to match frontend (e.g. 'lâm_đồng', 'bình_thuận')
+            trend_key = str(prov).strip().lower().replace(" ", "_")
+            trends[trend_key] = {
                 'ltc': prov_ltc,
                 'gtc': prov_gtc
             }
@@ -2718,7 +3690,7 @@ def api_chat():
                 if os.path.exists(odr_path):
                     df_odr = pd.read_csv(odr_path)
                     df_odr['GTC'] = pd.to_numeric(df_odr['GTC'], errors='coerce')
-                    df_odr['%Ontime'] = pd.to_numeric(df_odr['%Ontime'].astype(str).str.rstrip('%'), errors='coerce') / 100
+                    df_odr['%Ontime'] = normalize_pct_col(df_odr['%Ontime'])
                     latest_date = df_odr['Time'].max()
                     df_latest = df_odr[(df_odr['Time'] == latest_date) & (df_odr['GTC'] >= 10)] # filter at least 10 orders
                     if not df_latest.empty:
@@ -2739,7 +3711,7 @@ def api_chat():
                     if val_float >= 80:
                         reply += "✅ Hiệu suất OPR đạt mục tiêu tối thiểu (Target: >= 80%). Các bưu cục đang vận hành khá tốt!"
                     else:
-                        reply += "⚠️ Hiệu suất OPR hiện tại chưa đạt mục tiêu tối thiểu (Target: >= 80%). Cần tập trung cải thiện thời gian xử lý đơn hàng."
+                        reply += "⚠️ Hiệu suất OPR hiện tại dưới mục tiêu tối thiểu (Target: >= 80%). Cần tập trung cải thiện thời gian xử lý đơn hàng."
                 except:
                     pass
             else:
@@ -2753,7 +3725,7 @@ def api_chat():
                 if os.path.exists(odr_path):
                     df_odr = pd.read_csv(odr_path)
                     df_odr['GTC'] = pd.to_numeric(df_odr['GTC'], errors='coerce')
-                    df_odr['%Ontime'] = pd.to_numeric(df_odr['%Ontime'].astype(str).str.rstrip('%'), errors='coerce') / 100
+                    df_odr['%Ontime'] = normalize_pct_col(df_odr['%Ontime'])
                     df_odr['ontime_vol'] = df_odr['GTC'] * df_odr['%Ontime']
                     latest_date = df_odr['Time'].max()
                     df_latest = df_odr[df_odr['Time'] == latest_date]
@@ -2820,11 +3792,14 @@ def api_chat():
 @requires_permission('tab-introduction')
 def get_ntb_structure():
     try:
-        path = resolve_path('co_cau_ntb.xlsx', write=False)
+        path = resolve_path('co_cau_ntb.csv', write=False)
         if not os.path.exists(path):
-            return jsonify({"error": "Không tìm thấy file co_cau_ntb.xlsx"})
+            return jsonify({"error": "Không tìm thấy file co_cau_ntb.csv"})
         
-        df = pd.read_excel(path, sheet_name='Sheet1')
+        df = safe_read_csv(path)
+        if df is None:
+            return jsonify({"error": "Lỗi đọc file co_cau_ntb.csv"})
+            
         df['Tỉnh'] = df['Tỉnh'].replace({'Khánh Hoà': 'Khánh Hòa', 'Bình Phước': 'Lâm Đồng'}).fillna("Chưa xác định").str.strip()
         df['AM'] = df['AM'].fillna("Chưa có AM").str.strip()
         df['Bưu cục'] = df['Bưu cục'].fillna("Chưa xác định").str.strip()
@@ -2843,14 +3818,18 @@ def get_ntb_structure():
 @requires_permission('tab-sync')
 def get_files_status():
     files = [
-        'Aging _5 ngày.xlsx',
-        'Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx',
-        'OPR TTS.xlsx',
-        'Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx',
-        'buu_cuc_bat_on.xlsx',
-        'co_cau_ntb.xlsx',
-        'off_tuyen_spe.xlsx',
-        'vols_tao_don.xlsx'
+        'ops_gtc.csv',
+        'ops_ltc.csv',
+        'ops_co_cau.csv',
+        'opr_opr.csv',
+        'opr_oe.csv',
+        'opr_raw.csv',
+        'aging_raw.csv',
+        'treo_stuck.csv',
+        'buu_cuc_bat_on.csv',
+        'off_tuyen_spe.csv',
+        'vols_tao_don.csv',
+        'co_cau_ntb.csv'
     ]
     status = []
     for f in files:
@@ -2875,7 +3854,7 @@ def get_volume_creation():
             DF_BUU_CUC_TYPE_MAP = load_buu_cuc_type_map()
             
     if DF_TAO_DON_CACHE is None:
-        return jsonify({"error": "Không tìm thấy file vols_tao_don.xlsx. Vui lòng cấu hình Google Sheet và đồng bộ!"}), 404
+        return jsonify({"error": "Không tìm thấy file vols_tao_don.csv. Vui lòng cấu hình Google Sheet và đồng bộ!"}), 404
         
     try:
         df = DF_TAO_DON_CACHE.copy()
@@ -3121,7 +4100,7 @@ def get_volume_creation():
             
             merged_growth = pd.merge(vol_d, vol_d7, on='Bưu cục', suffixes=('_d', '_d7'), how='left').fillna(0)
             merged_growth['growth_abs'] = merged_growth['Volume_d'] - merged_growth['Volume_d7']
-            merged_growth['growth_pct'] = (merged_growth['growth_abs'] / merged_growth['Volume_d7'] * 100).replace([np.inf, -np.inf], 0).fillna(0)
+            merged_growth['growth_pct'] = (merged_growth['growth_abs'] / merged_growth['Volume_d7'] * 100).replace(np.inf, 100.0).replace(-np.inf, -100.0).fillna(0)
             
             # Sort by absolute growth descending
             merged_growth = merged_growth.sort_values(by='growth_abs', ascending=False)
@@ -3186,6 +4165,365 @@ def startup_cache_init():
 # But in local debug mode, only run it once to prevent double execution
 if not app.debug or os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
     threading.Thread(target=startup_cache_init, daemon=True).start()
+
+def get_spiking_post_offices():
+    global DF_TAO_DON_CACHE
+    with CACHE_LOCK:
+        if DF_TAO_DON_CACHE is None:
+            DF_TAO_DON_CACHE = load_vols_tao_don_df()
+    if DF_TAO_DON_CACHE is None:
+        return []
+        
+    df = DF_TAO_DON_CACHE.copy()
+    latest_dt = df['Date'].max()
+    
+    df_d = df[df['Date'] == latest_dt]
+    df_d7 = df[df['Date'] == (latest_dt - pd.Timedelta(days=7))]
+    
+    if len(df_d) == 0 or len(df_d7) == 0:
+        return []
+        
+    vol_d = df_d.groupby(['Tỉnh', 'Bưu cục'])['Volume'].sum().reset_index()
+    vol_d7 = df_d7.groupby('Bưu cục')['Volume'].sum().reset_index()
+    
+    merged_growth = pd.merge(vol_d, vol_d7, on='Bưu cục', suffixes=('_d', '_d7'), how='left').fillna(0)
+    merged_growth['growth_abs'] = merged_growth['Volume_d'] - merged_growth['Volume_d7']
+    merged_growth['growth_pct'] = (merged_growth['growth_abs'] / merged_growth['Volume_d7'] * 100).replace(np.inf, 100.0).replace(-np.inf, -100.0).fillna(0)
+    
+    # Filter spikes: growth_abs >= 50 AND growth_pct >= 30%
+    spikes = merged_growth[(merged_growth['growth_abs'] >= 50) & (merged_growth['growth_pct'] >= 30.0)]
+    spikes = spikes.sort_values(by='growth_abs', ascending=False)
+    
+    spike_list = []
+    for _, row in spikes.iterrows():
+        spike_list.append({
+            'name': row['Bưu cục'],
+            'value': int(row['Volume_d']),
+            'province': row['Tỉnh'],
+            'growth_abs': int(row['growth_abs']),
+            'growth_pct': round(float(row['growth_pct']), 1)
+        })
+    return spike_list
+
+@app.route('/api/send-telegram-warning', methods=['POST'])
+@requires_permission('tab-volume-creation')
+def send_telegram_warning():
+    try:
+        config = load_config()
+        bot_token = config.get("telegram_bot_token", "").strip()
+        chat_id = config.get("telegram_chat_id", "").strip()
+        
+        # Accept updated config values in body to allow saving & sending at the same time
+        data = request.json or {}
+        req_token = data.get("telegram_bot_token", "").strip()
+        req_chat_id = data.get("telegram_chat_id", "").strip()
+        
+        if req_token and not ("*" in req_token or "hidden" in req_token.lower()):
+            bot_token = req_token
+            # Also save it permanently
+            save_config({
+                "consolidated_url": config.get("consolidated_url", ""),
+                "telegram_bot_token": req_token,
+                "telegram_chat_id": req_chat_id if req_chat_id else chat_id
+            })
+        elif req_chat_id and req_chat_id != chat_id:
+            chat_id = req_chat_id
+            save_config({
+                "consolidated_url": config.get("consolidated_url", ""),
+                "telegram_bot_token": config.get("telegram_bot_token", ""),
+                "telegram_chat_id": req_chat_id
+            })
+            
+        if not bot_token or not chat_id:
+            return jsonify({"error": "Chưa cấu hình Telegram Bot Token hoặc Chat ID / Group ID."}), 400
+            
+        spikes = get_spiking_post_offices()
+        
+        if spikes:
+            items_str = ""
+            for idx, item in enumerate(spikes):
+                items_str += f"{idx + 1}. *{item['name']}* ({item['province']})\n"
+                items_str += f"   - Sản lượng hôm nay: *{item['value']:,}* đơn\n"
+                items_str += f"   - Tăng trưởng 7D: *+{item['growth_abs']:,}* đơn (*+{item['growth_pct']}%*)\n\n"
+                
+            message = (
+                f"🚨 *CẢNH BÁO SẢN LƯỢNG TẠO ĐƠN TĂNG ĐỘT BIẾN* 🚨\n"
+                f"(So sánh sản lượng hôm nay với 7 ngày trước)\n\n"
+                f"Danh sách bưu cục có sản lượng tăng đột biến (>30% và >50 đơn):\n\n"
+                f"{items_str}"
+                f"📊 *Tổng quan:* Phát hiện {len(spikes)} bưu cục tăng đột biến trong Vùng."
+            )
+        else:
+            message = (
+                f"ℹ️ *BÁO CÁO SẢN LƯỢNG TẠO ĐƠN VÙNG* ℹ️\n"
+                f"Không phát hiện bưu cục nào có sản lượng tăng đột biến (>30% và >50 đơn) trong 7 ngày qua."
+            )
+            
+        url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+        payload = {
+            "chat_id": chat_id,
+            "text": message,
+            "parse_mode": "Markdown"
+        }
+        res = requests.post(url, json=payload, timeout=10)
+        
+        if res.status_code == 200:
+            return jsonify({"success": True, "message": "Gửi cảnh báo qua Telegram thành công!"})
+        else:
+            return jsonify({"error": f"Lỗi từ Telegram API: {res.text}"}), 500
+            
+    except Exception as e:
+        return jsonify({"error": f"Lỗi gửi tin nhắn: {str(e)}"}), 500
+
+def get_overall_metrics_summary():
+    try:
+        df_gtc, df_ltc, df_aging, df_treo = get_dataframes(force=True)
+        if df_gtc is None or df_ltc is None:
+            return None
+            
+        all_times = set(df_gtc['Time'].dropna().unique()).union(set(df_ltc['Time'].dropna().unique()))
+        dates_sorted = sorted(list(all_times), key=lambda x: pd.to_datetime(x.split(' - ')[0]))
+        if not dates_sorted:
+            return None
+            
+        latest_date = dates_sorted[-1]
+        latest_idx = dates_sorted.index(latest_date)
+        n3_date = dates_sorted[latest_idx - 3] if latest_idx >= 3 else None
+        
+        latest_dt = pd.to_datetime(latest_date.split(' - ')[0])
+        lw_date = None
+        for d in dates_sorted:
+            dt = pd.to_datetime(d.split(' - ')[0])
+            if (latest_dt - dt).days == 7:
+                lw_date = d
+                break
+        
+        def get_kpi_for_day(date_str):
+            if not date_str:
+                return None
+            gtc_d = df_gtc[df_gtc['Time'] == date_str]
+            ltc_d = df_ltc[df_ltc['Time'] == date_str] if date_str in df_ltc['Time'].values else df_ltc[df_ltc['Time'] == df_ltc['Time'].max()]
+            
+            gtc_vol = gtc_d['Volume'].sum()
+            gtc_del = gtc_d['delivered_vol'].sum()
+            ltc_vol = ltc_d['Volume'].sum()
+            ltc_ltc = ltc_d['ltc_vol'].sum()
+            
+            return {
+                'gtc_pct': round((gtc_del / gtc_vol * 100), 2) if gtc_vol > 0 else 0.0,
+                'ltc_pct': round((ltc_ltc / ltc_vol * 100), 2) if ltc_vol > 0 else 0.0,
+                'gtc_vol': int(gtc_vol),
+                'ltc_vol': int(ltc_vol)
+            }
+            
+        today_kpi = get_kpi_for_day(latest_date)
+        n3_kpi = get_kpi_for_day(n3_date) if n3_date else None
+        lw_kpi = get_kpi_for_day(lw_date) if lw_date else None
+        
+        chua_giao = len(df_aging)
+        chua_lay = len(df_treo[df_treo['Loại đơn'] == 'Luân chuyển giao'])
+        chua_tra = len(df_treo[df_treo['Loại đơn'] == 'Luân chuyển trả'])
+        backlog_total = chua_giao + chua_lay + chua_tra
+        
+        today_gtc_po = df_gtc[df_gtc['Time'] == latest_date].copy()
+        today_gtc_po['% GTC'] = (today_gtc_po['delivered_vol'] / today_gtc_po['Volume'] * 100).fillna(0)
+        worst_gtc_po = today_gtc_po[today_gtc_po['Volume'] >= 10].sort_values(by='% GTC').head(3)
+        
+        today_ltc_po = df_ltc[df_ltc['Time'] == latest_date].copy()
+        today_ltc_po['% LTC'] = (today_ltc_po['ltc_vol'] / today_ltc_po['Volume'] * 100).fillna(0)
+        worst_ltc_po = today_ltc_po[today_ltc_po['Volume'] >= 10].sort_values(by='% LTC').head(3)
+        
+        worst_gtc_list = []
+        for _, r in worst_gtc_po.iterrows():
+            worst_gtc_list.append({
+                'name': r.get('Chi tiết', 'N/A'),
+                'province': r.get('mapped_prov', 'N/A'),
+                'vol': int(r.get('Volume', 0)),
+                'pct': float(r.get('% GTC', 0.0))
+            })
+            
+        worst_ltc_list = []
+        for _, r in worst_ltc_po.iterrows():
+            worst_ltc_list.append({
+                'name': r.get('Chi tiết', 'N/A'),
+                'province': r.get('mapped_prov', 'N/A'),
+                'vol': int(r.get('Volume', 0)),
+                'pct': float(r.get('% LTC', 0.0))
+            })
+            
+        spikes = get_spiking_post_offices()
+        
+        return {
+            'date': latest_date,
+            'today': today_kpi,
+            'n3': n3_kpi,
+            'lw': lw_kpi,
+            'backlog': {
+                'total': backlog_total,
+                'chua_giao': chua_giao,
+                'chua_lay': chua_lay,
+                'chua_tra': chua_tra
+            },
+            'worst_gtc': worst_gtc_list,
+            'worst_ltc': worst_ltc_list,
+            'spikes': spikes[:5]
+        }
+    except Exception as e:
+        print(f"Error in get_overall_metrics_summary: {e}")
+        return None
+
+@app.route('/api/send-telegram-ai-briefing', methods=['POST'])
+@requires_permission('tab-volume-creation')
+def send_telegram_ai_briefing():
+    try:
+        config = load_config()
+        bot_token = config.get("telegram_bot_token", "").strip()
+        chat_id = config.get("telegram_chat_id", "").strip()
+        gemini_api_key = config.get("gemini_api_key", "").strip()
+        
+        print(f"DEBUG IN SERVER BRIEFING: bot_token={bot_token[:10] if bot_token else None}... chat_id={chat_id} gemini_api_key={gemini_api_key[:10] if gemini_api_key else None}...")
+        data = request.json or {}
+        req_token = data.get("telegram_bot_token", "").strip()
+        req_chat_id = data.get("telegram_chat_id", "").strip()
+        req_gemini_key = data.get("gemini_api_key", "").strip()
+        
+        # Save config if changed and not masked
+        should_save = False
+        updated_config = {
+            "consolidated_url": config.get("consolidated_url", ""),
+            "telegram_bot_token": config.get("telegram_bot_token", ""),
+            "telegram_chat_id": config.get("telegram_chat_id", ""),
+            "gemini_api_key": config.get("gemini_api_key", "")
+        }
+        
+        if req_token and not ("*" in req_token or "hidden" in req_token.lower()):
+            bot_token = req_token
+            updated_config["telegram_bot_token"] = req_token
+            should_save = True
+            
+        if req_chat_id and req_chat_id != chat_id:
+            chat_id = req_chat_id
+            updated_config["telegram_chat_id"] = req_chat_id
+            should_save = True
+            
+        if req_gemini_key and not ("*" in req_gemini_key or "hidden" in req_gemini_key.lower()):
+            gemini_api_key = req_gemini_key
+            updated_config["gemini_api_key"] = req_gemini_key
+            should_save = True
+            
+        if should_save:
+            save_config(updated_config)
+            
+        if not bot_token or not chat_id:
+            return jsonify({"error": "Chưa cấu hình Telegram Bot Token hoặc Chat ID / Group ID."}), 400
+            
+        if not gemini_api_key:
+            return jsonify({"error": "Chưa cấu hình Gemini API Key."}), 400
+            
+        summary = get_overall_metrics_summary()
+        if not summary:
+            return jsonify({"error": "Không thể tổng hợp chỉ số vận hành."}), 500
+            
+        # Format worst post offices strings
+        worst_gtc_str = ", ".join([f"{item['name']} ({item['province']}): {item['pct']:.1f}% GTC" for item in summary['worst_gtc']])
+        worst_ltc_str = ", ".join([f"{item['name']} ({item['province']}): {item['pct']:.1f}% LTC" for item in summary['worst_ltc']])
+        
+        # Format volume spikes
+        if summary['spikes']:
+            spikes_str = "\n".join([f"- {s['name']} ({s['province']}): +{s['growth_abs']:,} đơn (+{s['growth_pct']}%)" for s in summary['spikes']])
+        else:
+            spikes_str = "Không phát hiện bưu cục tăng đơn đột biến."
+            
+        # Construct the Prompt for Gemini
+        prompt = (
+            f"Bạn là một AI Trợ lý Vận hành cao cấp phụ trách Vùng NTB của hệ thống Giao Hàng Nhanh (GHN).\n"
+            f"Hãy phân tích dữ liệu vận hành tổng thể ngày {summary['date']} dưới đây và viết một bản tin phân tích cảnh báo đầu ngày gửi cho Group Telegram của Ban điều hành.\n\n"
+            f"Dữ liệu vận hành ngày {summary['date']}:\n"
+            f"1. Các chỉ số chính (KPI) hôm nay:\n"
+            f"   - Giao thành công (% GTC): {summary['today']['gtc_pct']}%\n"
+            f"   - Lưu kho thành công (% LTC): {summary['today']['ltc_pct']}%\n"
+            f"   - Tổng sản lượng GTC: {summary['today']['gtc_vol']:,} đơn\n"
+            f"   - Tổng sản lượng LTC: {summary['today']['ltc_vol']:,} đơn\n\n"
+            f"2. So sánh hiệu suất (Tỷ lệ tăng/giảm %):\n"
+            f"   - So với 3 ngày trước:\n"
+            f"     + GTC: {round(summary['today']['gtc_pct'] - (summary['n3']['gtc_pct'] if summary['n3'] else 0), 2):+}% \n"
+            f"     + LTC: {round(summary['today']['ltc_pct'] - (summary['n3']['ltc_pct'] if summary['n3'] else 0), 2):+}% \n"
+            f"   - So với tuần trước:\n"
+            f"     + GTC: {round(summary['today']['gtc_pct'] - (summary['lw']['gtc_pct'] if summary['lw'] else 0), 2):+}% \n"
+            f"     + LTC: {round(summary['today']['ltc_pct'] - (summary['lw']['ltc_pct'] if summary['lw'] else 0), 2):+}% \n\n"
+            f"3. Đơn tồn đọng (Backlog):\n"
+            f"   - Tổng tồn đọng: {summary['backlog']['total']:,} đơn\n"
+            f"     + Chưa giao (Aging): {summary['backlog']['chua_giao']:,} đơn\n"
+            f"     + Chưa lấy (Treo giao): {summary['backlog']['chua_lay']:,} đơn\n"
+            f"     + Chưa trả (Treo trả): {summary['backlog']['chua_tra']:,} đơn\n\n"
+            f"4. Bưu cục cần đặc biệt lưu ý hôm nay (Hiệu suất tệ nhất):\n"
+            f"   - Top GTC thấp nhất: {worst_gtc_str}\n"
+            f"   - Top LTC thấp nhất: {worst_ltc_str}\n\n"
+            f"5. Cảnh báo sản lượng tạo đơn tăng đột biến:\n"
+            f"   {spikes_str}\n\n"
+            f"Yêu cầu định dạng bản tin gửi Telegram:\n"
+            f"- Định dạng Markdown chuẩn của Telegram (sử dụng *chữ đậm*, `chữ code`, biểu tượng emoji thích hợp).\n"
+            f"- Tránh sử dụng các ký tự đặc biệt làm lỗi bộ phân tích cú pháp Markdown của Telegram (như dấu ngoặc vuông hoặc dấu gạch dưới đơn lẻ không đóng cặp). Hãy giữ Markdown đơn giản bằng cách dùng dấu * cho chữ đậm và không lồng ghép định dạng.\n"
+            f"- Phong cách viết: Chuyên nghiệp, nghiêm túc, tập trung vào hành động nhanh và chỉ rõ các điểm nóng cần khắc phục (đặc biệt lưu ý bưu cục hiệu suất thấp hoặc có sản lượng tăng đột biến).\n"
+            f"- Hãy chia rõ 4 phần sau:\n"
+            f"  * 📊 *BẢN TIN VẬN HÀNH ĐẦU NGÀY VÙNG NTB* ({summary['date']})\n"
+            f"  * ⚠️ *CẢNH BÁO ĐIỂM NÓNG* (Bưu cục yếu kém và backlog cao)\n"
+            f"  * 🚨 *CẢNH BÁO SẢN LƯỢNG ĐỘT BIẾN*\n"
+            f"  * 💡 *HÀNH ĐỘNG KHUYẾN NGHỊ* (Gợi ý hành động thực tế cho AM và Bưu cục trưởng)"
+        )
+        
+        # Call Gemini REST API
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={gemini_api_key}"
+        payload = {
+            "contents": [{
+                "parts": [{"text": prompt}]
+            }]
+        }
+        
+        res_gemini = None
+        try:
+            res_gemini = requests.post(url, json=payload, headers={"Content-Type": "application/json"}, timeout=15)
+        except Exception as e:
+            print(f"Primary Gemini model failed with exception: {e}. Trying fallback...")
+            
+        # Fallback to gemini-3.1-flash-lite if primary is unavailable or timed out
+        if res_gemini is None or res_gemini.status_code != 200:
+            url_fallback = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key={gemini_api_key}"
+            try:
+                res_gemini = requests.post(url_fallback, json=payload, headers={"Content-Type": "application/json"}, timeout=30)
+            except Exception as e:
+                return jsonify({"error": f"Lỗi từ Gemini API (Fallback cũng thất bại): {str(e)}"}), 500
+                
+        if res_gemini and res_gemini.status_code == 200:
+            gemini_data = res_gemini.json()
+            message = gemini_data['candidates'][0]['content']['parts'][0]['text']
+        else:
+            err_text = res_gemini.text if res_gemini else "No response"
+            return jsonify({"error": f"Lỗi từ Gemini API: {err_text}"}), 500
+            
+        # Send message to Telegram
+        url_tele = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+        payload_tele = {
+            "chat_id": chat_id,
+            "text": message,
+            "parse_mode": "Markdown"
+        }
+        res_tele = requests.post(url_tele, json=payload_tele, timeout=10)
+        
+        if res_tele.status_code == 200:
+            return jsonify({"success": True, "message": "Gửi bản tin phân tích AI đầu ngày thành công!"})
+        else:
+            # Fallback to plain text if Markdown fails
+            payload_tele["parse_mode"] = ""
+            res_tele_plain = requests.post(url_tele, json=payload_tele, timeout=10)
+            if res_tele_plain.status_code == 200:
+                return jsonify({"success": True, "message": "Gửi bản tin phân tích AI thành công (chế độ plain-text do lỗi định dạng Markdown)!"})
+            return jsonify({"error": f"Lỗi từ Telegram API: {res_tele.text}"}), 500
+            
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": f"Lỗi gửi bản tin AI: {str(e)}"}), 500
 
 if __name__ == '__main__':
     print("Dashboard server starts on http://0.0.0.0:5000/")

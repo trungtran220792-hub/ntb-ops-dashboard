@@ -1,0 +1,100 @@
+L1263: def process_unstable_po():
+L1264:     file_path = resolve_path('buu_cuc_bat_on.xlsx', write=False)
+L1265:     if not os.path.exists(file_path):
+L1266:         return {"error": f"Không tìm thấy file: {os.path.basename(file_path)}. Vui lòng đồng bộ hoặc tải lên."}
+L1267:     
+L1268:     try:
+L1269:         with pd.ExcelFile(file_path) as xls_meta:
+L1270:             sheet_names = xls_meta.sheet_names
+L1271:             
+L1272:         sheet_name = None
+L1273:         for s in sheet_names:
+L1274:             s_lower = s.lower()
+L1275:             if "ntb" in s_lower or "bất ổn" in s_lower or "bat_on" in s_lower or "cảnh báo" in s_lower or "canh_bao" in s_lower:
+L1276:                 sheet_name = s
+L1277:                 break
+L1278:         if not sheet_name:
+L1279:             sheet_name = sheet_names[0]
+L1280:             
+L1281:         df_raw = load_sheet_cached('buu_cuc_bat_on.xlsx', f'raw_{sheet_name}', lambda p: pd.read_excel(p, sheet_name=sheet_name, header=None))
+L1282:         
+L1283:         update_time = None
+L1284:         total_warning = None
+L1285:         
+L1286:         # Search metadata in the first 15 rows
+L1287:         for r_idx in range(min(15, len(df_raw))):
+L1288:             for c_idx in range(len(df_raw.columns)):
+L1289:                 cell_val = str(df_raw.iloc[r_idx, c_idx])
+L1290:                 if "Thời gian cập nhật" in cell_val:
+L1291:                     for offset in range(1, 4):
+L1292:                         if c_idx + offset < len(df_raw.columns):
+L1293:                             val = df_raw.iloc[r_idx, c_idx + offset]
+L1294:                             if pd.notna(val) and str(val).strip() != "":
+L1295:                                 update_time = str(val).strip()
+L1296:                                 break
+L1297:                 elif "bưu cục cảnh báo" in cell_val or "bưu cục bất ổn" in cell_val or "lượng bưu cục" in cell_val:
+L1298:                     for offset in range(1, 4):
+L1299:                         if c_idx + offset < len(df_raw.columns):
+L1300:                             val = df_raw.iloc[r_idx, c_idx + offset]
+L1301:                             if pd.notna(val) and str(val).strip() != "":
+L1302:                                 try:
+L1303:                                     total_warning = int(float(val))
+L1304:                                 except:
+L1305:                                     total_warning = str(val).strip()
+L1306:                                 break
+L1307:         
+L1308:         # Find the table headers row
+L1309:         header_row_idx = None
+L1310:         for r_idx in range(len(df_raw)):
+L1311:             row_vals = [str(x).lower().strip() for x in df_raw.iloc[r_idx].values]
+L1312:             if any("tổng số lượng" in x or "thời gian cập nhật" in x for x in row_vals):
+L1313:                 continue
+L1314:             if any(x == "bưu cục" or x == "chi tiết" or x == "tên bc" or "tên bưu cục" in x or "kho_giao_id" in x or "kho_giao_name" in x or "tinh_giao" in x for x in row_vals):
+L1315:                 header_row_idx = r_idx
+L1316:                 break
+L1317:                 
+L1318:         if header_row_idx is None:
+L1319:             header_row_idx = 4 if len(df_raw) > 4 else 0
+L1320:             
+L1321:         # Extract headers and data rows in-memory
+L1322:         headers = [str(c).strip() for c in df_raw.iloc[header_row_idx].values]
+L1323:         df_table = df_raw.iloc[header_row_idx+1:].copy()
+L1324:         df_table.columns = headers
+L1325:         
+L1326:         # Remove completely empty rows
+L1327:         id_col = next((c for c in df_table.columns if "id" in c.lower() or "kho_giao_id" in c.lower()), df_table.columns[0])
+L1328:         name_col = next((c for c in df_table.columns if "name" in c.lower() or "bưu cục" in c.lower() or "kho_giao_name" in c.lower()), df_table.columns[1] if len(df_table.columns) > 1 else df_table.columns[0])
+L1329:         
+L1330:         df_table = df_table.dropna(subset=[id_col, name_col], how='all')
+L1331:         df_table = df_table[df_table[id_col].astype(str).str.strip() != ""]
+L1332:         
+L1333:         # Ensure we have clean mappings from co_cau_ntb.xlsx
+L1334:         id_to_am = {}
+L1335:         id_to_prov = {}
+L1336:         name_to_am = {}
+L1337:         name_to_prov = {}
+L1338:         co_cau_path = resolve_path('co_cau_ntb.xlsx', write=False)
+L1339:         if os.path.exists(co_cau_path):
+L1340:             try:
+L1341:                 df_cc = load_sheet_cached('co_cau_ntb.xlsx', 'Sheet1', lambda p: pd.read_excel(p, sheet_name='Sheet1'))
+L1342:                 for _, r in df_cc.iterrows():
+L1343:                     bc_id = r.get('warehouse_id')
+L1344:                     bc_name = str(r.get('Bưu cục', '')).strip()
+L1345:                     am = str(r.get('AM', '')).strip()
+L1346:                     prov = str(r.get('Tỉnh', '')).strip()
+L1347:                     if prov == 'Khánh Hoà':
+L1348:                         prov = 'Khánh Hòa'
+L1349:                     if prov == 'Bình Phước':
+L1350:                         prov = 'Lâm Đồng'
+L1351:                     
+L1352:                     if pd.notna(bc_id):
+L1353:                         try:
+L1354:                             id_to_am[int(bc_id)] = am
+L1355:                             id_to_prov[int(bc_id)] = prov
+L1356:                         except:
+L1357:                             pass
+L1358:                     if bc_name:
+L1359:                         name_clean = clean_po_name(bc_name)
+L1360:                         name_to_am[name_clean] = am
+L1361:                         name_to_prov[name_clean] = prov
+L1362:             except Exception as e:

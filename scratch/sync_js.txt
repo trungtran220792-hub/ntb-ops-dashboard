@@ -1,0 +1,35 @@
+Line 1584: <li class="menu-item" onclick="switchTab('tab-sync', this)">
+Line 1599: <p id="last-sync-time">Lần đồng bộ cuối: Chưa có</p>
+Line 1610: <button class="btn btn-primary" id="header-sync-btn" onclick="syncData()">
+Line 2865: <!-- TAB 6: DATA SYNC & FILES STATUS -->
+Line 2866: <div id="tab-sync" class="content-panel">
+Line 2950: <button class="btn btn-primary" id="footer-sync-btn" style="padding: 12px 24px;" onclick="syncData()">
+Line 3008: const lastSyncEl = document.getElementById('last-sync-time');
+Line 3009: if (!lastSyncEl) return;
+Line 3016: lastSyncEl.innerText = "Ngày báo cáo: " + latestDate;
+Line 3020: lastSyncEl.innerText = "Đang so sánh với mốc: " + bl.baseline_timestamp;
+Line 3022: lastSyncEl.innerText = "Lần đồng bộ cuối: " + new Date().toLocaleTimeString();
+Line 3025: lastSyncEl.innerText = "Lần đồng bộ cuối: " + new Date().toLocaleTimeString();
+Line 3108: async function checkUserRole() {
+Line 3119: // Hide sync buttons
+Line 3120: const headerSyncBtn = document.getElementById('header-sync-btn');
+Line 3121: if (headerSyncBtn) headerSyncBtn.style.display = 'none';
+Line 3123: const footerSyncBtn = document.getElementById('footer-sync-btn');
+Line 3124: if (footerSyncBtn) footerSyncBtn.style.display = 'none';
+Line 3133: window.addEventListener('DOMContentLoaded', async () => {
+Line 3143: async function loadGoogleSheetsConfig() {
+Line 3161: async function saveGoogleSheetsConfig() {
+Line 3203: async function loadAllData(baseline = "") {
+Line 3257: async function loadFilesStatus() {
+Line 3326: async function uploadFile(file, targetFilename) {
+Line 3365: async function loadHistoryDropdown() {
+Line 3396: async function syncData() {
+Line 3399: const res = await fetch(getApiUrl('/api/sync'), getFetchOptions({ method: 'POST' }));
+Line 3407: const pollInterval = setInterval(async () => {
+Line 3409: const statusRes = await fetch(getApiUrl('/api/sync/status'), getFetchOptions());
+Line 3444: async function loadBacklogData(baseline) {
+Line 3452: document.getElementById('last-sync-time').innerText = "Đang so sánh với mốc: " + data.baseline_timestamp;
+Line 4450: async function onVolFilterChange(changedType) {
+Line 4967: async function loadNtbSummaryData() {
+Line 5431: async function sendChatMessage() {
+Line 5485: async function loadNtbStructure() {

@@ -1,0 +1,6 @@
+--- STEP 351 | Tool: multi_replace_file_content ---
+Description: "Update templates/index.html to support weekly time group selection, dynamically update comparison labels, and send time group request parameters."
+Instruction: "Replace selector, card subheaders, sparkline titles, and JavaScript rendering methods in templates/index.html to support week view."
+--- MULTI CHUNKS ---
+  Chunk 0:
+Error parsing line 350 in 92726133-7314-4954-9f94-c885d0c26df2: 'str' object has no attribute 'get'

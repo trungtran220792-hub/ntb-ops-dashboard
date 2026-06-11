@@ -1,0 +1,10 @@
+--- STEP 1123 | Tool: replace_file_content ---
+Description: "Add CSS styling for the toggle capsules inside quality index cards section"
+Instruction: "Insert styles for .ntb-toggle-capsules and .ntb-capsule before style end tag"
+--- TARGET CONTENT ---
+"                    .quality-metric-card .sparkline-container {\n                        height: 50px;\n                        margin-top: 10px;\n                    }\n                </style>"
+--- REPLACEMENT CONTENT ---
+"                    .quality-metric-card .sparkline-container {\n                        height: 50px;\n                        margin-top: 10px;\n                    }\n                    .ntb-toggle-capsules {\n                        background: rgba(120, 120, 128, 0.08);\n                        border-radius: 8px;\n                        padding: 2px;\n                        display: inline-flex;\n                    }\n                    .ntb-capsule {\n                        color: var(--text-muted);\n                        cursor: pointer;\n                        border-radius: 6px;\n                        padding: 4px 12px;\n                        font-size: 13px;\n                        font-weight: 500;\n                        transition: all 0.2s ease;\n                    }\n                    .ntb-capsule.active {\n                        background: var(--card-bg);\n                        color: var(--text-primary);\n                        box-shadow: 0 1px 3px rgba(0,0,0,0.1);\n                        font-weight: 600;\n                    }\n                </style>"
+
+================================================================================
+

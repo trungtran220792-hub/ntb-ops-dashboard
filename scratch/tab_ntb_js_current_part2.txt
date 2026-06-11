@@ -1,0 +1,401 @@
+5800:                     stroke: { width: 3, curve: 'smooth' },
+5801:                     theme: { mode: 'light' },
+5802:                     legend: { position: 'bottom', labels: { colors: '#64748b' } },
+5803:                     dataLabels: { enabled: true, formatter: val => val + "%", style: { fontSize: '9px' } }
+5804:                 };
+5805: 
+5806:                 if (ntbLtcTrendChart) ntbLtcTrendChart.destroy();
+5807:                 ntbLtcTrendChart = new ApexCharts(document.querySelector("#chart-ntb-ltc-trend"), ltcTrendOptions);
+5808:                 ntbLtcTrendChart.render();
+5809: 
+5810:                 const gtcLines = [];
+5811:                 if (trends.overall) gtcLines.push({ name: 'Toàn vùng', data: trends.overall.gtc });
+5812:                 if (trends['lâm_đồng']) gtcLines.push({ name: 'Lâm Đồng', data: trends['lâm_đồng'].gtc });
+5813:                 if (trends['bình_thuận']) gtcLines.push({ name: 'Bình Thuận', data: trends['bình_thuận'].gtc });
+5814: 
+5815:                 const gtcTrendOptions = {
+5816:                     chart: { type: 'line', height: 280, toolbar: { show: false }, background: 'transparent' },
+5817:                     series: gtcLines,
+5818:                     xaxis: { categories: trendDates.map(d => d.split(" - ")[0]), labels: { style: { colors: '#64748b' } } },
+5819:                     yaxis: { title: { text: 'Tỷ lệ %' }, min: 40, max: 100, labels: { style: { colors: '#64748b' } } },
+5820:                     colors: ['#ff5f00', '#007bc3', '#10b981'],
+5821:                     stroke: { width: 3, curve: 'smooth' },
+5822:                     theme: { mode: 'light' },
+5823:                     legend: { position: 'bottom', labels: { colors: '#64748b' } },
+5824:                     dataLabels: { enabled: true, formatter: val => val + "%", style: { fontSize: '9px' } }
+5825:                 };
+5826: 
+5827:                 if (ntbGtcTrendChart) ntbGtcTrendChart.destroy();
+5828:                 ntbGtcTrendChart = new ApexCharts(document.querySelector("#chart-ntb-gtc-trend"), gtcTrendOptions);
+5829:                 ntbGtcTrendChart.render();
+5830: 
+5831:                 // Update trend cards
+5832:                 const updateTrendKPI = (prefix, valKey) => {
+5833:                     const valEl = document.getElementById(`ntb-trend-${prefix}-val`);
+5834:                     const diffEl = document.getElementById(`ntb-trend-${prefix}-diff`);
+5835: 
+5836:                     if (trends.overall && trends.overall[valKey]) {
+5837:                         const len = trends.overall[valKey].length;
+5838:                         if (len >= 1) {
+5839:                             const latestVal = trends.overall[valKey][len - 1];
+5840:                             valEl.innerText = latestVal ? latestVal + "%" : "- %";
+5841: 
+5842:                             if (len >= 2) {
+5843:                                 const prevVal = trends.overall[valKey][len - 2];
+5844:                                 const diff = (latestVal - prevVal).toFixed(2);
+5845:                                 if (diff > 0) {
+5846:                                     diffEl.innerHTML = `<span class="trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +${diff}%</span> vs ngày trước (${prevVal}%)`;
+5847:                                 } else if (diff < 0) {
+5848:                                     diffEl.innerHTML = `<span class="trend-down"><i class="fa-solid fa-arrow-trend-down"></i> ${diff}%</span> vs ngày trước (${prevVal}%)`;
+5849:                                 } else {
+5850:                                     diffEl.innerHTML = `<span class="trend-neutral">Không đổi</span> vs ngày trước (${prevVal}%)`;
+5851:                                 }
+5852:                             }
+5853:                         }
+5854:                     }
+5855: 
+5856:                     const ldValEl = document.getElementById(`ntb-trend-${prefix}-ld-val`);
+5857:                     const ldDiffEl = document.getElementById(`ntb-trend-${prefix}-ld-diff`);
+5858:                     if (trends['lâm_đồng'] && trends['lâm_đồng'][valKey]) {
+5859:                         const len = trends['lâm_đồng'][valKey].length;
+5860:                         const latestVal = trends['lâm_đồng'][valKey][len - 1];
+5861:                         ldValEl.innerText = latestVal ? latestVal + "%" : "- %";
+5862:                         if (len >= 2) {
+5863:                             const prevVal = trends['lâm_đồng'][valKey][len - 2];
+5864:                             const diff = (latestVal - prevVal).toFixed(2);
+5865:                             ldDiffEl.innerHTML = diff > 0 ? `<span style="color: var(--color-success)">↑ ${diff}%</span>` : (diff < 0 ? `<span style="color: var(--color-danger)">↓ ${Math.abs(diff)}%</span>` : `<span style="color: var(--text-muted)">-</span>`);
+5866:                         }
+5867:                     }
+5868: 
+5869:                     const btValEl = document.getElementById(`ntb-trend-${prefix}-bt-val`);
+5870:                     const btDiffEl = document.getElementById(`ntb-trend-${prefix}-bt-diff`);
+5871:                     if (trends['bình_thuận'] && trends['bình_thuận'][valKey]) {
+5872:                         const len = trends['bình_thuận'][valKey].length;
+5873:                         const latestVal = trends['bình_thuận'][valKey][len - 1];
+5874:                         btValEl.innerText = latestVal ? latestVal + "%" : "- %";
+5875:                         if (len >= 2) {
+5876:                             const prevVal = trends['bình_thuận'][valKey][len - 2];
+5877:                             const diff = (latestVal - prevVal).toFixed(2);
+5878:                             btDiffEl.innerHTML = diff > 0 ? `<span style="color: var(--color-success)">↑ ${diff}%</span>` : (diff < 0 ? `<span style="color: var(--color-danger)">↓ ${Math.abs(diff)}%</span>` : `<span style="color: var(--text-muted)">-</span>`);
+5879:                         }
+5880:                     }
+5881:                 };
+5882: 
+5883:                 updateTrendKPI('ltc', 'ltc');
+5884:                 updateTrendKPI('gtc', 'gtc');
+5885: 
+5886:                 // Fetch matrix tables data
+5887:                 const matrixRes = await fetch(getApiUrl(`/api/matrix-tables?${params.toString()}`), getFetchOptions());
+5888:                 const matrixData = await matrixRes.json();
+5889: 
+5890:                 renderMatrixTable('table-ntb-ltc-matrix', matrixData.ltc, 'LTC');
+5891:                 renderMatrixTable('table-ntb-gtc-matrix', matrixData.gtc, 'GTC');
+5892: 
+5893:             } catch (err) {
+5894:                 console.error("Error loading NTB data:", err);
+5895:             }
+5896:         }
+5897: 
+5898:         function renderMatrixTable(tableId, matrix, typeLabel) {
+5899:             const table = document.getElementById(tableId);
+5900:             if (!table) return;
+5901: 
+5902:             table.innerHTML = '';
+5903: 
+5904:             if (!matrix || !matrix.dates || matrix.dates.length === 0 || !matrix.rows || matrix.rows.length === 0) {
+5905:                 table.innerHTML = `<thead><tr><th>AM / Bưu cục</th><th>Không có dữ liệu</th></tr></thead>`;
+5906:                 return;
+5907:             }
+5908: 
+5909:             const dates = matrix.dates;
+5910: 
+5911:             const thead = document.createElement('thead');
+5912:             const hRow = document.createElement('tr');
+5913: 
+5914:             hRow.innerHTML = `
+5915:                 <th rowspan="2" style="width: 250px; text-align: left !important;">AM / Bưu cục</th>
+5916:             `;
+5917: 
+5918:             dates.forEach(d => {
+5919:                 const displayDate = d.split(" - ")[0];
+5920:                 hRow.innerHTML += `
+5921:                     <th colspan="2" style="text-align: center;">${displayDate}</th>
+5922:                 `;
+5923:             });
+5924:             thead.appendChild(hRow);
+5925: 
+5926:             const subRow = document.createElement('tr');
+5927:             dates.forEach(() => {
+5928:                 subRow.innerHTML += `
+5929:                     <th style="font-size: 10px; text-align: center;">Số đơn</th>
+5930:                     <th style="font-size: 10px; text-align: center;">% ${typeLabel}</th>
+5931:                 `;
+5932:             });
+5933:             thead.appendChild(subRow);
+5934:             table.appendChild(thead);
+5935: 
+5936:             const tbody = document.createElement('tbody');
+5937: 
+5938:             matrix.rows.forEach((row, amIdx) => {
+5939:                 const amId = tableId + '-am-' + amIdx;
+5940: 
+5941:                 const amRow = document.createElement('tr');
+5942:                 amRow.className = 'am-header-row';
+5943:                 amRow.onclick = () => toggleAmGroup(amId);
+5944: 
+5945:                 let cellsHtml = `
+5946:                     <td style="text-align: left;">
+5947:                         <i id="icon-${amId}" class="fa-solid fa-plus" style="margin-right: 8px; font-size: 11px; color: var(--color-indigo);"></i>
+5948:                         <strong>Totals for ${escapeHTML(row.am)}</strong>
+5949:                     </td>
+5950:                 `;
+5951: 
+5952:                 dates.forEach(d => {
+5953:                     const totalData = row.totals[d] || { vol: 0, pct: 0.0 };
+5954:                     cellsHtml += `
+5955:                         <td style="text-align: center;"><strong>${totalData.vol.toLocaleString()}</strong></td>
+5956:                         <td style="text-align: center;"><strong>${totalData.pct}%</strong></td>
+5957:                     `;
+5958:                 });
+5959: 
+5960:                 amRow.innerHTML = cellsHtml;
+5961:                 tbody.appendChild(amRow);
+5962: 
+5963:                 row.pos.forEach(po => {
+5964:                     const poRow = document.createElement('tr');
+5965:                     poRow.className = `po-row po-row-${amId} collapsed`;
+5966: 
+5967:                     let poCellsHtml = `
+5968:                         <td style="text-align: left; padding-left: 28px; color: var(--text-secondary);">${escapeHTML(po.bc)}</td>
+5969:                     `;
+5970: 
+5971:                     dates.forEach(d => {
+5972:                         const poData = po.data[d] || { vol: 0, pct: 0.0 };
+5973:                         const target = typeLabel === 'LTC' ? 80 : 60;
+5974:                         const badgeClass = poData.pct >= target ? 'badge-success' : 'badge-danger';
+5975:                         poCellsHtml += `
+5976:                             <td style="text-align: center; color: var(--text-secondary);">${poData.vol.toLocaleString()}</td>
+5977:                             <td style="text-align: center;">
+5978:                                 <span class="badge ${badgeClass}">${poData.pct}%</span>
+5979:                             </td>
+5980:                         `;
+5981:                     });
+5982: 
+5983:                     poRow.innerHTML = poCellsHtml;
+5984:                     tbody.appendChild(poRow);
+5985:                 });
+5986:             });
+5987: 
+5988:             table.appendChild(tbody);
+5989:         }
+5990: 
+5991:         function toggleAmGroup(amId) {
+5992:             const rows = document.querySelectorAll(`.po-row-${amId}`);
+5993:             rows.forEach(r => r.classList.toggle('collapsed'));
+5994: 
+5995:             const icon = document.querySelector(`#icon-${amId}`);
+5996:             if (icon) {
+5997:                 if (icon.classList.contains('fa-plus')) {
+5998:                     icon.classList.remove('fa-plus');
+5999:                     icon.classList.add('fa-minus');
+6000:                 } else {
+6001:                     icon.classList.remove('fa-minus');
+6002:                     icon.classList.add('fa-plus');
+6003:                 }
+6004:             }
+6005:         }
+6006: 
+6007:         /* ==========================================================================
+6008:            GHN AI CHAT LOGIC
+6009:            ========================================================================== */
+6010:         function toggleChatWindow(show) {
+6011:             const trigger = document.getElementById('chat-trigger');
+6012:             const windowEl = document.getElementById('chat-window');
+6013:             if (show) {
+6014:                 trigger.style.opacity = '0';
+6015:                 trigger.style.pointerEvents = 'none';
+6016:                 windowEl.classList.add('active');
+6017:                 document.getElementById('chat-input').focus();
+6018:             } else {
+6019:                 trigger.style.opacity = '1';
+6020:                 trigger.style.pointerEvents = 'auto';
+6021:                 windowEl.classList.remove('active');
+6022:             }
+6023:         }
+6024: 
+6025:         // Setup Box opening/closing animation on trigger hover
+6026:         document.addEventListener('DOMContentLoaded', () => {
+6027:             const trigger = document.getElementById('chat-trigger');
+6028:             if (trigger) {
+6029:                 const boxIcon = trigger.querySelector('.ghn-package-box i');
+6030:                 trigger.addEventListener('mouseenter', () => {
+6031:                     boxIcon.className = 'fa-solid fa-box-open';
+6032:                 });
+6033:                 trigger.addEventListener('mouseleave', () => {
+6034:                     boxIcon.className = 'fa-solid fa-box';
+6035:                 });
+6036:             }
+6037:         });
+6038: 
+6039:         async function sendChatMessage() {
+6040:             const input = document.getElementById('chat-input');
+6041:             const query = input.value.trim();
+6042:             if (!query) return;
+6043:             
+6044:             appendMessage(query, 'user');
+6045:             input.value = '';
+6046:             
+6047:             const typingIndicator = appendMessage('🤖 Đang tính toán dữ liệu...', 'ai loading');
+6048:             
+6049:             try {
+6050:                 const res = await fetch(getApiUrl('/api/chat'), getFetchOptions({
+6051:                     method: 'POST',
+6052:                     headers: {
+6053:                         'Content-Type': 'application/json'
+6054:                     },
+6055:                     body: JSON.stringify({ message: query })
+6056:                 }));
+6057:                 
+6058:                 if (res.ok) {
+6059:                     const data = await res.json();
+6060:                     typingIndicator.remove();
+6061:                     appendMessage(data.reply, 'ai');
+6062:                 } else {
+6063:                     typingIndicator.remove();
+6064:                     appendMessage('Xin lỗi, đã xảy ra lỗi khi trao đổi với trợ lý AI.', 'ai');
+6065:                 }
+6066:             } catch (e) {
+6067:                 typingIndicator.remove();
+6068:                 appendMessage('Lỗi kết nối server.', 'ai');
+6069:             }
+6070:         }
+6071: 
+6072:         function sendQuickPrompt(promptText) {
+6073:             document.getElementById('chat-input').value = promptText;
+6074:             sendChatMessage();
+6075:         }
+6076: 
+6077:         function handleChatKey(e) {
+6078:             if (e.key === 'Enter') {
+6079:                 sendChatMessage();
+6080:             }
+6081:         }
+6082: 
+6083:         function appendMessage(text, sender) {
+6084:             const container = document.getElementById('chat-messages');
+6085:             const msg = document.createElement('div');
+6086:             msg.className = `chat-message ${sender}`;
+6087:             msg.innerHTML = text;
+6088:             container.appendChild(msg);
+6089:             container.scrollTop = container.scrollHeight;
+6090:             return msg;
+6091:         }
+6092: 
+6093:         async function loadNtbStructure() {
+6094:             const root = document.getElementById('ntb-org-tree-root');
+6095:             if (!root) return;
+6096: 
+6097:             // Keywords to identify warehouses vs post offices
+6098:             const WAREHOUSE_KEYWORDS = ['Kho Trung Chuyển', 'Kho Trung Chuyen', 'Kho Chuyển Tiếp', 'Kho Chuyen Tiep', 'Kho TC', 'Transit Hub', 'Sub-hub'];
+6099:             function isWarehouse(name) {
+6100:                 return WAREHOUSE_KEYWORDS.some(kw => name.toLowerCase().includes(kw.toLowerCase()));
+6101:             }
+6102: 
+6103:             try {
+6104:                 const res = await fetch(getApiUrl('/api/ntb-structure'), getFetchOptions());
+6105:                 if (!res.ok) throw new Error("Lỗi khi tải dữ liệu cơ cấu từ server");
+6106:                 const structure = await res.json();
+6107:                 if (structure.error) {
+6108:                     root.innerHTML = `<div style="color: var(--color-danger); text-align: center; padding: 20px;">
+6109:                         <i class="fa-solid fa-triangle-exclamation" style="margin-right: 8px;"></i> ${escapeHTML(structure.error)}
+6110:                     </div>`;
+6111:                     return;
+6112:                 }
+6113: 
+6114:                 // Update window.provinceStats dynamically from loaded Excel structure
+6115:                 const provinceRegions = {
+6116:                     "Lâm Đồng": "Tây Nguyên",
+6117:                     "Khánh Hòa": "Duyên hải",
+6118:                     "Đắk Nông": "Tây Nguyên",
+6119:                     "Bình Thuận": "Duyên hải",
+6120:                     "Ninh Thuận": "Duyên hải"
+6121:                 };
+6122: 
+6123:                 let ntbTotalPOs = 0;
+6124:                 let ntbTotalKTC = 0;
+6125:                 let ntbTotalKCT = 0;
+6126:                 const ntbUniqueAMs = new Set();
+6127: 
+6128:                 for (const [prov, ams] of Object.entries(structure)) {
+6129:                     const normProv = prov.replace('Khánh Hoà','Khánh Hòa').trim();
+6130:                     const amNames = Object.keys(ams);
+6131:                     
+6132:                     let pCount = 0;
+6133:                     let tcCount = 0;
+6134:                     let ctCount = 0;
+6135: 
+6136:                     amNames.forEach(am => {
+6137:                         ntbUniqueAMs.add(am.trim());
+6138:                         ams[am].forEach(name => {
+6139:                             const trimmedName = name.trim();
+6140:                             const nameLower = trimmedName.toLowerCase();
+6141:                             if (isWarehouse(trimmedName)) {
+6142:                                 if (nameLower.includes('trung chuyển') || nameLower.includes('trung chuyen') || nameLower.includes('transit')) {
+6143:                                     tcCount++;
+6144:                                     ntbTotalKTC++;
+6145:                                 } else {
+6146:                                     ctCount++;
+6147:                                     ntbTotalKCT++;
+6148:                                 }
+6149:                             } else {
+6150:                                 pCount++;
+6151:                                 ntbTotalPOs++;
+6152:                             }
+6153:                         });
+6154:                     });
+6155: 
+6156:                     window.provinceStats[normProv] = {
+6157:                         ams: amNames.length,
+6158:                         pos: pCount,
+6159:                         transitHubs: tcCount,
+6160:                         subHubs: ctCount,
+6161:                         region: provinceRegions[normProv] || "Khu vực"
+6162:                     };
+6163: 
+6164:                     // Update corresponding card footer stats
+6165:                     const cardStatsDiv = document.querySelector(`.prov-card-stats[data-province="${normProv}"]`);
+6166:                     if (cardStatsDiv) {
+6167:                         cardStatsDiv.innerHTML = `
+6168:                             <span><i class="fa-solid fa-user-tie"></i> <strong>${amNames.length}</strong> AM</span>
+6169:                             <span><i class="fa-solid fa-home"></i> <strong>${pCount}</strong> Bưu cục</span>
+6170:                             <span><i class="fa-solid fa-warehouse" style="color: #10b981;"></i> <strong>${ctCount}</strong> Kho CT</span>
+6171:                             <span><i class="fa-solid fa-star" style="color: var(--color-ghn-blue);"></i> <strong>${tcCount}</strong> Kho TC</span>
+6172:                         `;
+6173:                     }
+6174:                 }
+6175: 
+6176:                 // Update Hero Banner stats elements
+6177:                 document.getElementById('ntb-total-ams').innerText = ntbUniqueAMs.size;
+6178:                 document.getElementById('ntb-total-pos').innerText = ntbTotalPOs;
+6179:                 document.getElementById('ntb-total-ktc').innerText = ntbTotalKTC;
+6180:                 document.getElementById('ntb-total-kct').innerText = ntbTotalKCT;
+6181: 
+6182:                 let html = '';
+6183:                 
+6184:                 // Add the Regional Director node at the very top of the tree, styled like a family tree root
+6185:                 html += `
+6186:                 <div class="tree-root-leader-node" style="margin-bottom: 15px;">
+6187:                     <div class="leader-node-header" style="display: inline-flex; align-items: center; padding: 12px 18px; background: #ffffff; border: 2px solid var(--color-ghn-orange); border-radius: 12px; box-shadow: 0 4px 12px rgba(255, 95, 0, 0.08); min-width: 240px; gap: 12px;">
+6188:                         <i class="fa-solid fa-user-tie" style="color: var(--color-ghn-orange); font-size: 18px; background: rgba(255, 95, 0, 0.08); padding: 8px; border-radius: 50%;"></i>
+6189:                         <div style="text-align: left;">
+6190:                             <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Giám đốc vùng</div>
+6191:                             <div style="font-size: 14px; font-weight: 700; color: var(--text-primary);">Trần Ngọc Trung</div>
+6192:                         </div>
+6193:                     </div>
+6194:                     <div class="tree-children expanded" style="display: flex; margin-left: 24px; border-left: 2px dashed rgba(255, 95, 0, 0.25); padding-left: 18px; margin-top: 8px; flex-direction: column; gap: 10px;">
+6195:                 `;
+6196: 
+6197:                 const provinces = Object.keys(structure).sort();
+6198: 
+6199:                 provinces.forEach(prov => {
+6200:                     const ams = structure[prov];

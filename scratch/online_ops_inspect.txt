@@ -1,0 +1,14 @@
+Sheets: ['Tổng quan', 'Trang tính12', 'Bưu cục', 'Thứ cùng kỳ', 'Ca1 - Ca2 - Tồn', 'Trang tính6', 'Data', 'TTS', 'DataLTC', 'ODR TTS', 'rawltc', 'Sheet13', 'Cơ cấu']
+Columns: ['Mã bưu cục', 'Bưu cục', 'BC', 'Tỉnh', 'Am', 'ID - Họ Tên Am']
+
+Target 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông': matches=1
+   Mã bưu cục                                     Bưu cục                                          BC      Tỉnh              Am  ID - Họ Tên Am
+5    20269003  Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Đắk Nông  Trần Văn Phước  Trần Văn Phước
+
+Target 'Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng': matches=1
+   Mã bưu cục                                                   Bưu cục                                                        BC      Tỉnh             Am ID - Họ Tên Am
+6    22048001  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng  Đắk Nông  Trần Công Hậu  Trần Công Hậu
+
+Target 'Điểm lấy hàng Nguyễn Đình Chiểu-Nghĩa Tân-Gia Nghĩa-Đăk Nông': matches=1
+    Mã bưu cục                                                       Bưu cục                                                            BC      Tỉnh              Am  ID - Họ Tên Am
+17    21659000  Điểm lấy hàng Nguyễn Đình Chiểu-Nghĩa Tân-Gia Nghĩa-Đăk Nông  Điểm lấy hàng Nguyễn Đình Chiểu-Nghĩa Tân-Gia Nghĩa-Đăk Nông  Đắk Nông  Trần Thị Nhung  Trần Thị Nhung

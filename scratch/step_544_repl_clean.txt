@@ -1,0 +1,49 @@
+"        function setAmOprSort(dir) {
+            amOprSortDir = dir;
+            document.getElementById('sort-am-asc').classList.toggle('active', dir === 'asc');
+            document.getElementById('sort-am-desc').classList.toggle('active', dir === 'desc');
+            renderOprAmChartOnly();
+        }
+
+        function renderOprAmChartOnly() {
+            const opr = globalData.opr;
+            if (!opr || !opr.am_performance) return;
+
+            let amPerformance = [...opr.am_performance];
+            if (amOprSortDir === 'asc') {
+                amPerformance.sort((a, b) => (a['% OPR'] || 0) - (b['% OPR'] || 0));
+            } else {
+                amPerformance.sort((a, b) => (b['% OPR'] || 0) - (a['% OPR'] || 0));
+            }
+
+            const ams = amPerformance.map(r => r.AM);
+            const amOpr = amPerformance.map(r => roundNum(r['% OPR']));
+            const chartHeight = Math.max(250, ams.length * 32);
+
+            const amOptions = {
+                chart: { 
+                    type: 'bar', 
+                    height: chartHeight, 
+                    toolbar: { show: false }, 
+                    background: 'transparent',
+                    animations: { enabled: true }
+                },
+                series: [{ name: '% OPR', data: amOpr }],
+                xaxis: { 
+                    categories: ams, 
+                    max: 108, // Adjust to fit labels outside the bars nicely
+                    labels: { style: { colors: '#64748b', fontFamily: 'Inter, sans-serif' } } 
+                },
+                yaxis: { 
+                    labels: { 
+                        offsetX: -4,
+                        style: { colors: '#475569', fontSize: '11px', fontFamily: 'Inter, sans-serif', fontWeight: '500' } 
+                    } 
+                },
+                colors: ['#ff5f00'],
+                plotOptions: { 
+                    bar: { 
+                        borderRadius: 4, 
+                        horizontal: true, 
+         
+<truncated 1693 bytes>

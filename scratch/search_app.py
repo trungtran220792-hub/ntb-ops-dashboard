@@ -1,19 +1,43 @@
+# -*- coding: utf-8 -*-
+import os
 import re
 
-with open("app.py", "r", encoding="utf-8") as f:
-    lines = f.readlines()
+files = [
+    r"c:\Users\lap4all\Desktop\New folder\app.py",
+    r"c:\Users\lap4all\Desktop\New folder\scratch\app.py.base"
+]
 
-keywords = ["thu_cung_ky", "cung ky", "cùng kỳ", "volume", "tạo đơn", "tao_don", "vols", "DataLTC", "rawltc", "off_spe", "buu_cuc_bat_on"]
+out = open(r"c:\Users\lap4all\Desktop\New folder\scratch\search_app_res.txt", "w", encoding="utf-8")
 
-found = []
-for idx, line in enumerate(lines):
-    line_num = idx + 1
-    for kw in keywords:
-        if kw.lower() in line.lower():
-            found.append((line_num, kw, line.strip()))
-
-with open("scratch/search_app_res.txt", "w", encoding="utf-8") as out:
-    for f in found:
-        out.write(f"Line {f[0]} (kw: {f[1]}): {f[2]}\n")
-
-print(f"Done, found {len(found)} occurrences.")
+for p in files:
+    if not os.path.exists(p):
+        out.write(f"{p} not found\n")
+        continue
+    out.write(f"\n================ FILE: {os.path.basename(p)} ================\n")
+    try:
+        with open(p, 'r', encoding='utf-8') as f:
+            content = f.read()
+    except UnicodeDecodeError:
+        try:
+            with open(p, 'r', encoding='utf-16') as f:
+                content = f.read()
+        except Exception as e:
+            out.write(f"Error reading {p}: {e}\n")
+            continue
+    
+    # find all lines with @app.route
+    lines = content.split('\n')
+    route_lines = []
+    for i, line in enumerate(lines):
+        if "@app.route" in line:
+            route_lines.append((i+1, line.strip()))
+    
+    out.write(f"Total routes found: {len(route_lines)}\n")
+    for line_num, r in route_lines:
+        def_line = ""
+        if line_num < len(lines):
+            def_line = lines[line_num].strip()
+        out.write(f"Line {line_num}: {r} -> {def_line}\n")
+        
+out.close()
+print("Done searching app routes.")

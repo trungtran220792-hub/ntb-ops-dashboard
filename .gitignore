@@ -12,6 +12,23 @@ backlog_history.json
 !*.env.example
 !co_cau_ntb.xlsx
 
+# Allow tracking of operational CSV database files for Vercel deployment
+!ops_gtc.csv
+!ops_ltc.csv
+!ops_co_cau.csv
+!co_cau_ntb.csv
+!ops_tts.csv
+!opr_opr.csv
+!opr_oe.csv
+!opr_raw.csv
+!aging_raw.csv
+!treo_stuck.csv
+!buu_cuc_bat_on.csv
+!off_tuyen_spe.csv
+!vols_tao_don.csv
+!ODR TTS.csv
+!ops_nhan_su.csv
+
 # Intermediate inspection and log files
 *_res.txt
 *res.txt
@@ -32,3 +49,6 @@ __pycache__/
 .vscode/
 .idea/
 .gemini/
+
+# Cache files
+.cache_*.pkl

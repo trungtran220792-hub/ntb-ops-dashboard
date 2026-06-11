@@ -1,0 +1,12 @@
+Date
+Vùng
+Tỉnh
+Quận/Huyện
+Phường/Xã
+Bưu cục
+Khách hàng
+Volume
+Khối lượng
+warehouse_id
+bat_on
+province_name

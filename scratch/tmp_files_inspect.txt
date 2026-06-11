@@ -1,0 +1,9 @@
+Path '/tmp': exists=True
+  Files: []
+Path 'C:\tmp': exists=True
+  Files: []
+Path '\tmp': exists=True
+  Files: []
+
+Cwd: C:\Users\lap4all\Desktop\New folder
+Cwd writeable: True

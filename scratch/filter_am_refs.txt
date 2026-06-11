@@ -1,0 +1,5 @@
+L1759: <select id="filter-am" class="select-input" onchange="applyFilters()">
+L4354: const amSelect = document.getElementById('filter-am');
+L4390: const am = document.getElementById('filter-am').value;
+L4793: const am = document.getElementById('filter-am').value;
+L6225: const am = document.getElementById('filter-am').value;

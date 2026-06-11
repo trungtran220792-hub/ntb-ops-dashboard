@@ -1,0 +1,422 @@
+{
+  "all_dates": [
+    "2026-06-08 - Thứ 2",
+    "2026-06-07 - Chủ Nhật",
+    "2026-06-06 - Thứ 7",
+    "2026-06-05 - Thứ 6",
+    "2026-06-04 - Thứ 5",
+    "2026-06-03 - Thứ 4",
+    "2026-06-02 - Thứ 3",
+    "2026-06-01 - Thứ 2",
+    "2026-05-31 - Chủ Nhật",
+    "2026-05-30 - Thứ 7",
+    "2026-05-29 - Thứ 6",
+    "2026-05-28 - Thứ 5",
+    "2026-05-27 - Thứ 4",
+    "2026-05-26 - Thứ 3",
+    "2026-05-25 - Thứ 2",
+    "2026-05-24 - Chủ Nhật",
+    "2026-05-23 - Thứ 7",
+    "2026-05-22 - Thứ 6",
+    "2026-05-21 - Thứ 5",
+    "2026-05-20 - Thứ 4",
+    "2026-05-19 - Thứ 3",
+    "2026-05-18 - Thứ 2",
+    "2026-05-17 - Chủ Nhật",
+    "2026-05-16 - Thứ 7",
+    "2026-05-15 - Thứ 6",
+    "2026-05-14 - Thứ 5",
+    "2026-05-13 - Thứ 4",
+    "2026-05-12 - Thứ 3"
+  ],
+  "backlog_by_am": [
+    {
+      "am": "",
+      "chua_giao": 1361,
+      "chua_lay": 58,
+      "chua_tra": 203
+    },
+    {
+      "am": "Không xác định",
+      "chua_giao": 19,
+      "chua_lay": 0,
+      "chua_tra": 0
+    }
+  ],
+  "completed_vols": [
+    {
+      "GTC": 14596,
+      "GTC_pct": 74.4,
+      "LTC": 2960,
+      "LTC_pct": 95.09,
+      "TTC": 14978,
+      "TTC_pct": 76.35,
+      "Volume_gtc": 19619,
+      "Volume_ltc": 3114,
+      "province": "Bình Thuận"
+    },
+    {
+      "GTC": 14266,
+      "GTC_pct": 62.45,
+      "LTC": 4142,
+      "LTC_pct": 88.87,
+      "TTC": 14874,
+      "TTC_pct": 65.11,
+      "Volume_gtc": 22845,
+      "Volume_ltc": 4662,
+      "province": "Khánh Hòa"
+    },
+    {
+      "GTC": 121,
+      "GTC_pct": 75.78,
+      "LTC": 32,
+      "LTC_pct": 86.49,
+      "TTC": 123,
+      "TTC_pct": 77.02,
+      "Volume_gtc": 161,
+      "Volume_ltc": 37,
+      "province": "Không xác định"
+    },
+    {
+      "GTC": 15155,
+      "GTC_pct": 58.4,
+      "LTC": 4474,
+      "LTC_pct": 92.29,
+      "TTC": 15695,
+      "TTC_pct": 60.48,
+      "Volume_gtc": 25951,
+      "Volume_ltc": 4848,
+      "province": "Lâm Đồng"
+    },
+    {
+      "GTC": 5434,
+      "GTC_pct": 69.47,
+      "LTC": 2655,
+      "LTC_pct": 96.86,
+      "TTC": 5653,
+      "TTC_pct": 72.27,
+      "Volume_gtc": 7823,
+      "Volume_ltc": 2742,
+      "province": "Ninh Thuận"
+    },
+    {
+      "GTC": 5282,
+      "GTC_pct": 57.15,
+      "LTC": 3522,
+      "LTC_pct": 86.86,
+      "TTC": 5526,
+      "TTC_pct": 59.79,
+      "Volume_gtc": 9242,
+      "Volume_ltc": 4055,
+      "province": "Đắk Nông"
+    }
+  ],
+  "kpis": {
+    "binh_thuan": {
+      "dod": {
+        "gtc": 6.68,
+        "ltc": 3.42,
+        "prev_date_str": "Chủ Nhật",
+        "prev_gtc": 67.72,
+        "prev_ltc": 91.67,
+        "prev_ttc": 69.79,
+        "ttc": 6.56
+      },
+      "gtc": 74.4,
+      "ltc": 95.09,
+      "n3": {
+        "gtc": 5.91,
+        "ltc": 0.08,
+        "n3_date_str": "Thứ 6",
+        "n3_gtc": 68.49,
+        "n3_ltc": 95.01,
+        "n3_ttc": 70.36,
+        "ttc": 5.99
+      },
+      "name": "Bình Thuận",
+      "ttc": 76.35,
+      "vol_gtc": 19619,
+      "vol_ltc": 3114,
+      "w1_avg": {
+        "days_count": 7,
+        "gtc": 69.81,
+        "ltc": 94.41,
+        "ttc": 71.73
+      },
+      "w2_avg": {
+        "days_count": 7,
+        "gtc": 67.51,
+        "ltc": 92.36,
+        "ttc": 69.45
+      },
+      "wow": {
+        "gtc": 7.01,
+        "ltc": -0.03,
+        "lw_gtc": 67.39,
+        "lw_ltc": 95.12,
+        "lw_ttc": 69.38,
+        "ttc": 6.97
+      },
+      "wow_avg": {
+        "gtc": 2.3,
+        "ltc": 2.05,
+        "ttc": 2.28
+      }
+    },
+    "dak_nong": {
+      "dod": {
+        "gtc": 2.11,
+        "ltc": 6.92,
+        "prev_date_str": "Chủ Nhật",
+        "prev_gtc": 55.04,
+        "prev_ltc": 79.94,
+        "prev_ttc": 57.35,
+        "ttc": 2.44
+      },
+      "gtc": 57.15,
+      "ltc": 86.86,
+      "n3": {
+        "gtc": -2.6,
+        "ltc": 0.54,
+        "n3_date_str": "Thứ 6",
+        "n3_gtc": 59.75,
+        "n3_ltc": 86.32,
+        "n3_ttc": 62.2,
+        "ttc": -2.41
+      },
+      "name": "Đắk Nông",
+      "ttc": 59.79,
+      "vol_gtc": 9242,
+      "vol_ltc": 4055,
+      "w1_avg": {
+        "days_count": 7,
+        "gtc": 58.25,
+        "ltc": 86.76,
+        "ttc": 60.69
+      },
+      "w2_avg": {
+        "days_count": 7,
+        "gtc": 56.73,
+        "ltc": 83.91,
+        "ttc": 59.22
+      },
+      "wow": {
+        "gtc": 1.36,
+        "ltc": -1.4,
+        "lw_gtc": 55.79,
+        "lw_ltc": 88.26,
+        "lw_ttc": 58.13,
+        "ttc": 1.66
+      },
+      "wow_avg": {
+        "gtc": 1.52,
+        "ltc": 2.85,
+        "ttc": 1.47
+      }
+    },
+    "khanh_hoa": {
+      "dod": {
+        "gtc": 4.24,
+        "ltc": 0.85,
+        "prev_date_str": "Chủ Nhật",
+        "prev_gtc": 58.21,
+        "prev_ltc": 88.02,
+        "prev_ttc": 60.83,
+        "ttc": 4.28
+      },
+      "gtc": 62.45,
+      "ltc": 88.87,
+      "n3": {
+        "gtc": -0.92,
+        "ltc": -2.58,
+        "n3_date_str": "Thứ 6",
+        "n3_gtc": 63.37,
+        "n3_ltc": 91.45,
+        "n3_ttc": 66.08,
+        "ttc": -0.97
+      },
+      "name": "Khánh Hòa",
+      "ttc": 65.11,
+      "vol_gtc": 22845,
+      "vol_ltc": 4662,
+      "w1_avg": {
+        "days_count": 7,
+        "gtc": 62.01,
+        "ltc": 89.69,
+        "ttc": 64.74
+      },
+      "w2_avg": {
+        "days_count": 7,
+        "gtc": 58.01,
+        "ltc": 91.25,
+        "ttc": 60.84
+      },
+      "wow": {
+        "gtc": 1.69,
+        "ltc": -4.99,
+        "lw_gtc": 60.76,
+        "lw_ltc": 93.86,
+        "lw_ttc": 63.82,
+        "ttc": 1.29
+      },
+      "wow_avg": {
+        "gtc": 4.0,
+        "ltc": -1.56,
+        "ttc": 3.9
+      }
+    },
+    "lam_dong": {
+      "dod": {
+        "gtc": 6.11,
+        "ltc": -0.75,
+        "prev_date_str": "Chủ Nhật",
+        "prev_gtc": 52.29,
+        "prev_ltc": 93.04,
+        "prev_ttc": 54.25,
+        "ttc": 6.23
+      },
+      "gtc": 58.4,
+      "ltc": 92.29,
+      "n3": {
+        "gtc": 2.28,
+        "ltc": 0.18,
+        "n3_date_str": "Thứ 6",
+        "n3_gtc": 56.12,
+        "n3_ltc": 92.11,
+        "n3_ttc": 58.22,
+        "ttc": 2.26
+      },
+      "name": "Lâm Đồng",
+      "ttc": 60.48,
+      "vol_gtc": 25951,
+      "vol_ltc": 4848,
+      "w1_avg": {
+        "days_count": 7,
+        "gtc": 54.11,
+        "ltc": 92.73,
+        "ttc": 56.21
+      },
+      "w2_avg": {
+        "days_count": 7,
+        "gtc": 49.69,
+        "ltc": 91.56,
+        "ttc": 51.89
+      },
+      "wow": {
+        "gtc": 9.03,
+        "ltc": 2.25,
+        "lw_gtc": 49.37,
+        "lw_ltc": 90.04,
+        "lw_ttc": 51.42,
+        "ttc": 9.06
+      },
+      "wow_avg": {
+        "gtc": 4.42,
+        "ltc": 1.17,
+        "ttc": 4.32
+      }
+    },
+    "ninh_thuan": {
+      "dod": {
+        "gtc": 6.16,
+        "ltc": 0.95,
+        "prev_date_str": "Chủ Nhật",
+        "prev_gtc": 63.31,
+        "prev_ltc": 95.91,
+        "prev_ttc": 66.29,
+        "ttc": 5.98
+      },
+      "gtc": 69.47,
+      "ltc": 96.86,
+      "n3": {
+        "gtc": -0.91,
+        "ltc": 0.54,
+        "n3_date_str": "Thứ 6",
+        "n3_gtc": 70.38,
+        "n3_ltc": 96.32,
+        "n3_ttc": 73.37,
+        "ttc": -1.1
+      },
+      "name": "Ninh Thuận",
+      "ttc": 72.27,
+      "vol_gtc": 7823,
+      "vol_ltc": 2742,
+      "w1_avg": {
+        "days_count": 7,
+        "gtc": 68.24,
+        "ltc": 96.88,
+        "ttc": 71.09
+      },
+      "w2_avg": {
+        "days_count": 7,
+        "gtc": 66.68,
+        "ltc": 96.36,
+        "ttc": 69.45
+      },
+      "wow": {
+        "gtc": 2.32,
+        "ltc": 0.76,
+        "lw_gtc": 67.15,
+        "lw_ltc": 96.1,
+        "lw_ttc": 69.53,
+        "ttc": 2.74
+      },
+      "wow_avg": {
+        "gtc": 1.56,
+        "ltc": 0.52,
+        "ttc": 1.64
+      }
+    },
+    "overall": {
+      "dod": {
+        "gtc": 5.37,
+        "ltc": 2.33,
+        "prev_date_str": "Chủ Nhật",
+        "prev_gtc": 58.69,
+        "prev_ltc": 89.09,
+        "prev_ttc": 60.99,
+        "ttc": 5.4
+      },
+      "gtc": 64.06,
+      "ltc": 91.42,
+      "n3": {
+        "gtc": 1.53,
+        "ltc": -0.22,
+        "n3_date_str": "Thứ 6",
+        "n3_gtc": 62.53,
+        "n3_ltc": 91.64,
+        "n3_ttc": 64.86,
+        "ttc": 1.53
+      },
+      "ttc": 66.39,
+      "vol_gtc": 85641,
+      "vol_ltc": 19458,
+      "w1_avg": {
+        "days_count": 7,
+        "gtc": 61.46,
+        "ltc": 91.31,
+        "ttc": 63.79
+      },
+      "w2_avg": {
+        "days_count": 7,
+        "gtc": 57.92,
+        "ltc": 90.21,
+        "ttc": 60.31
+      },
+      "wow": {
+        "gtc": 5.91,
+        "ltc": -0.85,
+        "lw_gtc": 58.15,
+        "lw_ltc": 92.27,
+        "lw_ttc": 60.52,
+        "ttc": 5.87
+      },
+      "wow_avg": {
+        "gtc": 3.54,
+        "ltc": 1.1,
+        "ttc": 3.48
+      }
+    }
+  },
+  "latest_date": "2026-06-08 - Thứ 2"
+}

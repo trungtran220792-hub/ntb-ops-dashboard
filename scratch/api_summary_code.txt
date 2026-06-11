@@ -1,0 +1,151 @@
+2406: @app.route('/api/summary-dashboard')
+2407: @requires_permission('tab-dashboard')
+2408: def api_summary_dashboard():
+2409:     try:
+2410:         df_gtc, df_ltc, df_aging, df_treo = get_dataframes()
+2411:         
+2412:         # Filters from query params
+2413:         am = request.args.get('am')
+2414:         province = request.args.get('province')
+2415:         post_office = request.args.get('post_office')
+2416:         selected_date = request.args.get('date')
+2417:         
+2418:         # Find latest date dynamically
+2419:         all_times = set(df_gtc['Time'].dropna().unique()).union(set(df_ltc['Time'].dropna().unique()))
+2420:         dates_sorted = sorted(list(all_times), key=lambda x: pd.to_datetime(x.split(' - ')[0]))
+2421:         if not dates_sorted:
+2422:             return jsonify({"error": "Không có dữ liệu ngày trong Datagtc hoặc Dataltc"})
+2423:             
+2424:         if selected_date and selected_date in dates_sorted:
+2425:             latest_date = selected_date
+2426:         else:
+2427:             latest_date = dates_sorted[-1]
+2428:         
+2429:         prev_date = dates_sorted[-2] if len(dates_sorted) >= 2 else None
+2430:         
+2431:         # Find same day of week last week (7 days ago)
+2432:         latest_dt = pd.to_datetime(latest_date.split(' - ')[0])
+2433:         last_week_date = None
+2434:         for d in dates_sorted:
+2435:             dt = pd.to_datetime(d.split(' - ')[0])
+2436:             if (latest_dt - dt).days == 7:
+2437:                 last_week_date = d
+2438:                 break
+2439:                 
+2440:         def compute_kpi_for_date(date_str, filter_am=None, filter_prov=None, filter_po=None):
+2441:             if not date_str:
+2442:                 return None
+2443:             gtc_d = df_gtc[df_gtc['Time'] == date_str]
+2444:             ltc_d = df_ltc[df_ltc['Time'] == date_str]
+2445:             
+2446:             gtc_d = apply_filters(gtc_d, filter_am, filter_prov, filter_po)
+2447:             ltc_d = apply_filters(ltc_d, filter_am, filter_prov, filter_po)
+2448:             
+2449:             ltc_vol = ltc_d['Volume'].sum()
+2450:             ltc_done = ltc_d['ltc_vol'].sum()
+2451:             gtc_vol = gtc_d['Volume'].sum()
+2452:             gtc_done = gtc_d['delivered_vol'].sum()
+2453:             ttc_done = gtc_d['ttc_vol'].sum()
+2454:             
+2455:             return {
+2456:                 'ltc': round((ltc_done / ltc_vol * 100), 2) if ltc_vol > 0 else 0.0,
+2457:                 'gtc': round((gtc_done / gtc_vol * 100), 2) if gtc_vol > 0 else 0.0,
+2458:                 'ttc': round((ttc_done / gtc_vol * 100), 2) if gtc_vol > 0 else 0.0,
+2459:                 'vol_ltc': int(ltc_vol),
+2460:                 'vol_gtc': int(gtc_vol)
+2461:             }
+2462:         
+2463:         # Filter for latest date
+2464:         today_gtc = df_gtc[df_gtc['Time'] == latest_date]
+2465:         today_ltc = df_ltc[df_ltc['Time'] == latest_date]
+2466:         
+2467:         # Apply filters to today's data
+2468:         today_gtc = apply_filters(today_gtc, am, province, post_office)
+2469:         today_ltc = apply_filters(today_ltc, am, province, post_office)
+2470:         
+2471:         # Apply filters to backlog datasets
+2472:         curr_aging = apply_filters(df_aging, am, province, post_office)
+2473:         curr_treo = apply_filters(df_treo, am, province, post_office)
+2474:         
+2475:         # 1. Completed Volume Grouped by Province
+2476:         gtc_prov = today_gtc.groupby('mapped_prov').agg({'Volume': 'sum', 'delivered_vol': 'sum', 'ttc_vol': 'sum'}).reset_index()
+2477:         ltc_prov = today_ltc.groupby('mapped_prov').agg({'Volume': 'sum', 'ltc_vol': 'sum'}).reset_index()
+2478:         
+2479:         merged_prov = pd.merge(gtc_prov, ltc_prov, on='mapped_prov', suffixes=('_gtc', '_ltc'), how='outer').fillna(0)
+2480:         completed_vols = []
+2481:         for _, r in merged_prov.iterrows():
+2482:             prov_name = r['mapped_prov']
+2483:             completed_vols.append({
+2484:                 'province': prov_name,
+2485:                 'LTC': int(r['ltc_vol']),
+2486:                 'GTC': int(r['delivered_vol']),
+2487:                 'TTC': int(r['ttc_vol']),
+2488:                 'LTC_pct': round((r['ltc_vol'] / r['Volume_ltc'] * 100), 2) if r['Volume_ltc'] > 0 else 0.0,
+2489:                 'GTC_pct': round((r['delivered_vol'] / r['Volume_gtc'] * 100), 2) if r['Volume_gtc'] > 0 else 0.0,
+2490:                 'TTC_pct': round((r['ttc_vol'] / r['Volume_gtc'] * 100), 2) if r['Volume_gtc'] > 0 else 0.0,
+2491:                 'Volume_gtc': int(r['Volume_gtc']),
+2492:                 'Volume_ltc': int(r['Volume_ltc'])
+2493:             })
+2494:             
+2495:         # 2. Backlog by AM
+2496:         treo_giao = curr_treo[curr_treo['Loại đơn'] == 'Luân chuyển giao']
+2497:         treo_tra = curr_treo[curr_treo['Loại đơn'] == 'Luân chuyển trả']
+2498:         
+2499:         aging_am = curr_aging.groupby('mapped_am').size().reset_index(name='chua_giao')
+2500:         treo_giao_am = treo_giao.groupby('mapped_am').size().reset_index(name='chua_lay')
+2501:         treo_tra_am = treo_tra.groupby('mapped_am').size().reset_index(name='chua_tra')
+2502:         
+2503:         backlog_am = pd.merge(treo_giao_am, aging_am, on='mapped_am', how='outer')
+2504:         backlog_am = pd.merge(backlog_am, treo_tra_am, on='mapped_am', how='outer').fillna(0)
+2505:         
+2506:         backlog_by_am = []
+2507:         for _, r in backlog_am.iterrows():
+2508:             backlog_by_am.append({
+2509:                 'am': r['mapped_am'],
+2510:                 'chua_lay': int(r['chua_lay']),
+2511:                 'chua_giao': int(r['chua_giao']),
+2512:                 'chua_tra': int(r['chua_tra'])
+2513:             })
+2514:             
+2515:         # 3. Overall & Province-specific KPIs
+2516:         kpis = {}
+2517:         
+2518:         def format_kpi_dict(latest_kpi, prev_kpi, lw_kpi):
+2519:             res = {
+2520:                 'ltc': latest_kpi['ltc'] if latest_kpi else 0.0,
+2521:                 'gtc': latest_kpi['gtc'] if latest_kpi else 0.0,
+2522:                 'ttc': latest_kpi['ttc'] if latest_kpi else 0.0,
+2523:                 'vol_ltc': latest_kpi['vol_ltc'] if latest_kpi else 0,
+2524:                 'vol_gtc': latest_kpi['vol_gtc'] if latest_kpi else 0
+2525:             }
+2526:             if latest_kpi:
+2527:                 if prev_kpi:
+2528:                     res['dod'] = {
+2529:                         'ltc': round(latest_kpi['ltc'] - prev_kpi['ltc'], 2),
+2530:                         'gtc': round(latest_kpi['gtc'] - prev_kpi['gtc'], 2),
+2531:                         'ttc': round(latest_kpi['ttc'] - prev_kpi['ttc'], 2)
+2532:                     }
+2533:                 else:
+2534:                     res['dod'] = None
+2535:                 
+2536:                 if lw_kpi:
+2537:                     res['wow'] = {
+2538:                         'ltc': round(latest_kpi['ltc'] - lw_kpi['ltc'], 2),
+2539:                         'gtc': round(latest_kpi['gtc'] - lw_kpi['gtc'], 2),
+2540:                         'ttc': round(latest_kpi['ttc'] - lw_kpi['ttc'], 2)
+2541:                     }
+2542:                 else:
+2543:                     res['wow'] = None
+2544:             else:
+2545:                 res['dod'] = None
+2546:                 res['wow'] = None
+2547:             return res
+2548:             
+2549:         overall_latest = compute_kpi_for_date(latest_date, am, province, post_office)
+2550:         overall_prev = compute_kpi_for_date(prev_date, am, province, post_office) if prev_date else None
+2551:         overall_lw = compute_kpi_for_date(last_week_date, am, province, post_office) if last_week_date else None
+2552:         
+2553:         kpis['overall'] = format_kpi_dict(overall_latest, overall_prev, overall_lw)
+2554:         
+2555:         # Compute for each province
+2556:         all_provinces = set(df_ltc['mapped_prov'].unique()).union(set(df_gtc['mapped_prov'].unique()))

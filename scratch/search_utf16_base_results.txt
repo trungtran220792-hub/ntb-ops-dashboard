@@ -1,0 +1,12 @@
+Reading c:\Users\lap4all\Desktop\New folder\scratch\index.html.base as UTF-16...
+Successfully read 344557 characters.
+Saved UTF-8 copy to c:\Users\lap4all\Desktop\New folder\scratch\index_base_utf8.html
+
+Keyword 'nhân sự': found 0 occurrences
+Keyword 'quản lý nhân sự': found 0 occurrences
+Keyword 'gán tất cả': found 0 occurrences
+Keyword 'gán tts': found 0 occurrences
+Keyword 'odr tts': found 0 occurrences
+Keyword 'tổng quan': found 0 occurrences
+
+Lines containing 'Nhân sự' or 'nhan-su' or 'nhan_su':

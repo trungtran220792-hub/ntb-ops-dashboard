@@ -1,0 +1,460 @@
+
+=================== CURRENT ===================
+Matches count: 10
+
+--- Context at index 10213 ---
+al',
+                'tab-opr',
+                'tab-backlog',
+                'tab-unstable-po',
+                'tab-off-spe',
+                'tab-volume-creation',
+                'tab-nhan-su',
+                'tab-sync'
+            ];
+
+            let firstAllowedTab = null;
+
+            tabIds.forEach(tabId => {
+                const navItem = document.getElementById('nav-' + tabId);
+                if (!navItem) return;
+
+                // Admin has all permissions. Otherwise check if tabId in userPermissions
+                const isAllowed = userRole === 'admin' || userPermissions.includes(tabId);
+                
+                if (isAllowed) {
+                    navItem.style.display = 'flex';
+                    if (!firstAllowedTab) firstAllowedTab = tabId;
+                } else {
+                    navItem.style.display = 'none';
+                }
+            });
+
+            // If current active tab is not allowed, sw
+------------------------------
+
+--- Context at index 15299 ---
+klog': 'Backlog',
+                        'tab-unstable-po': 'Bất ổn',
+                        'tab-off-spe': 'OFF SPE',
+                        'tab-volume-creation': 'Sản lượng',
+                        'tab-sync': 'Đồng bộ'
+                    };
+
+                    users.forEach(u => {
+                        const tr = document.createElement('tr');
+                        
+                        let badgeHtml = '';
+                        if (u.role === 'admin') {
+                            badgeHtml = '<span class="status-badge stable">Admin</span>';
+                        } else {
+                            badgeHtml = '<span class="status-badge warning">Staff</span>';
+                        }
+
+                        let permissionsHtml = '';
+                        if (u.role === 'admin') {
+                            permissionsHtml = '<span style="color: var(--text-muted); font-style: italic;">Có toàn quyền hệ thống</sp
+------------------------------
+
+--- Context at index 27770 ---
+pePromise = fetch(getApiUrl('/api/off-spe'), getFetchOptions()).then(r => r.json());
+                const volCreationPromise = fetch(getApiUrl('/api/volume-creation'), getFetchOptions()).then(r => r.json());
+
+                const [opsData, oprData, blData, unstableData, offSpeData, volCreationData] = await Promise.all([
+                    opsPromise,
+                    oprPromise,
+                    backlogPromise,
+                    unstablePromise,
+                    offSpePromise,
+                    volCreationPromise
+                ]);
+
+                globalData.operational = opsData;
+                globalData.opr = oprData;
+                globalData.backlog = blData;
+                globalData.unstablePo = unstableData;
+                globalData.offSpe = offSpeData;
+                globalData.volumeCreation = volCreationData;
+
+                // Update timestamps
+                const activePanel = document.querySelect
+------------------------------
+
+--- Context at index 94295 ---
+         });
+                
+                showLoading("Đang cập nhật báo cáo volume...");
+                const res = await fetch(getApiUrl(`/api/volume-creation?${queryParams.toString()}`), getFetchOptions());
+                const data = await res.json();
+                
+                if (data.error) {
+                    alert("Lỗi lọc dữ liệu: " + data.error);
+                } else {
+                    populateVolFilters(data.filters, province, district, ward, po, customer, potype);
+                    renderVolumeCreation(data);
+                }
+            } catch (err) {
+                console.error("Lỗi khi lọc volume:", err);
+            } finally {
+                hideLoading();
+                isVolFiltering = false;
+            }
+        }
+
+        function renderVolumeCreation(data) {
+            const dateEl = document.getElementById('volume-creation-report-date');
+            const kpiValEl = document.getElemen
+------------------------------
+
+--- Context at index 95017 ---
+   isVolFiltering = false;
+            }
+        }
+
+        function renderVolumeCreation(data) {
+            const dateEl = document.getElementById('volume-creation-report-date');
+            const kpiValEl = document.getElementById('kpi-volume-creation');
+            const kpiCompEl = document.getElementById('kpi-volume-creation-comparison');
+            const tbody = document.getElementById('table-volume-creation-pivot-body');
+
+            if (!data || data.error) {
+                if (kpiValEl) kpiValEl.innerText = "Lỗi";
+                if (kpiCompEl) kpiCompEl.innerText = data && data.error ? data.error : "Không có dữ liệu";
+                if (tbody) {
+                    tbody.innerHTML = `<tr><td colspan="12" style="text-align: center; color: var(--text-danger); font-weight: 600; padding: 24px;"><i class="fa-solid fa-circle-exclamation"></i> ${data && data.error ? escapeHTML(data.error) : "Lỗi tải dữ liệu"}</td></tr>`;
+        
+------------------------------
+
+--- Context at index 95106 ---
+(data) {
+            const dateEl = document.getElementById('volume-creation-report-date');
+            const kpiValEl = document.getElementById('kpi-volume-creation');
+            const kpiCompEl = document.getElementById('kpi-volume-creation-comparison');
+            const tbody = document.getElementById('table-volume-creation-pivot-body');
+
+            if (!data || data.error) {
+                if (kpiValEl) kpiValEl.innerText = "Lỗi";
+                if (kpiCompEl) kpiCompEl.innerText = data && data.error ? data.error : "Không có dữ liệu";
+                if (tbody) {
+                    tbody.innerHTML = `<tr><td colspan="12" style="text-align: center; color: var(--text-danger); font-weight: 600; padding: 24px;"><i class="fa-solid fa-circle-exclamation"></i> ${data && data.error ? escapeHTML(data.error) : "Lỗi tải dữ liệu"}</td></tr>`;
+                }
+                return;
+            }
+
+            const provinceSelect = docum
+------------------------------
+
+--- Context at index 95184 ---
+eport-date');
+            const kpiValEl = document.getElementById('kpi-volume-creation');
+            const kpiCompEl = document.getElementById('kpi-volume-creation-comparison');
+            const tbody = document.getElementById('table-volume-creation-pivot-body');
+
+            if (!data || data.error) {
+                if (kpiValEl) kpiValEl.innerText = "Lỗi";
+                if (kpiCompEl) kpiCompEl.innerText = data && data.error ? data.error : "Không có dữ liệu";
+                if (tbody) {
+                    tbody.innerHTML = `<tr><td colspan="12" style="text-align: center; color: var(--text-danger); font-weight: 600; padding: 24px;"><i class="fa-solid fa-circle-exclamation"></i> ${data && data.error ? escapeHTML(data.error) : "Lỗi tải dữ liệu"}</td></tr>`;
+                }
+                return;
+            }
+
+            const provinceSelect = document.getElementById('vol-filter-province');
+            if (provinceSelect && p
+------------------------------
+
+--- Context at index 95271 ---
+');
+            const kpiCompEl = document.getElementById('kpi-volume-creation-comparison');
+            const tbody = document.getElementById('table-volume-creation-pivot-body');
+
+            if (!data || data.error) {
+                if (kpiValEl) kpiValEl.innerText = "Lỗi";
+                if (kpiCompEl) kpiCompEl.innerText = data && data.error ? data.error : "Không có dữ liệu";
+                if (tbody) {
+                    tbody.innerHTML = `<tr><td colspan="12" style="text-align: center; color: var(--text-danger); font-weight: 600; padding: 24px;"><i class="fa-solid fa-circle-exclamation"></i> ${data && data.error ? escapeHTML(data.error) : "Lỗi tải dữ liệu"}</td></tr>`;
+                }
+                return;
+            }
+
+            const provinceSelect = document.getElementById('vol-filter-province');
+            if (provinceSelect && provinceSelect.options.length <= 1 && data.filters) {
+                populateVolFilters
+------------------------------
+
+--- Context at index 100642 ---
+`;
+                }
+                
+                tbody.innerHTML = html;
+            }
+
+            const mHead = document.getElementById('table-volume-creation-matrix-head');
+            const mBody = document.getElementById('table-volume-creation-matrix-body');
+            
+            if (mHead && mBody && data.matrix && data.matrix.dates) {
+                let headHtml = `
+                    <tr>
+                        <th style="text-align: left; font-weight: 700; font-size: 13px;">Tỉnh / Bưu cục</th>
+                `;
+                data.matrix.dates.forEach(d => {
+                    headHtml += `<th style="text-align: center; font-weight: 700; font-size: 11px;">${formatMatrixDate(d)}</th>`;
+                });
+                headHtml += `
+                        <th style="text-align: center; font-weight: 700; font-size: 13px; background-color: rgba(0, 123, 195, 0.05);">Tổng cộng</th>
+                    </tr>
+        
+------------------------------
+
+--- Context at index 100730 ---
+  }
+
+            const mHead = document.getElementById('table-volume-creation-matrix-head');
+            const mBody = document.getElementById('table-volume-creation-matrix-body');
+            
+            if (mHead && mBody && data.matrix && data.matrix.dates) {
+                let headHtml = `
+                    <tr>
+                        <th style="text-align: left; font-weight: 700; font-size: 13px;">Tỉnh / Bưu cục</th>
+                `;
+                data.matrix.dates.forEach(d => {
+                    headHtml += `<th style="text-align: center; font-weight: 700; font-size: 11px;">${formatMatrixDate(d)}</th>`;
+                });
+                headHtml += `
+                        <th style="text-align: center; font-weight: 700; font-size: 13px; background-color: rgba(0, 123, 195, 0.05);">Tổng cộng</th>
+                    </tr>
+                `;
+                mHead.innerHTML = headHtml;
+                
+                
+------------------------------
+
+=================== BACKUP ===================
+Matches count: 10
+
+--- Context at index 10214 ---
+al',
+                'tab-opr',
+                'tab-backlog',
+                'tab-unstable-po',
+                'tab-off-spe',
+                'tab-volume-creation',
+                'tab-nhan-su',
+                'tab-sync'
+            ];
+
+            let firstAllowedTab = null;
+
+            tabIds.forEach(tabId => {
+                const navItem = document.getElementById('nav-' + tabId);
+                if (!navItem) return;
+
+                // Admin has all permissions. Otherwise check if tabId in userPermissions
+                const isAllowed = userRole === 'admin' || userPermissions.includes(tabId);
+                
+                if (isAllowed) {
+                    navItem.style.display = 'flex';
+                    if (!firstAllowedTab) firstAllowedTab = tabId;
+                } else {
+                    navItem.style.display = 'none';
+                }
+            });
+
+            // If current active tab is not allowed, sw
+------------------------------
+
+--- Context at index 15300 ---
+klog': 'Backlog',
+                        'tab-unstable-po': 'Bất ổn',
+                        'tab-off-spe': 'OFF SPE',
+                        'tab-volume-creation': 'Sản lượng',
+                        'tab-sync': 'Đồng bộ'
+                    };
+
+                    users.forEach(u => {
+                        const tr = document.createElement('tr');
+                        
+                        let badgeHtml = '';
+                        if (u.role === 'admin') {
+                            badgeHtml = '<span class="status-badge stable">Admin</span>';
+                        } else {
+                            badgeHtml = '<span class="status-badge warning">Staff</span>';
+                        }
+
+                        let permissionsHtml = '';
+                        if (u.role === 'admin') {
+                            permissionsHtml = '<span style="color: var(--text-muted); font-style: italic;">Có toàn quyền hệ thống</sp
+------------------------------
+
+--- Context at index 32844 ---
+pePromise = fetch(getApiUrl('/api/off-spe'), getFetchOptions()).then(r => r.json());
+                const volCreationPromise = fetch(getApiUrl('/api/volume-creation'), getFetchOptions()).then(r => r.json());
+
+                const [opsData, oprData, blData, unstableData, offSpeData, volCreationData] = await Promise.all([
+                    opsPromise,
+                    oprPromise,
+                    backlogPromise,
+                    unstablePromise,
+                    offSpePromise,
+                    volCreationPromise
+                ]);
+
+                globalData.operational = opsData;
+                globalData.opr = oprData;
+                globalData.backlog = blData;
+                globalData.unstablePo = unstableData;
+                globalData.offSpe = offSpeData;
+                globalData.volumeCreation = volCreationData;
+
+                // Update timestamps
+                const activePanel = document.querySelect
+------------------------------
+
+--- Context at index 96433 ---
+         });
+                
+                showLoading("Đang cập nhật báo cáo volume...");
+                const res = await fetch(getApiUrl(`/api/volume-creation?${queryParams.toString()}`), getFetchOptions());
+                const data = await res.json();
+                
+                if (data.error) {
+                    alert("Lỗi lọc dữ liệu: " + data.error);
+                } else {
+                    populateVolFilters(data.filters, province, district, ward, po, customer, potype);
+                    renderVolumeCreation(data);
+                }
+            } catch (err) {
+                console.error("Lỗi khi lọc volume:", err);
+            } finally {
+                hideLoading();
+                isVolFiltering = false;
+            }
+        }
+
+        function renderVolumeCreation(data) {
+            const dateEl = document.getElementById('volume-creation-report-date');
+            const kpiValEl = document.getElemen
+------------------------------
+
+--- Context at index 97155 ---
+   isVolFiltering = false;
+            }
+        }
+
+        function renderVolumeCreation(data) {
+            const dateEl = document.getElementById('volume-creation-report-date');
+            const kpiValEl = document.getElementById('kpi-volume-creation');
+            const kpiCompEl = document.getElementById('kpi-volume-creation-comparison');
+            const tbody = document.getElementById('table-volume-creation-pivot-body');
+
+            if (!data || data.error) {
+                if (kpiValEl) kpiValEl.innerText = "Lỗi";
+                if (kpiCompEl) kpiCompEl.innerText = data && data.error ? data.error : "Không có dữ liệu";
+                if (tbody) {
+                    tbody.innerHTML = `<tr><td colspan="12" style="text-align: center; color: var(--text-danger); font-weight: 600; padding: 24px;"><i class="fa-solid fa-circle-exclamation"></i> ${data && data.error ? escapeHTML(data.error) : "Lỗi tải dữ liệu"}</td></tr>`;
+        
+------------------------------
+
+--- Context at index 97244 ---
+(data) {
+            const dateEl = document.getElementById('volume-creation-report-date');
+            const kpiValEl = document.getElementById('kpi-volume-creation');
+            const kpiCompEl = document.getElementById('kpi-volume-creation-comparison');
+            const tbody = document.getElementById('table-volume-creation-pivot-body');
+
+            if (!data || data.error) {
+                if (kpiValEl) kpiValEl.innerText = "Lỗi";
+                if (kpiCompEl) kpiCompEl.innerText = data && data.error ? data.error : "Không có dữ liệu";
+                if (tbody) {
+                    tbody.innerHTML = `<tr><td colspan="12" style="text-align: center; color: var(--text-danger); font-weight: 600; padding: 24px;"><i class="fa-solid fa-circle-exclamation"></i> ${data && data.error ? escapeHTML(data.error) : "Lỗi tải dữ liệu"}</td></tr>`;
+                }
+                return;
+            }
+
+            const provinceSelect = docum
+------------------------------
+
+--- Context at index 97322 ---
+eport-date');
+            const kpiValEl = document.getElementById('kpi-volume-creation');
+            const kpiCompEl = document.getElementById('kpi-volume-creation-comparison');
+            const tbody = document.getElementById('table-volume-creation-pivot-body');
+
+            if (!data || data.error) {
+                if (kpiValEl) kpiValEl.innerText = "Lỗi";
+                if (kpiCompEl) kpiCompEl.innerText = data && data.error ? data.error : "Không có dữ liệu";
+                if (tbody) {
+                    tbody.innerHTML = `<tr><td colspan="12" style="text-align: center; color: var(--text-danger); font-weight: 600; padding: 24px;"><i class="fa-solid fa-circle-exclamation"></i> ${data && data.error ? escapeHTML(data.error) : "Lỗi tải dữ liệu"}</td></tr>`;
+                }
+                return;
+            }
+
+            const provinceSelect = document.getElementById('vol-filter-province');
+            if (provinceSelect && p
+------------------------------
+
+--- Context at index 97409 ---
+');
+            const kpiCompEl = document.getElementById('kpi-volume-creation-comparison');
+            const tbody = document.getElementById('table-volume-creation-pivot-body');
+
+            if (!data || data.error) {
+                if (kpiValEl) kpiValEl.innerText = "Lỗi";
+                if (kpiCompEl) kpiCompEl.innerText = data && data.error ? data.error : "Không có dữ liệu";
+                if (tbody) {
+                    tbody.innerHTML = `<tr><td colspan="12" style="text-align: center; color: var(--text-danger); font-weight: 600; padding: 24px;"><i class="fa-solid fa-circle-exclamation"></i> ${data && data.error ? escapeHTML(data.error) : "Lỗi tải dữ liệu"}</td></tr>`;
+                }
+                return;
+            }
+
+            const provinceSelect = document.getElementById('vol-filter-province');
+            if (provinceSelect && provinceSelect.options.length <= 1 && data.filters) {
+                populateVolFilters
+------------------------------
+
+--- Context at index 102780 ---
+`;
+                }
+                
+                tbody.innerHTML = html;
+            }
+
+            const mHead = document.getElementById('table-volume-creation-matrix-head');
+            const mBody = document.getElementById('table-volume-creation-matrix-body');
+            
+            if (mHead && mBody && data.matrix && data.matrix.dates) {
+                let headHtml = `
+                    <tr>
+                        <th style="text-align: left; font-weight: 700; font-size: 13px;">Tỉnh / Bưu cục</th>
+                `;
+                data.matrix.dates.forEach(d => {
+                    headHtml += `<th style="text-align: center; font-weight: 700; font-size: 11px;">${formatMatrixDate(d)}</th>`;
+                });
+                headHtml += `
+                        <th style="text-align: center; font-weight: 700; font-size: 13px; background-color: rgba(0, 123, 195, 0.05);">Tổng cộng</th>
+                    </tr>
+        
+------------------------------
+
+--- Context at index 102868 ---
+  }
+
+            const mHead = document.getElementById('table-volume-creation-matrix-head');
+            const mBody = document.getElementById('table-volume-creation-matrix-body');
+            
+            if (mHead && mBody && data.matrix && data.matrix.dates) {
+                let headHtml = `
+                    <tr>
+                        <th style="text-align: left; font-weight: 700; font-size: 13px;">Tỉnh / Bưu cục</th>
+                `;
+                data.matrix.dates.forEach(d => {
+                    headHtml += `<th style="text-align: center; font-weight: 700; font-size: 11px;">${formatMatrixDate(d)}</th>`;
+                });
+                headHtml += `
+                        <th style="text-align: center; font-weight: 700; font-size: 13px; background-color: rgba(0, 123, 195, 0.05);">Tổng cộng</th>
+                    </tr>
+                `;
+                mHead.innerHTML = headHtml;
+                
+                
+------------------------------

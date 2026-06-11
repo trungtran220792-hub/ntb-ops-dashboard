@@ -1,0 +1,21 @@
+API calls found in index.html:
+'/api/chat'
+'/api/config'
+'/api/download-template?filename='
+'/api/files-status'
+'/api/history'
+'/api/ntb-structure'
+'/api/off-spe'
+'/api/operational'
+'/api/opr'
+'/api/sync'
+'/api/sync/status'
+'/api/unstable-po'
+'/api/upload'
+'/api/user-role'
+'/api/volume-creation'
+`/api/backlog?baseline=${baseline}`
+`/api/matrix-tables?${params.toString()}`
+`/api/summary-dashboard?${params.toString()}`
+`/api/trends-dashboard?${params.toString()}`
+`/api/volume-creation?${queryParams.toString()}`

@@ -1,0 +1,40 @@
+L2041:         # Auto-update co_cau_ntb.xlsx from cached 'Cơ cấu' sheet of Báo cáo Vận hành
+L2042:         try:
+L2043:             # Detect columns dynamically
+L2044:             col_id = next((c for c in df_co_cau.columns if c.lower() in ['mã bưu cục', 'warehouse_id', 'id']), df_co_cau.columns[0])
+L2045:             col_bc = next((c for c in df_co_cau.columns if c.lower() in ['bưu cục', 'buu_cuc', 'name']), df_co_cau.columns[1] if len(df_co_cau.columns) > 1 else df_co_cau.columns[0])
+L2046:             col_prov = next((c for c in df_co_cau.columns if c.lower() in ['tỉnh', 'tinh', 'province']), df_co_cau.columns[3] if len(df_co_cau.columns) > 3 else df_co_cau.columns[0])
+L2047:             col_am = next((c for c in df_co_cau.columns if c.lower() in ['am', 'am_name', 'id - họ tên am']), df_co_cau.columns[4] if len(df_co_cau.columns) > 4 else df_co_cau.columns[0])
+L2048: 
+L2049:             df_cc_export = df_co_cau.rename(columns={
+L2050:                 col_id: 'warehouse_id',
+L2051:                 col_bc: 'Bưu cục',
+L2052:                 col_prov: 'Tỉnh',
+L2053:                 col_am: 'AM'
+L2054:             })
+L2055:             df_cc_export = df_cc_export[['warehouse_id', 'Bưu cục', 'Tỉnh', 'AM']].dropna(subset=['warehouse_id'])
+L2056:             
+L2057:             # Map province corrections
+L2058:             df_cc_export['Tỉnh'] = df_cc_export['Tỉnh'].replace({'Khánh Hoà': 'Khánh Hòa', 'Bình Phước': 'Lâm Đồng'})
+L2059:             
+L2060:             co_cau_dest = resolve_path('co_cau_ntb.xlsx', write=True)
+L2061:             df_cc_export.to_excel(co_cau_dest, sheet_name='Sheet1', index=False)
+L2062:             print("Successfully auto-updated co_cau_ntb.xlsx from Ops report.")
+L2063:         except Exception as ex:
+L2064:             clean_err = str(ex).encode('ascii', errors='ignore').decode('ascii')
+L2065:             print(f"Error auto-updating co_cau_ntb.xlsx: {clean_err}")
+L2066:             
+L2067:         gc.collect()
+L2068:         
+L2069:     return DF_GTC_CACHE, DF_LTC_CACHE, DF_AGING_CACHE, DF_TREO_CACHE
+L2070: 
+L2071: def apply_filters(df, am=None, province=None, post_office=None):
+L2072:     df_filtered = df.copy()
+L2073:     if am:
+L2074:         df_filtered = df_filtered[df_filtered['mapped_am'] == am]
+L2075:     if province:
+L2076:         df_filtered = df_filtered[df_filtered['mapped_prov'] == province]
+L2077:     if post_office:
+L2078:         df_filtered = df_filtered[df_filtered['clean_bc'] == post_office.strip().lower()]
+L2079:     return df_filtered
+L2080: 

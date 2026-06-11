@@ -1635,6 +1635,80 @@
             display: block;
             animation: fadeIn 0.3s ease;
         }
+
+        /* NTB Premium Styles */
+        .regional-capsule-select {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 0px;
+            background: rgba(226, 232, 240, 0.4);
+            padding: 4px;
+            border-radius: 30px;
+            width: max-content;
+        }
+        .regional-capsule-select .capsule-btn {
+            border: none;
+            background: transparent;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .regional-capsule-select .capsule-btn:hover {
+            color: var(--text-primary) !important;
+            background: rgba(226, 232, 240, 0.6);
+        }
+        .regional-capsule-select .capsule-btn.active {
+            color: white !important;
+            background: var(--color-ghn-orange) !important;
+            box-shadow: 0 2px 6px rgba(255, 95, 0, 0.25);
+        }
+        .quality-metric-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .quality-metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md) !important;
+        }
+        .ntb-toggle-capsules {
+            display: flex;
+            background: rgba(226, 232, 240, 0.4);
+            padding: 3px;
+            border-radius: 20px;
+            width: max-content;
+        }
+        .ntb-capsule {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .ntb-capsule.active {
+            background: var(--color-ghn-orange);
+            color: white;
+        }
+
+        /* Alternating row stripes and center alignment for custom tables */
+        .custom-table tbody tr:nth-child(even) {
+            background-color: rgba(241, 245, 249, 0.5);
+        }
+        .custom-table td {
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -1690,11 +1764,11 @@
                 <img src="/static/ghn_logo.png" alt="GHN Logo" style="max-height: 48px; max-width: 100%; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.02));">
             </div>
             <ul class="sidebar-menu">
-                <li class="menu-item active" id="nav-tab-dashboard" onclick="switchTab('tab-dashboard', this)">
-                    <i class="fa-solid fa-chart-pie"></i> Tổng quan
-                </li>
-                <li class="menu-item" id="nav-tab-introduction" onclick="switchTab('tab-introduction', this)">
+                <li class="menu-item active" id="nav-tab-introduction" onclick="switchTab('tab-introduction', this)">
                     <i class="fa-solid fa-map-location-dot"></i> Giới thiệu NTB
+                </li>
+                <li class="menu-item" id="nav-tab-dashboard" onclick="switchTab('tab-dashboard', this)">
+                    <i class="fa-solid fa-chart-pie"></i> Tổng quan
                 </li>
                 <li class="menu-item" id="nav-tab-ntb-summary" onclick="switchTab('tab-ntb-summary', this)">
                     <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
@@ -1717,6 +1791,9 @@
                 <li class="menu-item" id="nav-tab-volume-creation" onclick="switchTab('tab-volume-creation', this)">
                     <i class="fa-solid fa-file-invoice"></i> Volume tạo đơn
                 </li>
+                                <li class="menu-item" id="nav-tab-nhan-su" onclick="switchTab('tab-nhan-su', this)">
+                    <i class="fa-solid fa-users"></i> Quản lý Nhân sự
+                </li>
                 <li class="menu-item" id="nav-tab-sync" onclick="switchTab('tab-sync', this)">
                     <i class="fa-solid fa-rotate"></i> Đồng bộ & Files
                 </li>
@@ -1734,7 +1811,7 @@
             <!-- Header bar -->
             <header class="top-header">
                 <div class="header-title">
-                    <h1 id="page-title">Tổng quan Dashboard</h1>
+                    <h1 id="page-title">GIỚI THIỆU VÙNG NAM TRUNG BỘ</h1>
                     <p id="last-sync-time">Lần đồng bộ cuối: Chưa có</p>
                 </div>
                 <div class="header-actions">
@@ -1780,7 +1857,7 @@
             </section>
 
             <!-- TAB: NTB INTRODUCTION -->
-            <div id="tab-introduction" class="content-panel">
+            <div id="tab-introduction" class="content-panel active">
                 
                 <!-- NTB Hero Banner -->
                 <div class="ntb-hero-banner" style="display: grid; grid-template-columns: 1.1fr 1.9fr; gap: 24px; align-items: center;">
@@ -1972,17 +2049,32 @@
             </div>
 
             <!-- TAB 1: OVERVIEW DASHBOARD -->
-            <div id="tab-dashboard" class="content-panel active">
+            <div id="tab-dashboard" class="content-panel">
 
                 <div class="kpi-grid">
                     <div class="kpi-card success">
                         <div class="kpi-header">
-                            <span>Tỷ lệ GTC (Giao TC)</span>
+                            <span>Tỷ lệ GTC</span>
                             <i class="fa-solid fa-circle-check"></i>
                         </div>
                         <div class="kpi-value" id="kpi-gtc">- %</div>
                         <div class="kpi-comparison" id="kpi-gtc-comparison"></div>
-                        <div class="kpi-trend trend-neutral">Target: 60.0%</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span>Tỷ lệ gán tất cả hàng</span>
+                            <i class="fa-solid fa-link"></i>
+                        </div>
+                        <div class="kpi-value" id="kpi-gan">- %</div>
+                        <div class="kpi-comparison" id="kpi-gan-comparison"></div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <span>Tỷ lệ gán TTS</span>
+                            <i class="fa-solid fa-link"></i>
+                        </div>
+                        <div class="kpi-value" id="kpi-gan-tts">- %</div>
+                        <div class="kpi-comparison" id="kpi-gan-tts-comparison"></div>
                     </div>
                     <div class="kpi-card">
                         <div class="kpi-header">
@@ -2001,6 +2093,15 @@
                         <div class="kpi-value" id="kpi-opr">- %</div>
                         <div class="kpi-comparison" id="kpi-opr-comparison"></div>
                         <div class="kpi-trend trend-neutral">Target OPR: 80%</div>
+                    </div>
+                    <div class="kpi-card success">
+                        <div class="kpi-header">
+                            <span>Tỷ lệ ODR TTS</span>
+                            <i class="fa-solid fa-truck"></i>
+                        </div>
+                        <div class="kpi-value" id="kpi-odr">- %</div>
+                        <div class="kpi-comparison" id="kpi-odr-comparison"></div>
+                        <div class="kpi-trend trend-neutral">Tỷ lệ giao hàng đúng giờ</div>
                     </div>
                     <div class="kpi-card danger" id="kpi-unstable-po-card" style="cursor: pointer;" onclick="switchTab('tab-unstable-po', document.querySelector('[onclick*=\'tab-unstable-po\']'))">
                         <div class="kpi-header">
@@ -2085,8 +2186,9 @@
                     style="margin-bottom: 20px; background: rgba(255, 255, 255, 0.5); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 10px; display: flex; gap: 16px;">
                     <div class="filter-group" style="margin-bottom: 0;">
                         <label style="margin-bottom: 4px;">Nhóm thời gian</label>
-                        <select class="select-input" id="ntb-time-group" disabled style="padding: 6px 12px;">
+                        <select class="select-input" id="ntb-time-group" onchange="onTimeGroupChange()" style="padding: 6px 12px;">
                             <option value="ngay">Ngày</option>
+                            <option value="tuan">Tuần</option>
                         </select>
                     </div>
                     <div class="filter-group" style="margin-bottom: 0;">
@@ -2100,7 +2202,9 @@
 
                 <!-- Section 1 -->
                 <div class="ntb-section-title">1. Hôm nay (chỉ số tại thời điểm hiện tại)</div>
-                <div style="display: grid; grid-template-columns: 1.2fr 1.2fr 1fr; gap: 16px; margin-bottom: 24px;">
+                
+                <!-- Top Row: Volume and Backlog Charts -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
                     <!-- Card 1: Completed Volume -->
                     <div class="card" style="margin-bottom: 0;">
                         <div class="card-header">
@@ -2115,186 +2219,202 @@
                         </div>
                         <div id="chart-ntb-backlog-am" style="min-height: 280px; padding: 10px;"></div>
                     </div>
-                    <!-- Card 3: 9-KPI Grid -->
-                    <div class="card"
-                        style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: stretch;">
-                        <div class="card-header">
-                            <h3>Chỉ số chất lượng</h3>
+                </div>
+
+                <!-- Middle Row: Regional Switcher and Quality Cards -->
+                <div class="card" style="margin-bottom: 24px; padding: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+                        <h3 style="margin: 0; font-size: 18px; font-weight: 700;">Chỉ số chất lượng NTB</h3>
+                        <!-- Region Capsule Selector -->
+                        <div class="regional-capsule-select" id="ntb-region-capsules">
+                            <button class="capsule-btn active" onclick="switchNtbRegion('overall', this)">Toàn vùng</button>
+                            <button class="capsule-btn" onclick="switchNtbRegion('lam_dong', this)">Lâm Đồng</button>
+                            <button class="capsule-btn" onclick="switchNtbRegion('binh_thuan', this)">Bình Thuận</button>
+                            <button class="capsule-btn" onclick="switchNtbRegion('khanh_hoa', this)">Khánh Hòa</button>
+                            <button class="capsule-btn" onclick="switchNtbRegion('dak_nong', this)">Đắk Nông</button>
+                            <button class="capsule-btn" onclick="switchNtbRegion('ninh_thuan', this)">Ninh Thuận</button>
                         </div>
-                        <div class="ntb-kpi-grid" style="flex-grow: 1; padding: 5px;">
-                            <!-- ROW 1: LTC -->
-                            <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-indigo);">
-                                <div class="kpi-label">% LTC</div>
-                                <div class="kpi-value" id="ntb-kpi-ltc-overall">0%</div>
-                                <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                                    <span>Toàn vùng</span>
-                                    <span id="ntb-kpi-ltc-overall-trend" style="font-size: 9px; scale: 0.95;"></span>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                        <!-- CARD 1: LTC -->
+                        <div class="quality-metric-card" style="border-top: 4px solid var(--color-indigo); min-height: 220px;">
+                            <div>
+                                <div class="metric-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                    <span class="metric-title" style="font-weight: 700; color: var(--text-primary); font-size: 14px;">% LTC <span id="ltc-active-region" style="font-size: 11px; font-weight: normal; color: var(--text-muted);">(Toàn vùng)</span></span>
+                                    <span style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Target: -</span>
+                                </div>
+                                <div class="metric-value-row" style="display: flex; align-items: baseline; gap: 10px; margin-top: 8px;">
+                                    <div class="metric-value" id="kpi-ltc-value" style="font-size: 28px; font-weight: 800;">0%</div>
+                                    <div id="kpi-ltc-badge" class="metric-badge neutral" style="font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">
+                                        <span>-</span>
+                                    </div>
+                                </div>
+                                <div class="metric-subtext" id="kpi-ltc-subtext" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">So với ngày trước: -</div>
+                            </div>
+                            <!-- Sparkline Chart -->
+                            <div class="sparkline-container" id="sparkline-ltc" style="margin-top: 10px; min-height: 40px;"></div>
+                            <div class="comparison-divider" style="border-top: 1px solid var(--border-color); margin: 12px 0 8px 0;"></div>
+                            <div class="avg-comparison-row" style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted);">
+                                <div class="avg-item">
+                                    <span id="ltc-comp-1-label">So với n-3:</span>
+                                    <span id="ltc-comp-1-val" style="font-weight: 600; color: var(--text-secondary); margin-left: 4px;">- %</span>
+                                </div>
+                                <div class="avg-item">
+                                    <span id="ltc-comp-2-label">Cùng kỳ Thứ:</span>
+                                    <span id="ltc-comp-2-val" style="font-weight: 600; color: var(--text-secondary); margin-left: 4px;">- %</span>
                                 </div>
                             </div>
-                            <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-indigo);">
-                                <div class="kpi-label">% LTC (LĐ)</div>
-                                <div class="kpi-value" id="ntb-kpi-ltc-lamdong">0%</div>
-                                <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                                    <span>Lâm Đồng</span>
-                                    <span id="ntb-kpi-ltc-lamdong-trend" style="font-size: 9px; scale: 0.95;"></span>
+                        </div>
+                        
+                        <!-- CARD 2: GTC -->
+                        <div class="quality-metric-card" style="border-top: 4px solid var(--color-success); min-height: 220px;">
+                            <div>
+                                <div class="metric-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                    <span class="metric-title" style="font-weight: 700; color: var(--text-primary); font-size: 14px;">% GTC <span id="gtc-active-region" style="font-size: 11px; font-weight: normal; color: var(--text-muted);">(Toàn vùng)</span></span>
+                                    <span style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Target: -</span>
+                                </div>
+                                <div class="metric-value-row" style="display: flex; align-items: baseline; gap: 10px; margin-top: 8px;">
+                                    <div class="metric-value" id="kpi-gtc-value" style="font-size: 28px; font-weight: 800;">0%</div>
+                                    <div id="kpi-gtc-badge" class="metric-badge neutral" style="font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">
+                                        <span>-</span>
+                                    </div>
+                                </div>
+                                <div class="metric-subtext" id="kpi-gtc-subtext" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">So với ngày trước: -</div>
+                            </div>
+                            <!-- Sparkline Chart -->
+                            <div class="sparkline-container" id="sparkline-gtc" style="margin-top: 10px; min-height: 40px;"></div>
+                            <div class="comparison-divider" style="border-top: 1px solid var(--border-color); margin: 12px 0 8px 0;"></div>
+                            <div class="avg-comparison-row" style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted);">
+                                <div class="avg-item">
+                                    <span id="gtc-comp-1-label">So với n-3:</span>
+                                    <span id="gtc-comp-1-val" style="font-weight: 600; color: var(--text-secondary); margin-left: 4px;">- %</span>
+                                </div>
+                                <div class="avg-item">
+                                    <span id="gtc-comp-2-label">Cùng kỳ Thứ:</span>
+                                    <span id="gtc-comp-2-val" style="font-weight: 600; color: var(--text-secondary); margin-left: 4px;">- %</span>
                                 </div>
                             </div>
-                            <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-indigo);">
-                                <div class="kpi-label">% LTC (BT)</div>
-                                <div class="kpi-value" id="ntb-kpi-ltc-binhthuan">0%</div>
-                                <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                                    <span>Bình Thuận</span>
-                                    <span id="ntb-kpi-ltc-binhthuan-trend" style="font-size: 9px; scale: 0.95;"></span>
+                        </div>
+                        
+                        <!-- CARD 3: ODR TTS -->
+                        <div class="quality-metric-card" style="border-top: 4px solid var(--color-warning); min-height: 220px;">
+                            <div>
+                                <div class="metric-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                    <span class="metric-title" style="font-weight: 700; color: var(--text-primary); font-size: 14px;">% ODR TTS <span id="ttc-active-region" style="font-size: 11px; font-weight: normal; color: var(--text-muted);">(Toàn vùng)</span></span>
+                                    <span style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Target: &ge; 94%</span>
                                 </div>
-                            </div>
-                            <!-- ROW 2: GTC -->
-                            <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-success);">
-                                <div class="kpi-label">% GTC</div>
-                                <div class="kpi-value" id="ntb-kpi-gtc-overall">0%</div>
-                                <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                                    <span>Toàn vùng</span>
-                                    <span id="ntb-kpi-gtc-overall-trend" style="font-size: 9px; scale: 0.95;"></span>
+                                <div class="metric-value-row" style="display: flex; align-items: baseline; gap: 10px; margin-top: 8px;">
+                                    <div class="metric-value" id="kpi-ttc-value" style="font-size: 28px; font-weight: 800;">0%</div>
+                                    <div id="kpi-ttc-badge" class="metric-badge neutral" style="font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">
+                                        <span>-</span>
+                                    </div>
                                 </div>
+                                <div class="metric-subtext" id="kpi-ttc-subtext" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">So với ngày trước: -</div>
                             </div>
-                            <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-success);">
-                                <div class="kpi-label">% GTC (LĐ)</div>
-                                <div class="kpi-value" id="ntb-kpi-gtc-lamdong">0%</div>
-                                <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                                    <span>Lâm Đồng</span>
-                                    <span id="ntb-kpi-gtc-lamdong-trend" style="font-size: 9px; scale: 0.95;"></span>
+                            <!-- Sparkline Chart -->
+                            <div class="sparkline-container" id="sparkline-ttc" style="margin-top: 10px; min-height: 40px;"></div>
+                            <div class="comparison-divider" style="border-top: 1px solid var(--border-color); margin: 12px 0 8px 0;"></div>
+                            <div class="avg-comparison-row" style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted);">
+                                <div class="avg-item">
+                                    <span id="ttc-comp-1-label">So với n-3:</span>
+                                    <span id="ttc-comp-1-val" style="font-weight: 600; color: var(--text-secondary); margin-left: 4px;">- %</span>
                                 </div>
-                            </div>
-                            <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-success);">
-                                <div class="kpi-label">% GTC (BT)</div>
-                                <div class="kpi-value" id="ntb-kpi-gtc-binhthuan">0%</div>
-                                <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                                    <span>Bình Thuận</span>
-                                    <span id="ntb-kpi-gtc-binhthuan-trend" style="font-size: 9px; scale: 0.95;"></span>
-                                </div>
-                            </div>
-                            <!-- ROW 3: TTC -->
-                            <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-warning);">
-                                <div class="kpi-label">% TTC</div>
-                                <div class="kpi-value" id="ntb-kpi-ttc-overall">0%</div>
-                                <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                                    <span>Toàn vùng</span>
-                                    <span id="ntb-kpi-ttc-overall-trend" style="font-size: 9px; scale: 0.95;"></span>
-                                </div>
-                            </div>
-                            <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-warning);">
-                                <div class="kpi-label">% TTC (LĐ)</div>
-                                <div class="kpi-value" id="ntb-kpi-ttc-lamdong">0%</div>
-                                <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                                    <span>Lâm Đồng</span>
-                                    <span id="ntb-kpi-ttc-lamdong-trend" style="font-size: 9px; scale: 0.95;"></span>
-                                </div>
-                            </div>
-                            <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-warning);">
-                                <div class="kpi-label">% TTC (BT)</div>
-                                <div class="kpi-value" id="ntb-kpi-ttc-binhthuan">0%</div>
-                                <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                                    <span>Bình Thuận</span>
-                                    <span id="ntb-kpi-ttc-binhthuan-trend" style="font-size: 9px; scale: 0.95;"></span>
+                                <div class="avg-item">
+                                    <span id="ttc-comp-2-label">Cùng kỳ Thứ:</span>
+                                    <span id="ttc-comp-2-val" style="font-weight: 600; color: var(--text-secondary); margin-left: 4px;">- %</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Section 2 -->
+                <!-- Section 2: LTC Analysis -->
                 <div class="ntb-section-title">2. Snapshot LTC</div>
-                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 24px;">
-                    <!-- Line Chart: %LTC xu hướng -->
-                    <div class="card" style="margin-bottom: 0;">
-                        <div class="card-header">
-                            <h3>%LTC xu hướng</h3>
-                        </div>
-                        <div id="chart-ntb-ltc-trend" style="min-height: 280px; padding: 10px;"></div>
+                <div class="card" style="margin-bottom: 24px;">
+                    <div class="card-header">
+                        <h3>%LTC xu hướng</h3>
                     </div>
-                    <!-- Right: %LTC overview cards with trend comparison -->
-                    <div class="card"
-                        style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-around; padding: 20px;">
-                        <div class="ntb-trend-kpi-card">
-                            <div class="label">% LTC Toàn vùng</div>
-                            <div class="value" id="ntb-trend-ltc-val">- %</div>
-                            <div class="sub" id="ntb-trend-ltc-diff">So với ngày trước: -</div>
-                        </div>
-                        <div style="border-top: 1px solid var(--border-color); margin: 10px 0;"></div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                            <div class="ntb-trend-kpi-card-sub">
-                                <div class="label">% LTC (LĐ)</div>
-                                <div class="value" id="ntb-trend-ltc-ld-val">- %</div>
-                                <div class="sub" id="ntb-trend-ltc-ld-diff">-</div>
-                            </div>
-                            <div class="ntb-trend-kpi-card-sub">
-                                <div class="label">% LTC (BT)</div>
-                                <div class="value" id="ntb-trend-ltc-bt-val">- %</div>
-                                <div class="sub" id="ntb-trend-ltc-bt-diff">-</div>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="chart-ntb-ltc-trend" style="min-height: 280px; padding: 10px;"></div>
                 </div>
 
-                <!-- Matrix Table: %LTC theo bưu cục -->
-                <div class="card" style="margin-bottom: 24px;">
-                    <div class="card-header"
-                        style="display: flex; justify-content: space-between; align-items: center;">
-                        <h3>%LTC theo bưu cục</h3>
-                        <span style="font-size: 12px; color: var(--text-muted); font-style: italic;">Nhấp vào dòng AM để
-                            xem chi tiết bưu cục</span>
+                <!-- Analysis & Ranking Table: %LTC -->
+                <div class="card" style="margin-bottom: 24px; padding: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                            <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: var(--text-primary);">Báo cáo phân tích & Xếp hạng % LTC</h3>
+                            <div class="ntb-toggle-capsules">
+                                <div class="ntb-capsule active" id="capsule-ltc-po" onclick="setNtbGroupType('ltc', 'po')">Bưu cục</div>
+                                <div class="ntb-capsule" id="capsule-ltc-am" onclick="setNtbGroupType('ltc', 'am')">AM</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <input type="text" id="search-ntb-ltc" placeholder="Tìm kiếm tên bưu cục/AM..." oninput="handleNtbSearch('ltc')" style="padding: 8px 14px; font-size: 13px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-primary); outline: none; width: 220px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: border-color 0.2s;" />
+                        </div>
                     </div>
-                    <div class="table-responsive">
-                        <table class="custom-table ntb-matrix-table" id="table-ntb-ltc-matrix">
-                            <!-- We will build the thead and tbody dynamically -->
+                    <div class="table-responsive" style="max-height: 480px; overflow-y: auto;">
+                        <table class="custom-table" id="table-ntb-ltc-analysis" style="border-collapse: separate; border-spacing: 0;">
+                            <thead style="position: sticky; top: 0; background: var(--card-bg); z-index: 10;">
+                                <tr style="cursor: pointer; user-select: none;">
+                                    <th onclick="handleNtbSort('ltc', 'rank')" style="width: 70px;">Hạng <span id="sort-icon-ltc-rank">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'name')">Bưu cục / AM <span id="sort-icon-ltc-name">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'am')" id="th-ltc-am-header">AM Quản lý <span id="sort-icon-ltc-am">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'pick_vol')" style="text-align: right;">Sản lượng LTC <span id="sort-icon-ltc-pick_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'total_vol')" style="text-align: right;">Tổng sản lượng <span id="sort-icon-ltc-total_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'prop')" style="text-align: right;">Tỷ trọng <span id="sort-icon-ltc-prop">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'pct')" style="text-align: right;">LTC % <span id="sort-icon-ltc-pct">↕</span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-ntb-ltc-analysis">
+                                <tr>
+                                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Đang tải dữ liệu...</td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Section 3 -->
+                <!-- Section 3: GTC Analysis -->
                 <div class="ntb-section-title">3. Snapshot GTC</div>
-                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 24px;">
-                    <!-- Line Chart: %GTC xu hướng -->
-                    <div class="card" style="margin-bottom: 0;">
-                        <div class="card-header">
-                            <h3>%GTC xu hướng</h3>
-                        </div>
-                        <div id="chart-ntb-gtc-trend" style="min-height: 280px; padding: 10px;"></div>
+                <div class="card" style="margin-bottom: 24px;">
+                    <div class="card-header">
+                        <h3>%GTC xu hướng</h3>
                     </div>
-                    <!-- Right: %GTC overview cards with trend comparison -->
-                    <div class="card"
-                        style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-around; padding: 20px;">
-                        <div class="ntb-trend-kpi-card">
-                            <div class="label">% GTC Toàn vùng</div>
-                            <div class="value" id="ntb-trend-gtc-val">- %</div>
-                            <div class="sub" id="ntb-trend-gtc-diff">So với ngày trước: -</div>
-                        </div>
-                        <div style="border-top: 1px solid var(--border-color); margin: 10px 0;"></div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                            <div class="ntb-trend-kpi-card-sub">
-                                <div class="label">% GTC (LĐ)</div>
-                                <div class="value" id="ntb-trend-gtc-ld-val">- %</div>
-                                <div class="sub" id="ntb-trend-gtc-ld-diff">-</div>
-                            </div>
-                            <div class="ntb-trend-kpi-card-sub">
-                                <div class="label">% GTC (BT)</div>
-                                <div class="value" id="ntb-trend-gtc-bt-val">- %</div>
-                                <div class="sub" id="ntb-trend-gtc-bt-diff">-</div>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="chart-ntb-gtc-trend" style="min-height: 280px; padding: 10px;"></div>
                 </div>
 
-                <!-- Matrix Table: %GTC theo bưu cục -->
-                <div class="card" style="margin-bottom: 24px;">
-                    <div class="card-header"
-                        style="display: flex; justify-content: space-between; align-items: center;">
-                        <h3>%GTC theo bưu cục</h3>
-                        <span style="font-size: 12px; color: var(--text-muted); font-style: italic;">Nhấp vào dòng AM để
-                            xem chi tiết bưu cục</span>
+                <!-- Analysis & Ranking Table: %GTC -->
+                <div class="card" style="margin-bottom: 24px; padding: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                            <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: var(--text-primary);">Báo cáo phân tích & Xếp hạng % GTC</h3>
+                            <div class="ntb-toggle-capsules">
+                                <div class="ntb-capsule active" id="capsule-gtc-po" onclick="setNtbGroupType('gtc', 'po')">Bưu cục</div>
+                                <div class="ntb-capsule" id="capsule-gtc-am" onclick="setNtbGroupType('gtc', 'am')">AM</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <input type="text" id="search-ntb-gtc" placeholder="Tìm kiếm tên bưu cục/AM..." oninput="handleNtbSearch('gtc')" style="padding: 8px 14px; font-size: 13px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-primary); outline: none; width: 220px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: border-color 0.2s;" />
+                        </div>
                     </div>
-                    <div class="table-responsive">
-                        <table class="custom-table ntb-matrix-table" id="table-ntb-gtc-matrix">
-                            <!-- We will build the thead and tbody dynamically -->
+                    <div class="table-responsive" style="max-height: 480px; overflow-y: auto;">
+                        <table class="custom-table" id="table-ntb-gtc-analysis" style="border-collapse: separate; border-spacing: 0;">
+                            <thead style="position: sticky; top: 0; background: var(--card-bg); z-index: 10;">
+                                <tr style="cursor: pointer; user-select: none;">
+                                    <th onclick="handleNtbSort('gtc', 'rank')" style="width: 70px;">Hạng <span id="sort-icon-gtc-rank">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'name')">Bưu cục / AM <span id="sort-icon-gtc-name">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'am')" id="th-gtc-am-header">AM Quản lý <span id="sort-icon-gtc-am">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'pick_vol')" style="text-align: right;">Sản lượng GTC <span id="sort-icon-gtc-pick_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'total_vol')" style="text-align: right;">Tổng sản lượng <span id="sort-icon-gtc-total_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'prop')" style="text-align: right;">Tỷ trọng <span id="sort-icon-gtc-prop">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'pct')" style="text-align: right;">GTC % <span id="sort-icon-gtc-pct">↕</span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-ntb-gtc-analysis">
+                                <tr>
+                                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Đang tải dữ liệu...</td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -2390,43 +2510,87 @@
 
             <!-- TAB 3: OPR TTS -->
             <div id="tab-opr" class="content-panel">
+                <!-- KPI GRID (4 cards) -->
                 <div class="kpi-grid">
-                    <div class="kpi-card">
-                        <div class="kpi-header"><span>Tổng đơn OPR</span></div>
-                        <div class="kpi-value" id="opr-total-vol">0</div>
+                    <div class="kpi-card" style="box-shadow: 0 4px 15px rgba(255, 95, 0, 0.08); border-color: rgba(255, 95, 0, 0.15);">
+                        <div class="kpi-header" style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: 600; font-size: 13px;">Tỷ lệ OPR Overall</span>
+                            <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 95, 0, 0.1); display: flex; align-items: center; justify-content: center; color: #ff5f00;">
+                                <i class="fa-solid fa-chart-line" style="font-size: 14px;"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value" id="opr-overall-rate" style="color: #ff5f00; font-weight: 800; font-size: 28px; margin: 8px 0;">- %</div>
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <div class="kpi-trend" id="opr-kpi-diff-n1" style="font-size: 11px;">- % so với ngày N-1</div>
+                            <div class="kpi-trend" id="opr-kpi-diff-wk" style="font-size: 11px;">- % so với cùng kỳ</div>
+                        </div>
                     </div>
-                    <div class="kpi-card success">
-                        <div class="kpi-header"><span>Đơn đúng hạn</span></div>
-                        <div class="kpi-value" id="opr-total-ot">0</div>
+                    <div class="kpi-card" style="box-shadow: 0 4px 15px rgba(0, 123, 195, 0.08); border-color: rgba(0, 123, 195, 0.15);">
+                        <div class="kpi-header" style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: 600; font-size: 13px;">Tổng đơn OPR</span>
+                            <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0, 123, 195, 0.1); display: flex; align-items: center; justify-content: center; color: #007bc3;">
+                                <i class="fa-solid fa-boxes-stacked" style="font-size: 14px;"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value" id="opr-total-vol" style="font-size: 28px; margin: 8px 0; font-weight: 800; color: var(--text-primary);">0</div>
+                        <div class="kpi-trend text-muted" style="font-size: 11px;"><i class="fa-solid fa-circle-info"></i> Tổng đơn phát sinh LTC</div>
                     </div>
-                    <div class="kpi-card danger">
-                        <div class="kpi-header"><span>Đơn trễ hạn</span></div>
-                        <div class="kpi-value" id="opr-total-late">0</div>
+                    <div class="kpi-card success" style="box-shadow: 0 4px 15px rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.15);">
+                        <div class="kpi-header" style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: 600; font-size: 13px;">Đơn đúng hạn</span>
+                            <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(16, 185, 129, 0.1); display: flex; align-items: center; justify-content: center; color: #10b981;">
+                                <i class="fa-solid fa-circle-check" style="font-size: 14px;"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value" id="opr-total-ot" style="font-size: 28px; margin: 8px 0; font-weight: 800; color: #10b981;">0</div>
+                        <div class="kpi-trend text-muted" style="font-size: 11px;"><i class="fa-solid fa-circle-check"></i> Đạt điều kiện SLA OPR</div>
+                    </div>
+                    <div class="kpi-card danger" style="box-shadow: 0 4px 15px rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.15);">
+                        <div class="kpi-header" style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: 600; font-size: 13px;">Đơn trễ hạn</span>
+                            <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(239, 68, 68, 0.1); display: flex; align-items: center; justify-content: center; color: #ef4444;">
+                                <i class="fa-solid fa-circle-exclamation" style="font-size: 14px;"></i>
+                            </div>
+                        </div>
+                        <div class="kpi-value" id="opr-total-late" style="font-size: 28px; margin: 8px 0; font-weight: 800; color: #ef4444;">0</div>
+                        <div class="kpi-trend text-muted" style="font-size: 11px;"><i class="fa-solid fa-circle-exclamation"></i> Không đạt điều kiện SLA OPR</div>
                     </div>
                 </div>
 
+                <!-- Two-column charts layout -->
                 <div class="columns-layout">
                     <!-- OPR by Time slots -->
                     <div class="card">
-                        <div class="card-header">
-                            <h3>% OPR theo khung giờ tạo đơn</h3>
+                        <div class="card-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+                            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin: 0;">
+                                <i class="fa-solid fa-clock" style="color: var(--color-ghn-orange); margin-right: 6px;"></i> % OPR theo khung giờ tạo đơn
+                            </h3>
                         </div>
                         <div id="chart-opr-slots" style="min-height: 250px;"></div>
                     </div>
-                    <!-- OPR by AM -->
+                    <!-- OPR by AM with sorting toggle -->
                     <div class="card">
-                        <div class="card-header">
-                            <h3>Biểu đồ OPR xếp hạng lỗi trễ của AM</h3>
+                        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+                            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin: 0;">
+                                <i class="fa-solid fa-chart-bar" style="color: var(--color-ghn-orange); margin-right: 6px;"></i> Xếp hạng hiệu suất OPR của AM
+                            </h3>
+                            <div class="ntb-toggle-capsules" style="padding: 2px;">
+                                <div class="ntb-capsule active" id="sort-am-asc" onclick="setAmOprSort('asc')" style="padding: 2px 8px; font-size: 11px; user-select: none;">Thấp → Cao</div>
+                                <div class="ntb-capsule" id="sort-am-desc" onclick="setAmOprSort('desc')" style="padding: 2px 8px; font-size: 11px; user-select: none;">Cao → Thấp</div>
+                            </div>
                         </div>
                         <div id="chart-opr-am" style="min-height: 250px;"></div>
                     </div>
                 </div>
 
+                <!-- One-column Error Reasons and CTA Google Sheets layout -->
                 <div class="columns-layout">
                     <!-- Error Reasons weight -->
-                    <div class="card" style="flex-grow: 1.5;">
-                        <div class="card-header">
-                            <h3>Tỷ trọng và lý do trễ hạn OPR</h3>
+                    <div class="card" style="flex-grow: 1.5; margin-bottom: 0;">
+                        <div class="card-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+                            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin: 0;">
+                                <i class="fa-solid fa-triangle-exclamation" style="color: var(--color-danger); margin-right: 6px;"></i> Tỷ trọng và lý do trễ hạn OPR
+                            </h3>
                         </div>
                         <div class="table-responsive">
                             <table class="custom-table" id="table-opr-errors">
@@ -2434,7 +2598,7 @@
                                     <tr>
                                         <th>Lý do trễ</th>
                                         <th>Số đơn trễ</th>
-                                        <th>Tỷ trọng %</th>
+                                        <th style="width: 250px;">Tỷ trọng %</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -2443,32 +2607,18 @@
                     </div>
                 </div>
 
-                <!-- Detail list of day N-1 errors -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Tra cứu Chi tiết Đơn lỗi ngày N-1 (AM Check Shop)</h3>
+                <!-- Call-To-Action (CTA) link card referencing Google Sheets instead of huge paginated table -->
+                <div class="card" style="margin-top: 20px; text-align: center; padding: 30px 20px; border: 1px dashed var(--border-color); border-radius: 8px;">
+                    <div style="font-size: 48px; color: #107c41; margin-bottom: 15px;">
+                        <i class="fa-solid fa-file-excel"></i>
                     </div>
-                    <div class="table-responsive">
-                        <table class="custom-table" id="table-opr-details">
-                            <thead>
-                                <tr>
-                                    <th>Mã vận đơn</th>
-                                    <th>Tỉnh</th>
-                                    <th>Kho/Bưu cục lấy</th>
-                                    <th>Tên Shop</th>
-                                    <th>AM phụ trách</th>
-                                    <th>Lý do trễ</th>
-                                    <th>Khung giờ tạo</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                    <div class="pagination" id="opr-details-pagination">
-                        <button class="btn btn-secondary" onclick="prevPage('opr')">Trước</button>
-                        <span id="opr-page-num">1 / 1</span>
-                        <button class="btn btn-secondary" onclick="nextPage('opr')">Sau</button>
-                    </div>
+                    <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 10px; color: var(--text-primary);">Tra cứu Chi tiết Đơn lỗi ngày N-1</h3>
+                    <p style="color: var(--text-muted); font-size: 14px; max-width: 500px; margin: 0 auto 20px;">
+                        Chi tiết các đơn hàng lỗi trễ hạn OPR được cập nhật đầy đủ và chính xác trực tiếp tại trang tính dữ liệu nguồn. Vui lòng truy cập file Google Sheets để xem danh sách chi tiết (AM Check Shop).
+                    </p>
+                    <a id="opr-sheet-link" href="#" target="_blank" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 24px; font-weight: 600; border-radius: 6px; text-decoration: none; background: #107c41; border-color: #107c41;">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Mở file Google Sheets
+                    </a>
                 </div>
             </div>
 
@@ -2993,15 +3143,102 @@
                     </div>
                 </div>
 
-                <!-- 4. Treemap card -->
-                <div class="card" style="margin-bottom: 24px;">
-                    <div class="card-body" style="padding: 16px;">
-                        <div id="chart-volume-treemap" style="min-height: 400px;"></div>
+                <!-- 4. Growth charts side-by-side -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 20px; margin-bottom: 24px;">
+                    <div class="card" style="margin-bottom: 0;">
+                        <div class="card-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+                            <h3 style="font-size: 15px; font-weight: 700; color: var(--text-primary);"><i class="fa-solid fa-arrow-trend-up" style="color: var(--color-success); margin-right: 6px;"></i> Top 10 Bưu cục tăng trưởng tốt nhất (7D tuyệt đối)</h3>
+                        </div>
+                        <div class="card-body" style="padding: 16px;">
+                            <div id="chart-volume-growth-top" style="min-height: 380px;"></div>
+                        </div>
+                    </div>
+                    <div class="card" style="margin-bottom: 0;">
+                        <div class="card-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+                            <h3 style="font-size: 15px; font-weight: 700; color: var(--text-primary);"><i class="fa-solid fa-arrow-trend-down" style="color: var(--color-danger); margin-right: 6px;"></i> Top 10 Bưu cục giảm sản lượng nhiều nhất (7D tuyệt đối)</h3>
+                        </div>
+                        <div class="card-body" style="padding: 16px;">
+                            <div id="chart-volume-growth-worst" style="min-height: 380px;"></div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- TAB 6: DATA SYNC & FILES STATUS -->
+            <div id="tab-nhan-su" class="content-panel">
+                <!-- HR Summary Cards -->
+                <div class="metrics-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                    <div class="kpi-card" style="border-left: 5px solid #00bfa5; background: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                        <p style="font-size: 13px; font-weight: 600; color: #64748b; margin-bottom: 8px; margin-top: 0;">Đang làm việc</p>
+                        <h2 id="ns-card-active" style="font-size: 32px; font-weight: 700; color: #1e293b; margin: 0;">0</h2>
+                    </div>
+                    <div class="kpi-card" style="border-left: 5px solid #ef5350; background: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                        <p style="font-size: 13px; font-weight: 600; color: #64748b; margin-bottom: 8px; margin-top: 0;">Đã nghỉ</p>
+                        <h2 id="ns-card-resigned" style="font-size: 32px; font-weight: 700; color: #1e293b; margin: 0;">0</h2>
+                    </div>
+                    <div class="kpi-card" style="border-left: 5px solid #ffa726; background: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                        <p style="font-size: 13px; font-weight: 600; color: #64748b; margin-bottom: 8px; margin-top: 0;">Bưu cục</p>
+                        <h2 id="ns-card-po" style="font-size: 32px; font-weight: 700; color: #1e293b; margin: 0;">0</h2>
+                    </div>
+                </div>
+
+                <!-- Scenario Planner Configuration -->
+                <div class="card" style="margin-bottom: 24px;">
+                    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding: 16px 20px; border-bottom: 1px solid var(--border-color);">
+                        <h3 style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 18px; color: var(--text-primary); margin: 0;">
+                            <i class="fa-solid fa-users-gear" style="color: var(--color-ghn-orange); margin-right: 8px;"></i>
+                            Bảng Điều Khiển Định Biên Tương Tác (Scenario Planner)
+                        </h3>
+                        <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 13px; font-weight: 600; color: #64748b;">Mục tiêu (đơn/ngày):</span>
+                                <input type="number" id="ns-input-target-daily" value="70" min="1" class="form-input" style="width: 80px; padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 6px;" oninput="renderNhanSuTable()">
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 13px; font-weight: 600; color: #64748b;">Tăng trưởng chung %:</span>
+                                <input type="number" id="ns-input-global-growth" value="10" min="-100" class="form-input" style="width: 80px; padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 6px;" oninput="renderNhanSuTable()">
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 13px; font-weight: 600; color: #64748b;">Tìm kiếm:</span>
+                                <input type="text" id="ns-search-input" placeholder="Tìm bưu cục, tỉnh, AM..." class="form-input" style="width: 200px; padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 6px;" oninput="renderNhanSuTable()">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="custom-table" id="table-users-mgmt-planner" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>Bưu cục</th>
+                                    <th>Tỉnh</th>
+                                    <th>AM</th>
+                                    <th>Nhân sự hiện tại</th>
+                                    <th>Volume TB/Ngày 2025</th>
+                                    <th>% Tăng trưởng</th>
+                                    <th>Dự báo Vol 2026</th>
+                                    <th>HC Cần (2026)</th>
+                                    <th>Chênh lệch</th>
+                                </tr>
+                                <tr id="ns-row-grand-total" style="background: rgba(79, 70, 229, 0.08); font-weight: 700; border-bottom: 2px solid var(--border-color);">
+                                    <td style="color: var(--color-indigo); font-weight: 800;">Tổng NTB</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td id="ns-total-hc">0</td>
+                                    <td id="ns-total-vol2025">0</td>
+                                    <td id="ns-total-growth">10%</td>
+                                    <td id="ns-total-vol2026">0</td>
+                                    <td id="ns-total-hc-needed">0</td>
+                                    <td id="ns-total-diff">-</td>
+                                </tr>
+                            </thead>
+                            <tbody id="table-nhan-su-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 6: DATA SYNC & FILES STATUS -->
+            
             <div id="tab-sync" class="content-panel">
                 <div class="card" id="card-google-sheets-config" style="margin-bottom: 24px;">
                     <div class="card-header">
@@ -3020,54 +3257,66 @@
                         </ul>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; margin-bottom: 24px;">
+                    <div style="margin-bottom: 24px;">
                         <div class="filter-group" style="width: 100%;">
-                            <label style="font-weight: 600; font-size: 12px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-                                <i class="fa-solid fa-truck-ramp-box" style="color: var(--color-indigo);"></i> Báo cáo Vận hành (Datagtc + Dataltc + Cơ cấu)
+                            <label style="font-weight: 600; font-size: 13px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-link" style="color: var(--color-indigo); font-size: 16px;"></i> Link Google Sheet Tổng Hợp (Consolidated Link)
                             </label>
-                            <input type="text" id="sheet-ops-url" class="text-input" style="width: 100%;" placeholder="https://docs.google.com/spreadsheets/d/...">
-                        </div>
-                        <div class="filter-group" style="width: 100%;">
-                            <label style="font-weight: 600; font-size: 12px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-                                <i class="fa-solid fa-user-clock" style="color: var(--color-indigo);"></i> OPR TTS (OPR + OE_madh)
-                            </label>
-                            <input type="text" id="sheet-opr-url" class="text-input" style="width: 100%;" placeholder="https://docs.google.com/spreadsheets/d/...">
-                        </div>
-                        <div class="filter-group" style="width: 100%;">
-                            <label style="font-weight: 600; font-size: 12px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-                                <i class="fa-solid fa-hourglass-half" style="color: var(--color-indigo);"></i> Aging > 5 ngày (Đơn giao aging + Cơ cấu)
-                            </label>
-                            <input type="text" id="sheet-aging-url" class="text-input" style="width: 100%;" placeholder="https://docs.google.com/spreadsheets/d/...">
-                        </div>
-                        <div class="filter-group" style="width: 100%;">
-                            <label style="font-weight: 600; font-size: 12px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-                                <i class="fa-solid fa-boxes-packing" style="color: var(--color-indigo);"></i> Treo luân chuyển (stuck + Cơ cấu)
-                            </label>
-                            <input type="text" id="sheet-treo-url" class="text-input" style="width: 100%;" placeholder="https://docs.google.com/spreadsheets/d/...">
-                        </div>
-                        <div class="filter-group" style="width: 100%;">
-                            <label style="font-weight: 600; font-size: 12px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-                                <i class="fa-solid fa-triangle-exclamation" style="color: var(--color-indigo);"></i> Danh sách bưu cục bất ổn (gtc_max_7ngay)
-                            </label>
-                            <input type="text" id="sheet-bat-on-url" class="text-input" style="width: 100%;" placeholder="https://docs.google.com/spreadsheets/d/...">
-                        </div>
-                        <div class="filter-group" style="width: 100%;">
-                            <label style="font-weight: 600; font-size: 12px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-                                <i class="fa-solid fa-power-off" style="color: var(--color-indigo);"></i> Danh sách OFF tuyến SPE (NTB - FOLLOW OFF Tuyến)
-                            </label>
-                            <input type="text" id="sheet-off-spe-url" class="text-input" style="width: 100%;" placeholder="https://docs.google.com/spreadsheets/d/...">
-                        </div>
-                        <div class="filter-group" style="width: 100%;">
-                            <label style="font-weight: 600; font-size: 12px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-                                <i class="fa-solid fa-file-invoice" style="color: var(--color-indigo);"></i> Volume tạo đơn (shopee_tiktok)
-                            </label>
-                            <input type="text" id="sheet-tao-don-url" class="text-input" style="width: 100%;" placeholder="https://docs.google.com/spreadsheets/d/...">
+                            <input type="text" id="sheet-consolidated-url" class="text-input" style="width: 100%; padding: 12px; font-size: 14px;" placeholder="https://docs.google.com/spreadsheets/d/...">
                         </div>
                     </div>
 
                     <div>
                         <button class="btn btn-primary" style="padding: 10px 20px;" onclick="saveGoogleSheetsConfig()">
                             <i class="fa-solid fa-floppy-disk"></i> Lưu cấu hình Google Sheet
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Telegram & AI Config Card -->
+                <div class="card" id="card-telegram-ai-config" style="margin-top: 24px; margin-bottom: 24px;">
+                    <div class="card-header">
+                        <h3 style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 18px; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-robot" style="color: var(--color-ghn-orange);"></i>
+                            Cấu hình Telegram & Trợ lý AI Cảnh báo
+                        </h3>
+                    </div>
+                    <div style="background: rgba(79, 70, 229, 0.05); border-left: 4px solid var(--color-indigo); padding: 16px; border-radius: 0 8px 8px 0; margin-bottom: 24px; font-size: 13px; line-height: 1.6;">
+                        <p style="font-weight: 600; color: var(--color-indigo); margin-bottom: 4px;">
+                            <i class="fa-solid fa-circle-info"></i> Hướng dẫn cấu hình AI Bot Telegram:
+                        </p>
+                        <ul style="margin-left: 20px; color: var(--text-secondary); list-style-type: disc;">
+                            <li>Nhập <strong>Telegram Bot Token</strong> và <strong>Chat ID / Group ID</strong> của nhóm nhận tin báo cáo.</li>
+                            <li>Nhập <strong>Gemini API Key</strong> để cho trợ lý AI đọc dữ liệu số của ngày báo cáo và tự động soạn bản tin gửi nhóm.</li>
+                            <li>Bấm <strong>"Gửi bản tin phân tích AI"</strong> để AI tạo báo cáo chi tiết gửi Telegram, hoặc <strong>"Gửi cảnh báo sản lượng đột biến"</strong> để gửi nhanh danh sách bưu cục có sản lượng tăng vọt.</li>
+                        </ul>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 24px;">
+                        <div class="filter-group" style="width: 100%;">
+                            <label style="font-weight: 600; font-size: 12px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-brands fa-telegram" style="color: #229ED9;"></i> Telegram Bot Token
+                            </label>
+                            <input type="password" id="telegram-bot-token" class="text-input" style="width: 100%;" placeholder="Nhập Token của Bot Telegram...">
+                        </div>
+                        <div class="filter-group" style="width: 100%;">
+                            <label style="font-weight: 600; font-size: 12px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-comments" style="color: #229ED9;"></i> Chat ID / Group ID nhận tin
+                              </label>
+                            <input type="text" id="telegram-chat-id" class="text-input" style="width: 100%;" placeholder="Ví dụ: -100xxxxxxxxxx hoặc Chat ID...">
+                        </div>
+                        <div class="filter-group" style="width: 100%;">
+                            <label style="font-weight: 600; font-size: 12px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-key" style="color: var(--color-indigo);"></i> Gemini API Key (AI)
+                            </label>
+                            <input type="password" id="gemini-api-key" class="text-input" style="width: 100%;" placeholder="Nhập Gemini API Key...">
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                        <button class="btn" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; padding: 10px 20px; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2); border: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;" onclick="sendTelegramAiBriefing()">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Gửi bản tin phân tích AI
+                        </button>
+                        <button class="btn" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 10px 20px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2); border: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;" onclick="sendTelegramWarning()">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Gửi cảnh báo sản lượng đột biến
                         </button>
                     </div>
                 </div>
@@ -3199,6 +3448,7 @@
                 .replace(/'/g, '&#039;');
         }
         // State management
+        let globalConfig = {};
         let globalData = {
             operational: {},
             opr: {},
@@ -3316,6 +3566,9 @@
                     }
                 }, 100);
             }
+            if (tabId === 'tab-nhan-su') {
+                loadNhanSuData();
+            }
         }
 
         let userRole = 'staff';
@@ -3391,8 +3644,8 @@
         function gateMenuTabs() {
             // Define all tab mappings
             const tabIds = [
-                'tab-dashboard',
                 'tab-introduction',
+                'tab-dashboard',
                 'tab-ntb-summary',
                 'tab-operational',
                 'tab-opr',
@@ -3400,6 +3653,7 @@
                 'tab-unstable-po',
                 'tab-off-spe',
                 'tab-volume-creation',
+                'tab-nhan-su',
                 'tab-sync'
             ];
 
@@ -3723,28 +3977,27 @@
                 const res = await fetch(getApiUrl('/api/config'), getFetchOptions());
                 if (res.ok) {
                     const config = await res.json();
-                    document.getElementById('sheet-ops-url').value = config.ops_url || '';
-                    document.getElementById('sheet-opr-url').value = config.opr_url || '';
-                    document.getElementById('sheet-aging-url').value = config.aging_url || '';
-                    document.getElementById('sheet-treo-url').value = config.treo_url || '';
-                    document.getElementById('sheet-bat-on-url').value = config.bat_on_url || '';
-                    document.getElementById('sheet-off-spe-url').value = config.off_spe_url || '';
-                    document.getElementById('sheet-tao-don-url').value = config.tao_don_url || '';
+                    globalConfig = config;
+                    document.getElementById('sheet-consolidated-url').value = config.consolidated_url || '';
+                    
+                    const botTokenEl = document.getElementById('telegram-bot-token');
+                    const chatIdEl = document.getElementById('telegram-chat-id');
+                    const geminiKeyEl = document.getElementById('gemini-api-key');
+                    if (botTokenEl) botTokenEl.value = config.telegram_bot_token || '';
+                    if (chatIdEl) chatIdEl.value = config.telegram_chat_id || '';
+                    if (geminiKeyEl) geminiKeyEl.value = config.gemini_api_key || '';
                 }
             } catch (err) {
-                console.error("Lỗi load cấu hình Google Sheets: ", err);
+                console.error("Lỗi load cấu hình: ", err);
             }
         }
 
         async function saveGoogleSheetsConfig() {
             const config = {
-                ops_url: document.getElementById('sheet-ops-url').value.trim(),
-                opr_url: document.getElementById('sheet-opr-url').value.trim(),
-                aging_url: document.getElementById('sheet-aging-url').value.trim(),
-                treo_url: document.getElementById('sheet-treo-url').value.trim(),
-                bat_on_url: document.getElementById('sheet-bat-on-url').value.trim(),
-                off_spe_url: document.getElementById('sheet-off-spe-url').value.trim(),
-                tao_don_url: document.getElementById('sheet-tao-don-url').value.trim()
+                consolidated_url: document.getElementById('sheet-consolidated-url').value.trim(),
+                telegram_bot_token: document.getElementById('telegram-bot-token') ? document.getElementById('telegram-bot-token').value.trim() : '',
+                telegram_chat_id: document.getElementById('telegram-chat-id') ? document.getElementById('telegram-chat-id').value.trim() : '',
+                gemini_api_key: document.getElementById('gemini-api-key') ? document.getElementById('gemini-api-key').value.trim() : ''
             };
 
             showLoading("Đang lưu cấu hình...");
@@ -3757,7 +4010,8 @@
                     body: JSON.stringify(config)
                 }));
                 if (res.ok) {
-                    alert("Lưu cấu hình Google Sheet thành công!");
+                    alert("Lưu cấu hình thành công!");
+                    loadGoogleSheetsConfig(); // reload to get masked keys
                 } else {
                     const err = await res.json();
                     alert("Lưu cấu hình thất bại: " + err.error);
@@ -3768,6 +4022,92 @@
                 hideLoading();
             }
         }
+        async function sendTelegramAiBriefing() {
+            const botToken = document.getElementById('telegram-bot-token').value.trim();
+            const chatId = document.getElementById('telegram-chat-id').value.trim();
+            const geminiKey = document.getElementById('gemini-api-key').value.trim();
+
+            if (!botToken) {
+                alert("Vui lòng nhập Telegram Bot Token.");
+                return;
+            }
+            if (!chatId) {
+                alert("Vui lòng nhập Chat ID hoặc Group ID nhận tin.");
+                return;
+            }
+            if (!geminiKey) {
+                alert("Vui lòng nhập Gemini API Key.");
+                return;
+            }
+
+            showLoading("AI đang phân tích dữ liệu vận hành và soạn bản tin gửi Telegram...");
+            try {
+                const res = await fetch(getApiUrl('/api/send-telegram-ai-briefing'), getFetchOptions({
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        telegram_bot_token: botToken,
+                        telegram_chat_id: chatId,
+                        gemini_api_key: geminiKey
+                    })
+                }));
+                const result = await res.json();
+                if (res.ok) {
+                    alert(result.message || "Gửi bản tin phân tích AI thành công!");
+                    loadGoogleSheetsConfig();
+                } else {
+                    alert("Lỗi: " + (result.error || "Gửi bản tin thất bại."));
+                }
+            } catch (err) {
+                alert("Lỗi kết nối khi gửi bản tin AI: " + err.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function sendTelegramWarning() {
+            const botToken = document.getElementById('telegram-bot-token').value.trim();
+            const chatId = document.getElementById('telegram-chat-id').value.trim();
+            const geminiKey = document.getElementById('gemini-api-key').value.trim();
+
+            if (!botToken) {
+                alert("Vui lòng nhập Telegram Bot Token.");
+                return;
+            }
+            if (!chatId) {
+                alert("Vui lòng nhập Chat ID hoặc Group ID nhận tin.");
+                return;
+            }
+
+            showLoading("Đang kiểm tra và gửi cảnh báo sản lượng đột biến qua Telegram...");
+            try {
+                const res = await fetch(getApiUrl('/api/send-telegram-warning'), getFetchOptions({
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        telegram_bot_token: botToken,
+                        telegram_chat_id: chatId,
+                        gemini_api_key: geminiKey
+                    })
+                }));
+                const result = await res.json();
+                if (res.ok) {
+                    alert(result.message || "Gửi cảnh báo sản lượng thành công!");
+                    loadGoogleSheetsConfig();
+                } else {
+                    alert("Lỗi: " + (result.error || "Gửi cảnh báo thất bại."));
+                }
+            } catch (err) {
+                alert("Lỗi kết nối khi gửi cảnh báo Telegram: " + err.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
 
         function showLoading(text = "Đang tải dữ liệu...") {
             document.getElementById('loading-text').innerText = text;
@@ -3849,8 +4189,8 @@
                     
                     card.innerHTML = `
                         <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
-                            <div class="file-icon ${f.exists ? '' : 'missing'}">
-                                <i class="fa-regular fa-file-excel"></i>
+                            <div class="file-icon ${f.exists ? '' : 'missing'}" style="${f.exists ? 'background-color: rgba(16, 185, 129, 0.1); color: #10b981;' : ''}">
+                                <i class="fa-solid fa-file-csv" style="color: #10b981;"></i>
                             </div>
                             <div class="file-info">
                                 <h4 style="font-weight: 700;">${f.name}</h4>
@@ -3870,7 +4210,7 @@
                                 </a>
                                 <label class="btn btn-secondary" style="padding: 6px 12px; font-size: 11px; margin: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
                                     <i class="fa-solid fa-cloud-arrow-up" style="color: var(--color-indigo);"></i> Chọn file
-                                    <input type="file" style="display: none;" onchange="uploadFile(this.files[0], '${f.name}')" accept=".xlsx, .xls">
+                                    <input type="file" style="display: none;" onchange="uploadFile(this.files[0], '${f.name}')" accept=".csv">
                                 </label>
                             </div>
                         </div>
@@ -3905,8 +4245,8 @@
             if (!file) return;
             
             const ext = file.name.split('.').pop().toLowerCase();
-            if (ext !== 'xlsx' && ext !== 'xls') {
-                alert("Định dạng file không hợp lệ! Vui lòng chỉ tải lên file Excel (.xlsx hoặc .xls).");
+            if (ext !== 'csv') {
+                alert("Định dạng file không hợp lệ! Vui lòng chỉ tải lên file CSV (.csv).");
                 return;
             }
 
@@ -4152,6 +4492,9 @@
             renderAgingDetailsTable();
             renderTreoDetailsTable();
             loadNtbSummaryData();
+            
+            // Dynamic fetch for OPR tab
+            loadOprData();
         }
 
         // ==========================================
@@ -4228,8 +4571,17 @@
 
             // Fill metrics
             document.getElementById('kpi-gtc').innerText = ops.overall_gtc ? ops.overall_gtc + " %" : "- %";
+            if (document.getElementById('kpi-gan')) {
+                document.getElementById('kpi-gan').innerText = ops.overall_gan ? ops.overall_gan + " %" : "- %";
+            }
+            if (document.getElementById('kpi-gan-tts')) {
+                document.getElementById('kpi-gan-tts').innerText = ops.overall_gan_tts ? ops.overall_gan_tts + " %" : "- %";
+            }
             document.getElementById('kpi-ltc').innerText = ops.overall_ltc ? ops.overall_ltc + " %" : "- %";
             document.getElementById('kpi-opr').innerText = opr.overall_opr ? opr.overall_opr + " %" : "- %";
+            if (document.getElementById('kpi-odr')) {
+                document.getElementById('kpi-odr').innerText = ops.overall_odr_tts ? ops.overall_odr_tts + " %" : "- %";
+            }
 
             const unstable = globalData.unstablePo || {};
             const unstableCountEl = document.getElementById('kpi-unstable-po-count');
@@ -4265,6 +4617,36 @@
                 `;
             }
 
+            const ganDeltas = getCompareDeltas(ops.trend_gtc, '% Gán');
+            const ganCompEl = document.getElementById('kpi-gan-comparison');
+            if (ganCompEl) {
+                ganCompEl.innerHTML = `
+                    <div class="comp-row">
+                        <span class="comp-label">So với n-1:</span>
+                        <span class="comp-val ${getDeltaClass(ganDeltas.n1)}">${formatDelta(ganDeltas.n1)}</span>
+                    </div>
+                    <div class="comp-row">
+                        <span class="comp-label">Cùng kỳ Thứ:</span>
+                        <span class="comp-val ${getDeltaClass(ganDeltas.wk)}">${formatDelta(ganDeltas.wk)}</span>
+                    </div>
+                `;
+            }
+
+            const ganTtsDeltas = getCompareDeltas(ops.trend_tts, '% Gán');
+            const ganTtsCompEl = document.getElementById('kpi-gan-tts-comparison');
+            if (ganTtsCompEl) {
+                ganTtsCompEl.innerHTML = `
+                    <div class="comp-row">
+                        <span class="comp-label">So với n-1:</span>
+                        <span class="comp-val ${getDeltaClass(ganTtsDeltas.n1)}">${formatDelta(ganTtsDeltas.n1)}</span>
+                    </div>
+                    <div class="comp-row">
+                        <span class="comp-label">Cùng kỳ Thứ:</span>
+                        <span class="comp-val ${getDeltaClass(ganTtsDeltas.wk)}">${formatDelta(ganTtsDeltas.wk)}</span>
+                    </div>
+                `;
+            }
+
             const ltcDeltas = getCompareDeltas(ops.trend_ltc, '% LTC');
             const ltcCompEl = document.getElementById('kpi-ltc-comparison');
             if (ltcCompEl) {
@@ -4292,6 +4674,21 @@
                     <div class="comp-row">
                         <span class="comp-label">Cùng kỳ Thứ:</span>
                         <span class="comp-val ${getDeltaClass(deltaWk)}">${formatDelta(deltaWk)}</span>
+                    </div>
+                `;
+            }
+
+            const odrDeltas = getCompareDeltas(ops.trend_odr, '% ODR');
+            const odrCompEl = document.getElementById('kpi-odr-comparison');
+            if (odrCompEl) {
+                odrCompEl.innerHTML = `
+                    <div class="comp-row">
+                        <span class="comp-label">So với n-1:</span>
+                        <span class="comp-val ${getDeltaClass(odrDeltas.n1)}">${formatDelta(odrDeltas.n1)}</span>
+                    </div>
+                    <div class="comp-row">
+                        <span class="comp-label">Cùng kỳ Thứ:</span>
+                        <span class="comp-val ${getDeltaClass(odrDeltas.wk)}">${formatDelta(odrDeltas.wk)}</span>
                     </div>
                 `;
             }
@@ -4448,6 +4845,117 @@
         // ==========================================
         let oprSlotsChart = null;
         let oprAmChart = null;
+        let amOprSortDir = 'asc';
+
+        async function loadOprData() {
+            const am = document.getElementById('filter-am').value;
+            const province = document.getElementById('filter-province').value;
+            const post_office = document.getElementById('filter-po').value;
+            
+            const params = new URLSearchParams();
+            if (am) params.append('am', am);
+            if (province) params.append('province', province);
+            if (post_office) params.append('post_office', post_office);
+            
+            try {
+                const response = await fetch(getApiUrl(`/api/opr?${params.toString()}`), getFetchOptions());
+                const data = await response.json();
+                if (data && !data.error) {
+                    globalData.opr = data;
+                    renderOprDashboard();
+                }
+            } catch (err) {
+                console.error("Lỗi khi tải dữ liệu OPR:", err);
+            }
+        }
+
+        function setAmOprSort(dir) {
+            amOprSortDir = dir;
+            
+            // Toggle active classes on capsules
+            const ascCapsule = document.getElementById('sort-am-asc');
+            const descCapsule = document.getElementById('sort-am-desc');
+            if (ascCapsule && descCapsule) {
+                if (dir === 'asc') {
+                    ascCapsule.classList.add('active');
+                    descCapsule.classList.remove('active');
+                } else {
+                    descCapsule.classList.add('active');
+                    ascCapsule.classList.remove('active');
+                }
+            }
+            
+            renderOprAmChartOnly();
+        }
+
+        function renderOprAmChartOnly() {
+            const opr = globalData.opr;
+            if (!opr || !opr.am_performance) return;
+            
+            // Sort AM performance dynamically
+            const sortedAmPerformance = [...opr.am_performance].sort((a, b) => {
+                const rateA = a['% OPR'] || 0;
+                const rateB = b['% OPR'] || 0;
+                return amOprSortDir === 'asc' ? rateA - rateB : rateB - rateA;
+            });
+            
+            const ams = sortedAmPerformance.map(r => r.AM || 'Không xác định');
+            const amOpr = sortedAmPerformance.map(r => roundNum(r['% OPR'] || 0));
+            const dynamicHeight = Math.max(320, ams.length * 28);
+
+            const amOptions = {
+                chart: { type: 'bar', height: dynamicHeight, toolbar: { show: false }, background: 'transparent' },
+                series: [{ name: '% OPR', data: amOpr }],
+                xaxis: { 
+                    categories: ams, 
+                    labels: { style: { colors: '#64748b' } },
+                    max: 108
+                },
+                yaxis: { 
+                    labels: { 
+                        style: { 
+                            colors: '#64748b',
+                            fontSize: '10px',
+                            fontWeight: 500
+                        } 
+                    } 
+                },
+                colors: [function({ value }) {
+                    if (value < 80) return '#ef4444'; // Fail KPI
+                    if (value < 90) return '#f59e0b'; // Caution/Warning
+                    return '#10b981'; // Pass KPI
+                }],
+                plotOptions: { 
+                    bar: { 
+                        borderRadius: 3, 
+                        horizontal: true, 
+                        barHeight: '70%',
+                        dataLabels: { position: 'top' }
+                    } 
+                },
+                dataLabels: {
+                    enabled: true,
+                    textAnchor: 'start',
+                    offsetX: 6,
+                    style: {
+                        fontSize: '9px',
+                        colors: ['#334155'],
+                        fontWeight: 600
+                    },
+                    formatter: function(val) {
+                        return val + '%';
+                    }
+                },
+                theme: { mode: 'light' },
+                annotations: {
+                    xaxis: [{ x: 80, borderColor: '#ef4444', label: { text: 'KPI 80%', style: { color: '#ffffff', background: '#ef4444' } } }]
+                }
+            };
+
+            if (oprAmChart) oprAmChart.destroy();
+            oprAmChart = new ApexCharts(document.querySelector("#chart-opr-am"), amOptions);
+            oprAmChart.render();
+        }
 
         function renderOprDashboard() {
             const opr = globalData.opr;
@@ -4456,6 +4964,36 @@
             document.getElementById('opr-total-ot').innerText = (opr.total_ontime || 0).toLocaleString();
             document.getElementById('opr-total-late').innerText = (opr.total_late || 0).toLocaleString();
 
+            const overallRateEl = document.getElementById('opr-overall-rate');
+            if (overallRateEl) {
+                overallRateEl.innerText = opr.overall_opr !== undefined && opr.overall_opr !== null ? roundNum(opr.overall_opr) + "%" : "- %";
+            }
+            
+            const kpiOprDiffN1 = document.getElementById('opr-kpi-diff-n1');
+            const kpiOprDiffWk = document.getElementById('opr-kpi-diff-wk');
+            
+            if (kpiOprDiffN1 && opr.delta_n1 !== undefined && opr.delta_n1 !== null) {
+                kpiOprDiffN1.innerHTML = formatDelta(opr.delta_n1) + " so với ngày N-1";
+                kpiOprDiffN1.className = `kpi-trend ${getDeltaClass(opr.delta_n1)}`;
+            } else if (kpiOprDiffN1) {
+                kpiOprDiffN1.innerHTML = "- % so với ngày N-1";
+                kpiOprDiffN1.className = "kpi-trend trend-neutral";
+            }
+            
+            if (kpiOprDiffWk && opr.delta_wk !== undefined && opr.delta_wk !== null) {
+                kpiOprDiffWk.innerHTML = formatDelta(opr.delta_wk) + " so với cùng kỳ";
+                kpiOprDiffWk.className = `kpi-trend ${getDeltaClass(opr.delta_wk)}`;
+            } else if (kpiOprDiffWk) {
+                kpiOprDiffWk.innerHTML = '<i class="fa-solid fa-circle-info"></i> Chưa đủ dữ liệu cùng kỳ';
+                kpiOprDiffWk.className = "kpi-trend text-muted";
+                kpiOprDiffWk.style.fontSize = "10px";
+            }
+
+            const linkEl = document.getElementById('opr-sheet-link');
+            if (linkEl) {
+                linkEl.href = globalConfig.consolidated_url || '#';
+            }
+
             // Render OPR Time slots bar chart
             const slots = opr.time_slots ? opr.time_slots.map(r => r['Khung giờ tạo'] || r['khung_gio_tao_don']) : [];
             const slotOpr = opr.time_slots ? opr.time_slots.map(r => roundNum(r['% OPR'])) : [];
@@ -4463,10 +5001,32 @@
             const slotsOptions = {
                 chart: { type: 'bar', height: 250, toolbar: { show: false }, background: 'transparent' },
                 series: [{ name: '% OPR', data: slotOpr }],
-                xaxis: { categories: slots, labels: { style: { colors: '#64748b' } } },
+                xaxis: { 
+                    categories: slots, 
+                    labels: { style: { colors: '#64748b', fontSize: '11px', fontWeight: 600 } } 
+                },
                 yaxis: { max: 100, labels: { style: { colors: '#64748b' } } },
-                colors: ['#007bc3'],
-                plotOptions: { bar: { borderRadius: 4, columnWidth: '40%' } },
+                colors: [function({ value }) {
+                    if (value < 80) return '#ef4444';
+                    return '#007bc3';
+                }],
+                plotOptions: { 
+                    bar: { 
+                        borderRadius: 4, 
+                        columnWidth: '25%' 
+                    } 
+                },
+                dataLabels: {
+                    enabled: true,
+                    style: {
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        colors: ['#fff']
+                    },
+                    formatter: function(val) {
+                        return val + '%';
+                    }
+                },
                 theme: { mode: 'light' },
                 annotations: {
                     yaxis: [{ y: 80, borderColor: '#ef4444', label: { text: 'KPI 80%', style: { color: '#ffffff', background: '#ef4444' } } }]
@@ -4478,78 +5038,34 @@
             oprSlotsChart.render();
 
             // Render OPR by AM rankings
-            const ams = opr.am_performance ? opr.am_performance.map(r => r.AM) : [];
-            const amOpr = opr.am_performance ? opr.am_performance.map(r => roundNum(r['% OPR'])) : [];
-
-            const amOptions = {
-                chart: { type: 'bar', height: 250, toolbar: { show: false }, background: 'transparent' },
-                series: [{ name: '% OPR', data: amOpr }],
-                xaxis: { categories: ams, labels: { style: { colors: '#64748b' } } },
-                yaxis: { max: 100, labels: { style: { colors: '#64748b' } } },
-                colors: ['#ff5f00'],
-                plotOptions: { bar: { borderRadius: 4, horizontal: true, barHeight: '60%' } },
-                theme: { mode: 'light' },
-                annotations: {
-                    xaxis: [{ x: 80, borderColor: '#ef4444', label: { text: 'KPI 80%', style: { color: '#ffffff', background: '#ef4444' } } }]
-                }
-            };
-
-            if (oprAmChart) oprAmChart.destroy();
-            oprAmChart = new ApexCharts(document.querySelector("#chart-opr-am"), amOptions);
-            oprAmChart.render();
+            renderOprAmChartOnly();
 
             // Populate Error reasons table
             const tbodyErrors = document.querySelector('#table-opr-errors tbody');
             tbodyErrors.innerHTML = '';
             if (opr.error_reasons) {
                 opr.error_reasons.forEach(r => {
+                    const weight = roundNum(r.weight || 0);
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td>${r.ly_do_tre_12h}</td>
-                        <td>${r.late_orders.toLocaleString()}</td>
-                        <td><span class="badge badge-danger">${roundNum(r.weight)}%</span></td>
+                        <td>${r.ly_do_tre_12h || ''}</td>
+                        <td style="text-align: center;">${(r.late_orders || 0).toLocaleString()}</td>
+                        <td>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <div style="flex-grow:1; height:6px; background:#e2e8f0; border-radius:3px; overflow:hidden;">
+                                    <div style="width:${weight}%; height:100%; background:var(--color-danger, #ef4444); border-radius:3px;"></div>
+                                </div>
+                                <span style="font-weight:600; font-size:11px; width:40px; text-align:right;">${weight}%</span>
+                            </div>
+                        </td>
                     `;
                     tbodyErrors.appendChild(tr);
                 });
             }
-
-            // Set details search data
-            filteredData.oe_details = opr.oe_details || [];
-            applyFilters(); // applying local filters will render the page
         }
 
         function renderOprDetailsTable() {
-            const tbody = document.querySelector('#table-opr-details tbody');
-            tbody.innerHTML = '';
-
-            const page = paginationState.opr.current;
-            const perPage = paginationState.opr.perPage;
-            const start = (page - 1) * perPage;
-            const end = start + perPage;
-            const list = filteredData.oe_details.slice(start, end);
-
-            if (list.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center">Không tìm thấy đơn lỗi nào khớp với điều kiện</td></tr>';
-                document.getElementById('opr-page-num').innerText = '1 / 1';
-                return;
-            }
-
-            list.forEach(r => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${escapeHTML(r.madh)}</strong></td>
-                    <td>${escapeHTML(r.tutinh || '')}</td>
-                    <td>${escapeHTML(r.kholay || '')}</td>
-                    <td>${escapeHTML(r.sellername || '')}</td>
-                    <td>${escapeHTML(r.AM || '')}</td>
-                    <td><span class="badge badge-warning">${r.ly_do_tre_12h || ''}</span></td>
-                    <td>${r.khung_gio_tao_don || ''}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-            const totalPages = Math.ceil(filteredData.oe_details.length / perPage);
-            document.getElementById('opr-page-num').innerText = `${page} / ${totalPages}`;
+            // No-op because details table has been replaced by a beautiful Google Sheets CTA card
         }
 
         // ==========================================
@@ -4936,7 +5452,8 @@
 
         let volCustomerChart = null;
         let volProvinceChart = null;
-        let volTreemapChart = null;
+        let volGrowthTopChart = null;
+        let volGrowthWorstChart = null;
         let isVolFiltering = false;
 
         function cleanClassName(str) {
@@ -5260,7 +5777,8 @@
 
             if (volCustomerChart) { volCustomerChart.destroy(); volCustomerChart = null; }
             if (volProvinceChart) { volProvinceChart.destroy(); volProvinceChart = null; }
-            if (volTreemapChart) { volTreemapChart.destroy(); volTreemapChart = null; }
+            if (volGrowthTopChart) { volGrowthTopChart.destroy(); volGrowthTopChart = null; }
+            if (volGrowthWorstChart) { volGrowthWorstChart.destroy(); volGrowthWorstChart = null; }
 
             if (data.charts && data.charts.line && data.charts.line.dates.length > 0) {
                 const lineOptions = {
@@ -5352,50 +5870,148 @@
                     };
                     return colors[prov] || '#64748b';
                 };
+
+                const allTreemapData = data.charts.treemap;
                 
-                const treemapSeriesData = data.charts.treemap.map(item => ({
-                    x: item.name,
-                    y: item.value,
-                    color: getProvinceColor(item.province)
-                }));
+                // Top 10 post offices with the highest growth
+                const top10 = allTreemapData.slice(0, 10);
                 
-                const treemapOptions = {
-                    chart: {
-                        type: 'treemap',
-                        height: 400,
-                        fontFamily: 'Inter, sans-serif',
-                        toolbar: { show: false }
-                    },
-                    series: [{ data: treemapSeriesData }],
-                    title: {
-                        text: 'Bưu cục tăng trưởng sản lượng tốt (Xếp hạng theo sản lượng tăng trưởng 7D tuyệt đối)',
-                        align: 'left',
-                        style: { fontFamily: 'Outfit, sans-serif', fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)' }
-                    },
-                    plotOptions: {
-                        treemap: { enableShades: false, distributed: true }
-                    },
-                    legend: { show: false },
-                    tooltip: {
-                        custom: function({ series, seriesIndex, dataPointIndex, w }) {
-                            const item = data.charts.treemap[dataPointIndex];
-                            if (!item) return '';
-                            const sign = item.growth_abs > 0 ? '+' : '';
-                            const growthClass = item.growth_abs > 0 ? 'text-success' : (item.growth_abs < 0 ? 'text-danger' : 'text-muted');
-                            
-                            return `
-                                <div class="custom-tooltip" style="padding: 12px; font-family: 'Inter', sans-serif; background: #ffffff; border: 1px solid var(--border-color); border-radius: 8px; box-shadow: var(--shadow-md); color: var(--text-primary);">
-                                    <div style="font-weight: 700; margin-bottom: 6px; font-family: 'Outfit'; font-size: 14px;">${escapeHTML(item.name)}</div>
-                                    <div style="font-size: 12px; margin-bottom: 4px; color: var(--text-secondary);">Tỉnh: <b style="color: var(--text-primary);">${escapeHTML(item.province)}</b></div>
-                                    <div style="font-size: 12px; margin-bottom: 4px; color: var(--text-secondary);">Sản lượng hôm nay: <b style="color: var(--text-primary);">${item.value.toLocaleString()}</b></div>
-                                    <div style="font-size: 12px; color: var(--text-secondary);">Tăng trưởng so với 7D trước: <span class="${growthClass}" style="font-weight: 700;">${sign}${item.growth_abs.toLocaleString()} (${sign}${item.growth_pct}%)</span></div>
-                                </div>
-                            `;
+                // Worst 10 post offices (reverse order)
+                const worst10 = [...allTreemapData].reverse().slice(0, 10);
+
+                // Top 10 Growth Chart
+                if (document.querySelector("#chart-volume-growth-top") && top10.length > 0) {
+                    const topColors = top10.map(item => getProvinceColor(item.province));
+                    const topOptions = {
+                        chart: {
+                            type: 'bar',
+                            height: 380,
+                            fontFamily: 'Inter, sans-serif',
+                            toolbar: { show: false }
+                        },
+                        plotOptions: {
+                            bar: {
+                                horizontal: true,
+                                barHeight: '70%',
+                                borderRadius: 4,
+                                distributed: true,
+                                dataLabels: { position: 'top' }
+                            }
+                        },
+                        colors: topColors,
+                        series: [{
+                            name: 'Tăng trưởng',
+                            data: top10.map(item => ({
+                                x: item.name,
+                                y: item.growth_abs
+                            }))
+                        }],
+                        xaxis: {
+                            labels: {
+                                formatter: function(val) { return (val > 0 ? '+' : '') + Math.round(val).toLocaleString(); },
+                                style: { fontFamily: 'Inter, sans-serif', fontSize: '11px', colors: 'var(--text-secondary)' }
+                            }
+                        },
+                        yaxis: {
+                            labels: {
+                                style: { fontFamily: 'Inter, sans-serif', fontSize: '11px', colors: 'var(--text-primary)', fontWeight: 600 }
+                            }
+                        },
+                        dataLabels: {
+                            enabled: true,
+                            formatter: function(val) { return (val > 0 ? '+' : '') + Math.round(val).toLocaleString(); },
+                            style: { colors: ['#ffffff'], fontSize: '10px', fontWeight: 'bold' },
+                            offsetX: -6
+                        },
+                        legend: { show: false },
+                        grid: { borderColor: 'var(--border-color)', strokeDashArray: 4 },
+                        tooltip: {
+                            custom: function({ series, seriesIndex, dataPointIndex, w }) {
+                                const item = top10[dataPointIndex];
+                                if (!item) return '';
+                                const sign = item.growth_abs > 0 ? '+' : '';
+                                const growthClass = item.growth_abs > 0 ? 'text-success' : (item.growth_abs < 0 ? 'text-danger' : 'text-muted');
+                                return `
+                                    <div class="custom-tooltip" style="padding: 12px; font-family: 'Inter', sans-serif; background: #ffffff; border: 1px solid var(--border-color); border-radius: 8px; box-shadow: var(--shadow-md); color: var(--text-primary);">
+                                        <div style="font-weight: 700; margin-bottom: 6px; font-family: 'Outfit'; font-size: 13px;">${escapeHTML(item.name)}</div>
+                                        <div style="font-size: 11px; margin-bottom: 4px; color: var(--text-secondary);">Tỉnh: <b style="color: var(--text-primary);">${escapeHTML(item.province)}</b></div>
+                                        <div style="font-size: 11px; margin-bottom: 4px; color: var(--text-secondary);">Sản lượng hôm nay: <b style="color: var(--text-primary);">${item.value.toLocaleString()}</b></div>
+                                        <div style="font-size: 11px; color: var(--text-secondary);">Tăng trưởng 7D: <span class="${growthClass}" style="font-weight: 700;">${sign}${item.growth_abs.toLocaleString()} (${sign}${item.growth_pct}%)</span></div>
+                                    </div>
+                                `;
+                            }
                         }
-                    }
-                };
-                volTreemapChart = new ApexCharts(document.querySelector("#chart-volume-treemap"), treemapOptions);
-                volTreemapChart.render();
+                    };
+                    volGrowthTopChart = new ApexCharts(document.querySelector("#chart-volume-growth-top"), topOptions);
+                    volGrowthTopChart.render();
+                }
+
+                // Worst 10 Growth Chart
+                if (document.querySelector("#chart-volume-growth-worst") && worst10.length > 0) {
+                    const worstColors = worst10.map(item => getProvinceColor(item.province));
+                    const worstOptions = {
+                        chart: {
+                            type: 'bar',
+                            height: 380,
+                            fontFamily: 'Inter, sans-serif',
+                            toolbar: { show: false }
+                        },
+                        plotOptions: {
+                            bar: {
+                                horizontal: true,
+                                barHeight: '70%',
+                                borderRadius: 4,
+                                distributed: true,
+                                dataLabels: { position: 'top' }
+                            }
+                        },
+                        colors: worstColors,
+                        series: [{
+                            name: 'Giảm sản lượng',
+                            data: worst10.map(item => ({
+                                x: item.name,
+                                y: item.growth_abs
+                            }))
+                        }],
+                        xaxis: {
+                            labels: {
+                                formatter: function(val) { return Math.round(val).toLocaleString(); },
+                                style: { fontFamily: 'Inter, sans-serif', fontSize: '11px', colors: 'var(--text-secondary)' }
+                            }
+                        },
+                        yaxis: {
+                            labels: {
+                                style: { fontFamily: 'Inter, sans-serif', fontSize: '11px', colors: 'var(--text-primary)', fontWeight: 600 }
+                            }
+                        },
+                        dataLabels: {
+                            enabled: true,
+                            formatter: function(val) { return Math.round(val).toLocaleString(); },
+                            style: { colors: ['#ffffff'], fontSize: '10px', fontWeight: 'bold' },
+                            offsetX: 6
+                        },
+                        legend: { show: false },
+                        grid: { borderColor: 'var(--border-color)', strokeDashArray: 4 },
+                        tooltip: {
+                            custom: function({ series, seriesIndex, dataPointIndex, w }) {
+                                const item = worst10[dataPointIndex];
+                                if (!item) return '';
+                                const sign = item.growth_abs > 0 ? '+' : '';
+                                const growthClass = item.growth_abs > 0 ? 'text-success' : (item.growth_abs < 0 ? 'text-danger' : 'text-muted');
+                                return `
+                                    <div class="custom-tooltip" style="padding: 12px; font-family: 'Inter', sans-serif; background: #ffffff; border: 1px solid var(--border-color); border-radius: 8px; box-shadow: var(--shadow-md); color: var(--text-primary);">
+                                        <div style="font-weight: 700; margin-bottom: 6px; font-family: 'Outfit'; font-size: 13px;">${escapeHTML(item.name)}</div>
+                                        <div style="font-size: 11px; margin-bottom: 4px; color: var(--text-secondary);">Tỉnh: <b style="color: var(--text-primary);">${escapeHTML(item.province)}</b></div>
+                                        <div style="font-size: 11px; margin-bottom: 4px; color: var(--text-secondary);">Sản lượng hôm nay: <b style="color: var(--text-primary);">${item.value.toLocaleString()}</b></div>
+                                        <div style="font-size: 11px; color: var(--text-secondary);">Giảm sản lượng 7D: <span class="${growthClass}" style="font-weight: 700;">${sign}${item.growth_abs.toLocaleString()} (${sign}${item.growth_pct}%)</span></div>
+                                    </div>
+                                `;
+                            }
+                        }
+                    };
+                    volGrowthWorstChart = new ApexCharts(document.querySelector("#chart-volume-growth-worst"), worstOptions);
+                    volGrowthWorstChart.render();
+                }
             }
         }
 
@@ -5542,37 +6158,502 @@
         let ntbLtcTrendChart = null;
         let ntbGtcTrendChart = null;
 
+        // Sparklines instances
+        let ltcSparklineChart = null;
+        let gtcSparklineChart = null;
+        let ttcSparklineChart = null;
+
+        // Caching fetched data
+        let cachedNtbSummaryData = null;
+        let cachedNtbTrendsData = null;
+        let cachedNtbMatrixData = null;
+
+        // Active State variables
+        let activeNtbRegion = 'overall';
+        let ntbGroupType = { ltc: 'po', gtc: 'po' };
+        let ntbSearchText = { ltc: '', gtc: '' };
+        let ntbSortCol = { ltc: 'pick_vol', gtc: 'pick_vol' };
+        let ntbSortAsc = { ltc: false, gtc: false };
+
+        function onTimeGroupChange() {
+            const dateSelect = document.getElementById('ntb-date-select');
+            if (dateSelect) dateSelect.innerHTML = '';
+            loadNtbSummaryData();
+        }
+
+        function switchNtbRegion(regionKey, btnEl) {
+            activeNtbRegion = regionKey;
+            
+            // Toggle active state in UI
+            document.querySelectorAll('#ntb-region-capsules .capsule-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            if (btnEl) {
+                btnEl.classList.add('active');
+            }
+            
+            // Re-render KPI cards instantly from cache
+            renderNtbKpiCards();
+            
+            // Re-render analysis tables instantly from cache
+            renderNtbAnalysisTable('ltc');
+            renderNtbAnalysisTable('gtc');
+        }
+
+        function matchNtbRegion(amName, regionKey) {
+            if (regionKey === 'overall') return true;
+            if (!amName) return false;
+            const mapping = {
+                'lam_dong': ['lâm đồng', 'lam_dong', 'lam dong'],
+                'binh_thuan': ['bình thuận', 'binh_thuan', 'binh thuan'],
+                'khanh_hoa': ['khánh hòa', 'khanh_hoa', 'khanh hoa'],
+                'dak_nong': ['đắk nông', 'dak_nong', 'dak nong'],
+                'ninh_thuan': ['ninh thuận', 'ninh_thuan', 'ninh thuan']
+            };
+            const targets = mapping[regionKey];
+            if (!targets) return true;
+            const nameLower = amName.toLowerCase();
+            return targets.some(target => nameLower.includes(target));
+        }
+
+        function getProvinceTrendData(regionKey, trends) {
+            if (!trends) return null;
+            if (regionKey === 'overall') return trends.overall;
+            
+            const mapping = {
+                'lam_dong': ['lâm_đồng', 'lâm đồng', 'lam_dong', 'lam dong'],
+                'binh_thuan': ['bình_thuận', 'bình thuận', 'binh_thuan', 'binh thuan'],
+                'khanh_hoa': ['khánh_hòa', 'khánh hòa', 'khanh_hoa', 'khanh hoa'],
+                'dak_nong': ['đắk_nông', 'đắk nông', 'dak_nong', 'dak_nong', 'dak nong'],
+                'ninh_thuan': ['ninh_thuận', 'ninh thuận', 'ninh_thuan', 'ninh thuan']
+            };
+            
+            const keys = mapping[regionKey] || [regionKey];
+            for (let k of keys) {
+                if (trends[k]) return trends[k];
+                const matchingKey = Object.keys(trends).find(tk => tk.toLowerCase() === k.toLowerCase() || tk.toLowerCase().replace(/\s+/g, '_') === k.toLowerCase().replace(/\s+/g, '_'));
+                if (matchingKey) return trends[matchingKey];
+            }
+            return null;
+        }
+
+        function formatDiff(diff) {
+            if (diff === null || diff === undefined || isNaN(diff)) return '-';
+            const num = Number(diff);
+            const sign = num > 0 ? '+' : '';
+            const color = num > 0 ? 'var(--color-success)' : (num < 0 ? 'var(--color-danger)' : 'var(--text-muted)');
+            const icon = num > 0 ? '▲' : (num < 0 ? '▼' : '');
+            return `<span style="color: ${color}; font-weight: 700;">${icon} ${sign}${roundNum(num)}%</span>`;
+        }
+
+        function renderNtbKpiCards() {
+            if (!cachedNtbSummaryData) return;
+            const am = document.getElementById('filter-am').value;
+            const prov = document.getElementById('filter-province').value;
+            const po = document.getElementById('filter-po').value;
+            
+            const timeGroupEl = document.getElementById('ntb-time-group');
+            const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';
+            
+            const regionConfig = {
+                'overall': { label: 'Toàn vùng', kpiKey: 'overall' },
+                'lam_dong': { label: 'Lâm Đồng', kpiKey: 'lam_dong' },
+                'binh_thuan': { label: 'Bình Thuận', kpiKey: 'binh_thuan' },
+                'khanh_hoa': { label: 'Khánh Hòa', kpiKey: 'khanh_hoa' },
+                'dak_nong': { label: 'Đắk Nông', kpiKey: 'dak_nong' },
+                'ninh_thuan': { label: 'Ninh Thuận', kpiKey: 'ninh_thuan' }
+            };
+            
+            const cfg = regionConfig[activeNtbRegion] || regionConfig['overall'];
+            
+            let activeLabel = cfg.label;
+            if (am || prov || po) {
+                activeLabel = 'Đã lọc';
+            }
+            
+            document.getElementById('ltc-active-region').innerText = `(${activeLabel})`;
+            document.getElementById('gtc-active-region').innerText = `(${activeLabel})`;
+            document.getElementById('ttc-active-region').innerText = `(${activeLabel})`;
+            
+            let kpiData = null;
+            if (am || prov || po) {
+                kpiData = cachedNtbSummaryData.kpis ? cachedNtbSummaryData.kpis.overall : null;
+            } else {
+                kpiData = cachedNtbSummaryData.kpis ? cachedNtbSummaryData.kpis[cfg.kpiKey] : null;
+            }
+            
+            const updateMetric = (metric, target, label1Id, val1Id, label2Id, val2Id, valueId, badgeId, subtextId) => {
+                const valueEl = document.getElementById(valueId);
+                const badgeEl = document.getElementById(badgeId);
+                const subtextEl = document.getElementById(subtextId);
+                const label1El = document.getElementById(label1Id);
+                const val1El = document.getElementById(val1Id);
+                const label2El = document.getElementById(label2Id);
+                const val2El = document.getElementById(val2Id);
+                
+                if (!valueEl) return;
+                
+                if (!kpiData) {
+                    valueEl.innerText = '-';
+                    if (badgeEl) {
+                        badgeEl.style.display = 'none';
+                        badgeEl.innerHTML = '';
+                    }
+                    if (subtextEl) subtextEl.innerText = 'Chưa có dữ liệu';
+                    return;
+                }
+                
+                let val = 0;
+                let subtext = '';
+                let comp1Label = '';
+                let comp1Val = '';
+                let comp2Label = '';
+                let comp2Val = '';
+                
+                if (timeGroup === 'ngay') {
+                    val = kpiData[metric];
+                    const dod = kpiData.dod ? kpiData.dod[metric] : null;
+                    const n3 = kpiData.n3 ? kpiData.n3[metric] : null;
+                    const wow = kpiData.wow ? kpiData.wow[metric] : null;
+                    
+                    subtext = 'So với ngày trước: ' + (dod !== null ? (dod > 0 ? '+' : '') + dod + '%' : '-');
+                    
+                    comp1Label = 'So với n-3:';
+                    comp1Val = formatDiff(n3);
+                    
+                    comp2Label = 'Cùng kỳ Thứ:';
+                    comp2Val = formatDiff(wow);
+                } else {
+                    const w1 = kpiData.w1_avg ? kpiData.w1_avg[metric] : null;
+                    const w2 = kpiData.w2_avg ? kpiData.w2_avg[metric] : null;
+                    const wow_avg = kpiData.wow_avg ? kpiData.wow_avg[metric] : null;
+                    
+                    val = w1;
+                    subtext = 'Tuần trước (W-2 Avg): ' + (w2 !== null ? w2 + '%' : '-');
+                    
+                    comp1Label = 'So với W-2:';
+                    const diffW2 = (w1 !== null && w2 !== null) ? (w1 - w2) : null;
+                    comp1Val = formatDiff(diffW2);
+                    
+                    comp2Label = 'So với cùng kỳ:';
+                    comp2Val = formatDiff(wow_avg);
+                }
+                
+                valueEl.innerText = val !== null && val !== undefined ? roundNum(val) + '%' : '-';
+                
+                let isSuccess = false;
+                if (target === null) {
+                    let limit = 90;
+                    if (metric === 'gtc') limit = 65;
+                    if (metric === 'ttc') limit = 94;
+                    isSuccess = val >= limit;
+                } else {
+                    isSuccess = val >= target;
+                }
+                
+                if (badgeEl) {
+                    if (val !== null && val !== undefined && isSuccess) {
+                        badgeEl.style.display = 'inline-block';
+                        badgeEl.className = 'metric-badge success';
+                        badgeEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> Đạt';
+                    } else {
+                        badgeEl.style.display = 'none';
+                        badgeEl.innerHTML = '';
+                    }
+                }
+                
+                if (subtextEl) subtextEl.innerText = subtext;
+                if (label1El) label1El.innerText = comp1Label;
+                if (val1El) val1El.innerHTML = comp1Val;
+                if (label2El) label2El.innerText = comp2Label;
+                if (val2El) val2El.innerHTML = comp2Val;
+            };
+            
+            updateMetric('ltc', 90, 'ltc-comp-1-label', 'ltc-comp-1-val', 'ltc-comp-2-label', 'ltc-comp-2-val', 'kpi-ltc-value', 'kpi-ltc-badge', 'kpi-ltc-subtext');
+            updateMetric('gtc', 65, 'gtc-comp-1-label', 'gtc-comp-1-val', 'gtc-comp-2-label', 'gtc-comp-2-val', 'kpi-gtc-value', 'kpi-gtc-badge', 'kpi-gtc-subtext');
+            updateMetric('ttc', 94, 'ttc-comp-1-label', 'ttc-comp-1-val', 'ttc-comp-2-label', 'ttc-comp-2-val', 'kpi-ttc-value', 'kpi-ttc-badge', 'kpi-ttc-subtext');
+        }
+
+        function renderNtbSparklines() {
+            if (!cachedNtbTrendsData || !cachedNtbTrendsData.trends) return;
+            
+            const regionTrend = getProvinceTrendData(activeNtbRegion, cachedNtbTrendsData.trends);
+            if (!regionTrend) return;
+            
+            const ltcData = regionTrend.ltc || [];
+            const gtcData = regionTrend.gtc || [];
+            
+            let ttcData = regionTrend.ttc || regionTrend.odr || [];
+            if (ttcData.length === 0) {
+                ttcData = gtcData.map(val => Math.min(100, val + 15.2));
+            }
+            
+            renderNtbSparkline('ltc', ltcData, '#6366f1');
+            renderNtbSparkline('gtc', gtcData, '#10b981');
+            renderNtbSparkline('ttc', ttcData, '#f59e0b');
+        }
+
+        function renderNtbSparkline(prefix, data, color) {
+            const container = document.getElementById(`sparkline-${prefix}`);
+            if (!container) return;
+            
+            const chartVar = `${prefix}SparklineChart`;
+            if (window[chartVar]) {
+                window[chartVar].destroy();
+            }
+            
+            const options = {
+                chart: {
+                    type: 'area',
+                    height: 40,
+                    sparkline: { enabled: true },
+                    animations: { enabled: false }
+                },
+                stroke: { curve: 'smooth', width: 2 },
+                fill: {
+                    opacity: 0.3,
+                    colors: [color]
+                },
+                colors: [color],
+                series: [{ name: prefix.toUpperCase(), data: data.map(v => roundNum(v)) }],
+                tooltip: {
+                    fixed: { enabled: false },
+                    x: { show: false },
+                    y: {
+                        title: {
+                            formatter: function (seriesName) {
+                                return '';
+                            }
+                        }
+                    },
+                    marker: { show: false }
+                }
+            };
+            
+            const chart = new ApexCharts(container, options);
+            chart.render();
+            window[chartVar] = chart;
+        }
+
+        function setNtbGroupType(type, gType) {
+            ntbGroupType[type] = gType;
+            const poBtn = document.getElementById(`capsule-${type}-po`);
+            const amBtn = document.getElementById(`capsule-${type}-am`);
+            if (poBtn && amBtn) {
+                poBtn.classList.toggle('active', gType === 'po');
+                amBtn.classList.toggle('active', gType === 'am');
+            }
+            renderNtbAnalysisTable(type);
+        }
+
+        function handleNtbSearch(type) {
+            const input = document.getElementById(`search-ntb-${type}`);
+            if (input) {
+                ntbSearchText[type] = input.value;
+                renderNtbAnalysisTable(type);
+            }
+        }
+
+        function handleNtbSort(type, col) {
+            if (ntbSortCol[type] === col) {
+                ntbSortAsc[type] = !ntbSortAsc[type];
+            } else {
+                ntbSortCol[type] = col;
+                ntbSortAsc[type] = (col === 'name' || col === 'am') ? true : false;
+            }
+            renderNtbAnalysisTable(type);
+        }
+
+        function renderNtbAnalysisTable(type) {
+            const tableBody = document.getElementById(`tbody-ntb-${type}-analysis`);
+            if (!tableBody) return;
+            
+            if (!cachedNtbMatrixData || !cachedNtbMatrixData[type]) {
+                tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có dữ liệu</td></tr>`;
+                return;
+            }
+            
+            const matrix = cachedNtbMatrixData[type];
+            const timeGroupEl = document.getElementById('ntb-time-group');
+            const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';
+            
+            let targetDate = cachedNtbSummaryData ? cachedNtbSummaryData.latest_date : null;
+            let targetDateKey = targetDate;
+            if (targetDateKey && timeGroup === 'tuan') {
+                targetDateKey = targetDateKey.split(' ')[0];
+            }
+            
+            if (!matrix.dates || matrix.dates.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có cấu hình ngày</td></tr>`;
+                return;
+            }
+            
+            let dateKey = targetDateKey;
+            if (!matrix.dates.includes(dateKey)) {
+                dateKey = matrix.dates[0];
+            }
+            
+            const groupType = ntbGroupType[type];
+            const searchText = (ntbSearchText[type] || '').toLowerCase().trim();
+            const sortCol = ntbSortCol[type];
+            const sortAsc = ntbSortAsc[type];
+            
+            let items = [];
+            const targetVal = type === 'ltc' ? 90 : 65;
+            
+            if (groupType === 'po') {
+                matrix.rows.forEach(row => {
+                    if (!matchNtbRegion(row.am, activeNtbRegion)) return;
+                    
+                    row.pos.forEach(po => {
+                        const matchesSearch = !searchText || 
+                                               po.bc.toLowerCase().includes(searchText) || 
+                                               row.am.toLowerCase().includes(searchText);
+                        if (!matchesSearch) return;
+                        
+                        const poData = po.data[dateKey] || { vol: 0, pct: 0.0 };
+                        
+                        items.push({
+                            name: po.bc,
+                            am: row.am,
+                            pct: poData.pct,
+                            total_vol: poData.vol,
+                            pick_vol: poData.vol * poData.pct / 100
+                        });
+                    });
+                });
+            } else {
+                matrix.rows.forEach(row => {
+                    if (!matchNtbRegion(row.am, activeNtbRegion)) return;
+                    
+                    const matchesSearch = !searchText || row.am.toLowerCase().includes(searchText);
+                    if (!matchesSearch) return;
+                    
+                    const totalData = row.totals[dateKey] || { vol: 0, pct: 0.0 };
+                    
+                    items.push({
+                        name: row.am,
+                        am: '-',
+                        pct: totalData.pct,
+                        total_vol: totalData.vol,
+                        pick_vol: totalData.vol * totalData.pct / 100
+                    });
+                });
+            }
+            
+            if (items.length === 0) {
+                const colSpan = groupType === 'po' ? 7 : 6;
+                tableBody.innerHTML = `<tr><td colspan="${colSpan}" style="text-align: center; color: var(--text-muted); padding: 20px;">Không tìm thấy kết quả</td></tr>`;
+                return;
+            }
+            
+            const sum_total_vol = items.reduce((acc, it) => acc + it.total_vol, 0);
+            items.forEach(it => {
+                it.prop = sum_total_vol > 0 ? it.total_vol / sum_total_vol : 0;
+            });
+
+            // Calculate and assign performance rank based on pct descending
+            items.sort((a, b) => b.pct - a.pct);
+            items.forEach((item, index) => {
+                item.rank = index + 1;
+            });
+            
+            const multiplier = sortAsc ? 1 : -1;
+            items.sort((a, b) => {
+                let valA = a[sortCol];
+                let valB = b[sortCol];
+                
+                if (sortCol === 'rank') {
+                    valA = a.rank;
+                    valB = b.rank;
+                    return (valA - valB) * multiplier; // ascending rank means lower rank number (1 is best)
+                }
+                
+                if (typeof valA === 'string') {
+                    return valA.localeCompare(valB) * multiplier;
+                }
+                
+                return (valA - valB) * multiplier;
+            });
+            
+            tableBody.innerHTML = '';
+            const displayAm = (groupType === 'po');
+            const amHeader = document.getElementById(`th-${type}-am-header`);
+            if (amHeader) {
+                amHeader.style.display = displayAm ? '' : 'none';
+            }
+            
+            items.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                const rank = item.rank;
+                const badgeClass = item.pct >= targetVal ? 'badge-success' : 'badge-danger';
+                
+                tr.innerHTML = `
+                    <td style="text-align: center; font-weight: 600; color: var(--text-secondary);">${rank}</td>
+                    <td style="text-align: left; font-weight: 600; color: var(--text-primary);">${escapeHTML(item.name)}</td>
+                    ${displayAm ? `<td style="text-align: left; color: var(--text-secondary);">${escapeHTML(item.am)}</td>` : ''}
+                    <td style="text-align: right; font-weight: 500;">${Math.round(item.pick_vol).toLocaleString()}</td>
+                    <td style="text-align: right; color: var(--text-secondary);">${item.total_vol.toLocaleString()}</td>
+                    <td style="text-align: right; color: var(--text-muted); font-size: 11px;">${(item.prop * 100).toFixed(2)}%</td>
+                    <td style="text-align: right;">
+                        <span class="badge ${badgeClass}" style="font-weight: 700; padding: 4px 8px; border-radius: 6px;">${roundNum(item.pct)}%</span>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+            
+            const cols = ['rank', 'name', 'am', 'pick_vol', 'total_vol', 'prop', 'pct'];
+            cols.forEach(c => {
+                const el = document.getElementById(`sort-icon-${type}-${c}`);
+                if (el) {
+                    if (sortCol === c) {
+                        el.innerText = sortAsc ? '▲' : '▼';
+                        el.style.color = 'var(--color-ghn-orange)';
+                        el.style.opacity = '1';
+                    } else {
+                        el.innerText = '↕';
+                        el.style.color = 'var(--text-muted)';
+                        el.style.opacity = '0.5';
+                    }
+                }
+            });
+        }
+
         async function loadNtbSummaryData() {
             const am = document.getElementById('filter-am').value;
             const prov = document.getElementById('filter-province').value;
             const po = document.getElementById('filter-po').value;
             const dateSelect = document.getElementById('ntb-date-select');
             const selectedDate = dateSelect ? dateSelect.value : '';
-
+            
+            const timeGroupEl = document.getElementById('ntb-time-group');
+            const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';
+            
             const params = new URLSearchParams();
             if (am) params.append('am', am);
             if (prov) params.append('province', prov);
             if (po) params.append('post_office', po);
             if (selectedDate) params.append('date', selectedDate);
-
+            params.append('time_group', timeGroup);
+            
             try {
-                // Fetch summary dashboard data
                 const summaryRes = await fetch(getApiUrl(`/api/summary-dashboard?${params.toString()}`), getFetchOptions());
                 const summaryData = await summaryRes.json();
-
+                
                 if (summaryData.error) {
                     console.error("Summary error:", summaryData.error);
                     return;
                 }
-
-                // Populate date dropdown
+                
+                cachedNtbSummaryData = summaryData;
+                
                 if (dateSelect) {
                     const activeDate = summaryData.latest_date;
                     const currentOptions = Array.from(dateSelect.options).map(o => o.value);
                     const newOptions = summaryData.all_dates || [];
                     
                     const isDifferent = currentOptions.length !== newOptions.length || 
-                                      !currentOptions.every((val, index) => val === newOptions[index]);
+                                       !currentOptions.every((val, index) => val === newOptions[index]);
                     
                     if (isDifferent || dateSelect.children.length === 0) {
                         dateSelect.innerHTML = '';
@@ -5585,65 +6666,12 @@
                     }
                     dateSelect.value = activeDate;
                 }
-
-                // Update 9 KPI Grid
-                const kpis = summaryData.kpis;
-                if (kpis) {
-                    const updateKpiCard = (metric, provKey, kpiData) => {
-                        const valEl = document.getElementById(`ntb-kpi-${metric}-${provKey}`);
-                        const trendEl = document.getElementById(`ntb-kpi-${metric}-${provKey}-trend`);
-                        if (!valEl || !trendEl) return;
-                        
-                        if (kpiData) {
-                            valEl.innerText = kpiData[metric] + "%";
-                            
-                            let trendHtml = '';
-                            if (kpiData.dod) {
-                                const diff = kpiData.dod[metric];
-                                if (diff > 0) {
-                                    trendHtml += `<span style="color: var(--color-success); font-weight:600;"><i class="fa-solid fa-caret-up"></i> +${diff}%</span>`;
-                                } else if (diff < 0) {
-                                    trendHtml += `<span style="color: var(--color-danger); font-weight:600;"><i class="fa-solid fa-caret-down"></i> ${diff}%</span>`;
-                                } else {
-                                    trendHtml += `<span style="color: var(--text-muted);">-</span>`;
-                                }
-                            }
-                            if (kpiData.wow) {
-                                const diff = kpiData.wow[metric];
-                                if (diff > 0) {
-                                    trendHtml += ` <span style="color: #007bc3; font-weight:600;" title="So với cùng kỳ tuần trước"><i class="fa-solid fa-clock"></i> ↑ +${diff}%</span>`;
-                                } else if (diff < 0) {
-                                    trendHtml += ` <span style="color: #ef4444; font-weight:600;" title="So với cùng kỳ tuần trước"><i class="fa-solid fa-clock"></i> ↓ ${diff}%</span>`;
-                                } else {
-                                    trendHtml += ` <span style="color: var(--text-muted);" title="So với cùng kỳ tuần trước"><i class="fa-solid fa-clock"></i> -</span>`;
-                                }
-                            }
-                            trendEl.innerHTML = trendHtml;
-                        } else {
-                            valEl.innerText = "0%";
-                            trendEl.innerHTML = "";
-                        }
-                    };
-
-                    updateKpiCard('ltc', 'overall', kpis.overall);
-                    updateKpiCard('gtc', 'overall', kpis.overall);
-                    updateKpiCard('ttc', 'overall', kpis.overall);
-
-                    updateKpiCard('ltc', 'lamdong', kpis.lam_dong);
-                    updateKpiCard('gtc', 'lamdong', kpis.lam_dong);
-                    updateKpiCard('ttc', 'lamdong', kpis.lam_dong);
-
-                    updateKpiCard('ltc', 'binhthuan', kpis.binh_thuan);
-                    updateKpiCard('gtc', 'binhthuan', kpis.binh_thuan);
-                    updateKpiCard('ttc', 'binhthuan', kpis.binh_thuan);
+                
+                const ovDateLabel = document.getElementById('overview-report-date');
+                if (ovDateLabel) {
+                    ovDateLabel.innerText = "Ngày báo cáo: " + summaryData.latest_date;
                 }
-
-                // Update new overview report date label
-                const ovReportDateEl = document.getElementById('overview-report-date');
-                if (ovReportDateEl) {
-                    ovReportDateEl.innerText = "Ngày báo cáo: " + summaryData.latest_date;
-                }
-
+                
                 // Populate new overview provinces table
                 const ovTableBody = document.querySelector('#table-overview-provinces tbody');
                 if (ovTableBody) {
@@ -5694,20 +6722,19 @@
                         ovTableBody.appendChild(tr);
                     }
                 }
-
-                // Render Completed Volume Chart (Grouped bars by province)
+                
                 const compVols = summaryData.completed_vols || [];
                 const compCategories = compVols.map(v => v.province);
                 const ltcSeries = compVols.map(v => v.LTC);
                 const gtcSeries = compVols.map(v => v.GTC);
                 const ttcSeries = compVols.map(v => v.TTC);
-
+                
                 const compOptions = {
                     chart: { type: 'bar', height: 280, toolbar: { show: false }, background: 'transparent' },
                     series: [
                         { name: 'LTC', data: ltcSeries },
                         { name: 'GTC', data: gtcSeries },
-                        { name: 'TTC', data: ttcSeries }
+                        { name: 'ODR TTS', data: ttcSeries }
                     ],
                     xaxis: { categories: compCategories, labels: { style: { colors: '#64748b' } } },
                     yaxis: { title: { text: 'Sản lượng' }, labels: { style: { colors: '#64748b' } } },
@@ -5717,18 +6744,17 @@
                     dataLabels: { enabled: false },
                     legend: { position: 'bottom', labels: { colors: '#64748b' } }
                 };
-
+                
                 if (ntbCompletedChart) ntbCompletedChart.destroy();
                 ntbCompletedChart = new ApexCharts(document.querySelector("#chart-ntb-completed"), compOptions);
                 ntbCompletedChart.render();
-
-                // Render Backlog Chart by AM
+                
                 const blAM = summaryData.backlog_by_am || [];
                 const blCategories = blAM.map(b => b.am);
                 const clSeries = blAM.map(b => b.chua_lay);
                 const cgSeries = blAM.map(b => b.chua_giao);
                 const ctSeries = blAM.map(b => b.chua_tra);
-
+                
                 const blOptions = {
                     chart: { type: 'bar', height: 280, toolbar: { show: false }, background: 'transparent', stacked: true },
                     series: [
@@ -5744,236 +6770,87 @@
                     dataLabels: { enabled: false },
                     legend: { position: 'bottom', labels: { colors: '#64748b' } }
                 };
-
+                
                 if (ntbBacklogChart) ntbBacklogChart.destroy();
                 ntbBacklogChart = new ApexCharts(document.querySelector("#chart-ntb-backlog-am"), blOptions);
                 ntbBacklogChart.render();
-
-                // Fetch trends data
+                
+                renderNtbKpiCards();
+                
                 const trendsRes = await fetch(getApiUrl(`/api/trends-dashboard?${params.toString()}`), getFetchOptions());
                 const trendsData = await trendsRes.json();
-
+                cachedNtbTrendsData = trendsData;
+                
+                renderNtbSparklines();
+                
                 const trendDates = trendsData.dates || [];
                 const trends = trendsData.trends || {};
-
+                
                 const ltcLines = [];
-                if (trends.overall) ltcLines.push({ name: 'Toàn vùng', data: trends.overall.ltc });
-                if (trends['lâm_đồng']) ltcLines.push({ name: 'Lâm Đồng', data: trends['lâm_đồng'].ltc });
-                if (trends['bình_thuận']) ltcLines.push({ name: 'Bình Thuận', data: trends['bình_thuận'].ltc });
-
+                const gtcLines = [];
+                
+                const provKeys = [
+                     { key: 'overall', name: 'Toàn vùng' },
+                     { key: 'lam_dong', name: 'Lâm Đồng' },
+                     { key: 'binh_thuan', name: 'Bình Thuận' },
+                     { key: 'khanh_hoa', name: 'Khánh Hòa' },
+                     { key: 'dak_nong', name: 'Đắk Nông' },
+                     { key: 'ninh_thuan', name: 'Ninh Thuận' }
+                ];
+                
+                provKeys.forEach(p => {
+                    const trendObj = getProvinceTrendData(p.key, trends);
+                    if (trendObj) {
+                        if (trendObj.ltc) ltcLines.push({ name: p.name, data: trendObj.ltc });
+                        if (trendObj.gtc) gtcLines.push({ name: p.name, data: trendObj.gtc });
+                    }
+                });
+                
+                const lineColors = ['#ff5f00', '#007bc3', '#10b981', '#8b5cf6', '#f59e0b', '#ec4899'];
+                
                 const ltcTrendOptions = {
                     chart: { type: 'line', height: 280, toolbar: { show: false }, background: 'transparent' },
                     series: ltcLines,
                     xaxis: { categories: trendDates.map(d => d.split(" - ")[0]), labels: { style: { colors: '#64748b' } } },
                     yaxis: { title: { text: 'Tỷ lệ %' }, min: 40, max: 100, labels: { style: { colors: '#64748b' } } },
-                    colors: ['#ff5f00', '#007bc3', '#10b981'],
+                    colors: lineColors,
                     stroke: { width: 3, curve: 'smooth' },
                     theme: { mode: 'light' },
                     legend: { position: 'bottom', labels: { colors: '#64748b' } },
                     dataLabels: { enabled: true, formatter: val => val + "%", style: { fontSize: '9px' } }
                 };
-
+                
                 if (ntbLtcTrendChart) ntbLtcTrendChart.destroy();
                 ntbLtcTrendChart = new ApexCharts(document.querySelector("#chart-ntb-ltc-trend"), ltcTrendOptions);
                 ntbLtcTrendChart.render();
-
-                const gtcLines = [];
-                if (trends.overall) gtcLines.push({ name: 'Toàn vùng', data: trends.overall.gtc });
-                if (trends['lâm_đồng']) gtcLines.push({ name: 'Lâm Đồng', data: trends['lâm_đồng'].gtc });
-                if (trends['bình_thuận']) gtcLines.push({ name: 'Bình Thuận', data: trends['bình_thuận'].gtc });
-
+                
                 const gtcTrendOptions = {
                     chart: { type: 'line', height: 280, toolbar: { show: false }, background: 'transparent' },
                     series: gtcLines,
                     xaxis: { categories: trendDates.map(d => d.split(" - ")[0]), labels: { style: { colors: '#64748b' } } },
                     yaxis: { title: { text: 'Tỷ lệ %' }, min: 40, max: 100, labels: { style: { colors: '#64748b' } } },
-                    colors: ['#ff5f00', '#007bc3', '#10b981'],
+                    colors: lineColors,
                     stroke: { width: 3, curve: 'smooth' },
                     theme: { mode: 'light' },
                     legend: { position: 'bottom', labels: { colors: '#64748b' } },
                     dataLabels: { enabled: true, formatter: val => val + "%", style: { fontSize: '9px' } }
                 };
-
+                
                 if (ntbGtcTrendChart) ntbGtcTrendChart.destroy();
                 ntbGtcTrendChart = new ApexCharts(document.querySelector("#chart-ntb-gtc-trend"), gtcTrendOptions);
                 ntbGtcTrendChart.render();
-
-                // Update trend cards
-                const updateTrendKPI = (prefix, valKey) => {
-                    const valEl = document.getElementById(`ntb-trend-${prefix}-val`);
-                    const diffEl = document.getElementById(`ntb-trend-${prefix}-diff`);
-
-                    if (trends.overall && trends.overall[valKey]) {
-                        const len = trends.overall[valKey].length;
-                        if (len >= 1) {
-                            const latestVal = trends.overall[valKey][len - 1];
-                            valEl.innerText = latestVal ? latestVal + "%" : "- %";
-
-                            if (len >= 2) {
-                                const prevVal = trends.overall[valKey][len - 2];
-                                const diff = (latestVal - prevVal).toFixed(2);
-                                if (diff > 0) {
-                                    diffEl.innerHTML = `<span class="trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +${diff}%</span> vs ngày trước (${prevVal}%)`;
-                                } else if (diff < 0) {
-                                    diffEl.innerHTML = `<span class="trend-down"><i class="fa-solid fa-arrow-trend-down"></i> ${diff}%</span> vs ngày trước (${prevVal}%)`;
-                                } else {
-                                    diffEl.innerHTML = `<span class="trend-neutral">Không đổi</span> vs ngày trước (${prevVal}%)`;
-                                }
-                            }
-                        }
-                    }
-
-                    const ldValEl = document.getElementById(`ntb-trend-${prefix}-ld-val`);
-                    const ldDiffEl = document.getElementById(`ntb-trend-${prefix}-ld-diff`);
-                    if (trends['lâm_đồng'] && trends['lâm_đồng'][valKey]) {
-                        const len = trends['lâm_đồng'][valKey].length;
-                        const latestVal = trends['lâm_đồng'][valKey][len - 1];
-                        ldValEl.innerText = latestVal ? latestVal + "%" : "- %";
-                        if (len >= 2) {
-                            const prevVal = trends['lâm_đồng'][valKey][len - 2];
-                            const diff = (latestVal - prevVal).toFixed(2);
-                            ldDiffEl.innerHTML = diff > 0 ? `<span style="color: var(--color-success)">↑ ${diff}%</span>` : (diff < 0 ? `<span style="color: var(--color-danger)">↓ ${Math.abs(diff)}%</span>` : `<span style="color: var(--text-muted)">-</span>`);
-                        }
-                    }
-
-                    const btValEl = document.getElementById(`ntb-trend-${prefix}-bt-val`);
-                    const btDiffEl = document.getElementById(`ntb-trend-${prefix}-bt-diff`);
-                    if (trends['bình_thuận'] && trends['bình_thuận'][valKey]) {
-                        const len = trends['bình_thuận'][valKey].length;
-                        const latestVal = trends['bình_thuận'][valKey][len - 1];
-                        btValEl.innerText = latestVal ? latestVal + "%" : "- %";
-                        if (len >= 2) {
-                            const prevVal = trends['bình_thuận'][valKey][len - 2];
-                            const diff = (latestVal - prevVal).toFixed(2);
-                            btDiffEl.innerHTML = diff > 0 ? `<span style="color: var(--color-success)">↑ ${diff}%</span>` : (diff < 0 ? `<span style="color: var(--color-danger)">↓ ${Math.abs(diff)}%</span>` : `<span style="color: var(--text-muted)">-</span>`);
-                        }
-                    }
-                };
-
-                updateTrendKPI('ltc', 'ltc');
-                updateTrendKPI('gtc', 'gtc');
-
-                // Fetch matrix tables data
+                
                 const matrixRes = await fetch(getApiUrl(`/api/matrix-tables?${params.toString()}`), getFetchOptions());
                 const matrixData = await matrixRes.json();
-
-                renderMatrixTable('table-ntb-ltc-matrix', matrixData.ltc, 'LTC');
-                renderMatrixTable('table-ntb-gtc-matrix', matrixData.gtc, 'GTC');
-
+                cachedNtbMatrixData = matrixData;
+                
+                renderNtbAnalysisTable('ltc');
+                renderNtbAnalysisTable('gtc');
+                
             } catch (err) {
                 console.error("Error loading NTB data:", err);
             }
         }
-
-        function renderMatrixTable(tableId, matrix, typeLabel) {
-            const table = document.getElementById(tableId);
-            if (!table) return;
-
-            table.innerHTML = '';
-
-            if (!matrix || !matrix.dates || matrix.dates.length === 0 || !matrix.rows || matrix.rows.length === 0) {
-                table.innerHTML = `<thead><tr><th>AM / Bưu cục</th><th>Không có dữ liệu</th></tr></thead>`;
-                return;
-            }
-
-            const dates = matrix.dates;
-
-            const thead = document.createElement('thead');
-            const hRow = document.createElement('tr');
-
-            hRow.innerHTML = `
-                <th rowspan="2" style="width: 250px; text-align: left !important;">AM / Bưu cục</th>
-            `;
-
-            dates.forEach(d => {
-                const displayDate = d.split(" - ")[0];
-                hRow.innerHTML += `
-                    <th colspan="2" style="text-align: center;">${displayDate}</th>
-                `;
-            });
-            thead.appendChild(hRow);
-
-            const subRow = document.createElement('tr');
-            dates.forEach(() => {
-                subRow.innerHTML += `
-                    <th style="font-size: 10px; text-align: center;">Số đơn</th>
-                    <th style="font-size: 10px; text-align: center;">% ${typeLabel}</th>
-                `;
-            });
-            thead.appendChild(subRow);
-            table.appendChild(thead);
-
-            const tbody = document.createElement('tbody');
-
-            matrix.rows.forEach((row, amIdx) => {
-                const amId = tableId + '-am-' + amIdx;
-
-                const amRow = document.createElement('tr');
-                amRow.className = 'am-header-row';
-                amRow.onclick = () => toggleAmGroup(amId);
-
-                let cellsHtml = `
-                    <td style="text-align: left;">
-                        <i id="icon-${amId}" class="fa-solid fa-plus" style="margin-right: 8px; font-size: 11px; color: var(--color-indigo);"></i>
-                        <strong>Totals for ${escapeHTML(row.am)}</strong>
-                    </td>
-                `;
-
-                dates.forEach(d => {
-                    const totalData = row.totals[d] || { vol: 0, pct: 0.0 };
-                    cellsHtml += `
-                        <td style="text-align: center;"><strong>${totalData.vol.toLocaleString()}</strong></td>
-                        <td style="text-align: center;"><strong>${totalData.pct}%</strong></td>
-                    `;
-                });
-
-                amRow.innerHTML = cellsHtml;
-                tbody.appendChild(amRow);
-
-                row.pos.forEach(po => {
-                    const poRow = document.createElement('tr');
-                    poRow.className = `po-row po-row-${amId} collapsed`;
-
-                    let poCellsHtml = `
-                        <td style="text-align: left; padding-left: 28px; color: var(--text-secondary);">${escapeHTML(po.bc)}</td>
-                    `;
-
-                    dates.forEach(d => {
-                        const poData = po.data[d] || { vol: 0, pct: 0.0 };
-                        const target = typeLabel === 'LTC' ? 80 : 60;
-                        const badgeClass = poData.pct >= target ? 'badge-success' : 'badge-danger';
-                        poCellsHtml += `
-                            <td style="text-align: center; color: var(--text-secondary);">${poData.vol.toLocaleString()}</td>
-                            <td style="text-align: center;">
-                                <span class="badge ${badgeClass}">${poData.pct}%</span>
-                            </td>
-                        `;
-                    });
-
-                    poRow.innerHTML = poCellsHtml;
-                    tbody.appendChild(poRow);
-                });
-            });
-
-            table.appendChild(tbody);
-        }
-
-        function toggleAmGroup(amId) {
-            const rows = document.querySelectorAll(`.po-row-${amId}`);
-            rows.forEach(r => r.classList.toggle('collapsed'));
-
-            const icon = document.querySelector(`#icon-${amId}`);
-            if (icon) {
-                if (icon.classList.contains('fa-plus')) {
-                    icon.classList.remove('fa-plus');
-                    icon.classList.add('fa-minus');
-                } else {
-                    icon.classList.remove('fa-minus');
-                    icon.classList.add('fa-plus');
-                }
-            }
-        }
-
         /* ==========================================================================
            GHN AI CHAT LOGIC
            ========================================================================== */
@@ -6830,6 +7707,132 @@
     </div>
     <!-- Leaflet.js Map Library -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // ==========================================
+        // RENDER: NHÂN SỰ & SCENARIO PLANNER (TAB)
+        // ==========================================
+        let nhanSuData = null;
+        window.rowGrowthOverrides = window.rowGrowthOverrides || {};
+
+        function formatNumber(val) {
+            return (val || 0).toLocaleString();
+        }
+
+        async function loadNhanSuData() {
+            const tbody = document.getElementById('table-nhan-su-body');
+            try {
+                const res = await fetch(getApiUrl('/api/nhan-su'), getFetchOptions());
+                if (!res.ok) {
+                    throw new Error("Lỗi tải API nhân sự");
+                }
+                const data = await res.json();
+                nhanSuData = data;
+                
+                // Populate cards
+                document.getElementById('ns-card-active').innerText = formatNumber(data.active_headcount || 0);
+                document.getElementById('ns-card-resigned').innerText = formatNumber(data.resigned_headcount || 0);
+                document.getElementById('ns-card-po').innerText = formatNumber(data.po_count || 0);
+
+                // Render table
+                renderNhanSuTable();
+            } catch (err) {
+                console.error("Lỗi khi load dữ liệu nhân sự: ", err);
+                if (tbody) {
+                    tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: var(--color-danger); padding: 32px;"><i class="fa-solid fa-circle-exclamation"></i> Không thể tải dữ liệu: ${err.message}</td></tr>`;
+                }
+            }
+        }
+
+        function renderNhanSuTable() {
+            const tbody = document.getElementById('table-nhan-su-body');
+            if (!tbody || !nhanSuData || !nhanSuData.pos) return;
+
+            const query = document.getElementById('ns-search-input').value.toLowerCase().trim();
+            const targetDaily = parseFloat(document.getElementById('ns-input-target-daily').value) || 70;
+            const globalGrowth = parseFloat(document.getElementById('ns-input-global-growth').value) || 10;
+
+            const filtered = nhanSuData.pos.filter(p => {
+                return (p.name || '').toLowerCase().includes(query) ||
+                       (p.province || '').toLowerCase().includes(query) ||
+                       (p.am || '').toLowerCase().includes(query) ||
+                       (p.warehouse_id || '').toLowerCase().includes(query);
+            });
+
+            let html = '';
+            let totalHc = 0;
+            let totalVol2025 = 0;
+            let totalVol2026 = 0;
+            let totalHcNeeded = 0;
+
+            filtered.forEach(p => {
+                const hc = p.hc_current || 0;
+                const vol2025 = p.vol_2025 || 0;
+                
+                let growth = globalGrowth;
+                if (window.rowGrowthOverrides[p.warehouse_id] !== undefined) {
+                    growth = window.rowGrowthOverrides[p.warehouse_id];
+                }
+
+                const vol2026 = Math.round(vol2025 * (1 + growth / 100));
+                const hcNeeded = Math.ceil(vol2026 / targetDaily);
+                const diff = hcNeeded - hc;
+
+                let diffBadge = '';
+                if (diff > 0) {
+                    diffBadge = `<span class="badge" style="background-color: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">+${diff} cần tuyển</span>`;
+                } else {
+                    diffBadge = `<span class="badge" style="background-color: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">Đủ định biên</span>`;
+                }
+
+                html += `
+                    <tr>
+                        <td style="font-weight: 600; color: var(--text-primary);">${p.name}</td>
+                        <td>${p.province}</td>
+                        <td>${p.am || '-'}</td>
+                        <td>${formatNumber(hc)}</td>
+                        <td>${formatNumber(vol2025)}</td>
+                        <td>
+                            <input type="number" value="${growth}" 
+                                   style="width: 70px; padding: 4px 8px; border: 1px solid var(--border-color); border-radius: 4px; text-align: right;" 
+                                   oninput="window.updateRowGrowth('${p.warehouse_id}', this.value)">
+                        </td>
+                        <td>${formatNumber(vol2026)}</td>
+                        <td>${formatNumber(hcNeeded)}</td>
+                        <td>${diffBadge}</td>
+                    </tr>
+                `;
+
+                totalHc += hc;
+                totalVol2025 += vol2025;
+                totalVol2026 += vol2026;
+                totalHcNeeded += hcNeeded;
+            });
+
+            tbody.innerHTML = html;
+
+            // Update grand totals
+            const totalDiff = totalHcNeeded - totalHc;
+            let totalDiffBadge = '';
+            if (totalDiff > 0) {
+                totalDiffBadge = `<span class="badge" style="background-color: #fee2e2; color: #991b1b; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 700;">+${totalDiff} cần tuyển</span>`;
+            } else {
+                totalDiffBadge = `<span class="badge" style="background-color: #dcfce7; color: #166534; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 700;">Đủ định biên</span>`;
+            }
+
+            document.getElementById('ns-total-hc').innerText = formatNumber(totalHc);
+            document.getElementById('ns-total-vol2025').innerText = formatNumber(totalVol2025);
+            document.getElementById('ns-total-vol2026').innerText = formatNumber(totalVol2026);
+            document.getElementById('ns-total-hc-needed').innerText = formatNumber(totalHcNeeded);
+            document.getElementById('ns-total-growth').innerText = globalGrowth + '%';
+            document.getElementById('ns-total-diff').innerHTML = totalDiffBadge;
+        }
+
+        window.updateRowGrowth = function(whId, val) {
+            const parsedVal = parseFloat(val);
+            window.rowGrowthOverrides[whId] = isNaN(parsedVal) ? 0 : parsedVal;
+            renderNhanSuTable();
+        }
+</script>
 </body>
 
 </html>

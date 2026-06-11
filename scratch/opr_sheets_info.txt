@@ -1,0 +1,30 @@
+
+=================== Sheet: OPR ===================
+Shape: (5, 14)
+Columns: ['tutinh', 'kholay', 'NgayLTC', 'khung_gio_tao_don', 'ly_do_tre_12h', 'sellername', 'vol_ltc', 'tuan', 'vung', 'ot', 'Tuần', 'AM', 'Khung giờ tạo', 'Đơn trễ']
+First row: {'tutinh': 'Lâm Đồng', 'kholay': 'Bưu Cục Đạ Huoai-Lâm Đồng', 'NgayLTC': Timestamp('2026-06-09 00:00:00'), 'khung_gio_tao_don': '3.Tạo sau 19h', 'ly_do_tre_12h': '0.Ontime OPR', 'sellername': 'Văn Thức Shop 49', 'vol_ltc': 24, 'tuan': 24, 'vung': 'NTB', 'ot': 24, 'Tuần': 'W24', 'AM': 'Huỳnh Tấn Hiền', 'Khung giờ tạo': '2.Tạo từ 19h-9h', 'Đơn trễ': 0}
+
+=================== Sheet: rawopr ===================
+Shape: (5, 14)
+Columns: ['tutinh', 'kholay', 'NgayLTC', 'khung_gio_tao_don', 'ly_do_tre_12h', 'sellername', 'vol_ltc', 'tuan', 'vung', 'ot', 'Tuần', 'AM', 'Khung giờ tạo', 'Đơn trễ']
+First row: {'tutinh': 'Lâm Đồng', 'kholay': 'Bưu Cục Đạ Huoai-Lâm Đồng', 'NgayLTC': Timestamp('2026-06-09 00:00:00'), 'khung_gio_tao_don': '3.Tạo sau 19h', 'ly_do_tre_12h': '0.Ontime OPR', 'sellername': 'Văn Thức Shop 49', 'vol_ltc': 24, 'tuan': 24, 'vung': 'NTB', 'ot': 24, 'Tuần': 'W24', 'AM': 'Huỳnh Tấn Hiền', 'Khung giờ tạo': '2.Tạo từ 19h-9h', 'Đơn trễ': 0}
+
+=================== Sheet: CoCauVung ===================
+Shape: (5, 4)
+Columns: ['warehouse_id', 'Bưu cục', 'Tỉnh', 'AM']
+First row: {'warehouse_id': 1909, 'Bưu cục': 'Kho Trung Chuyển Khánh Hòa', 'Tỉnh': 'Khánh Hòa', 'AM': 'Nguyễn Tiến Lực'}
+
+=================== Sheet: Data ===================
+Shape: (5, 21)
+Columns: ['Cấp Quản Lý', 'Chi tiết', 'Loại Hàng', 'Time', 'Volume', '% Gán', '% GTC', '% Chuyển trả', 'Leadtime', 'Sản Lượng Giao Thành Công', 'Sản Lượng Chuyển Trả', 'Sản Lượng Gán', 'Sản Lượng Trả', 'Sản Lượng Tồn', 'Sản Lượng Chưa Gán', '% Chưa Gán', '%Tồn', 'Hàng Mới Về Trong Ngày', 'Tỉnh', 'Vùng', 'AM']
+First row: {'Cấp Quản Lý': 'NTB - Đắk Nông', 'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'Loại Hàng': 'Hàng Mới Ca 1', 'Time': '2026-05-24 - Chủ Nhật', 'Volume': 112, '% Gán': 0.8571, '% GTC': 0.7232, '% Chuyển trả': 0.0, 'Leadtime': 6.69, 'Sản Lượng Giao Thành Công': 80.9984, 'Sản Lượng Chuyển Trả': 0.0, 'Sản Lượng Gán': 95.9952, 'Sản Lượng Trả': 0.0, 'Sản Lượng Tồn': 31.0016, 'Sản Lượng Chưa Gán': 16.0048, '% Chưa Gán': 0.1429, '%Tồn': 0.2768, 'Hàng Mới Về Trong Ngày': 112, 'Tỉnh': 'Đắk Nông', 'Vùng': 'NTB', 'AM': 'Trần Văn Phước'}
+
+=================== Sheet: TTS ===================
+Shape: (5, 21)
+Columns: ['Cấp Quản Lý', 'Chi tiết', 'Loại Hàng', 'Time', 'Volume', '% Gán', '% GTC', '% Chuyển trả', 'Leadtime', 'Sản Lượng Giao Thành Công', 'Sản Lượng Chuyển Trả', 'Sản Lượng Gán', 'Sản Lượng Trả', 'Sản Lượng Tồn', 'Sản Lượng Chưa Gán', '% Chưa Gán', '%Tồn', 'Hàng Mới Về Trong Ngày', 'Tỉnh', 'Vùng', 'AM']
+First row: {'Cấp Quản Lý': 'NTB - Đắk Nông', 'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'Loại Hàng': 'Hàng Mới Ca 1', 'Time': '2026-06-07 - Chủ Nhật', 'Volume': 20, '% Gán': 0.6, '% GTC': 0.55, '% Chuyển trả': 0, 'Leadtime': 7.55, 'Sản Lượng Giao Thành Công': 11.0, 'Sản Lượng Chuyển Trả': 0, 'Sản Lượng Gán': 12.0, 'Sản Lượng Trả': 0, 'Sản Lượng Tồn': 9.0, 'Sản Lượng Chưa Gán': 8.0, '% Chưa Gán': 0.4, '%Tồn': 0.45, 'Hàng Mới Về Trong Ngày': 20, 'Tỉnh': 'Đắk Nông', 'Vùng': 'NTB', 'AM': 'Trần Văn Phước'}
+
+=================== Sheet: DataLTC ===================
+Shape: (5, 18)
+Columns: ['Cấp quản lý', 'Chi tiết', 'Ca', 'Time', 'Volume', '%Gán', '%LTC', '%Đóng kiện', '%LC', 'Leadtime', 'Sản Lượng Lấy Thành Công', 'Sản Lượng Gán', 'Sản Lượng Chưa Gán', '% Chưa Gán', 'Hàng Mới Về Trong Ngày', 'Tỉnh', 'Vùng', 'AM']
+First row: {'Cấp quản lý': 'NTB - Bình Thuận', 'Chi tiết': 'BC 158 Quốc lộ 55-Tánh Linh-Bình Thuận', 'Ca': 'Hàng Tồn', 'Time': '2026-06-06 - Thứ 7', 'Volume': 7, '%Gán': 1, '%LTC': 0.7143, '%Đóng kiện': 0.7143, '%LC': 0.4286, 'Leadtime': 41.0, 'Sản Lượng Lấy Thành Công': 3.0002, 'Sản Lượng Gán': 7, 'Sản Lượng Chưa Gán': 0, '% Chưa Gán': 0, 'Hàng Mới Về Trong Ngày': 0, 'Tỉnh': 'Bình Thuận', 'Vùng': 'NTB', 'AM': 'Huỳnh Tấn Hiền'}

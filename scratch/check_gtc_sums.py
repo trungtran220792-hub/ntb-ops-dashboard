@@ -3,42 +3,19 @@ import os
 
 workspace_dir = r"c:\Users\lap4all\Desktop\New folder"
 file_path = os.path.join(workspace_dir, "Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx")
+output_path = os.path.join(workspace_dir, "scratch", "check_gtc_sums.txt")
 
-df = pd.read_excel(file_path, sheet_name="Data")
-# Filter for D (2026-06-07)
-df_d = df[df['Time'].str.startswith('2026-06-07', na=False)].copy()
+with open(output_path, "w", encoding="utf-8") as f:
+    df_raw = pd.read_excel(file_path, sheet_name="rawltc")
+    df_raw.columns = [c.strip() for c in df_raw.columns]
+    
+    # BC 158 on 2026-05-30
+    f.write("=== BC 158 on 2026-05-30 in rawltc ===\n")
+    sub = df_raw[
+        (df_raw['Chi tiết'].str.contains("BC 158", na=False)) & 
+        (df_raw['Time'] == "2026-05-30 - Thứ 7")
+    ]
+    f.write(sub.to_string() + "\n")
+    f.write(f"Volume sum: {sub['Volume'].sum()}\n\n")
 
-print("Columns in Data:")
-print(list(df.columns))
-
-print("\nRows matching 2026-06-07:", len(df_d))
-
-# Group by Province and sum different candidate fields
-summary = df_d.groupby('Tỉnh').agg({
-    'Volume': 'sum',
-    'Sản Lượng Giao Thành Công': 'sum',
-    'Sản Lượng Gán': 'sum',
-    'Hàng Mới Về Trong Ngày': 'sum'
-}).reset_index()
-
-# Also try computing Volume * % GTC manually or standard delivered_vol
-df_d['delivered_vol_calc'] = df_d['Volume'] * df_d['% GTC']
-df_d['delivered_vol_calc_percent'] = df_d['Volume'] * (df_d['% GTC'] / 100 if df_d['% GTC'].max() > 1 else df_d['% GTC'])
-
-summary_calc = df_d.groupby('Tỉnh').agg({
-    'delivered_vol_calc': 'sum',
-    'delivered_vol_calc_percent': 'sum'
-}).reset_index()
-
-merged = pd.merge(summary, summary_calc, on='Tỉnh')
-print("\nSums by Province:")
-print(merged.to_string())
-
-# Let's print out the Looker Targets for comparison:
-# Đắk Nông: 4460
-# Ninh Thuận: 3727
-# Lâm Đồng: 9496
-# Khánh Hòa: 11515
-# Bình Thuận: 10369
-print("\nLooker Targets:")
-print("Đắk Nông: 4460, Ninh Thuận: 3727, Lâm Đồng: 9496, Khánh Hòa: 11515, Bình Thuận: 10369")
+print("Done check.")

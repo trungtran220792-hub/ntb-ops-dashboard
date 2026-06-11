@@ -1,0 +1,100 @@
+L2441: @app.route('/api/download-template', methods=['GET'])
+L2442: @requires_permission('tab-sync')
+L2443: def download_template():
+L2444:     from flask import send_from_directory
+L2445:     filename = request.args.get('filename', '').strip()
+L2446:     allowed_files = [
+L2447:         'Aging _5 ngày.xlsx',
+L2448:         'Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx',
+L2449:         'OPR TTS.xlsx',
+L2450:         'Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx',
+L2451:         'buu_cuc_bat_on.xlsx',
+L2452:         'co_cau_ntb.xlsx',
+L2453:         'off_tuyen_spe.xlsx',
+L2454:         'vols_tao_don.xlsx'
+L2455:     ]
+L2456:     if filename not in allowed_files:
+L2457:         return jsonify({"error": "Tên file không hợp lệ."}), 400
+L2458:         
+L2459:     try:
+L2460:         download_path = resolve_path(filename, write=False)
+L2461:         directory, file_only = os.path.split(download_path)
+L2462:         return send_from_directory(directory, file_only, as_attachment=True)
+L2463:     except Exception as e:
+L2464:         return jsonify({"error": f"Không thể tải file: {str(e)}"}), 500
+L2465: 
+L2466: @app.route('/api/upload', methods=['POST'])
+L2467: @requires_permission('tab-sync')
+L2468: def upload_file():
+L2469:     global OPERATIONAL_CACHE, OPR_CACHE, BACKLOG_CACHE_RAW
+L2470:     if 'file' not in request.files:
+L2471:         return jsonify({"error": "Không tìm thấy file trong yêu cầu."}), 400
+L2472:         
+L2473:     file = request.files['file']
+L2474:     filename = request.form.get('filename', '').strip()
+L2475:     
+L2476:     if not filename:
+L2477:         return jsonify({"error": "Không xác định được tên file đích."}), 400
+L2478:         
+L2479:     allowed_files = [
+L2480:         'Aging _5 ngày.xlsx',
+L2481:         'Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx',
+L2482:         'OPR TTS.xlsx',
+L2483:         'Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx',
+L2484:         'buu_cuc_bat_on.xlsx',
+L2485:         'co_cau_ntb.xlsx',
+L2486:         'off_tuyen_spe.xlsx',
+L2487:         'vols_tao_don.xlsx'
+L2488:     ]
+L2489:     
+L2490:     if filename not in allowed_files:
+L2491:         return jsonify({"error": "Tên file không hợp lệ."}), 400
+L2492:         
+L2493:     if not (file.filename.endswith('.xlsx') or file.filename.endswith('.xls')):
+L2494:         return jsonify({"error": "Định dạng file không hợp lệ. Chỉ hỗ trợ file Excel (.xlsx, .xls)."}), 400
+L2495:         
+L2496:     try:
+L2497:         filepath = resolve_path(filename, write=True)
+L2498:         file.save(filepath)
+L2499:         
+L2500:         update_all_caches()
+L2501:         if BACKLOG_CACHE_RAW and "error" not in BACKLOG_CACHE_RAW["aging"] and "error" not in BACKLOG_CACHE_RAW["treo"]:
+L2502:             add_to_history(BACKLOG_CACHE_RAW["aging"], BACKLOG_CACHE_RAW["treo"])
+L2503:                 
+L2504:         return jsonify({"success": True, "message": f"Tải lên và đồng bộ file {filename} thành công!"})
+L2505:     except Exception as e:
+L2506:         return jsonify({"error": f"Lỗi lưu file hoặc cập nhật cache: {str(e)}"}), 500
+L2507: 
+L2508: SYNC_STATUS = {
+L2509:     "status": "idle",
+L2510:     "progress": "",
+L2511:     "error": None,
+L2512:     "timestamp": None
+L2513: }
+L2514: 
+L2515: def async_sync_task(is_admin_flag):
+L2516:     global OPERATIONAL_CACHE, OPR_CACHE, BACKLOG_CACHE_RAW, UNSTABLE_PO_CACHE, OFF_SPE_CACHE, SYNC_STATUS
+L2517:     try:
+L2518:         if is_admin_flag:
+L2519:             config = load_config()
+L2520:             download_errors = []
+L2521:             
+L2522:             mappings = [
+L2523:                 ("ops_url", 'Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', "Báo cáo Vận hành"),
+L2524:                 ("opr_url", 'OPR TTS.xlsx', "OPR TTS"),
+L2525:                 ("aging_url", 'Aging _5 ngày.xlsx', "Aging > 5 ngày"),
+L2526:                 ("treo_url", 'Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx', "Treo luân chuyển"),
+L2527:                 ("bat_on_url", 'buu_cuc_bat_on.xlsx', "Bưu cục bất ổn"),
+L2528:                 ("off_spe_url", 'off_tuyen_spe.xlsx', "OFF tuyến SPE"),
+L2529:                 ("tao_don_url", 'vols_tao_don.xlsx', "Volume tạo đơn")
+L2530:             ]
+L2531:             
+L2532:             total_urls = sum(1 for k, _, _ in mappings if config.get(k, "").strip())
+L2533:             current_idx = 0
+L2534:             
+L2535:             for key, filename, label in mappings:
+L2536:                 url = config.get(key, "")
+L2537:                 if url and url.strip():
+L2538:                     current_idx += 1
+L2539:                     SYNC_STATUS["progress"] = f"Đang tải {label} ({current_idx}/{total_urls})..."
+L2540:                     filepath = resolve_path(filename, write=True)

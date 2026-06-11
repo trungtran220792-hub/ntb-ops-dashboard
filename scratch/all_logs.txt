@@ -1,0 +1,295 @@
+﻿--------------------------------------------------
+STARTING CACHE LOAD: Processing raw Excel files...
+--------------------------------------------------
+Loading Copy o NTB - BAO CAO VAN HANH.xlsx...
+Dashboard server starts on http://0.0.0.0:5000/
+ * Serving Flask app 'app'
+ * Debug mode: off
+python : WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server 
+instead.
+At line:1 char:89
++ ... Start-Sleep -Seconds 1; python -u app.py > server_output_new.log 2>&1
++                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (WARNING: This i...server instead.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.2:5000
+Press CTRL+C to quit
+Loading Aging _5 ngay.xlsx...
+Loading Treo luan chuyen GIAO_TRA by IMTHIR.xlsx...
+Loading OPR TTS.xlsx...
+Preloading pandas dataframes for NTB summary dashboard...
+-> Dataframes loaded and cached successfully.
+Parsing 'Copy o NTB - BAO CAO VAN HANH.xlsx'...
+-> Operational report loaded and cached successfully.
+Parsing 'OPR TTS.xlsx'...
+-> OPR report loaded and cached successfully.
+Parsing 'Aging _5 ngay.xlsx' and 'Treo luan chuyen GIAO_TRA by IMTHIR.xlsx'...
+-> Backlog reports loaded and cached successfully.
+Parsing 'buu_cuc_bat_on.xlsx'...
+-> Unstable PO cache loaded successfully.
+Parsing 'off_tuyen_spe.xlsx'...
+-> OFF SPE cache loaded successfully.
+Parsing 'vols_tao_don.xlsx' and warehouse type mapping...
+192.168.1.2 - - [09/Jun/2026 00:45:58] "GET / HTTP/1.1" 401 -
+192.168.1.2 - - [09/Jun/2026 00:46:07] "GET / HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:07] "GET /static/vn_border_50.js?v=84219 HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:07] "GET /static/vn_provinces_simplified.js?v=37668 HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:07] "GET /static/ghn_logo.png HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:07] "GET /static/ghn_bg.png HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:07] "GET /favicon.ico HTTP/1.1" 404 -
+192.168.1.2 - - [09/Jun/2026 00:46:09] "GET /api/user-role HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:11] "GET /api/unstable-po HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:11] "GET /api/off-spe HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:13] "GET /api/files-status HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:13] "GET /api/history HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:14] "GET /api/config HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:15] "GET /api/ntb-structure HTTP/1.1" 200 -
+-> Volume creation cache loaded successfully.
+--------------------------------------------------
+CACHE LOAD COMPLETE.
+--------------------------------------------------
+192.168.1.2 - - [09/Jun/2026 00:46:31] "GET /api/operational HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:31] "GET /api/opr HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:31] "GET /api/backlog?baseline= HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:31] "GET /api/summary-dashboard HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:32] "GET /api/volume-creation HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:32] "GET /api/trends-dashboard HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:32] "GET /api/summary-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:33] "GET /api/summary-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:34] "GET /api/summary-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:34] "GET /api/summary-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:35] "GET /api/trends-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:35] "GET /api/matrix-tables HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:36] "GET /api/trends-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:36] "GET /api/matrix-tables?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:36] "GET /api/trends-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:37] "GET /api/trends-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:37] "GET /api/matrix-tables?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:38] "GET /api/matrix-tables?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 00:46:38] "GET /api/matrix-tables?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:20] "GET / HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:20] "GET /static/vn_border_50.js?v=1923 HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:20] "GET /static/ghn_logo.png HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:20] "GET /static/vn_provinces_simplified.js?v=50626 HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:20] "GET /static/ghn_bg.png HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:22] "GET /api/user-role HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:24] "GET /api/unstable-po HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:24] "GET /api/operational HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:24] "GET /api/off-spe HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:24] "GET /api/backlog?baseline= HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:24] "GET /api/opr HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:25] "GET /api/volume-creation HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:26] "GET /api/ntb-structure HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:26] "GET /api/history HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:26] "GET /api/config HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:26] "GET /api/files-status HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:26] "GET /api/summary-dashboard HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:28] "GET /api/trends-dashboard HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:28] "GET /api/summary-dashboard HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:30] "GET /api/trends-dashboard HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:30] "GET /api/summary-dashboard HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:30] "GET /api/matrix-tables HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:31] "GET /api/trends-dashboard HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:31] "GET /api/summary-dashboard HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:31] "GET /api/matrix-tables HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:32] "GET /api/trends-dashboard HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:32] "GET /api/summary-dashboard HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:34] "GET /api/trends-dashboard HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:34] "GET /api/matrix-tables HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:35] "GET /api/matrix-tables HTTP/1.1" 200 -
+192.168.1.2 - - [09/Jun/2026 01:00:36] "GET /api/matrix-tables HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:21:41] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:21:42] "GET /static/vn_border_50.js?v=69236 HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:21:42] "GET /static/vn_provinces_simplified.js?v=84096 HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:21:42] "GET /static/ghn_logo.png HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:21:42] "GET /static/ghn_bg.png HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:21:43] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:21:43] "GET /static/vn_border_50.js?v=88066 HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:21:43] "GET /static/vn_provinces_simplified.js?v=72540 HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:21:43] "GET /static/ghn_logo.png HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:21:44] "GET /static/ghn_bg.png HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:21:44] "GET /api/user-role HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:21:45] "GET /api/user-role HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:21:47] "GET /api/unstable-po HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:21:48] "GET /api/off-spe HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:21:50] "GET /api/files-status HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:21:52] "GET /api/history HTTP/1.1" 200 -
+--------------------------------------------------
+STARTING CACHE LOAD: Processing raw Excel files...
+--------------------------------------------------
+Loading Copy o NTB - BAO CAO VAN HANH.xlsx...
+Loading Aging _5 ngay.xlsx...
+Loading Treo luan chuyen GIAO_TRA by IMTHIR.xlsx...
+Loading OPR TTS.xlsx...
+Preloading pandas dataframes for NTB summary dashboard...
+-> Dataframes loaded and cached successfully.
+Parsing 'Copy o NTB - BAO CAO VAN HANH.xlsx'...
+-> Operational report loaded and cached successfully.
+Parsing 'OPR TTS.xlsx'...
+-> OPR report loaded and cached successfully.
+Parsing 'Aging _5 ngay.xlsx' and 'Treo luan chuyen GIAO_TRA by IMTHIR.xlsx'...
+-> Backlog reports loaded and cached successfully.
+Parsing 'buu_cuc_bat_on.xlsx'...
+-> Unstable PO cache loaded successfully.
+Parsing 'off_tuyen_spe.xlsx'...
+-> OFF SPE cache loaded successfully.
+Parsing 'vols_tao_don.xlsx' and warehouse type mapping...
+-> Volume creation cache loaded successfully.
+--------------------------------------------------
+CACHE LOAD COMPLETE.
+--------------------------------------------------
+127.0.0.1 - - [09/Jun/2026 01:25:21] "POST /api/sync HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:21] "GET /api/opr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:21] "GET /api/operational HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:21] "GET /api/backlog?baseline= HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:22] "GET /api/summary-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:22] "GET /api/volume-creation HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:22] "GET /api/config HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:22] "GET /api/history HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:22] "GET /api/ntb-structure HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:23] "GET /api/trends-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:23] "GET /api/summary-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:23] "GET /api/summary-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:24] "GET /api/summary-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:25] "GET /api/summary-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:27] "GET /api/opr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:27] "GET /api/operational HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:27] "GET /api/backlog?baseline= HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:27] "GET /api/off-spe HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:27] "GET /api/unstable-po HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:27] "GET /api/volume-creation HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:28] "GET /api/trends-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:28] "GET /api/matrix-tables HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:28] "GET /api/summary-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:28] "GET /api/files-status HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:29] "GET /api/trends-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:29] "GET /api/matrix-tables?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:29] "GET /api/summary-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:30] "GET /api/trends-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:31] "GET /api/summary-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:32] "GET /api/matrix-tables?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:32] "GET /api/trends-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:33] "GET /api/summary-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:33] "GET /api/trends-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:34] "GET /api/matrix-tables?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:34] "GET /api/trends-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:35] "GET /api/matrix-tables?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:35] "GET /api/trends-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:37] "GET /api/trends-dashboard?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:37] "GET /api/matrix-tables?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:38] "GET /api/matrix-tables?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:40] "GET /api/matrix-tables?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 01:25:41] "GET /api/matrix-tables?date=2026-06-07+-+Ch\u1ee7+Nh\u1eadt HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:48] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:48] "GET /static/vn_border_50.js?v=30808 HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:48] "GET /static/vn_provinces_simplified.js?v=26004 HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:48] "GET /static/ghn_logo.png HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:48] "GET /static/ghn_bg.png HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:49] "GET /api/user-role HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:50] "GET /api/opr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:50] "GET /api/operational HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:50] "GET /api/off-spe HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:50] "GET /api/unstable-po HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:50] "GET /api/backlog?baseline= HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:51] "GET /api/volume-creation HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:51] "GET /api/files-status HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:52] "GET /api/history HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:52] "GET /api/config HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:52] "GET /api/summary-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:52] "GET /api/ntb-structure HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:53] "GET /api/summary-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:54] "GET /api/trends-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:55] "GET /api/summary-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:55] "GET /api/trends-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:56] "GET /api/matrix-tables HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:56] "GET /api/summary-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:57] "GET /api/trends-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:58] "GET /api/matrix-tables HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:58] "GET /api/trends-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:35:58] "GET /api/summary-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:36:00] "GET /api/trends-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:36:00] "GET /api/matrix-tables HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:36:01] "GET /api/matrix-tables HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:36:03] "GET /api/matrix-tables HTTP/1.1" 200 -
+--------------------------------------------------
+STARTING CACHE LOAD: Processing raw Excel files...
+--------------------------------------------------
+Loading Copy o NTB - BAO CAO VAN HANH.xlsx...
+Loading Aging _5 ngay.xlsx...
+Loading Treo luan chuyen GIAO_TRA by IMTHIR.xlsx...
+Loading OPR TTS.xlsx...
+Preloading pandas dataframes for NTB summary dashboard...
+-> Dataframes loaded and cached successfully.
+Parsing 'Copy o NTB - BAO CAO VAN HANH.xlsx'...
+-> Operational report loaded and cached successfully.
+Parsing 'OPR TTS.xlsx'...
+-> OPR report loaded and cached successfully.
+Parsing 'Aging _5 ngay.xlsx' and 'Treo luan chuyen GIAO_TRA by IMTHIR.xlsx'...
+-> Backlog reports loaded and cached successfully.
+Parsing 'buu_cuc_bat_on.xlsx'...
+-> Unstable PO cache loaded successfully.
+Parsing 'off_tuyen_spe.xlsx'...
+-> OFF SPE cache loaded successfully.
+Parsing 'vols_tao_don.xlsx' and warehouse type mapping...
+-> Volume creation cache loaded successfully.
+--------------------------------------------------
+CACHE LOAD COMPLETE.
+--------------------------------------------------
+127.0.0.1 - - [09/Jun/2026 07:39:43] "POST /api/sync HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:39:46] "GET /api/sync/status HTTP/1.1" 404 -
+127.0.0.1 - - [09/Jun/2026 07:45:44] "GET / HTTP/1.1" 401 -
+127.0.0.1 - - [09/Jun/2026 08:01:36] "GET / HTTP/1.1" 401 -
+127.0.0.1 - - [09/Jun/2026 08:01:38] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:38] "GET /static/vn_border_50.js?v=6222 HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:38] "GET /static/vn_provinces_simplified.js?v=88067 HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:38] "GET /static/ghn_logo.png HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:38] "GET /static/ghn_bg.png HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:38] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [09/Jun/2026 08:01:39] "GET /api/user-role HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:40] "GET /api/unstable-po HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:40] "GET /api/operational HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:40] "GET /api/off-spe HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:40] "GET /api/opr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:40] "GET /api/backlog?baseline= HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:40] "GET /api/volume-creation HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:41] "GET /api/files-status HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:41] "GET /api/history HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:41] "GET /api/config HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:41] "GET /api/ntb-structure HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:41] "GET /api/summary-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:42] "GET /api/trends-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:42] "GET /api/summary-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:44] "GET /api/trends-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:44] "GET /api/matrix-tables HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:44] "GET /api/summary-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:45] "GET /api/trends-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:46] "GET /api/matrix-tables HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:46] "GET /api/summary-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:47] "GET /api/trends-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:47] "GET /api/matrix-tables HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:47] "GET /api/summary-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:49] "GET /api/trends-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:49] "GET /api/matrix-tables HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:01:50] "GET /api/matrix-tables HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:07:49] "GET /api/volume-creation HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:07:50] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:07:50] "GET /static/vn_border_50.js?v=42680 HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:07:50] "GET /static/ghn_logo.png HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:07:50] "GET /static/vn_provinces_simplified.js?v=83903 HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:07:50] "GET /static/ghn_bg.png HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:07:52] "GET /api/user-role HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:07:52] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:07:54] "GET /api/operational HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:07:54] "GET /api/opr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:07:54] "GET /api/unstable-po HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:07:54] "GET /api/off-spe HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:07:55] "GET /api/backlog?baseline= HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:07:55] "GET /api/volume-creation HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:07:56] "GET /api/files-status HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:07:56] "GET /api/history HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:07:56] "GET /api/config HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:07:56] "GET /api/summary-dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 08:07:56] "GET /api/ntb-structure HTTP/1.1" 200 -

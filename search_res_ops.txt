@@ -1,0 +1,7 @@
+Mã bưu cục,Bưu cục,BC,Tỉnh,Am,ID - Họ Tên Am
+20269003,Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông,Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông,Đắk Nông,Trần Văn Phước,Trần Văn Phước
+22048001,Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng,Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng,Đắk Nông,Trần Công Hậu,Trần Công Hậu
+21659000,Điểm lấy hàng Nguyễn Đình Chiểu-Nghĩa Tân-Gia Nghĩa-Đăk Nông,Điểm lấy hàng Nguyễn Đình Chiểu-Nghĩa Tân-Gia Nghĩa-Đăk Nông,Đắk Nông,Trần Thị Nhung,Trần Thị Nhung
+22394000,Bưu Cục Thôn 2-Xã Quảng Tín-Đắk Nông,BC Thôn 2-Xã Quảng Tín-Đắk Nông,Đắk Nông,Trần Văn Phước,Trần Văn Phước
+20590000,Bưu Cục Thôn 2-Tuy Đức-Đắk Nông,BC Thôn 2-Tuy Đức-Đắk Nông,Đắk Nông,Trần Thị Nhung,Trần Thị Nhung
+20663000,Bưu Cục 44B Nguyễn Đình Chiểu-Đạ Teh-Lâm Đồng,BC 44B Nguyễn Đình Chiểu-Đạ Teh-Lâm Đồng,Lâm Đồng,Huỳnh Tấn Hiền,Huỳnh Tấn Hiền

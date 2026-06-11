@@ -1,0 +1,5 @@
+3cdad02 fix: correct LTC column mappings and update card labels
+fc19d32 style: replace lightning bolt icon with GHN logo on login page
+8bccb23 feat: implement custom login page and role-based permissions panel
+75abe4d Implement asynchronous data syncing to prevent Render timeout errors
+8629319 Initial commit: NTB Ops Dashboard with secure configurations

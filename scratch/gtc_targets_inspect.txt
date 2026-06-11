@@ -1,0 +1,94 @@
+=== Verification of df_gtc mapping ===
+
+Target in df_gtc: 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông'
+  Matches: 84
+    Row 0: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 1: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 2: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 3: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 4: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 5: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 6: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 7: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 8: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 9: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 10: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 11: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 12: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 13: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 14: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 15: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 16: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 17: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 18: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 19: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 20: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 21: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 22: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 23: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 24: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 25: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 26: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 27: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 28: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 29: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 30: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 31: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 32: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 33: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 34: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 35: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 36: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 37: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 38: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 39: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 40: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 41: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 42: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 43: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 44: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 45: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 46: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 47: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 48: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 49: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 50: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 51: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 52: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 53: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 54: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 55: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 56: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 57: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 58: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 59: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 60: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 61: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 62: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 63: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 64: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 65: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 66: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 67: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 68: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 69: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 70: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 71: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 72: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 73: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 74: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 75: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 76: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 77: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 78: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 79: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 80: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 81: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 82: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+    Row 83: {'Chi tiết': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'clean_bc': 'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', 'mapped_am': 'Trần Văn Phước', 'mapped_prov': 'Đắk Nông', 'AM': 'Trần Văn Phước'}
+
+Target in df_gtc: 'Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng'
+  Matches: 0
+
+Target in df_gtc: 'Điểm lấy hàng Nguyễn Đình Chiểu-Nghĩa Tân-Gia Nghĩa-Đăk Nông'
+  Matches: 0

@@ -1,0 +1,40 @@
+631:                 return {"error": f"Không tìm thấy file: {os.path.basename(file_path)}"}
+632:             with pd.ExcelFile(file_path) as xls:
+633:                 if df_gtc is None:
+634:                     df_gtc = read_ops_sheet(xls, "gtc")
+635:                 if df_ltc is None:
+636:                     df_ltc = read_ops_sheet(xls, "ltc")
+637:         
+638:         df_gtc = df_gtc.dropna(subset=["Volume"]).copy()
+639:         df_gtc['Leadtime'] = pd.to_numeric(df_gtc['Leadtime'], errors='coerce')
+640:         
+641:         df_ltc = df_ltc.dropna(subset=["Volume"]).copy()
+642:         df_ltc['Leadtime'] = pd.to_numeric(df_ltc['Leadtime'], errors='coerce')
+643:         
+644:         # Normalize columns
+645:         df_gtc['% GTC'] = normalize_pct_col(df_gtc['% GTC'])
+646:         df_gtc['% Gán'] = normalize_pct_col(df_gtc['% Gán'])
+647:         df_gtc['% Chuyển trả'] = normalize_pct_col(df_gtc['% Chuyển trả'])
+648:         df_ltc['%LTC'] = normalize_pct_col(df_ltc['%LTC'])
+649: 
+650:         # Calculate overall metrics
+651:         df_gtc['delivered_vol'] = df_gtc['Volume'] * df_gtc['% GTC']
+652:         df_gtc['assigned_vol'] = df_gtc['Volume'] * df_gtc['% Gán']
+653:         df_gtc['return_vol'] = df_gtc['Volume'] * df_gtc['% Chuyển trả']
+654:         df_ltc['ltc_vol'] = df_ltc['Volume'] * df_ltc['%LTC']
+655:         
+656:         # Determine the latest date dynamically from Time column safely
+657:         latest_date_gtc = None
+658:         if 'Time' in df_gtc.columns and len(df_gtc) > 0:
+659:             times = df_gtc['Time'].dropna().unique()
+660:             try:
+661:                 dates_sorted = sorted(times, key=lambda x: pd.to_datetime(str(x).split(' - ')[0]))
+662:                 if dates_sorted:
+663:                     latest_date_gtc = dates_sorted[-1]
+664:             except Exception as e:
+665:                 print(f"Error sorting GTC dates: {e}")
+666:                 if len(times) > 0:
+667:                     latest_date_gtc = times[-1]
+668:                     
+669:         latest_date_ltc = None
+670:         if 'Time' in df_ltc.columns and len(df_ltc) > 0:

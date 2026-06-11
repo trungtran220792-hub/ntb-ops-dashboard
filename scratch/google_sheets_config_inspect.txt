@@ -1,0 +1,32 @@
+id="card-google-sheets-config" style="margin-bottom: 24px;">
+                    <div class="card-header">
+                        <h3>Cấu hình Google Sheets nguồn dữ liệu</h3>
+                    </div>
+                    
+                    <div style="background: rgba(79, 70, 229, 0.05); border-left: 4px solid var(--color-indigo); padding: 16px; border-radius: 0 8px 8px 0; margin-bottom: 24px; font-size: 13px; line-height: 1.6;">
+                        <p style="font-weight: 600; color: var(--color-indigo); margin-bottom: 4px;">
+                            <i class="fa-solid fa-circle-info"></i> Hướng dẫn chia sẻ Google Sheets:
+                        </p>
+                        <ul style="margin-left: 20px; color: var(--text-secondary);">
+                            <li>Mở file Google Sheet của bạn &rarr; Bấm nút <strong>Chia sẻ (Share)</strong> ở góc trên bên phải.</li>
+                            <li>Tại phần Quyền truy cập chung, chuyển từ "Hạn chế" sang <strong>"Bất kỳ ai có liên kết" (Anyone with the link)</strong> với vai trò là <strong>Người xem (Viewer)</strong>.</li>
+                            <li>Copy đường link của bảng tính dán vào các ô cấu hình dưới đây và bấm <strong>Lưu cấu hình Google Sheet</strong>.</li>
+                            <li>Nếu để trống link, hệ thống sẽ tự động sử dụng file Excel local hiện tại làm nguồn dữ liệu.</li>
+                        </ul>
+                    </div>
+
+                    <div style="margin-bottom: 24px;">
+                        <div class="filter-group" style="width: 100%;">
+                            <label style="font-weight: 600; font-size: 13px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-link" style="color: var(--color-indigo); font-size: 16px;"></i> Link Google Sheet Tổng Hợp (Consolidated Link)
+                            </label>
+                            <input type="text" id="sheet-consolidated-url" class="text-input" style="width: 100%; padding: 12px; font-size: 14px;" placeholder="https://docs.google.com/spreadsheets/d/...">
+                        </div>
+                    </div>
+
+                    <div>
+                        <button class="btn btn-primary" style="padding: 10px 20px;" onclick="saveGoogleSheetsConfig()">
+                            <i class="fa-solid fa-floppy-disk"></i> Lưu cấu hình Google Sheet
+                        </button>
+                    </div>
+                </div>

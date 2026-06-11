@@ -1,0 +1,364 @@
+@@ -2219,202 +2196,186 @@
+                         </div>
+                         <div id="chart-ntb-backlog-am" style="min-height: 280px; padding: 10px;"></div>
+                     </div>
+-                </div>
+-
+-                <!-- Middle Row: Regional Switcher and Quality Cards -->
+-                <div class="card" style="margin-bottom: 24px; padding: 24px;">
+-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+-                        <h3 style="margin: 0; font-size: 18px; font-weight: 700;">Chỉ số chất lượng NTB</h3>
+-                        <!-- Region Capsule Selector -->
+-                        <div class="regional-capsule-select" id="ntb-region-capsules">
+-                            <button class="capsule-btn active" onclick="switchNtbRegion('overall', this)">Toàn vùng</button>
+-                            <button class="capsule-btn" onclick="switchNtbRegion('lam_dong', this)">Lâm Đồng</button>
+-                            <button class="capsule-btn" onclick="switchNtbRegion('binh_thuan', this)">Bình Thuận</button>
+-                            <button class="capsule-btn" onclick="switchNtbRegion('khanh_hoa', this)">Khánh Hòa</button>
+-                            <button class="capsule-btn" onclick="switchNtbRegion('dak_nong', this)">Đắk Nông</button>
+-                            <button class="capsule-btn" onclick="switchNtbRegion('ninh_thuan', this)">Ninh Thuận</button>
+-                        </div>
+-                    </div>
+-                    
+-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+-                        <!-- CARD 1: LTC -->
+-                        <div class="quality-metric-card" style="border-top: 4px solid var(--color-indigo); min-height: 220px;">
+-                            <div>
+-                                <div class="metric-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+-                                    <span class="metric-title" style="font-weight: 700; color: var(--text-primary); font-size: 14px;">% LTC <span id="ltc-active-region" style="font-size: 11px; font-weight: normal; color: var(--text-muted);">(Toàn vùng)</span></span>
+-                                    <span style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Target: -</span>
+-                                </div>
+-                                <div class="metric-value-row" style="display: flex; align-items: baseline; gap: 10px; margin-top: 8px;">
+-                                    <div class="metric-value" id="kpi-ltc-value" style="font-size: 28px; font-weight: 800;">0%</div>
+-                                    <div id="kpi-ltc-badge" class="metric-badge neutral" style="font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">
+-                                        <span>-</span>
+-                                    </div>
+-                                </div>
+-                                <div class="metric-subtext" id="kpi-ltc-subtext" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">So với ngày trước: -</div>
+-                            </div>
+-                            <!-- Sparkline Chart -->
+-                            <div class="sparkline-container" id="sparkline-ltc" style="margin-top: 10px; min-height: 40px;"></div>
+-                            <div class="comparison-divider" style="border-top: 1px solid var(--border-color); margin: 12px 0 8px 0;"></div>
+-                            <div class="avg-comparison-row" style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted);">
+-                                <div class="avg-item">
+-                                    <span id="ltc-comp-1-label">So với n-3:</span>
+-                                    <span id="ltc-comp-1-val" style="font-weight: 600; color: var(--text-secondary); margin-left: 4px;">- %</span>
+-                                </div>
+-                                <div class="avg-item">
+-                                    <span id="ltc-comp-2-label">Cùng kỳ Thứ:</span>
+-                                    <span id="ltc-comp-2-val" style="font-weight: 600; color: var(--text-secondary); margin-left: 4px;">- %</span>
++                    <!-- Card 3: 9-KPI Grid -->
++                    <div class="card"
++                        style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: stretch;">
++                        <div class="card-header">
++                            <h3>Chỉ số chất lượng</h3>
++                        </div>
++                        <div class="ntb-kpi-grid" style="flex-grow: 1; padding: 5px;">
++                            <!-- ROW 1: LTC -->
++                            <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-indigo);">
++                                <div class="kpi-label">% LTC</div>
++                                <div class="kpi-value" id="ntb-kpi-ltc-overall">0%</div>
++                                <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
++                                    <span>Toàn vùng</span>
++                                    <span id="ntb-kpi-ltc-overall-trend" style="font-size: 9px; scale: 0.95;"></span>
+                                 </div>
+                             </div>
+-                        </div>
+-                        
+-                        <!-- CARD 2: GTC -->
+-                        <div class="quality-metric-card" style="border-top: 4px solid var(--color-success); min-height: 220px;">
+-                            <div>
+-                                <div class="metric-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+-                                    <span class="metric-title" style="font-weight: 700; color: var(--text-primary); font-size: 14px;">% GTC <span id="gtc-active-region" style="font-size: 11px; font-weight: normal; color: var(--text-muted);">(Toàn vùng)</span></span>
+-                                    <span style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Target: -</span>
+-                                </div>
+-                                <div class="metric-value-row" style="display: flex; align-items: baseline; gap: 10px; margin-top: 8px;">
+-                                    <div class="metric-value" id="kpi-gtc-value" style="font-size: 28px; font-weight: 800;">0%</div>
+-                                    <div id="kpi-gtc-badge" class="metric-badge neutral" style="font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">
+-                                        <span>-</span>
+-                                    </div>
+-                                </div>
+-                                <div class="metric-subtext" id="kpi-gtc-subtext" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">So với ngày trước: -</div>
+-                            </div>
+-                            <!-- Sparkline Chart -->
+-                            <div class="sparkline-container" id="sparkline-gtc" style="margin-top: 10px; min-height: 40px;"></div>
+-                            <div class="comparison-divider" style="border-top: 1px solid var(--border-color); margin: 12px 0 8px 0;"></div>
+-                            <div class="avg-comparison-row" style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted);">
+-                                <div class="avg-item">
+-                                    <span id="gtc-comp-1-label">So với n-3:</span>
+-                                    <span id="gtc-comp-1-val" style="font-weight: 600; color: var(--text-secondary); margin-left: 4px;">- %</span>
+-                                </div>
+-                                <div class="avg-item">
+-                                    <span id="gtc-comp-2-label">Cùng kỳ Thứ:</span>
+-                                    <span id="gtc-comp-2-val" style="font-weight: 600; color: var(--text-secondary); margin-left: 4px;">- %</span>
++                            <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-indigo);">
++                                <div class="kpi-label">% LTC (LĐ)</div>
++                                <div class="kpi-value" id="ntb-kpi-ltc-lamdong">0%</div>
++                                <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
++                                    <span>Lâm Đồng</span>
++                                    <span id="ntb-kpi-ltc-lamdong-trend" style="font-size: 9px; scale: 0.95;"></span>
+                                 </div>
+                             </div>
+-                        </div>
+-                        
+-                        <!-- CARD 3: ODR TTS -->
+-                        <div class="quality-metric-card" style="border-top: 4px solid var(--color-warning); min-height: 220px;">
+-                            <div>
+-                                <div class="metric-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+-                                    <span class="metric-title" style="font-weight: 700; color: var(--text-primary); font-size: 14px;">% ODR TTS <span id="ttc-active-region" style="font-size: 11px; font-weight: normal; color: var(--text-muted);">(Toàn vùng)</span></span>
+-                                    <span style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Target: &ge; 94%</span>
+-                                </div>
+-                                <div class="metric-value-row" style="display: flex; align-items: baseline; gap: 10px; margin-top: 8px;">
+-                                    <div class="metric-value" id="kpi-ttc-value" style="font-size: 28px; font-weight: 800;">0%</div>
+-                                    <div id="kpi-ttc-badge" class="metric-badge neutral" style="font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">
+-                                        <span>-</span>
+-                                    </div>
+-                                </div>
+-                                <div class="metric-subtext" id="kpi-ttc-subtext" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">So với ngày trước: -</div>
+-                            </div>
+-                            <!-- Sparkline Chart -->
+-                            <div class="sparkline-container" id="sparkline-ttc" style="margin-top: 10px; min-height: 40px;"></div>
+-                            <div class="comparison-divider" style="border-top: 1px solid var(--border-color); margin: 12px 0 8px 0;"></div>
+-                            <div class="avg-comparison-row" style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted);">
+-                                <div class="avg-item">
+-                                    <span id="ttc-comp-1-label">So với n-3:</span>
+-                                    <span id="ttc-comp-1-val" style="font-weight: 600; color: var(--text-secondary); margin-left: 4px;">- %</span>
+-                                </div>
+-                                <div class="avg-item">
+-                                    <span id="ttc-comp-2-label">Cùng kỳ Thứ:</span>
+-                                    <span id="ttc-comp-2-val" style="font-weight: 600; color: var(--text-secondary); margin-left: 4px;">- %</span>
++                            <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-indigo);">
++                                <div class="kpi-label">% LTC (BT)</div>
++                                <div class="kpi-value" id="ntb-kpi-ltc-binhthuan">0%</div>
++                                <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
++                                    <span>Bình Thuận</span>
++                                    <span id="ntb-kpi-ltc-binhthuan-trend" style="font-size: 9px; scale: 0.95;"></span>
+                                 </div>
+                             </div>
++                            <!-- ROW 2: GTC -->
++                            <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-success);">
++                                <div class="kpi-label">% GTC</div>
++                                <div class="kpi-value" id="ntb-kpi-gtc-overall">0%</div>
++                                <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
++                                    <span>Toàn vùng</span>
++                                    <span id="ntb-kpi-gtc-overall-trend" style="font-size: 9px; scale: 0.95;"></span>
++                                </div>
++                            </div>
++                            <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-success);">
++                                <div class="kpi-label">% GTC (LĐ)</div>
++                                <div class="kpi-value" id="ntb-kpi-gtc-lamdong">0%</div>
++                                <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
++                                    <span>Lâm Đồng</span>
++                                    <span id="ntb-kpi-gtc-lamdong-trend" style="font-size: 9px; scale: 0.95;"></span>
++                                </div>
++                            </div>
++                            <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-success);">
++                                <div class="kpi-label">% GTC (BT)</div>
++                                <div class="kpi-value" id="ntb-kpi-gtc-binhthuan">0%</div>
++                                <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
++                                    <span>Bình Thuận</span>
++                                    <span id="ntb-kpi-gtc-binhthuan-trend" style="font-size: 9px; scale: 0.95;"></span>
++                                </div>
++                            </div>
++                            <!-- ROW 3: TTC -->
++                            <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-warning);">
++                                <div class="kpi-label">% TTC</div>
++                                <div class="kpi-value" id="ntb-kpi-ttc-overall">0%</div>
++                                <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
++                                    <span>Toàn vùng</span>
++                                    <span id="ntb-kpi-ttc-overall-trend" style="font-size: 9px; scale: 0.95;"></span>
++                                </div>
++                            </div>
++                            <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-warning);">
++                                <div class="kpi-label">% TTC (LĐ)</div>
++                                <div class="kpi-value" id="ntb-kpi-ttc-lamdong">0%</div>
++                                <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
++                                    <span>Lâm Đồng</span>
++                                    <span id="ntb-kpi-ttc-lamdong-trend" style="font-size: 9px; scale: 0.95;"></span>
++                                </div>
++                            </div>
++                            <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-warning);">
++                                <div class="kpi-label">% TTC (BT)</div>
++                                <div class="kpi-value" id="ntb-kpi-ttc-binhthuan">0%</div>
++                                <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
++                                    <span>Bình Thuận</span>
++                                    <span id="ntb-kpi-ttc-binhthuan-trend" style="font-size: 9px; scale: 0.95;"></span>
++                                </div>
++                            </div>
+                         </div>
+                     </div>
+                 </div>
+ 
+-                <!-- Section 2: LTC Analysis -->
++                <!-- Section 2 -->
+                 <div class="ntb-section-title">2. Snapshot LTC</div>
++                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 24px;">
++                    <!-- Line Chart: %LTC xu hướng -->
++                    <div class="card" style="margin-bottom: 0;">
++                        <div class="card-header">
++                            <h3>%LTC xu hướng</h3>
++                        </div>
++                        <div id="chart-ntb-ltc-trend" style="min-height: 280px; padding: 10px;"></div>
++                    </div>
++                    <!-- Right: %LTC overview cards with trend comparison -->
++                    <div class="card"
++                        style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-around; padding: 20px;">
++                        <div class="ntb-trend-kpi-card">
++                            <div class="label">% LTC Toàn vùng</div>
++                            <div class="value" id="ntb-trend-ltc-val">- %</div>
++                            <div class="sub" id="ntb-trend-ltc-diff">So với ngày trước: -</div>
++                        </div>
++                        <div style="border-top: 1px solid var(--border-color); margin: 10px 0;"></div>
++                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
++                            <div class="ntb-trend-kpi-card-sub">
++                                <div class="label">% LTC (LĐ)</div>
++                                <div class="value" id="ntb-trend-ltc-ld-val">- %</div>
++                                <div class="sub" id="ntb-trend-ltc-ld-diff">-</div>
++                            </div>
++                            <div class="ntb-trend-kpi-card-sub">
++                                <div class="label">% LTC (BT)</div>
++                                <div class="value" id="ntb-trend-ltc-bt-val">- %</div>
++                                <div class="sub" id="ntb-trend-ltc-bt-diff">-</div>
++                            </div>
++                        </div>
++                    </div>
++                </div>
++
++                <!-- Matrix Table: %LTC theo bưu cục -->
+                 <div class="card" style="margin-bottom: 24px;">
+-                    <div class="card-header">
+-                        <h3>%LTC xu hướng</h3>
+-                    </div>
+-                    <div id="chart-ntb-ltc-trend" style="min-height: 280px; padding: 10px;"></div>
++                    <div class="card-header"
++                        style="display: flex; justify-content: space-between; align-items: center;">
++                        <h3>%LTC theo bưu cục</h3>
++                        <span style="font-size: 12px; color: var(--text-muted); font-style: italic;">Nhấp vào dòng AM để
++                            xem chi tiết bưu cục</span>
++                    </div>
++                    <div class="table-responsive">
++                        <table class="custom-table ntb-matrix-table" id="table-ntb-ltc-matrix">
++                            <!-- We will build the thead and tbody dynamically -->
++                        </table>
++                    </div>
+                 </div>
+ 
+-                <!-- Analysis & Ranking Table: %LTC -->
+-                <div class="card" style="margin-bottom: 24px; padding: 24px;">
+-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+-                        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+-                            <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: var(--text-primary);">Báo cáo phân tích & Xếp hạng % LTC</h3>
+-                            <div class="ntb-toggle-capsules">
+-                                <div class="ntb-capsule active" id="capsule-ltc-po" onclick="setNtbGroupType('ltc', 'po')">Bưu cục</div>
+-                                <div class="ntb-capsule" id="capsule-ltc-am" onclick="setNtbGroupType('ltc', 'am')">AM</div>
++                <!-- Section 3 -->
++                <div class="ntb-section-title">3. Snapshot GTC</div>
++                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 24px;">
++                    <!-- Line Chart: %GTC xu hướng -->
++                    <div class="card" style="margin-bottom: 0;">
++                        <div class="card-header">
++                            <h3>%GTC xu hướng</h3>
++                        </div>
++                        <div id="chart-ntb-gtc-trend" style="min-height: 280px; padding: 10px;"></div>
++                    </div>
++                    <!-- Right: %GTC overview cards with trend comparison -->
++                    <div class="card"
++                        style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-around; padding: 20px;">
++                        <div class="ntb-trend-kpi-card">
++                            <div class="label">% GTC Toàn vùng</div>
++                            <div class="value" id="ntb-trend-gtc-val">- %</div>
++                            <div class="sub" id="ntb-trend-gtc-diff">So với ngày trước: -</div>
++                        </div>
++                        <div style="border-top: 1px solid var(--border-color); margin: 10px 0;"></div>
++                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
++                            <div class="ntb-trend-kpi-card-sub">
++                                <div class="label">% GTC (LĐ)</div>
++                                <div class="value" id="ntb-trend-gtc-ld-val">- %</div>
++                                <div class="sub" id="ntb-trend-gtc-ld-diff">-</div>
+                             </div>
+-                        </div>
+-                        <div style="display: flex; gap: 12px; align-items: center;">
+-                            <input type="text" id="search-ntb-ltc" placeholder="Tìm kiếm tên bưu cục/AM..." oninput="handleNtbSearch('ltc')" style="padding: 8px 14px; font-size: 13px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-primary); outline: none; width: 220px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: border-color 0.2s;" />
+-                        </div>
+-                    </div>
+-                    <div class="table-responsive" style="max-height: 480px; overflow-y: auto;">
+-                        <table class="custom-table" id="table-ntb-ltc-analysis" style="border-collapse: separate; border-spacing: 0;">
+-                            <thead style="position: sticky; top: 0; background: var(--card-bg); z-index: 10;">
+-                                <tr style="cursor: pointer; user-select: none;">
+-                                    <th onclick="handleNtbSort('ltc', 'rank')" style="width: 70px;">Hạng <span id="sort-icon-ltc-rank">↕</span></th>
+-                                    <th onclick="handleNtbSort('ltc', 'name')">Bưu cục / AM <span id="sort-icon-ltc-name">↕</span></th>
+-                                    <th onclick="handleNtbSort('ltc', 'am')" id="th-ltc-am-header">AM Quản lý <span id="sort-icon-ltc-am">↕</span></th>
+-                                    <th onclick="handleNtbSort('ltc', 'pick_vol')" style="text-align: right;">Sản lượng LTC <span id="sort-icon-ltc-pick_vol">↕</span></th>
+-                                    <th onclick="handleNtbSort('ltc', 'total_vol')" style="text-align: right;">Tổng sản lượng <span id="sort-icon-ltc-total_vol">↕</span></th>
+-                                    <th onclick="handleNtbSort('ltc', 'prop')" style="text-align: right;">Tỷ trọng <span id="sort-icon-ltc-prop">↕</span></th>
+-                                    <th onclick="handleNtbSort('ltc', 'pct')" style="text-align: right;">LTC % <span id="sort-icon-ltc-pct">↕</span></th>
+-                                </tr>
+-                            </thead>
+-                            <tbody id="tbody-ntb-ltc-analysis">
+-                                <tr>
+-                                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Đang tải dữ liệu...</td>
+-                                </tr>
+-                            </tbody>
+-                        </table>
++                            <div class="ntb-trend-kpi-card-sub">
++                                <div class="label">% GTC (BT)</div>
++                                <div class="value" id="ntb-trend-gtc-bt-val">- %</div>
++                                <div class="sub" id="ntb-trend-gtc-bt-diff">-</div>
++                            </div>
++                        </div>
+                     </div>
+                 </div>
+ 
+-                <!-- Section 3: GTC Analysis -->
+-                <div class="ntb-section-title">3. Snapshot GTC</div>
++                <!-- Matrix Table: %GTC theo bưu cục -->
+                 <div class="card" style="margin-bottom: 24px;">
+-                    <div class="card-header">
+-                        <h3>%GTC xu hướng</h3>
+-                    </div>
+-                    <div id="chart-ntb-gtc-trend" style="min-height: 280px; padding: 10px;"></div>
+-                </div>
+-
+-                <!-- Analysis & Ranking Table: %GTC -->
+-                <div class="card" style="margin-bottom: 24px; padding: 24px;">
+-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+-                        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+-                            <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: var(--text-primary);">Báo cáo phân tích & Xếp hạng % GTC</h3>
+-                            <div class="ntb-toggle-capsules">
+-                                <div class="ntb-capsule active" id="capsule-gtc-po" onclick="setNtbGroupType('gtc', 'po')">Bưu cục</div>
+-                                <div class="ntb-capsule" id="capsule-gtc-am" onclick="setNtbGroupType('gtc', 'am')">AM</div>
+-                            </div>
+-                        </div>
+-                        <div style="display: flex; gap: 12px; align-items: center;">
+-                            <input type="text" id="search-ntb-gtc" placeholder="Tìm kiếm tên bưu cục/AM..." oninput="handleNtbSearch('gtc')" style="padding: 8px 14px; font-size: 13px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-primary); outline: none; width: 220px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: border-color 0.2s;" />
+-                        </div>
+-                    </div>
+-                    <div class="table-responsive" style="max-height: 480px; overflow-y: auto;">
+-                        <table class="custom-table" id="table-ntb-gtc-analysis" style="border-collapse: separate; border-spacing: 0;">
+-                            <thead style="position: sticky; top: 0; background: var(--card-bg); z-index: 10;">
+-                                <tr style="cursor: pointer; user-select: none;">
+-                                    <th onclick="handleNtbSort('gtc', 'rank')" style="width: 70px;">Hạng <span id="sort-icon-gtc-rank">↕</span></th>
+-                                    <th onclick="handleNtbSort('gtc', 'name')">Bưu cục / AM <span id="sort-icon-gtc-name">↕</span></th>
+-                                    <th onclick="handleNtbSort('gtc', 'am')" id="th-gtc-am-header">AM Quản lý <span id="sort-icon-gtc-am">↕</span></th>
+-                                    <th onclick="handleNtbSort('gtc', 'pick_vol')" style="text-align: right;">Sản lượng GTC <span id="sort-icon-gtc-pick_vol">↕</span></th>
+-                                    <th onclick="handleNtbSort('gtc', 'total_vol')" style="text-align: right;">Tổng sản lượng <span id="sort-icon-gtc-total_vol">↕</span></th>
+-                                    <th onclick="handleNtbSort('gtc', 'prop')" style="text-align: right;">Tỷ trọng <span id="sort-icon-gtc-prop">↕</span></th>
+-                                    <th onclick="handleNtbSort('gtc', 'pct')" style="text-align: right;">GTC % <span id="sort-icon-gtc-pct">↕</span></th>
+-                                </tr>
+-                            </thead>
+-                            <tbody id="tbody-ntb-gtc-analysis">
+-                                <tr>
+-                                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Đang tải dữ liệu...</td>
+-                                </tr>
+-                            </tbody>
++                    <div class="card-header"
++                        style="display: flex; justify-content: space-between; align-items: center;">
++                        <h3>%GTC theo bưu cục</h3>
++                        <span style="font-size: 12px; color: var(--text-muted); font-style: italic;">Nhấp vào dòng AM để
++                            xem chi tiết bưu cục</span>
++                    </div>
++                    <div class="table-responsive">
++                        <table class="custom-table ntb-matrix-table" id="table-ntb-gtc-matrix">
++                            <!-- We will build the thead and tbody dynamically -->
+                         </table>
+                     </div>
+                 </div>

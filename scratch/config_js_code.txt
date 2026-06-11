@@ -1,0 +1,43 @@
+=== loadGoogleSheetsConfig ===
+async function loadGoogleSheetsConfig() {
+            try {
+                const res = await fetch(getApiUrl('/api/config'), getFetchOptions());
+                if (res.ok) {
+                    const config = await res.json();
+                    document.getElementById('sheet-consolidated-url').value = config.consolidated_url || '';
+                }
+            } catch (err) {
+                console.error("Lỗi load cấu hình Google Sheets: ", err);
+            }
+        }
+=== saveGoogleSheetsConfig ===
+async function saveGoogleSheetsConfig() {
+            const config = {
+                consolidated_url: document.getElementById('sheet-consolidated-url').value.trim(),
+                telegram_bot_token: document.getElementById('telegram-bot-token') ? document.getElementById('telegram-bot-token').value.trim() : '',
+                telegram_chat_id: document.getElementById('telegram-chat-id') ? document.getElementById('telegram-chat-id').value.trim() : '',
+                gemini_api_key: document.getElementById('gemini-api-key') ? document.getElementById('gemini-api-key').value.trim() : ''
+            };
+
+            showLoading("Đang lưu cấu hình...");
+            try {
+                const res = await fetch(getApiUrl('/api/config'), getFetchOptions({
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(config)
+                }));
+                if (res.ok) {
+                    alert("Lưu cấu hình thành công!");
+                    loadGoogleSheetsConfig(); // reload to get masked keys
+                } else {
+                    const err = await res.json();
+                    alert("Lưu cấu hình thất bại: " + err.error);
+                }
+            } catch (err) {
+                alert("Lỗi kết nối khi lưu cấu hình: " + err.message);
+            } finally {
+                hideLoading();
+            }
+        }

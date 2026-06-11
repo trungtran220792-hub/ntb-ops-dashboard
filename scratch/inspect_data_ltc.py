@@ -1,15 +1,20 @@
+import sys
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+
 import pandas as pd
-import os
+import json
 
-workspace_dir = r"c:\Users\lap4all\Desktop\New folder"
-file_path = os.path.join(workspace_dir, "Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx")
-output_path = os.path.join(workspace_dir, "scratch", "inspect_data_ltc_res.txt")
+excel_path = 'downloaded_consolidated_sheet.xlsx'
+print("Loading excel file...")
+xl = pd.ExcelFile(excel_path)
+print("Sheet names:", xl.sheet_names)
 
-with open(output_path, "w", encoding="utf-8") as f:
-    df = pd.read_excel(file_path, sheet_name="DataLTC")
-    f.write(f"DataLTC columns: {list(df.columns)}\n")
-    f.write(f"DataLTC shape: {df.shape}\n")
-    f.write("DataLTC Head:\n")
-    f.write(df.head(10).to_string() + "\n")
-
-print("Done inspecting DataLTC.")
+for sheet in xl.sheet_names:
+    if 'ltc' in sheet.lower():
+        df = pd.read_excel(xl, sheet_name=sheet, nrows=5)
+        print(f"\n--- {sheet} columns ---")
+        for i, col in enumerate(df.columns):
+            print(f"Index {i}: {col}")
+        print("\nFirst 3 rows:")
+        print(df.head(3).to_string())

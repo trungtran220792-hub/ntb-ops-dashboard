@@ -1,0 +1,16 @@
+
+=== Matrix: ltc ===
+Number of rows: 22
+Unique AMs in response: ['', 'Cao Thị Thanh Thủy', 'Huỳnh Thị Kim Chi', 'Huỳnh Tấn Hiền', 'Hồng Bích Nga', 'Lê Minh Đại', 'Lê Thanh Nhựt', 'Lê Văn Trường', 'Nguyễn Thanh Long', 'Nguyễn Duy Long', 'Nguyễn Hoàng Phi', 'Nguyễn Lê Nguyên Vũ', 'Nguyễn Ngọc Khánh', 'Nguyễn Tống Hùng Phong', 'Phan Đình Duy', 'Phạm Bá Thành Công', 'Thái Thị Thanh Thư', 'Trầm Hữu Tiến', 'Trần Công Hậu', 'Trần Thị Nhung', 'Trần Văn Phước', 'Võ Tấn Lợi']
+Found match: PO='Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng' under AM=''
+Data: {'2026-06-03 - Thứ 4': {'pct': 86.46, 'vol': 879}, '2026-06-04 - Thứ 5': {'pct': 87.16, 'vol': 950}, '2026-06-05 - Thứ 6': {'pct': 82.06, 'vol': 602}, '2026-06-06 - Thứ 7': {'pct': 84.4, 'vol': 782}, '2026-06-07 - Chủ Nhật': {'pct': 86.2, 'vol': 884}, '2026-06-08 - Thứ 2': {'pct': 91.69, 'vol': 1299}}
+Found match: PO='Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông' under AM=''
+Data: {'2026-06-03 - Thứ 4': {'pct': 98.28, 'vol': 174}, '2026-06-04 - Thứ 5': {'pct': 99.39, 'vol': 165}, '2026-06-05 - Thứ 6': {'pct': 99.34, 'vol': 152}, '2026-06-06 - Thứ 7': {'pct': 99.08, 'vol': 109}, '2026-06-07 - Chủ Nhật': {'pct': 96.74, 'vol': 92}, '2026-06-08 - Thứ 2': {'pct': 96.69, 'vol': 121}}
+Found match: PO='Điểm lấy hàng Nguyễn Đình Chiểu-Nghĩa Tân-Gia Nghĩa-Đăk Nông' under AM=''
+Data: {'2026-06-03 - Thứ 4': {'pct': 80.37, 'vol': 1340}, '2026-06-04 - Thứ 5': {'pct': 78.68, 'vol': 1013}, '2026-06-05 - Thứ 6': {'pct': 72.18, 'vol': 895}, '2026-06-06 - Thứ 7': {'pct': 83.52, 'vol': 1851}, '2026-06-07 - Chủ Nhật': {'pct': 74.09, 'vol': 965}, '2026-06-08 - Thứ 2': {'pct': 77.57, 'vol': 1391}}
+
+=== Matrix: gtc ===
+Number of rows: 22
+Unique AMs in response: ['', 'Cao Thị Thanh Thủy', 'Huỳnh Thị Kim Chi', 'Huỳnh Tấn Hiền', 'Hồng Bích Nga', 'Lê Minh Đại', 'Lê Thanh Nhựt', 'Lê Văn Trường', 'Nguyễn Thanh Long', 'Nguyễn Duy Long', 'Nguyễn Hoàng Phi', 'Nguyễn Lê Nguyên Vũ', 'Nguyễn Ngọc Khánh', 'Nguyễn Tống Hùng Phong', 'Phan Đình Duy', 'Phạm Bá Thành Công', 'Thái Thị Thanh Thư', 'Trầm Hữu Tiến', 'Trần Công Hậu', 'Trần Thị Nhung', 'Trần Văn Phước', 'Võ Tấn Lợi']
+Found match: PO='Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông' under AM=''
+Data: {'2026-06-03 - Thứ 4': {'pct': 51.93, 'vol': 414}, '2026-06-04 - Thứ 5': {'pct': 59.83, 'vol': 463}, '2026-06-05 - Thứ 6': {'pct': 53.98, 'vol': 515}, '2026-06-06 - Thứ 7': {'pct': 56.55, 'vol': 534}, '2026-06-07 - Chủ Nhật': {'pct': 40.36, 'vol': 446}, '2026-06-08 - Thứ 2': {'pct': 54.85, 'vol': 567}}

@@ -1,0 +1,380 @@
+--- Current Script
++++ Backup Script
+@@ -143,6 +143,7 @@
+                     }
+                 }, 100);
+             }
++
+             if (tabId === 'tab-nhan-su') {
+                 loadNhanSuData();
+             }
+@@ -554,16 +555,35 @@
+                 const res = await fetch(getApiUrl('/api/config'), getFetchOptions());
+                 if (res.ok) {
+                     const config = await res.json();
+-                    document.getElementById('sheet-consolidated-url').value = config.consolidated_url || '';
++                    document.getElementById('sheet-ops-url').value = config.ops_url || '';
++                    document.getElementById('sheet-opr-url').value = config.opr_url || '';
++                    document.getElementById('sheet-aging-url').value = config.aging_url || '';
++                    document.getElementById('sheet-treo-url').value = config.treo_url || '';
++                    document.getElementById('sheet-bat-on-url').value = config.bat_on_url || '';
++                    document.getElementById('sheet-off-spe-url').value = config.off_spe_url || '';
++                    document.getElementById('sheet-tao-don-url').value = config.tao_don_url || '';
++                    
++                    const botTokenEl = document.getElementById('telegram-bot-token');
++                    const chatIdEl = document.getElementById('telegram-chat-id');
++                    const geminiKeyEl = document.getElementById('gemini-api-key');
++                    if (botTokenEl) botTokenEl.value = config.telegram_bot_token || '';
++                    if (chatIdEl) chatIdEl.value = config.telegram_chat_id || '';
++                    if (geminiKeyEl) geminiKeyEl.value = config.gemini_api_key || '';
+                 }
+             } catch (err) {
+-                console.error("Lỗi load cấu hình Google Sheets: ", err);
++                console.error("Lỗi load cấu hình: ", err);
+             }
+         }
+ 
+         async function saveGoogleSheetsConfig() {
+             const config = {
+-                consolidated_url: document.getElementById('sheet-consolidated-url').value.trim(),
++                ops_url: document.getElementById('sheet-ops-url').value.trim(),
++                opr_url: document.getElementById('sheet-opr-url').value.trim(),
++                aging_url: document.getElementById('sheet-aging-url').value.trim(),
++                treo_url: document.getElementById('sheet-treo-url').value.trim(),
++                bat_on_url: document.getElementById('sheet-bat-on-url').value.trim(),
++                off_spe_url: document.getElementById('sheet-off-spe-url').value.trim(),
++                tao_don_url: document.getElementById('sheet-tao-don-url').value.trim(),
+                 telegram_bot_token: document.getElementById('telegram-bot-token') ? document.getElementById('telegram-bot-token').value.trim() : '',
+                 telegram_chat_id: document.getElementById('telegram-chat-id') ? document.getElementById('telegram-chat-id').value.trim() : '',
+                 gemini_api_key: document.getElementById('gemini-api-key') ? document.getElementById('gemini-api-key').value.trim() : ''
+@@ -592,6 +612,92 @@
+             }
+         }
+ 
++        async function sendTelegramAiBriefing() {
++            const botToken = document.getElementById('telegram-bot-token').value.trim();
++            const chatId = document.getElementById('telegram-chat-id').value.trim();
++            const geminiKey = document.getElementById('gemini-api-key').value.trim();
++
++            if (!botToken) {
++                alert("Vui lòng nhập Telegram Bot Token.");
++                return;
++            }
++            if (!chatId) {
++                alert("Vui lòng nhập Chat ID hoặc Group ID nhận tin.");
++                return;
++            }
++            if (!geminiKey) {
++                alert("Vui lòng nhập Gemini API Key.");
++                return;
++            }
++
++            showLoading("AI đang phân tích dữ liệu vận hành và soạn bản tin gửi Telegram...");
++            try {
++                const res = await fetch(getApiUrl('/api/send-telegram-ai-briefing'), getFetchOptions({
++                    method: 'POST',
++                    headers: {
++                        'Content-Type': 'application/json'
++                    },
++                    body: JSON.stringify({
++                        telegram_bot_token: botToken,
++                        telegram_chat_id: chatId,
++                        gemini_api_key: geminiKey
++                    })
++                }));
++                const result = await res.json();
++                if (res.ok) {
++                    alert(result.message || "Gửi bản tin phân tích AI thành công!");
++                    loadGoogleSheetsConfig();
++                } else {
++                    alert("Lỗi: " + (result.error || "Gửi bản tin thất bại."));
++                }
++            } catch (err) {
++                alert("Lỗi kết nối khi gửi bản tin AI: " + err.message);
++            } finally {
++                hideLoading();
++            }
++        }
++
++        async function sendTelegramWarning() {
++            const botToken = document.getElementById('telegram-bot-token').value.trim();
++            const chatId = document.getElementById('telegram-chat-id').value.trim();
++            const geminiKey = document.getElementById('gemini-api-key').value.trim();
++
++            if (!botToken) {
++                alert("Vui lòng nhập Telegram Bot Token.");
++                return;
++            }
++            if (!chatId) {
++                alert("Vui lòng nhập Chat ID hoặc Group ID nhận tin.");
++                return;
++            }
++
++            showLoading("Đang kiểm tra và gửi cảnh báo sản lượng đột biến qua Telegram...");
++            try {
++                const res = await fetch(getApiUrl('/api/send-telegram-warning'), getFetchOptions({
++                    method: 'POST',
++                    headers: {
++                        'Content-Type': 'application/json'
++                    },
++                    body: JSON.stringify({
++                        telegram_bot_token: botToken,
++                        telegram_chat_id: chatId,
++                        gemini_api_key: geminiKey
++                    })
++                }));
++                const result = await res.json();
++                if (res.ok) {
++                    alert(result.message || "Gửi cảnh báo sản lượng thành công!");
++                    loadGoogleSheetsConfig();
++                } else {
++                    alert("Lỗi: " + (result.error || "Gửi cảnh báo thất bại."));
++                }
++            } catch (err) {
++                alert("Lỗi kết nối khi gửi cảnh báo Telegram: " + err.message);
++            } finally {
++                hideLoading();
++            }
++        }
++
+         function showLoading(text = "Đang tải dữ liệu...") {
+             document.getElementById('loading-text').innerText = text;
+             document.getElementById('loading-overlay').classList.add('active');
+@@ -672,8 +778,8 @@
+                     
+                     card.innerHTML = `
+                         <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+-                            <div class="file-icon ${f.exists ? '' : 'missing'}" style="${f.exists ? 'background-color: rgba(16, 185, 129, 0.1); color: #10b981;' : ''}">
+-                                <i class="fa-solid fa-file-csv" style="color: #10b981;"></i>
++                            <div class="file-icon ${f.exists ? '' : 'missing'}">
++                                <i class="fa-regular fa-file-excel"></i>
+                             </div>
+                             <div class="file-info">
+                                 <h4 style="font-weight: 700;">${f.name}</h4>
+@@ -693,7 +799,7 @@
+                                 </a>
+                                 <label class="btn btn-secondary" style="padding: 6px 12px; font-size: 11px; margin: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+                                     <i class="fa-solid fa-cloud-arrow-up" style="color: var(--color-indigo);"></i> Chọn file
+-                                    <input type="file" style="display: none;" onchange="uploadFile(this.files[0], '${f.name}')" accept=".csv">
++                                    <input type="file" style="display: none;" onchange="uploadFile(this.files[0], '${f.name}')" accept=".xlsx, .xls">
+                                 </label>
+                             </div>
+                         </div>
+@@ -728,8 +834,8 @@
+             if (!file) return;
+             
+             const ext = file.name.split('.').pop().toLowerCase();
+-            if (ext !== 'csv') {
+-                alert("Định dạng file không hợp lệ! Vui lòng chỉ tải lên file CSV (.csv).");
++            if (ext !== 'xlsx' && ext !== 'xls') {
++                alert("Định dạng file không hợp lệ! Vui lòng chỉ tải lên file Excel (.xlsx hoặc .xls).");
+                 return;
+             }
+ 
+@@ -1051,17 +1157,8 @@
+ 
+             // Fill metrics
+             document.getElementById('kpi-gtc').innerText = ops.overall_gtc ? ops.overall_gtc + " %" : "- %";
+-            if (document.getElementById('kpi-gan')) {
+-                document.getElementById('kpi-gan').innerText = ops.overall_gan ? ops.overall_gan + " %" : "- %";
+-            }
+-            if (document.getElementById('kpi-gan-tts')) {
+-                document.getElementById('kpi-gan-tts').innerText = ops.overall_gan_tts ? ops.overall_gan_tts + " %" : "- %";
+-            }
+             document.getElementById('kpi-ltc').innerText = ops.overall_ltc ? ops.overall_ltc + " %" : "- %";
+             document.getElementById('kpi-opr').innerText = opr.overall_opr ? opr.overall_opr + " %" : "- %";
+-            if (document.getElementById('kpi-odr')) {
+-                document.getElementById('kpi-odr').innerText = ops.overall_odr_tts ? ops.overall_odr_tts + " %" : "- %";
+-            }
+ 
+             const unstable = globalData.unstablePo || {};
+             const unstableCountEl = document.getElementById('kpi-unstable-po-count');
+@@ -1097,36 +1194,6 @@
+                 `;
+             }
+ 
+-            const ganDeltas = getCompareDeltas(ops.trend_gtc, '% Gán');
+-            const ganCompEl = document.getElementById('kpi-gan-comparison');
+-            if (ganCompEl) {
+-                ganCompEl.innerHTML = `
+-                    <div class="comp-row">
+-                        <span class="comp-label">So với n-1:</span>
+-                        <span class="comp-val ${getDeltaClass(ganDeltas.n1)}">${formatDelta(ganDeltas.n1)}</span>
+-                    </div>
+-                    <div class="comp-row">
+-                        <span class="comp-label">Cùng kỳ Thứ:</span>
+-                        <span class="comp-val ${getDeltaClass(ganDeltas.wk)}">${formatDelta(ganDeltas.wk)}</span>
+-                    </div>
+-                `;
+-            }
+-
+-            const ganTtsDeltas = getCompareDeltas(ops.trend_tts, '% Gán');
+-            const ganTtsCompEl = document.getElementById('kpi-gan-tts-comparison');
+-            if (ganTtsCompEl) {
+-                ganTtsCompEl.innerHTML = `
+-                    <div class="comp-row">
+-                        <span class="comp-label">So với n-1:</span>
+-                        <span class="comp-val ${getDeltaClass(ganTtsDeltas.n1)}">${formatDelta(ganTtsDeltas.n1)}</span>
+-                    </div>
+-                    <div class="comp-row">
+-                        <span class="comp-label">Cùng kỳ Thứ:</span>
+-                        <span class="comp-val ${getDeltaClass(ganTtsDeltas.wk)}">${formatDelta(ganTtsDeltas.wk)}</span>
+-                    </div>
+-                `;
+-            }
+-
+             const ltcDeltas = getCompareDeltas(ops.trend_ltc, '% LTC');
+             const ltcCompEl = document.getElementById('kpi-ltc-comparison');
+             if (ltcCompEl) {
+@@ -1154,21 +1221,6 @@
+                     <div class="comp-row">
+                         <span class="comp-label">Cùng kỳ Thứ:</span>
+                         <span class="comp-val ${getDeltaClass(deltaWk)}">${formatDelta(deltaWk)}</span>
+-                    </div>
+-                `;
+-            }
+-
+-            const odrDeltas = getCompareDeltas(ops.trend_odr, '% ODR');
+-            const odrCompEl = document.getElementById('kpi-odr-comparison');
+-            if (odrCompEl) {
+-                odrCompEl.innerHTML = `
+-                    <div class="comp-row">
+-                        <span class="comp-label">So với n-1:</span>
+-                        <span class="comp-val ${getDeltaClass(odrDeltas.n1)}">${formatDelta(odrDeltas.n1)}</span>
+-                    </div>
+-                    <div class="comp-row">
+-                        <span class="comp-label">Cùng kỳ Thứ:</span>
+-                        <span class="comp-val ${getDeltaClass(odrDeltas.wk)}">${formatDelta(odrDeltas.wk)}</span>
+                     </div>
+                 `;
+             }
+@@ -3661,4 +3713,129 @@
+                 });
+             });
+         });
++
++        // ==========================================
++        // RENDER: NHÂN SỰ & SCENARIO PLANNER (TAB)
++        // ==========================================
++        let nhanSuData = null;
++        window.rowGrowthOverrides = window.rowGrowthOverrides || {};
++
++        function formatNumber(val) {
++            return (val || 0).toLocaleString();
++        }
++
++        async function loadNhanSuData() {
++            const tbody = document.getElementById('table-nhan-su-body');
++            try {
++                const res = await fetch(getApiUrl('/api/nhan-su'), getFetchOptions());
++                if (!res.ok) {
++                    throw new Error("Lỗi tải API nhân sự");
++                }
++                const data = await res.json();
++                nhanSuData = data;
++                
++                // Populate cards
++                document.getElementById('ns-card-active').innerText = formatNumber(data.active_headcount || 0);
++                document.getElementById('ns-card-resigned').innerText = formatNumber(data.resigned_headcount || 0);
++                document.getElementById('ns-card-po').innerText = formatNumber(data.po_count || 0);
++
++                // Render table
++                renderNhanSuTable();
++            } catch (err) {
++                console.error("Lỗi khi load dữ liệu nhân sự: ", err);
++                if (tbody) {
++                    tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: var(--color-danger); padding: 32px;"><i class="fa-solid fa-circle-exclamation"></i> Không thể tải dữ liệu: ${err.message}</td></tr>`;
++                }
++            }
++        }
++
++        function renderNhanSuTable() {
++            const tbody = document.getElementById('table-nhan-su-body');
++            if (!tbody || !nhanSuData || !nhanSuData.pos) return;
++
++            const query = document.getElementById('ns-search-input').value.toLowerCase().trim();
++            const targetDaily = parseFloat(document.getElementById('ns-input-target-daily').value) || 70;
++            const globalGrowth = parseFloat(document.getElementById('ns-input-global-growth').value) || 10;
++
++            const filtered = nhanSuData.pos.filter(p => {
++                return (p.name || '').toLowerCase().includes(query) ||
++                       (p.province || '').toLowerCase().includes(query) ||
++                       (p.am || '').toLowerCase().includes(query) ||
++                       (p.warehouse_id || '').toLowerCase().includes(query);
++            });
++
++            let html = '';
++            let totalHc = 0;
++            let totalVol2025 = 0;
++            let totalVol2026 = 0;
++            let totalHcNeeded = 0;
++
++            filtered.forEach(p => {
++                const hc = p.hc_current || 0;
++                const vol2025 = p.vol_2025 || 0;
++                
++                let growth = globalGrowth;
++                if (window.rowGrowthOverrides[p.warehouse_id] !== undefined) {
++                    growth = window.rowGrowthOverrides[p.warehouse_id];
++                }
++
++                const vol2026 = Math.round(vol2025 * (1 + growth / 100));
++                const hcNeeded = Math.ceil(vol2026 / targetDaily);
++                const diff = hcNeeded - hc;
++
++                let diffBadge = '';
++                if (diff > 0) {
++                    diffBadge = `<span class="badge" style="background-color: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">+${diff} cần tuyển</span>`;
++                } else {
++                    diffBadge = `<span class="badge" style="background-color: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">Đủ định biên</span>`;
++                }
++
++                html += `
++                    <tr>
++                        <td style="font-weight: 600; color: var(--text-primary);">${p.name}</td>
++                        <td>${p.province}</td>
++                        <td>${p.am || '-'}</td>
++                        <td>${formatNumber(hc)}</td>
++                        <td>${formatNumber(vol2025)}</td>
++                        <td>
++                            <input type="number" value="${growth}" 
++                                   style="width: 70px; padding: 4px 8px; border: 1px solid var(--border-color); border-radius: 4px; text-align: right;" 
++                                   oninput="window.updateRowGrowth('${p.warehouse_id}', this.value)">
++                        </td>
++                        <td>${formatNumber(vol2026)}</td>
++                        <td>${formatNumber(hcNeeded)}</td>
++                        <td>${diffBadge}</td>
++                    </tr>
++                `;
++
++                totalHc += hc;
++                totalVol2025 += vol2025;
++                totalVol2026 += vol2026;
++                totalHcNeeded += hcNeeded;
++            });
++
++            tbody.innerHTML = html;
++
++            // Update grand totals
++            const totalDiff = totalHcNeeded - totalHc;
++            let totalDiffBadge = '';
++            if (totalDiff > 0) {
++                totalDiffBadge = `<span class="badge" style="background-color: #fee2e2; color: #991b1b; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 700;">+${totalDiff} cần tuyển</span>`;
++            } else {
++                totalDiffBadge = `<span class="badge" style="background-color: #dcfce7; color: #166534; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 700;">Đủ định biên</span>`;
++            }
++
++            document.getElementById('ns-total-hc').innerText = formatNumber(totalHc);
++            document.getElementById('ns-total-vol2025').innerText = formatNumber(totalVol2025);
++            document.getElementById('ns-total-vol2026').innerText = formatNumber(totalVol2026);
++            document.getElementById('ns-total-hc-needed').innerText = formatNumber(totalHcNeeded);
++            document.getElementById('ns-total-growth').innerText = globalGrowth + '%';
++            document.getElementById('ns-total-diff').innerHTML = totalDiffBadge;
++        }
++
++        window.updateRowGrowth = function(whId, val) {
++            const parsedVal = parseFloat(val);
++            window.rowGrowthOverrides[whId] = isNaN(parsedVal) ? 0 : parsedVal;
++            renderNhanSuTable();
++        }
+     

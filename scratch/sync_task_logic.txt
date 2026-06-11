@@ -1,0 +1,63 @@
+def async_sync_task(is_admin_flag):
+     global OPERATIONAL_CACHE, OPR_CACHE, BACKLOG_CACHE_RAW, UNSTABLE_PO_CACHE, OFF_SPE_CACHE, SYNC_STATUS
+     try:
+         if is_admin_flag:
+             config = load_config()
+-            download_errors = []
+-            
+-            mappings = [
+-                ("ops_url", 'Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', "Báo cáo Vận hành"),
+-                ("opr_url", 'OPR TTS.xlsx', "OPR TTS"),
+-                ("aging_url", 'Aging _5 ngày.xlsx', "Aging > 5 ngày"),
+-                ("treo_url", 'Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx', "Treo luân chuyển"),
+-                ("bat_on_url", 'buu_cuc_bat_on.xlsx', "Bưu cục bất ổn"),
+-                ("off_spe_url", 'off_tuyen_spe.xlsx', "OFF tuyến SPE"),
+-                ("tao_don_url", 'vols_tao_don.xlsx', "Volume tạo đơn")
+-            ]
+-            
+-            total_urls = sum(1 for k, _, _ in mappings if config.get(k, "").strip())
+-            current_idx = 0
+-            
+-            for key, filename, label in mappings:
+-                url = config.get(key, "")
+-                if url and url.strip():
+-                    current_idx += 1
+-                    SYNC_STATUS["progress"] = f"Đang tải {label} ({current_idx}/{total_urls})..."
+-                    filepath = resolve_path(filename, write=True)
+-                    success, msg = download_google_sheet(url, filepath)
+-                    if not success:
+-                        download_errors.append(f"{label}: {msg}")
+-            
+-            if download_errors:
+-                SYNC_STATUS["status"] = "error"
+-                SYNC_STATUS["error"] = "Lỗi đồng bộ Google Sheets:\n" + "\n".join(download_errors)
+-                return
++            url = config.get("consolidated_url", "")
++            if url and url.strip():
++                SYNC_STATUS["progress"] = "Đang tải file Google Sheet tổng hợp..."
++                temp_xlsx = resolve_path('downloaded_consolidated_sheet.xlsx', write=True)
++                success, msg = download_google_sheet(url, temp_xlsx)
++                if not success:
++                    SYNC_STATUS["status"] = "error"
++                    SYNC_STATUS["error"] = f"Lỗi tải Google Sheet: {msg}"
++                    return
++                
++                SYNC_STATUS["progress"] = "Đang trích xuất các sheet thành CSV..."
++                if not split_excel_to_csvs(temp_xlsx):
++                    SYNC_STATUS["status"] = "error"
++                    SYNC_STATUS["error"] = "Lỗi khi trích xuất dữ liệu từ Google Sheet sang CSV."
++                    return
++            else:
++                print("No consolidated URL configured, using existing CSV files.")
+                 
+         SYNC_STATUS["progress"] = "Đang xử lý dữ liệu và cập nhật bộ nhớ đệm..."
+         
+@@ -2309,6 +2722,119 @@ def get_sync_status():
+     return jsonify(SYNC_STATUS)
+ 
+ 
++@app.route('/api/nhan-su', methods=['GET'])
++@requires_permission('tab-dashboard')
++def api_nhan_su():
++    try:
++        n

@@ -1,0 +1,9 @@
+=== STEP 1171 | Tool: replace_file_content ===
+Description: "Modify switchNtbRegion to trigger re-rendering of LTC and GTC analysis tables on region capsule change"
+Instruction: "Call renderNtbAnalysisTable for both ltc and gtc inside switchNtbRegion"
+
+--- TARGET CONTENT ---
+"        function switchNtbRegion(regionKey, btnEl) {\n            activeNtbRegion = regionKey;\n            \n            // Toggle active state in UI\n            document.querySelectorAll('#ntb-region-capsules .capsule-btn').forEach(btn => {\n                btn.classList.remove('active');\n            });\n            if (btnEl) {\n                btnEl.classList.add('active');\n            }\n            \n            // Re-render KPI cards instantly from cache\n            renderNtbKpiCards();\n        }"
+
+--- REPLACEMENT CONTENT ---
+"        function switchNtbRegion(regionKey, btnEl) {\n            activeNtbRegion = regionKey;\n            \n            // Toggle active state in UI\n            document.querySelectorAll('#ntb-region-capsules .capsule-btn').forEach(btn => {\n                btn.classList.remove('active');\n            });\n            if (btnEl) {\n                btnEl.classList.add('active');\n            }\n            \n            // Re-render KPI cards instantly from cache\n            renderNtbKpiCards();\n            \n            // Re-render analysis tables instantly from cache\n            renderNtbAnalysisTable('ltc');\n            renderNtbAnalysisTable('gtc');\n        }"

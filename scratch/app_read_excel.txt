@@ -1,0 +1,31 @@
+601:                 return f_val / 100.0
+602:             return f_val
+603:         except:
+604:             return 0.0
+605:     return series.apply(convert_val)
+606: 
+607: def safe_read_csv(file_path, **kwargs):
+608:     if not os.path.exists(file_path):
+609:         return None
+610:     try:
+611:         return pd.read_csv(file_path, encoding='utf-8', **kwargs)
+612:     except UnicodeDecodeError:
+613:         try:
+614:             return pd.read_csv(file_path, encoding='utf-8-sig', **kwargs)
+615:         except UnicodeDecodeError:
+616:             return pd.read_csv(file_path, encoding='latin1', **kwargs)
+617:     except Exception as e:
+618:         print(f"Error reading CSV {file_path}: {e}")
+619:         return None
+620: 
+621: 
+622: # ==========================================
+623: # 1. PROCESS OPERATIONAL REPORT
+624: # ==========================================
+625: def process_operational_report(df_gtc=None, df_ltc=None):
+626:     file_path = resolve_path('Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', write=False)
+627:     
+628:     try:
+629:         if df_gtc is None or df_ltc is None:
+630:             if not os.path.exists(file_path):
+631:                 return {"error": f"Không tìm thấy file: {os.path.basename(file_path)}"}

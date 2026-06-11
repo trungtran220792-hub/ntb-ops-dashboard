@@ -1,0 +1,100 @@
+L2081: def update_all_caches():
+L2082:     global OPERATIONAL_CACHE, OPR_CACHE, BACKLOG_CACHE_RAW, UNSTABLE_PO_CACHE, OFF_SPE_CACHE, DF_TAO_DON_CACHE, DF_BUU_CUC_TYPE_MAP
+L2083:     import gc
+L2084:     
+L2085:     print("--------------------------------------------------")
+L2086:     print("STARTING MEMORY-EFFICIENT CACHE LOAD...")
+L2087:     print("--------------------------------------------------")
+L2088:     
+L2089:     # 1. First trigger get_dataframes(force=True) to build DF_GTC_CACHE, DF_LTC_CACHE, DF_AGING_CACHE, DF_TREO_CACHE
+L2090:     # sequentially and efficiently!
+L2091:     try:
+L2092:         get_dataframes(force=True)
+L2093:         print("-> Pandas DataFrames loaded sequentially.")
+L2094:     except Exception as e:
+L2095:         err_msg = f"Loi doc file Excel: {str(e)}"
+L2096:         print(err_msg)
+L2097:         OPERATIONAL_CACHE = {"error": err_msg}
+L2098:         OPR_CACHE = {"error": err_msg}
+L2099:         BACKLOG_CACHE_RAW = {"aging": {"error": err_msg}, "treo": {"error": err_msg}}
+L2100:         UNSTABLE_PO_CACHE = {"error": err_msg}
+L2101:         OFF_SPE_CACHE = {"error": err_msg}
+L2102:         return
+L2103: 
+L2104:     # 2. Now process operational report using cached DataFrames
+L2105:     try:
+L2106:         print("Parsing Operational report...")
+L2107:         # Note: process_operational_report reads file_path inside if df_gtc is None
+L2108:         # We pass the cached dataframes so it doesn't need to load the file again!
+L2109:         ops = process_operational_report(df_gtc=DF_GTC_CACHE, df_ltc=DF_LTC_CACHE, df_tts=DF_TTS_CACHE)
+L2110:         if "error" not in ops:
+L2111:             OPERATIONAL_CACHE = ops
+L2112:             print("-> Operational report processed and cached.")
+L2113:         else:
+L2114:             OPERATIONAL_CACHE = ops
+L2115:             print("-> Error processing operational report.")
+L2116:     except Exception as e:
+L2117:         OPERATIONAL_CACHE = {"error": f"Lỗi xử lý báo cáo vận hành: {e}"}
+L2118:         
+L2119:     # 3. Process OPR report
+L2120:     try:
+L2121:         print("Parsing OPR report...")
+L2122:         OPR_CACHE = process_opr_report()
+L2123:         print("-> OPR report processed and cached.")
+L2124:     except Exception as e:
+L2125:         OPR_CACHE = {"error": f"Lỗi xử lý OPR: {e}"}
+L2126:         
+L2127:     # 4. Process Backlog reports (Aging and Treo)
+L2128:     try:
+L2129:         print("Parsing Backlog reports...")
+L2130:         aging = process_aging_backlog(df_raw=DF_AGING_CACHE)
+L2131:         treo = process_treo_backlog(df_raw=DF_TREO_CACHE)
+L2132:             
+L2133:         BACKLOG_CACHE_RAW = {
+L2134:             "aging": aging,
+L2135:             "treo": treo
+L2136:         }
+L2137:         print("-> Backlog reports processed and cached.")
+L2138:         gc.collect()
+L2139:     except Exception as e:
+L2140:         BACKLOG_CACHE_RAW = {"aging": {"error": f"Lỗi: {e}"}, "treo": {"error": f"Lỗi: {e}"}}
+L2141:         
+L2142:     # 5. Process Unstable POs
+L2143:     try:
+L2144:         print("Parsing Unstable POs...")
+L2145:         UNSTABLE_PO_CACHE = process_unstable_po()
+L2146:         gc.collect()
+L2147:     except Exception as e:
+L2148:         UNSTABLE_PO_CACHE = {"error": f"Lỗi: {e}"}
+L2149:         
+L2150:     # 6. Process OFF SPE
+L2151:     try:
+L2152:         print("Parsing OFF SPE...")
+L2153:         OFF_SPE_CACHE = process_off_spe()
+L2154:         gc.collect()
+L2155:     except Exception as e:
+L2156:         OFF_SPE_CACHE = {"error": f"Lỗi: {e}"}
+L2157:         
+L2158:     # 7. Process Volume Creation
+L2159:     try:
+L2160:         print("Parsing Volume Creation...")
+L2161:         DF_TAO_DON_CACHE = load_vols_tao_don_df()
+L2162:         DF_BUU_CUC_TYPE_MAP = load_buu_cuc_type_map()
+L2163:         gc.collect()
+L2164:     except Exception as e:
+L2165:         print(f"Error volume: {e}")
+L2166:         
+L2167:     print("--------------------------------------------------")
+L2168:     print("MEMORY-EFFICIENT CACHE LOAD COMPLETE.")
+L2169:     print("--------------------------------------------------")
+L2170:     gc.collect()
+L2171: 
+L2172: 
+L2173: # ==========================================
+L2174: # 7. API FLASK ENDPOINTS
+L2175: # ==========================================
+L2176: @app.route('/')
+L2177: def home():
+L2178:     return render_template('index.html')
+L2179: 
+L2180: @app.route('/api/login', methods=['POST'])

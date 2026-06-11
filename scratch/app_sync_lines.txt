@@ -1,0 +1,423 @@
+=== app.py line 200-350 ===
+201: 
+202: @app.after_request
+203: def add_security_headers(response):
+204:     response.headers['Access-Control-Allow-Origin'] = '*'
+205:     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+206:     response.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
+207:     
+208:     # Disable caching to force updates
+209:     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+210:     response.headers['Pragma'] = 'no-cache'
+211:     response.headers['Expires'] = '0'
+212:     
+213:     # Secure HTTP headers from rules
+214:     response.headers['Content-Security-Policy'] = "default-src 'self' http://127.0.0.1:5000; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://*.basemaps.cartocdn.com https://unpkg.com; connect-src 'self' http://127.0.0.1:5000;"
+215:     response.headers['X-Frame-Options'] = 'DENY'
+216:     response.headers['X-Content-Type-Options'] = 'nosniff'
+217:     response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+218:     response.headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
+219:     response.headers.pop('X-Powered-By', None)
+220:     return response
+221: def resolve_path(filename, write=False):
+222:     """
+223:     Tự động phân giải đường dẫn đọc/ghi file.
+224:     Trên Vercel hoặc môi trường read-only:
+225:       - Ghi file (write=True): Lưu vào /tmp/<filename>
+226:       - Đọc file (write=False): Đọc từ /tmp/<filename> nếu tồn tại, ngược lại đọc từ thư mục gốc.
+227:     """
+228:     if os.environ.get("VERCEL") or not os.access(os.getcwd(), os.W_OK):
+229:         tmp_path = os.path.join('/tmp', filename)
+230:         if write:
+231:             # Đảm bảo thư mục /tmp tồn tại (trong trường hợp chạy cục bộ mô phỏng)
+232:             os.makedirs('/tmp', exist_ok=True)
+233:             return tmp_path
+234:         else:
+235:             if os.path.exists(tmp_path):
+236:                 return tmp_path
+237:             return os.path.join(os.getcwd(), filename)
+238:     return os.path.join(os.getcwd(), filename)
+239: 
+240: WORKSPACE_DIR = os.getcwd()
+241: 
+242: def load_config():
+243:     defaults = {
+244:         "ops_url": os.environ.get("OPS_URL", ""),
+245:         "opr_url": os.environ.get("OPR_URL", ""),
+246:         "aging_url": os.environ.get("AGING_URL", ""),
+247:         "treo_url": os.environ.get("TREO_URL", ""),
+248:         "bat_on_url": os.environ.get("BAT_ON_URL", ""),
+249:         "off_spe_url": os.environ.get("OFF_SPE_URL", ""),
+250:         "tao_don_url": os.environ.get("TAO_DON_URL", ""),
+251:         "telegram_bot_token": os.environ.get("TELEGRAM_BOT_TOKEN", ""),
+252:         "telegram_chat_id": os.environ.get("TELEGRAM_CHAT_ID", ""),
+253:         "gemini_api_key": os.environ.get("GEMINI_API_KEY", "")
+254:     }
+255:     
+256:     config = {}
+257:     config_file = resolve_path('config.json', write=False)
+258:     if os.path.exists(config_file):
+259:         try:
+260:             with open(config_file, 'r', encoding='utf-8') as f:
+261:                 config = json.load(f)
+262:         except Exception as e:
+263:             print(f"Error loading config.json: {e}")
+264:             
+265:     final_config = {}
+266:     keys_map = {
+267:         "ops_url": "OPS_URL",
+268:         "opr_url": "OPR_URL",
+269:         "aging_url": "AGING_URL",
+270:         "treo_url": "TREO_URL",
+271:         "bat_on_url": "BAT_ON_URL",
+272:         "off_spe_url": "OFF_SPE_URL",
+273:         "tao_don_url": "TAO_DON_URL",
+274:         "telegram_bot_token": "TELEGRAM_BOT_TOKEN",
+275:         "telegram_chat_id": "TELEGRAM_CHAT_ID",
+276:         "gemini_api_key": "GEMINI_API_KEY"
+277:     }
+278:     for k, env_name in keys_map.items():
+279:         val = os.environ.get(env_name, "")
+280:         if not val.strip():
+281:             val = config.get(k, "")
+282:         final_config[k] = val.strip()
+283:         
+284:     return final_config
+285: 
+286: def save_config(config):
+287:     try:
+288:         clean_config = {
+289:             "ops_url": config.get("ops_url", "").strip(),
+290:             "opr_url": config.get("opr_url", "").strip(),
+291:             "aging_url": config.get("aging_url", "").strip(),
+292:             "treo_url": config.get("treo_url", "").strip(),
+293:             "bat_on_url": config.get("bat_on_url", "").strip(),
+294:             "off_spe_url": config.get("off_spe_url", "").strip(),
+295:             "tao_don_url": config.get("tao_don_url", "").strip(),
+296:             "telegram_bot_token": config.get("telegram_bot_token", "").strip(),
+297:             "telegram_chat_id": config.get("telegram_chat_id", "").strip(),
+298:             "gemini_api_key": config.get("gemini_api_key", "").strip()
+299:         }
+300:         
+301:         # 1. Update in-memory os.environ
+302:         keys_map = {
+303:             "ops_url": "OPS_URL",
+304:             "opr_url": "OPR_URL",
+305:             "aging_url": "AGING_URL",
+306:             "treo_url": "TREO_URL",
+307:             "bat_on_url": "BAT_ON_URL",
+308:             "off_spe_url": "OFF_SPE_URL",
+309:             "tao_don_url": "TAO_DON_URL",
+310:             "telegram_bot_token": "TELEGRAM_BOT_TOKEN",
+311:             "telegram_chat_id": "TELEGRAM_CHAT_ID",
+312:             "gemini_api_key": "GEMINI_API_KEY"
+313:         }
+314:         for k, env_name in keys_map.items():
+315:             os.environ[env_name] = clean_config[k]
+316:             
+317:         # 2. Update .env file if it exists and is writeable, otherwise update config.json
+318:         env_file = os.path.join(WORKSPACE_DIR, '.env')
+319:         if not os.environ.get("VERCEL") and os.path.exists(env_file) and os.access(env_file, os.W_OK):
+320:             lines = []
+321:             with open(env_file, 'r', encoding='utf-8') as f:
+322:                 lines = f.readlines()
+323:                 
+324:             new_lines = []
+325:             keys_written = set()
+326:             for line in lines:
+327:                 matched = False
+328:                 for k, env_name in keys_map.items():
+329:                     if line.strip().startswith(f"{env_name}="):
+330:                         new_lines.append(f'{env_name}="{clean_config[k]}"\n')
+331:                         keys_written.add(env_name)
+332:                         matched = True
+333:                         break
+334:                 if not matched:
+335:                     new_lines.append(line)
+336:                     
+337:             for k, env_name in keys_map.items():
+338:                 if env_name not in keys_written:
+339:                     new_lines.append(f'{env_name}="{clean_config[k]}"\n')
+340:                     
+341:             with open(env_file, 'w', encoding='utf-8') as f:
+342:                 f.writelines(new_lines)
+343:         else:
+344:             config_file = resolve_path('config.json', write=True)
+345:             with open(config_file, 'w', encoding='utf-8') as f:
+346:                 json.dump(clean_config, f, indent=4, ensure_ascii=False)
+347:                 
+348:         return True
+349:     except Exception as e:
+350:         print(f"Error saving config: {e}")
+
+=== app.py line 2200-2470 ===
+2201:         return jsonify({"error": BACKLOG_CACHE_RAW["treo"]["error"]})
+2202:         
+2203:     history = load_history()
+2204:     baseline_ts = request.args.get("baseline")
+2205:     baseline_entry = None
+2206:     
+2207:     if history:
+2208:         if baseline_ts:
+2209:             for entry in history:
+2210:                 if entry["timestamp"] == baseline_ts:
+2211:                     baseline_entry = entry
+2212:                     break
+2213:         else:
+2214:             if len(history) >= 2:
+2215:                 baseline_entry = history[-2]
+2216:             else:
+2217:                 baseline_entry = history[-1]
+2218:                 
+2219:     import copy
+2220:     current_data = copy.deepcopy(BACKLOG_CACHE_RAW)
+2221:     current_data["baseline_timestamp"] = baseline_entry["timestamp"] if baseline_entry else None
+2222:     current_data = calculate_trend(current_data, baseline_entry)
+2223:     
+2224:     return jsonify(clean_nan(current_data))
+2225: 
+2226: @app.route('/api/history')
+2227: @requires_permission('tab-backlog')
+2228: def get_history():
+2229:     history = load_history()
+2230:     timestamps = [entry["timestamp"] for entry in history]
+2231:     return jsonify(timestamps[::-1])
+2232: 
+2233: @app.route('/api/user-role')
+2234: @requires_auth
+2235: def get_user_role():
+2236:     username = session.get('username')
+2237:     if not username and request.authorization:
+2238:         username = request.authorization.username
+2239:     role = 'admin' if is_admin() else 'staff'
+2240:     users = load_users()
+2241:     user = users.get(username, {})
+2242:     permissions = user.get("permissions", [])
+2243:     return jsonify({"username": username, "role": role, "permissions": permissions})
+2244: 
+2245: def mask_url(url):
+2246:     if not url:
+2247:         return ""
+2248:     match = re.search(r'/spreadsheets/d/([a-zA-Z0-9-_]+)', url)
+2249:     if not match:
+2250:         return url
+2251:     spreadsheet_id = match.group(1)
+2252:     if len(spreadsheet_id) > 10:
+2253:         masked_id = spreadsheet_id[:4] + "****************" + spreadsheet_id[-4:]
+2254:     else:
+2255:         masked_id = "********"
+2256:     masked_url = url.replace(spreadsheet_id, masked_id)
+2257:     return masked_url
+2258: 
+2259: def mask_token(token):
+2260:     if not token:
+2261:         return ""
+2262:     token = token.strip()
+2263:     if len(token) > 8:
+2264:         return token[:4] + "****************" + token[-4:]
+2265:     return "********"
+2266: 
+2267: def mask_config_value(key, val):
+2268:     if not val:
+2269:         return ""
+2270:     if key in ["telegram_bot_token", "gemini_api_key"]:
+2271:         return mask_token(val)
+2272:     elif key in ["ops_url", "opr_url", "aging_url", "treo_url", "bat_on_url", "off_spe_url", "tao_don_url"]:
+2273:         return mask_url(val)
+2274:     return val
+2275: 
+2276: @app.route('/api/config', methods=['GET', 'POST'])
+2277: @requires_permission('tab-sync')
+2278: def manage_config():
+2279:     if request.method == 'POST':
+2280:         if not is_admin():
+2281:             return jsonify({"error": "Quyền truy cập bị từ chối. Chỉ tài khoản admin mới được phép lưu cấu hình."}), 403
+2282:         try:
+2283:             data = request.json or {}
+2284:             current_config = load_config()
+2285:             
+2286:             config = {}
+2287:             for k in ["ops_url", "opr_url", "aging_url", "treo_url", "bat_on_url", "off_spe_url", "tao_don_url", "telegram_bot_token", "telegram_chat_id", "gemini_api_key"]:
+2288:                 val = data.get(k, "").strip()
+2289:                 if not val:
+2290:                     config[k] = ""
+2291:                 elif "*" in val or "Ẩn" in val or "hidden" in val.lower():
+2292:                     config[k] = current_config.get(k, "")
+2293:                 else:
+2294:                     if k in ["ops_url", "opr_url", "aging_url", "treo_url", "bat_on_url", "off_spe_url", "tao_don_url"]:
+2295:                         if not (val.startswith("https://docs.google.com/spreadsheets/") or val.startswith("http://docs.google.com/spreadsheets/")):
+2296:                             return jsonify({"error": f"Link Google Sheet không hợp lệ cho {k}. Phải bắt đầu bằng https://docs.google.com/spreadsheets/"}), 400
+2297:                     config[k] = val
+2298:             
+2299:             if save_config(config):
+2300:                 masked_config = {k: mask_config_value(k, v) for k, v in config.items()}
+2301:                 return jsonify({"success": True, "config": masked_config})
+2302:             else:
+2303:                 return jsonify({"error": "Không thể ghi cấu hình."}), 500
+2304:         except Exception as e:
+2305:             return jsonify({"error": f"Lỗi xử lý yêu cầu: {str(e)}"}), 400
+2306:     else:
+2307:         config = load_config()
+2308:         masked_config = {k: mask_config_value(k, v) for k, v in config.items()}
+2309:         return jsonify(masked_config)
+2310: 
+2311: @app.route('/api/download-template', methods=['GET'])
+2312: @requires_permission('tab-sync')
+2313: def download_template():
+2314:     from flask import send_from_directory
+2315:     filename = request.args.get('filename', '').strip()
+2316:     allowed_files = [
+2317:         'Aging _5 ngày.xlsx',
+2318:         'Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx',
+2319:         'OPR TTS.xlsx',
+2320:         'Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx',
+2321:         'buu_cuc_bat_on.xlsx',
+2322:         'off_tuyen_spe.xlsx',
+2323:         'vols_tao_don.xlsx'
+2324:     ]
+2325:     if filename not in allowed_files:
+2326:         return jsonify({"error": "Tên file không hợp lệ."}), 400
+2327:         
+2328:     try:
+2329:         download_path = resolve_path(filename, write=False)
+2330:         directory, file_only = os.path.split(download_path)
+2331:         return send_from_directory(directory, file_only, as_attachment=True)
+2332:     except Exception as e:
+2333:         return jsonify({"error": f"Không thể tải file: {str(e)}"}), 500
+2334: 
+2335: @app.route('/api/upload', methods=['POST'])
+2336: @requires_permission('tab-sync')
+2337: def upload_file():
+2338:     global OPERATIONAL_CACHE, OPR_CACHE, BACKLOG_CACHE_RAW
+2339:     if 'file' not in request.files:
+2340:         return jsonify({"error": "Không tìm thấy file trong yêu cầu."}), 400
+2341:         
+2342:     file = request.files['file']
+2343:     filename = request.form.get('filename', '').strip()
+2344:     
+2345:     if not filename:
+2346:         return jsonify({"error": "Không xác định được tên file đích."}), 400
+2347:         
+2348:     allowed_files = [
+2349:         'Aging _5 ngày.xlsx',
+2350:         'Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx',
+2351:         'OPR TTS.xlsx',
+2352:         'Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx',
+2353:         'buu_cuc_bat_on.xlsx',
+2354:         'off_tuyen_spe.xlsx',
+2355:         'vols_tao_don.xlsx'
+2356:     ]
+2357:     
+2358:     if filename not in allowed_files:
+2359:         return jsonify({"error": "Tên file không hợp lệ."}), 400
+2360:         
+2361:     if not (file.filename.endswith('.xlsx') or file.filename.endswith('.xls')):
+2362:         return jsonify({"error": "Định dạng file không hợp lệ. Chỉ hỗ trợ file Excel (.xlsx, .xls)."}), 400
+2363:         
+2364:     try:
+2365:         filepath = resolve_path(filename, write=True)
+2366:         file.save(filepath)
+2367:         
+2368:         update_all_caches()
+2369:         if BACKLOG_CACHE_RAW and "error" not in BACKLOG_CACHE_RAW["aging"] and "error" not in BACKLOG_CACHE_RAW["treo"]:
+2370:             add_to_history(BACKLOG_CACHE_RAW["aging"], BACKLOG_CACHE_RAW["treo"])
+2371:                 
+2372:         return jsonify({"success": True, "message": f"Tải lên và đồng bộ file {filename} thành công!"})
+2373:     except Exception as e:
+2374:         return jsonify({"error": f"Lỗi lưu file hoặc cập nhật cache: {str(e)}"}), 500
+2375: 
+2376: SYNC_STATUS = {
+2377:     "status": "idle",
+2378:     "progress": "",
+2379:     "error": None,
+2380:     "timestamp": None
+2381: }
+2382: 
+2383: def async_sync_task(is_admin_flag):
+2384:     global OPERATIONAL_CACHE, OPR_CACHE, BACKLOG_CACHE_RAW, UNSTABLE_PO_CACHE, OFF_SPE_CACHE, SYNC_STATUS
+2385:     try:
+2386:         if is_admin_flag:
+2387:             config = load_config()
+2388:             download_errors = []
+2389:             
+2390:             mappings = [
+2391:                 ("ops_url", 'Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', "Báo cáo Vận hành"),
+2392:                 ("opr_url", 'OPR TTS.xlsx', "OPR TTS"),
+2393:                 ("aging_url", 'Aging _5 ngày.xlsx', "Aging > 5 ngày"),
+2394:                 ("treo_url", 'Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx', "Treo luân chuyển"),
+2395:                 ("bat_on_url", 'buu_cuc_bat_on.xlsx', "Bưu cục bất ổn"),
+2396:                 ("off_spe_url", 'off_tuyen_spe.xlsx', "OFF tuyến SPE"),
+2397:                 ("tao_don_url", 'vols_tao_don.xlsx', "Volume tạo đơn")
+2398:             ]
+2399:             
+2400:             total_urls = sum(1 for k, _, _ in mappings if config.get(k, "").strip())
+2401:             current_idx = 0
+2402:             
+2403:             for key, filename, label in mappings:
+2404:                 url = config.get(key, "")
+2405:                 if url and url.strip():
+2406:                     current_idx += 1
+2407:                     SYNC_STATUS["progress"] = f"Đang tải {label} ({current_idx}/{total_urls})..."
+2408:                     filepath = resolve_path(filename, write=True)
+2409:                     success, msg = download_google_sheet(url, filepath)
+2410:                     if not success:
+2411:                         download_errors.append(f"{label}: {msg}")
+2412:             
+2413:             if download_errors:
+2414:                 SYNC_STATUS["status"] = "error"
+2415:                 SYNC_STATUS["error"] = "Lỗi đồng bộ Google Sheets:\n" + "\n".join(download_errors)
+2416:                 return
+2417:                 
+2418:         SYNC_STATUS["progress"] = "Đang xử lý dữ liệu và cập nhật bộ nhớ đệm..."
+2419:         
+2420:         update_all_caches()
+2421:         
+2422:         if OPERATIONAL_CACHE and "error" in OPERATIONAL_CACHE:
+2423:             SYNC_STATUS["status"] = "error"
+2424:             SYNC_STATUS["error"] = OPERATIONAL_CACHE["error"]
+2425:             return
+2426:         if OPR_CACHE and "error" in OPR_CACHE:
+2427:             SYNC_STATUS["status"] = "error"
+2428:             SYNC_STATUS["error"] = OPR_CACHE["error"]
+2429:             return
+2430:         if BACKLOG_CACHE_RAW:
+2431:             if "error" in BACKLOG_CACHE_RAW["aging"]:
+2432:                 SYNC_STATUS["status"] = "error"
+2433:                 SYNC_STATUS["error"] = BACKLOG_CACHE_RAW["aging"]["error"]
+2434:                 return
+2435:             if "error" in BACKLOG_CACHE_RAW["treo"]:
+2436:                 SYNC_STATUS["status"] = "error"
+2437:                 SYNC_STATUS["error"] = BACKLOG_CACHE_RAW["treo"]["error"]
+2438:                 return
+2439:         
+2440:         ts = add_to_history(BACKLOG_CACHE_RAW["aging"], BACKLOG_CACHE_RAW["treo"])
+2441:             
+2442:         SYNC_STATUS["status"] = "success"
+2443:         SYNC_STATUS["timestamp"] = ts
+2444:         SYNC_STATUS["progress"] = "Đồng bộ hoàn tất!"
+2445:         
+2446:     except Exception as e:
+2447:         SYNC_STATUS["status"] = "error"
+2448:         SYNC_STATUS["error"] = f"Lỗi hệ thống khi đồng bộ: {str(e)}"
+2449: 
+2450: @app.route('/api/sync', methods=['POST'])
+2451: @requires_permission('tab-sync')
+2452: def trigger_sync():
+2453:     global SYNC_STATUS
+2454:     if SYNC_STATUS["status"] == "processing":
+2455:         return jsonify({"error": "Đang có quá trình đồng bộ đang chạy."}), 400
+2456:         
+2457:     SYNC_STATUS["status"] = "processing"
+2458:     SYNC_STATUS["error"] = None
+2459:     SYNC_STATUS["progress"] = "Đang khởi tạo đồng bộ..."
+2460:     
+2461:     admin_flag = is_admin()
+2462:     threading.Thread(target=async_sync_task, args=(admin_flag,), daemon=True).start()
+2463:     return jsonify({"success": True, "status": "started"})
+2464: 
+2465: @app.route('/api/sync/status', methods=['GET'])
+2466: @requires_permission('tab-sync')
+2467: def get_sync_status():
+2468:     global SYNC_STATUS
+2469:     return jsonify(SYNC_STATUS)
+2470: 

@@ -1,0 +1,220 @@
+L27: <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+L3485: opr: {},
+L3497: opr: { current: 1, perPage: 15 },
+L3503: function updateHeaderSubtitle(tabId) {
+L3536: // Re-render donut chart if it's the summary panel to make sure it draws properly in case of size mismatch
+L3540: if (bl && backlogPieChart) {
+L3544: backlogPieChart.updateSeries([blAging, blTreoGiao, blTreoTra]);
+L3571: const isOpsTab = tabId === 'tab-operational' || tabId === 'tab-opr' || tabId === 'tab-backlog';
+L3588: // Force donut chart update when switching to backlog tab
+L3592: if (bl && backlogPieChart) {
+L3596: backlogPieChart.updateSeries([blAging, blTreoGiao, blTreoTra]);
+L3679: 'tab-opr',
+L3802: 'tab-opr': 'OPR',
+L4008: document.getElementById('sheet-opr-url').value = config.opr_url || '';
+L4023: opr_url: document.getElementById('sheet-opr-url').value.trim(),
+L4067: const oprPromise = fetch(getApiUrl('/api/opr'), getFetchOptions()).then(r => r.json());
+L4073: const [opsData, oprData, blData, unstableData, offSpeData, volCreationData] = await Promise.all([
+L4075: oprPromise,
+L4083: globalData.opr = oprData;
+L4100: renderOprDashboard();
+L4108: // Run initial filters and dynamic OPR load
+L4333: // OPR AMs
+L4334: if (globalData.opr.am_performance) {
+L4335: globalData.opr.am_performance.forEach(r => r.AM && amSet.add(r.AM));
+L4357: Array.from(amSet).sort().forEach(am => {
+L4368: Array.from(provinceSet).sort().forEach(p => {
+L4379: Array.from(poSet).sort().forEach(po => {
+L4408: // Filter OPR
+L4409: if (globalData.opr.oe_details) {
+L4410: filteredData.oe_details = globalData.opr.oe_details.filter(r =>
+L4430: paginationState.opr.current = 1;
+L4435: renderOprDetailsTable();
+L4439: loadOprData();
+L4445: let shiftsChart = null;
+L4446: let backlogPieChart = null;
+L4454: // Sort by Time
+L4455: const sorted = [...trendList].sort((a, b) => {
+L4461: const latestEntry = sorted[sorted.length - 1];
+L4468: const n1Entry = findTrendEntryByDateOffset(sorted, latestDateStr, 1);
+L4470: const wkEntry = findTrendEntryByDateOffset(sorted, latestDateStr, 7);
+L4509: function renderOverviewDashboard() {
+L4511: const opr = globalData.opr;
+L4523: document.getElementById('kpi-opr').innerText = opr.overall_opr ? opr.overall_opr + " %" : "- %";
+L4607: const oprCompEl = document.getElementById('kpi-opr-comparison');
+L4608: if (oprCompEl) {
+L4609: const deltaN1 = opr.delta_n1;
+L4610: const deltaWk = opr.delta_wk;
+L4611: oprCompEl.innerHTML = `
+L4682: // Shifts Distribution Chart (Ca 1, Ca 2, Tồn)
+L4684: chart: { type: 'bar', height: 250, toolbar: { show: false }, background: 'transparent' },
+L4694: if (shiftsChart) shiftsChart.destroy();
+L4695: shiftsChart = new ApexCharts(document.querySelector("#chart-shifts"), shiftsOptions);
+L4696: shiftsChart.render();
+L4698: // Backlog distribution chart (Aging > 5d, Treo Giao, Treo Trả)
+L4704: chart: { type: 'donut', height: 250, background: 'transparent' },
+L4713: if (backlogPieChart) backlogPieChart.destroy();
+L4714: backlogPieChart = new ApexCharts(document.querySelector("#chart-backlog-pie"), backlogPieOptions);
+L4715: backlogPieChart.render();
+L4721: let opsTrendChart = null;
+L4723: function renderOperationalDashboard() {
+L4726: // Render Trend Chart
+L4733: chart: { type: 'line', height: 300, toolbar: { show: false }, background: 'transparent' },
+L4751: if (opsTrendChart) opsTrendChart.destroy();
+L4752: opsTrendChart = new ApexCharts(document.querySelector("#chart-ops-trend"), trendOptions);
+L4753: opsTrendChart.render();
+L4786: // RENDER: OPR TTS DASHBOARD (TAB 3)
+L4788: let oprSlotsChart = null;
+L4789: let oprAmChart = null;
+L4790: let amOprSortDir = 'asc'; // 'asc' or 'desc'
+L4792: async function loadOprData() {
+L4803: const res = await fetch(getApiUrl(`/api/opr?${params.toString()}`), getFetchOptions());
+L4806: globalData.opr = data;
+L4807: renderOprDashboard();
+L4810: console.error("Lỗi load dữ liệu OPR: ", err);
+L4814: function setAmOprSort(dir) {
+L4815: amOprSortDir = dir;
+L4816: document.getElementById('sort-am-asc').classList.toggle('active', dir === 'asc');
+L4817: document.getElementById('sort-am-desc').classList.toggle('active', dir === 'desc');
+L4818: renderOprAmChartOnly();
+L4821: function renderOprAmChartOnly() {
+L4822: const opr = globalData.opr;
+L4823: if (!opr || !opr.am_performance) return;
+L4825: let amPerformance = [...opr.am_performance];
+L4826: if (amOprSortDir === 'asc') {
+L4827: amPerformance.sort((a, b) => (a['% OPR'] || 0) - (b['% OPR'] || 0));
+L4829: amPerformance.sort((a, b) => (b['% OPR'] || 0) - (a['% OPR'] || 0));
+L4833: const amOpr = amPerformance.map(r => roundNum(r['% OPR']));
+L4834: const chartHeight = Math.max(250, ams.length * 30);
+L4837: chart: { type: 'bar', height: chartHeight, toolbar: { show: false }, background: 'transparent' },
+L4838: series: [{ name: '% OPR', data: amOpr }],
+L4849: if (oprAmChart) oprAmChart.destroy();
+L4850: oprAmChart = new ApexCharts(document.querySelector("#chart-opr-am"), amOptions);
+L4851: oprAmChart.render();
+L4854: function renderOprDashboard() {
+L4855: const opr = globalData.opr;
+L4857: document.getElementById('opr-total-vol').innerText = (opr.total_volume || 0).toLocaleString();
+L4858: document.getElementById('opr-total-ot').innerText = (opr.total_ontime || 0).toLocaleString();
+L4859: document.getElementById('opr-total-late').innerText = (opr.total_late || 0).toLocaleString();
+L4861: // Render Overall OPR card
+L4862: const overallRate = opr.overall_opr !== undefined ? roundNum(opr.overall_opr) : null;
+L4863: document.getElementById('opr-overall-rate').innerText = overallRate !== null ? overallRate + " %" : "- %";
+L4865: const diffN1El = document.getElementById('opr-kpi-diff-n1');
+L4866: const diffWkEl = document.getElementById('opr-kpi-diff-wk');
+L4868: const deltaN1 = opr.delta_n1;
+L4872: const deltaWk = opr.delta_wk;
+L4876: // Render OPR Time slots bar chart
+L4877: const slots = opr.time_slots ? opr.time_slots.map(r => r['Khung giờ tạo'] || r['khung_gio_tao_don']) : [];
+L4878: const slotOpr = opr.time_slots ? opr.time_slots.map(r => roundNum(r['% OPR'])) : [];
+L4881: chart: { type: 'bar', height: 250, toolbar: { show: false }, background: 'transparent' },
+L4882: series: [{ name: '% OPR', data: slotOpr }],
+L4893: if (oprSlotsChart) oprSlotsChart.destroy();
+L4894: oprSlotsChart = new ApexCharts(document.querySelector("#chart-opr-slots"), slotsOptions);
+L4895: oprSlotsChart.render();
+L4897: // Render OPR by AM rankings
+L4898: renderOprAmChartOnly();
+L4901: const tbodyErrors = document.querySelector('#table-opr-errors tbody');
+L4903: if (opr.error_reasons) {
+L4904: opr.error_reasons.forEach(r => {
+L4924: filteredData.oe_details = opr.oe_details || [];
+L4927: function renderOprDetailsTable() {
+L4934: function renderAgingDashboard() {
+L4997: function renderAgingDetailsTable() {
+L5039: function renderTreoDashboard() {
+L5110: function renderTreoDetailsTable() {
+L5238: function renderUnstablePo(data) {
+L5313: let volCustomerChart = null;
+L5314: let volProvinceChart = null;
+L5315: let volTreemapChart = null;
+L5386: const updateSelect = (selectEl, options, selectedVal, defaultLabel) => {
+L5456: function renderVolumeCreation(data) {
+L5637: if (volCustomerChart) { volCustomerChart.destroy(); volCustomerChart = null; }
+L5638: if (volProvinceChart) { volProvinceChart.destroy(); volProvinceChart = null; }
+L5639: if (volTreemapChart) { volTreemapChart.destroy(); volTreemapChart = null; }
+L5641: if (data.charts && data.charts.line && data.charts.line.dates.length > 0) {
+L5643: chart: {
+L5649: series: data.charts.line.series,
+L5651: categories: data.charts.line.dates.map(formatMatrixDate),
+L5676: volCustomerChart = new ApexCharts(document.querySelector("#chart-volume-customer-trends"), lineOptions);
+L5677: volCustomerChart.render();
+L5680: if (data.charts && data.charts.bar && data.charts.bar.dates.length > 0) {
+L5682: chart: {
+L5691: series: data.charts.bar.series,
+L5693: categories: data.charts.bar.dates.map(formatMatrixDate),
+L5716: volProvinceChart = new ApexCharts(document.querySelector("#chart-volume-province-bars"), barOptions);
+L5717: volProvinceChart.render();
+L5720: if (data.charts && data.charts.treemap && data.charts.treemap.length > 0) {
+L5732: const treemapSeriesData = data.charts.treemap.map(item => ({
+L5739: chart: {
+L5757: const item = data.charts.treemap[dataPointIndex];
+L5773: volTreemapChart = new ApexCharts(document.querySelector("#chart-volume-treemap"), treemapOptions);
+L5774: volTreemapChart.render();
+L5778: function renderOffSpe(data) {
+L5806: const provinces = [...new Set(data.records.map(r => r.province).filter(Boolean))].sort();
+L5884: if (type === 'opr') renderOprDetailsTable();
+L5892: if (type === 'opr') total = filteredData.oe_details.length;
+L5899: if (type === 'opr') renderOprDetailsTable();
+L5916: let ntbCompletedChart = null;
+L5917: let ntbBacklogChart = null;
+L5918: let ntbLtcTrendChart = null;
+L5919: let ntbGtcTrendChart = null;
+L5929: let ntbSortCol = { ltc: 'pick_vol', gtc: 'pick_vol' };
+L5930: let ntbSortAsc = { ltc: false, gtc: false };
+L5983: function renderNtbKpiCards() {
+L6008: const updateMetricCardUI = (metric, cardIdPrefix) => {
+L6161: function renderNtbSparklines() {
+L6169: const renderSparkline = (containerId, dataArray, color) => {
+L6176: chart: {
+L6211: if (container.chartInstance) {
+L6212: container.chartInstance.destroy();
+L6214: const chart = new ApexCharts(container, sparklineOptions);
+L6215: chart.render();
+L6216: container.chartInstance = chart;
+L6285: const sortedVols = [...compVols].sort((a, b) => a.province.localeCompare(b.province));
+L6287: sortedVols.forEach(provData => {
+L6326: // Render Completed Volume Chart (Grouped bars by province)
+L6334: chart: { type: 'bar', height: 280, toolbar: { show: false }, background: 'transparent' },
+L6349: if (ntbCompletedChart) ntbCompletedChart.destroy();
+L6350: ntbCompletedChart = new ApexCharts(document.querySelector("#chart-ntb-completed"), compOptions);
+L6351: ntbCompletedChart.render();
+L6353: // Render Backlog Chart by AM
+L6361: //     chart: { type: 'bar', height: 280, toolbar: { show: false }, background: 'transparent', stacked: true },
+L6376: // if (ntbBacklogChart) ntbBacklogChart.destroy();
+L6377: // ntbBacklogChart = new ApexCharts(document.querySelector("#chart-ntb-backlog-am"), blOptions);
+L6378: // ntbBacklogChart.render();
+L6389: // Update LTC and GTC trend line charts
+L6407: chart: { type: 'line', height: 280, toolbar: { show: false }, background: 'transparent' },
+L6418: if (ntbLtcTrendChart) ntbLtcTrendChart.destroy();
+L6419: ntbLtcTrendChart = new ApexCharts(document.querySelector("#chart-ntb-ltc-trend"), ltcTrendOptions);
+L6420: ntbLtcTrendChart.render();
+L6436: chart: { type: 'line', height: 280, toolbar: { show: false }, background: 'transparent' },
+L6447: if (ntbGtcTrendChart) ntbGtcTrendChart.destroy();
+L6448: ntbGtcTrendChart = new ApexCharts(document.querySelector("#chart-ntb-gtc-trend"), gtcTrendOptions);
+L6449: ntbGtcTrendChart.render();
+L6481: function renderNtbAnalysisTable(type) {
+L6512: const sortCol = ntbSortCol[type];
+L6513: const sortAsc = ntbSortAsc[type];
+L6581: items.sort((a, b) => {
+L6583: if (sortCol === 'rank') {
+L6586: if (v1 < v2) return sortAsc ? -1 : 1;
+L6587: if (v1 > v2) return sortAsc ? 1 : -1;
+L6589: } else if (sortCol === 'name') {
+L6592: } else if (sortCol === 'am') {
+L6595: } else if (sortCol === 'pick_vol') {
+L6598: } else if (sortCol === 'total_vol') {
+L6601: } else if (sortCol === 'prop') {
+L6604: } else if (sortCol === 'pct') {
+L6607: } else if (sortCol === 'status') {
+L6612: if (v1 < v2) return sortAsc ? -1 : 1;
+L6613: if (v1 > v2) return sortAsc ? 1 : -1;
+L6653: const iconEl = document.getElementById(`sort-icon-${type}-${c}`);
+L6655: if (sortCol === c) {
+L6656: iconEl.innerText = sortAsc ? '▲' : '▼';
+L6692: function handleNtbSort(type, col) {
+L6693: if (ntbSortCol[type] === col) {
+L6694: ntbSortAsc[type] = !ntbSortAsc[type];
+L6696: ntbSortCol[type] = col;
+L6697: ntbSortAsc[type] = true;
+L6699: ntbSortAsc[type] = false;
+L6895: const provinces = Object.keys(structure).sort();
+L6904: const amNames = Object.keys(ams).sort();

@@ -1,0 +1,10 @@
+=== RAWLTC ===
+Latest Date: 2026-06-06 - Thứ 7
+Rows: 168
+Total Volume: 17666
+Total LTC Volume: 15912.0
+Weighted % LTC: 90.0713%
+
+=== DATALTC ===
+First 10 unique Time values in DataLTC: [np.float64(281.0), np.float64(262.0), np.float64(587.0), np.float64(474.0), np.float64(500.0), np.float64(166.0), np.float64(303.0), np.float64(550.0), np.float64(780.0), np.float64(271.0)]
+Date strings count in DataLTC Time: 0

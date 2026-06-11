@@ -1,0 +1,12 @@
+                    <div class="card" style="margin-bottom: 0;">
+                        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+                            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin: 0;">
+                                <i class="fa-solid fa-chart-bar" style="color: var(--color-ghn-orange); margin-right: 6px;"></i> Xếp hạng hiệu suất OPR của AM
+                            </h3>
+                            <div class="ntb-toggle-capsules" style="padding: 2px;">
+                                <div class="ntb-capsule active" id="sort-am-asc" onclick="setAmOprSort('asc')" style="padding: 2px 8px; font-size: 11px;">Thấp → Cao</div>
+                                <div class="ntb-capsule" id="sort-am-desc" onclick="setAmOprSort('desc')" style="padding: 2px 8px; font-size: 11px;">Cao → Thấp</div>
+                            </div>
+                        </div>
+                        <div id="chart-opr-am" style="min-height: 250px;"></div>
+                    </div>

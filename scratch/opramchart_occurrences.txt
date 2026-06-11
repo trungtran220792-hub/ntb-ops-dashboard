@@ -1,0 +1,4 @@
+L4789: let oprAmChart = null;
+L4849: if (oprAmChart) oprAmChart.destroy();
+L4850: oprAmChart = new ApexCharts(document.querySelector("#chart-opr-am"), amOptions);
+L4851: oprAmChart.render();

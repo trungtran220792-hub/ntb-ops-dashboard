@@ -1,0 +1,55 @@
+3461:             return false;
+3462:         }
+3463: 
+3464:         function gateMenuTabs() {
+3465:             // Define all tab mappings
+3466:             const tabIds = [
+3467:                 'tab-dashboard',
+3468:                 'tab-introduction',
+3469:                 'tab-ntb-summary',
+3470:                 'tab-operational',
+3471:                 'tab-opr',
+3472:                 'tab-backlog',
+3473:                 'tab-unstable-po',
+3474:                 'tab-off-spe',
+3475:                 'tab-volume-creation',
+3476:                 'tab-sync'
+3477:             ];
+3478: 
+3479:             let firstAllowedTab = null;
+3480: 
+3481:             tabIds.forEach(tabId => {
+3482:                 const navItem = document.getElementById('nav-' + tabId);
+3483:                 if (!navItem) return;
+3484: 
+3485:                 // Admin has all permissions. Otherwise check if tabId in userPermissions
+3486:                 const isAllowed = userRole === 'admin' || userPermissions.includes(tabId);
+3487:                 
+3488:                 if (isAllowed) {
+3489:                     navItem.style.display = 'flex';
+3490:                     if (!firstAllowedTab) firstAllowedTab = tabId;
+3491:                 } else {
+3492:                     navItem.style.display = 'none';
+3493:                 }
+3494:             });
+3495: 
+3496:             // If current active tab is not allowed, switch to the first allowed tab
+3497:             const activePanel = document.querySelector('.content-panel.active');
+3498:             const activeTabId = activePanel ? activePanel.id : 'tab-dashboard';
+3499: 
+3500:             const isCurrentAllowed = userRole === 'admin' || userPermissions.includes(activeTabId);
+3501:             if (!isCurrentAllowed && firstAllowedTab) {
+3502:                 const navBtn = document.getElementById('nav-' + firstAllowedTab);
+3503:                 if (navBtn) {
+3504:                     switchTab(firstAllowedTab, navBtn);
+3505:                 }
+3506:             }
+3507:         }
+3508: 
+3509:         async function handleLoginSubmit(event) {
+3510:             event.preventDefault();
+3511:             const usernameInput = document.getElementById('login-username');
+3512:             const passwordInput = document.getElementById('login-password');
+3513:             const errorMsg = document.getElementById('login-error-msg');
+3514:             const errorText = document.getElementById('login-error-text');
+3515: 

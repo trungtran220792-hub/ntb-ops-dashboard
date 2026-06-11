@@ -1,0 +1,10 @@
+--- STEP 1407 | Tool: replace_file_content ---
+Description: "Rename % TTC header to % ODR TTS in overview table in templates/index.html"
+Instruction: "Change column header % TTC to % ODR TTS in table-overview-provinces"
+--- TARGET CONTENT ---
+"                                    <th style=\"text-align: left;\">Tỉnh / Khu vực</th>\n                                    <th style=\"text-align: center;\">Sản lượng (GTC)</th>\n                                    <th style=\"text-align: center;\">% GTC</th>\n                                    <th style=\"text-align: center;\">Sản lượng (LTC)</th>\n                                    <th style=\"text-align: center;\">% LTC</th>\n                                    <th style=\"text-align: center;\">% TTC</th>"
+--- REPLACEMENT CONTENT ---
+"                                    <th style=\"text-align: left;\">Tỉnh / Khu vực</th>\n                                    <th style=\"text-align: center;\">Sản lượng (GTC)</th>\n                                    <th style=\"text-align: center;\">% GTC</th>\n                                    <th style=\"text-align: center;\">Sản lượng (LTC)</th>\n                                    <th style=\"text-align: center;\">% LTC</th>\n                                    <th style=\"text-align: center;\">% ODR TTS</th>"
+
+================================================================================
+

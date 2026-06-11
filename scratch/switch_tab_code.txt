@@ -1,0 +1,53 @@
+function switchTab(tabId, el) {
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.content-panel').forEach(panel => panel.classList.remove('active'));
+
+            el.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+
+            // Set header title
+            const tabName = el.innerText.trim();
+            if (tabId === 'tab-introduction') {
+                document.getElementById('page-title').innerText = "GIỚI THIỆU VÙNG NAM TRUNG BỘ";
+            } else {
+                document.getElementById('page-title').innerText = tabName + " Dashboard";
+            }
+
+            // Show/Hide baseline comparison selector based on tab
+            const isBacklogTab = tabId === 'tab-backlog';
+            document.getElementById('baseline-selector-container').style.display = isBacklogTab ? 'flex' : 'none';
+
+            // Show/Hide global filters panel based on tab (xóa cái này - hifnh3)
+            const isOpsTab = tabId === 'tab-operational' || tabId === 'tab-opr' || tabId === 'tab-backlog';
+            const globalFilters = document.getElementById('global-filters');
+            if (globalFilters) {
+                globalFilters.style.display = isOpsTab ? 'flex' : 'none';
+            }
+
+            // Update header subtitle
+            updateHeaderSubtitle(tabId);
+
+            // Handle Leaflet map resizing and positioning on tab switch
+            if (tabId === 'tab-introduction' && typeof _ntbMap !== 'undefined' && _ntbMap) {
+                setTimeout(() => {
+                    _ntbMap.invalidateSize();
+                    _ntbMap.setView([12.2, 108.2], 7);
+                }, 100);
+            }
+
+            // Force donut chart update when switching to backlog tab
+            if (tabId === 'tab-backlog') {
+                setTimeout(() => {
+                    const bl = globalData.backlog;
+                    if (bl && backlogPieChart) {
+                        const blAging = bl.aging ? bl.aging.total_backlog : 0;
+                        const blTreoGiao = bl.treo ? bl.treo.total_giao : 0;
+                        const blTreoTra = bl.treo ? bl.treo.total_tra : 0;
+                        backlogPieChart.updateSeries([blAging, blTreoGiao, blTreoTra]);
+                    }
+                }, 100);
+            }
+            if (tabId === 'tab-nhan-su') {
+                loadNhanSuData();
+            }
+        }

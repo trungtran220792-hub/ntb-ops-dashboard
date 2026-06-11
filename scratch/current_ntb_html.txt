@@ -1,0 +1,226 @@
+2100:                         <div id="chart-shifts" style="min-height: 250px;"></div>
+2101:                     </div>
+2102:                 </div>
+2103:             </div>
+2104: 
+2105:             <!-- TAB: NTB SUMMARY DASHBOARD -->
+2106:             <div id="tab-ntb-summary" class="content-panel">
+2107:                 <!-- Sub filter bar -->
+2108:                 <div class="filters-panel"
+2109:                     style="margin-bottom: 20px; background: rgba(255, 255, 255, 0.5); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 10px; display: flex; gap: 16px;">
+2110:                     <div class="filter-group" style="margin-bottom: 0;">
+2111:                         <label style="margin-bottom: 4px;">Nhóm thời gian</label>
+2112:                         <select class="select-input" id="ntb-time-group" disabled style="padding: 6px 12px;">
+2113:                             <option value="ngay">Ngày</option>
+2114:                         </select>
+2115:                     </div>
+2116:                     <div class="filter-group" style="margin-bottom: 0;">
+2117:                         <label style="margin-bottom: 4px;">Thời gian</label>
+2118:                         <select class="select-input" id="ntb-date-select" onchange="loadNtbSummaryData()"
+2119:                             style="padding: 6px 12px;">
+2120:                             <!-- Will populate dynamically -->
+2121:                         </select>
+2122:                     </div>
+2123:                 </div>
+2124: 
+2125:                 <!-- Section 1 -->
+2126:                 <div class="ntb-section-title">1. Hôm nay (chỉ số tại thời điểm hiện tại)</div>
+2127:                 <div style="display: grid; grid-template-columns: 1.2fr 1.2fr 1fr; gap: 16px; margin-bottom: 24px;">
+2128:                     <!-- Card 1: Completed Volume -->
+2129:                     <div class="card" style="margin-bottom: 0;">
+2130:                         <div class="card-header">
+2131:                             <h3>Số đơn hoàn thành</h3>
+2132:                         </div>
+2133:                         <div id="chart-ntb-completed" style="min-height: 280px; padding: 10px;"></div>
+2134:                     </div>
+2135:                     <!-- Card 2: Backlog by AM -->
+2136:                     <div class="card" style="margin-bottom: 0;">
+2137:                         <div class="card-header">
+2138:                             <h3>Số đơn chưa hoàn thành theo kế hoạch</h3>
+2139:                         </div>
+2140:                         <div id="chart-ntb-backlog-am" style="min-height: 280px; padding: 10px;"></div>
+2141:                     </div>
+2142:                     <!-- Card 3: 9-KPI Grid -->
+2143:                     <div class="card"
+2144:                         style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: stretch;">
+2145:                         <div class="card-header">
+2146:                             <h3>Chỉ số chất lượng</h3>
+2147:                         </div>
+2148:                         <div class="ntb-kpi-grid" style="flex-grow: 1; padding: 5px;">
+2149:                             <!-- ROW 1: LTC -->
+2150:                             <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-indigo);">
+2151:                                 <div class="kpi-label">% LTC</div>
+2152:                                 <div class="kpi-value" id="ntb-kpi-ltc-overall">0%</div>
+2153:                                 <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+2154:                                     <span>Toàn vùng</span>
+2155:                                     <span id="ntb-kpi-ltc-overall-trend" style="font-size: 9px; scale: 0.95;"></span>
+2156:                                 </div>
+2157:                             </div>
+2158:                             <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-indigo);">
+2159:                                 <div class="kpi-label">% LTC (LĐ)</div>
+2160:                                 <div class="kpi-value" id="ntb-kpi-ltc-lamdong">0%</div>
+2161:                                 <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+2162:                                     <span>Lâm Đồng</span>
+2163:                                     <span id="ntb-kpi-ltc-lamdong-trend" style="font-size: 9px; scale: 0.95;"></span>
+2164:                                 </div>
+2165:                             </div>
+2166:                             <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-indigo);">
+2167:                                 <div class="kpi-label">% LTC (BT)</div>
+2168:                                 <div class="kpi-value" id="ntb-kpi-ltc-binhthuan">0%</div>
+2169:                                 <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+2170:                                     <span>Bình Thuận</span>
+2171:                                     <span id="ntb-kpi-ltc-binhthuan-trend" style="font-size: 9px; scale: 0.95;"></span>
+2172:                                 </div>
+2173:                             </div>
+2174:                             <!-- ROW 2: GTC -->
+2175:                             <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-success);">
+2176:                                 <div class="kpi-label">% GTC</div>
+2177:                                 <div class="kpi-value" id="ntb-kpi-gtc-overall">0%</div>
+2178:                                 <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+2179:                                     <span>Toàn vùng</span>
+2180:                                     <span id="ntb-kpi-gtc-overall-trend" style="font-size: 9px; scale: 0.95;"></span>
+2181:                                 </div>
+2182:                             </div>
+2183:                             <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-success);">
+2184:                                 <div class="kpi-label">% GTC (LĐ)</div>
+2185:                                 <div class="kpi-value" id="ntb-kpi-gtc-lamdong">0%</div>
+2186:                                 <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+2187:                                     <span>Lâm Đồng</span>
+2188:                                     <span id="ntb-kpi-gtc-lamdong-trend" style="font-size: 9px; scale: 0.95;"></span>
+2189:                                 </div>
+2190:                             </div>
+2191:                             <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-success);">
+2192:                                 <div class="kpi-label">% GTC (BT)</div>
+2193:                                 <div class="kpi-value" id="ntb-kpi-gtc-binhthuan">0%</div>
+2194:                                 <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+2195:                                     <span>Bình Thuận</span>
+2196:                                     <span id="ntb-kpi-gtc-binhthuan-trend" style="font-size: 9px; scale: 0.95;"></span>
+2197:                                 </div>
+2198:                             </div>
+2199:                             <!-- ROW 3: TTC -->
+2200:                             <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-warning);">
+2201:                                 <div class="kpi-label">% TTC</div>
+2202:                                 <div class="kpi-value" id="ntb-kpi-ttc-overall">0%</div>
+2203:                                 <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+2204:                                     <span>Toàn vùng</span>
+2205:                                     <span id="ntb-kpi-ttc-overall-trend" style="font-size: 9px; scale: 0.95;"></span>
+2206:                                 </div>
+2207:                             </div>
+2208:                             <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-warning);">
+2209:                                 <div class="kpi-label">% TTC (LĐ)</div>
+2210:                                 <div class="kpi-value" id="ntb-kpi-ttc-lamdong">0%</div>
+2211:                                 <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+2212:                                     <span>Lâm Đồng</span>
+2213:                                     <span id="ntb-kpi-ttc-lamdong-trend" style="font-size: 9px; scale: 0.95;"></span>
+2214:                                 </div>
+2215:                             </div>
+2216:                             <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-warning);">
+2217:                                 <div class="kpi-label">% TTC (BT)</div>
+2218:                                 <div class="kpi-value" id="ntb-kpi-ttc-binhthuan">0%</div>
+2219:                                 <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+2220:                                     <span>Bình Thuận</span>
+2221:                                     <span id="ntb-kpi-ttc-binhthuan-trend" style="font-size: 9px; scale: 0.95;"></span>
+2222:                                 </div>
+2223:                             </div>
+2224:                         </div>
+2225:                     </div>
+2226:                 </div>
+2227: 
+2228:                 <!-- Section 2 -->
+2229:                 <div class="ntb-section-title">2. Snapshot LTC</div>
+2230:                 <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 24px;">
+2231:                     <!-- Line Chart: %LTC xu hướng -->
+2232:                     <div class="card" style="margin-bottom: 0;">
+2233:                         <div class="card-header">
+2234:                             <h3>%LTC xu hướng</h3>
+2235:                         </div>
+2236:                         <div id="chart-ntb-ltc-trend" style="min-height: 280px; padding: 10px;"></div>
+2237:                     </div>
+2238:                     <!-- Right: %LTC overview cards with trend comparison -->
+2239:                     <div class="card"
+2240:                         style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-around; padding: 20px;">
+2241:                         <div class="ntb-trend-kpi-card">
+2242:                             <div class="label">% LTC Toàn vùng</div>
+2243:                             <div class="value" id="ntb-trend-ltc-val">- %</div>
+2244:                             <div class="sub" id="ntb-trend-ltc-diff">So với ngày trước: -</div>
+2245:                         </div>
+2246:                         <div style="border-top: 1px solid var(--border-color); margin: 10px 0;"></div>
+2247:                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+2248:                             <div class="ntb-trend-kpi-card-sub">
+2249:                                 <div class="label">% LTC (LĐ)</div>
+2250:                                 <div class="value" id="ntb-trend-ltc-ld-val">- %</div>
+2251:                                 <div class="sub" id="ntb-trend-ltc-ld-diff">-</div>
+2252:                             </div>
+2253:                             <div class="ntb-trend-kpi-card-sub">
+2254:                                 <div class="label">% LTC (BT)</div>
+2255:                                 <div class="value" id="ntb-trend-ltc-bt-val">- %</div>
+2256:                                 <div class="sub" id="ntb-trend-ltc-bt-diff">-</div>
+2257:                             </div>
+2258:                         </div>
+2259:                     </div>
+2260:                 </div>
+2261: 
+2262:                 <!-- Matrix Table: %LTC theo bưu cục -->
+2263:                 <div class="card" style="margin-bottom: 24px;">
+2264:                     <div class="card-header"
+2265:                         style="display: flex; justify-content: space-between; align-items: center;">
+2266:                         <h3>%LTC theo bưu cục</h3>
+2267:                         <span style="font-size: 12px; color: var(--text-muted); font-style: italic;">Nhấp vào dòng AM để
+2268:                             xem chi tiết bưu cục</span>
+2269:                     </div>
+2270:                     <div class="table-responsive">
+2271:                         <table class="custom-table ntb-matrix-table" id="table-ntb-ltc-matrix">
+2272:                             <!-- We will build the thead and tbody dynamically -->
+2273:                         </table>
+2274:                     </div>
+2275:                 </div>
+2276: 
+2277:                 <!-- Section 3 -->
+2278:                 <div class="ntb-section-title">3. Snapshot GTC</div>
+2279:                 <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 24px;">
+2280:                     <!-- Line Chart: %GTC xu hướng -->
+2281:                     <div class="card" style="margin-bottom: 0;">
+2282:                         <div class="card-header">
+2283:                             <h3>%GTC xu hướng</h3>
+2284:                         </div>
+2285:                         <div id="chart-ntb-gtc-trend" style="min-height: 280px; padding: 10px;"></div>
+2286:                     </div>
+2287:                     <!-- Right: %GTC overview cards with trend comparison -->
+2288:                     <div class="card"
+2289:                         style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-around; padding: 20px;">
+2290:                         <div class="ntb-trend-kpi-card">
+2291:                             <div class="label">% GTC Toàn vùng</div>
+2292:                             <div class="value" id="ntb-trend-gtc-val">- %</div>
+2293:                             <div class="sub" id="ntb-trend-gtc-diff">So với ngày trước: -</div>
+2294:                         </div>
+2295:                         <div style="border-top: 1px solid var(--border-color); margin: 10px 0;"></div>
+2296:                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+2297:                             <div class="ntb-trend-kpi-card-sub">
+2298:                                 <div class="label">% GTC (LĐ)</div>
+2299:                                 <div class="value" id="ntb-trend-gtc-ld-val">- %</div>
+2300:                                 <div class="sub" id="ntb-trend-gtc-ld-diff">-</div>
+2301:                             </div>
+2302:                             <div class="ntb-trend-kpi-card-sub">
+2303:                                 <div class="label">% GTC (BT)</div>
+2304:                                 <div class="value" id="ntb-trend-gtc-bt-val">- %</div>
+2305:                                 <div class="sub" id="ntb-trend-gtc-bt-diff">-</div>
+2306:                             </div>
+2307:                         </div>
+2308:                     </div>
+2309:                 </div>
+2310: 
+2311:                 <!-- Matrix Table: %GTC theo bưu cục -->
+2312:                 <div class="card" style="margin-bottom: 24px;">
+2313:                     <div class="card-header"
+2314:                         style="display: flex; justify-content: space-between; align-items: center;">
+2315:                         <h3>%GTC theo bưu cục</h3>
+2316:                         <span style="font-size: 12px; color: var(--text-muted); font-style: italic;">Nhấp vào dòng AM để
+2317:                             xem chi tiết bưu cục</span>
+2318:                     </div>
+2319:                     <div class="table-responsive">
+2320:                         <table class="custom-table ntb-matrix-table" id="table-ntb-gtc-matrix">
+2321:                             <!-- We will build the thead and tbody dynamically -->
+2322:                         </table>
+2323:                     </div>
+2324:                 </div>
+2325:             </div>

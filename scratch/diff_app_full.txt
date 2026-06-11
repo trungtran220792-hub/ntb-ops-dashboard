@@ -1,0 +1,88 @@
+Created At: 2026-06-10T14:53:41Z
+Completed At: 2026-06-10T14:53:44Z
+
+				The command completed successfully.
+				Output:
+				<truncated 2312 lines>
++        else:
++            all_times = set(df_gtc['Time'].dropna().unique()).union(set(df_ltc['Time'].dropna().unique()))
++            dates_sorted = sorted(list(all_times), key=lambda x: pd.to_datetime(x.split(' - ')[0]))
++            last_6_dates = dates_sorted[-6:][::-1]
+         
+         def build_matrix_data(df, vol_col, target_val_col):
+-            df_6 = df[df['Time'].isin(last_6_dates)].copy()
++            df_6 = df[df[time_col].isin(last_6_dates)].copy()
+             if len(df_6) == 0:
+                 return {'dates': last_6_dates, 'rows': []}
+                 
+-            # Group by AM, Chi tiết, Time
+-            grouped = df_6.groupby(['mapped_am', 'Chi tiết', 'Time']).agg({'Volume': 'sum', target_val_col: 'sum'}).reset_index()
++            # Group by AM, Chi tiết, Time/Week
++            grouped = df_6.groupby(['mapped_am', 'Chi tiết', time_col]).agg({'Volume': 'sum', target_val_col: 'sum'}).reset_index()
+             
+-            # AM overall totals for each date
+-            am_totals = df_6.groupby(['mapped_am', 'Time']).agg({'Volume': 'sum', target_val_col: 'sum'}).reset_index()
++            # AM overall totals for each Time/Week
++            am_totals = df_6.groupby(['mapped_am', time_col]).agg({'Volume': 'sum', target_val_col: 'sum'}).reset_index()
+             
+             rows = []
+             unique_ams = sorted(df_6['mapped_am'].unique())
+@@ -2617,7 +3386,7 @@ def api_matrix_tables():
+                 am_time_df = am_totals[am_totals['mapped_am'] == am]
+                 totals_dict = {}
+                 for d in last_6_dates:
+-                    d_row = am_time_df[am_time_df['Time'] == d]
++                    d_row = am_time_df[am_time_df[time_col] == d]
+                     if len(d_row) > 0:
+                         vol = float(d_row['Volume'].iloc[0])
+                         target_val = float(d_row[target_val_col].iloc[0])
+@
+<truncated 4206 bytes>
+spe_url", "tao_don_url"])
++            if has_urls:
++                print("Auto-sync: Starting background sync from Google Sheets...")
++                if SYNC_STATUS["status"] != "processing":
++                    SYNC_STATUS["status"] = "processing"
++                    SYNC_STATUS["error"] = None
++                    SYNC_STATUS["progress"] = "Đang tự động đồng bộ trong nền..."
++                    async_sync_task(is_admin_flag=True)
++                    print("Auto-sync: Background sync complete.")
++                else:
++                    print("Auto-sync: Sync already in progress, skipping.")
++        except Exception as e:
++            print(f"Auto-sync error: {e}")
++        # Đồng bộ lại sau mỗi 15 phút
++        time.sleep(15 * 60)
++
+ def startup_cache_init():
+     update_all_caches()
+     try:
+@@ -3181,11 +3988,22 @@ def startup_cache_init():
+                 add_to_history(aging, treo)
+     except Exception as e:
+         print(f"Error initializing history: {e}")
+-
+-# Optimize to run cache initialization on startup thread upon import (for Gunicorn)
+-# But in local debug mode, only run it once to prevent double execution
+-if not app.debug or os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
+-    threading.Thread(target=startup_cache_init, daemon=True).start()
++    
++    # Khởi chạy luồng tự động đồng bộ trong nền
++    threading.Thread(target=auto_sync_loop, daemon=True).start()
++
++import sys
++is_utility = any(
++    x in sys.argv[0].lower() for x in [
++        'profile_endpoints', 'test_api_speed', 'check_dates', 
++        'check_mapped_ams', 'check_raw_data_dates', 'inspect_gtc_mapping',
++        'inspect_server_co_cau', 'query_api', 'test_trends_keys',
++        'verify_api_calls', 'verify_api_ngay'
++    ]
++)
++if not is_utility:
++    if not app.debug or os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
++        threading.Thread(target=startup_cache_init, daemon=True).start()
+ 
+ if __name__ == '__main__':
+     print("Dashboard server starts on http://0.0.0.0:5000/")
+

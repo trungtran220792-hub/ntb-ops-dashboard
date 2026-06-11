@@ -1,0 +1,10 @@
+--- STEP 1107 | Tool: replace_file_content ---
+Description: "Close header div tag and format the quality cards grid container start tag"
+Instruction: "Close the header flexbox div before starting the grid of metric cards"
+--- TARGET CONTENT ---
+"                <div class=\"card\" style=\"margin-bottom: 24px; padding: 24px;\">\n                    <div style=\"display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;\">\n                        <h3 style=\"margin: 0; font-size: 18px; font-weight: 700;\">Chỉ số chất lượng NTB</h3>\n                        <!-- Region Capsule Selector -->\n                                <div style=\"display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;\">"
+--- REPLACEMENT CONTENT ---
+"                <div class=\"card\" style=\"margin-bottom: 24px; padding: 24px;\">\n                    <div style=\"display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;\">\n                        <h3 style=\"margin: 0; font-size: 18px; font-weight: 700;\">Chỉ số chất lượng NTB</h3>\n                        <!-- Region Capsule Selector -->\n                    </div>\n                    <div style=\"display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;\">"
+
+================================================================================
+

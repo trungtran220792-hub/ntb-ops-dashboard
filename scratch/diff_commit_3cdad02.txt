@@ -1,0 +1,19 @@
+diff --git a/templates/index.html b/templates/index.html
+index f4436ca..a595538 100644
+--- a/templates/index.html
++++ b/templates/index.html
+@@ -1986,12 +1986,12 @@
+                     </div>
+                     <div class="kpi-card">
+                         <div class="kpi-header">
+-                            <span>Tỷ lệ LTC (Lần đầu)</span>
++                            <span>Tỷ lệ LTC</span>
+                             <i class="fa-solid fa-paper-plane"></i>
+                         </div>
+                         <div class="kpi-value" id="kpi-ltc">- %</div>
+                         <div class="kpi-comparison" id="kpi-ltc-comparison"></div>
+-                        <div class="kpi-trend trend-neutral">Tỷ lệ lần giao đầu</div>
++                        <div class="kpi-trend trend-neutral">Tỷ lệ lấy hàng thành công</div>
+                     </div>
+                     <div class="kpi-card warning">
+                         <div class="kpi-header">

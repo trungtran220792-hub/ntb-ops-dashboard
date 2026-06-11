@@ -1,0 +1,82 @@
+Created At: 2026-06-11T02:24:20Z
+Completed At: 2026-06-11T02:24:24Z
+
+				The command completed successfully.
+				Output:
+				<truncated 1980 lines>
++        // ==========================================
++        let nhanSuData = null;
++
++        function formatNumber(val) {
++            return (val || 0).toLocaleString();
++        }
++
++        async function loadNhanSuData() {
++            const tbody = document.getElementById('table-nhan-su-body');
++            try {
++                const res = await fetch(getApiUrl('/api/nhan-su'), getFetchOptions());
++                if (!res.ok) {
++                    throw new Error("Lỗi tải API nhân sự");
++                }
++                const data = await res.json();
++                nhanSuData = data;
++                
++                // Populate cards
++                document.getElementById('ns-card-active').innerText = formatNumber(data.active_headcount || 0);
++                document.getElementById('ns-card-resigned').innerText = formatNumber(data.resigned_headcount || 0);
++                document.getElementById('ns-card-po').innerText = formatNumber(data.po_count || 0);
++
++                // Render table
++                renderNhanSuTable();
++            } catch (err) {
++                console.error("Lỗi khi load dữ liệu nhân sự: ", err);
++                if (tbody) {
++                    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--color-danger); padding: 32px;"><i class="fa-solid fa-circle-exclamation"></i> Không thể tải dữ liệu: ${err.message}</td></tr>`;
++                }
++            }
++        }
++
++        function renderNhanSuTable() {
++            const tbody = document.getElementById('table-nhan-su-body');
++            if (!tbody || !nhanSuData || !nhanSuData.pos) return;
++
++            const query = document.getElementById('ns-search-input').value.toLowerCase().trim();
++            
++            const grandTotalHtml = document.getElementById('ns-row-grand-total').outerHTML;
++            tbo
+<truncated 4206 bytes>
+elector('.ns-col-diff');
++                if (diff > 0) {
++                    diffCol.innerHTML = `<span class="badge" style="background-color: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">+${diff} cần tuyển</span>`;
++                } else {
++                    diffCol.innerHTML = `<span class="badge" style="background-color: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">Đủ định biên</span>`;
++                }
++
++                totalHc += hc;
++                totalVol2025 += vol2025;
++                totalVol2026 += vol2026;
++                totalHcNeeded += hcNeeded;
++            });
++
++            const totalHcDisplay = 0; 
++            const totalDiff = totalHcNeeded - totalHcDisplay;
++
++            document.getElementById('ns-total-hc').innerText = totalHcDisplay;
++            document.getElementById('ns-total-vol2025').innerText = formatNumber(totalVol2025);
++            document.getElementById('ns-total-vol2026').innerText = formatNumber(totalVol2026);
++            document.getElementById('ns-total-hc-needed').innerText = formatNumber(totalHcNeeded);
++
++            const globalGrowth = parseFloat(document.getElementById('ns-input-global-growth').value) || 10;
++            document.getElementById('ns-total-growth').innerText = globalGrowth + '%';
++
++            const totalDiffCol = document.getElementById('ns-total-diff');
++            if (totalDiff > 0) {
++                totalDiffCol.innerHTML = `<span class="badge" style="background-color: #fee2e2; color: #991b1b; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 700;">+${totalDiff} cần tuyển</span>`;
++            } else {
++                totalDiffCol.innerHTML = `<span class="badge" style="background-color: #dcfce7; color: #166534; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 700;">Đủ định biên</span>`;
++            }
++        }
+     </script>
+ 
+     <!-- GHN AI Chat Widget -->
+

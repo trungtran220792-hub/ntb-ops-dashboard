@@ -1,0 +1,15 @@
+Line 1759: <li class="menu-item active" id="nav-tab-introduction" onclick="switchTab('tab-introduction', this)">
+Line 1762: <li class="menu-item" id="nav-tab-dashboard" onclick="switchTab('tab-dashboard', this)">
+Line 1765: <li class="menu-item" id="nav-tab-ntb-summary" onclick="switchTab('tab-ntb-summary', this)">
+Line 1768: <li class="menu-item" id="nav-tab-operational" onclick="switchTab('tab-operational', this)">
+Line 1771: <li class="menu-item" id="nav-tab-opr" onclick="switchTab('tab-opr', this)">
+Line 1774: <li class="menu-item" id="nav-tab-backlog" onclick="switchTab('tab-backlog', this)">
+Line 1777: <li class="menu-item" id="nav-tab-unstable-po" onclick="switchTab('tab-unstable-po', this)">
+Line 1780: <li class="menu-item" id="nav-tab-off-spe" onclick="switchTab('tab-off-spe', this)">
+Line 1783: <li class="menu-item" id="nav-tab-volume-creation" onclick="switchTab('tab-volume-creation', this)">
+Line 1786: <li class="menu-item" id="nav-tab-sync" onclick="switchTab('tab-sync', this)">
+Line 2095: <div class="kpi-card danger" id="kpi-unstable-po-card" style="cursor: pointer;" onclick="switchTab('tab-unstable-po', document.querySelector('[onclick*=\'tab-unstable-po\']'))">
+Line 2104: <div class="kpi-card info" id="kpi-off-spe-card" style="cursor: pointer;" onclick="switchTab('tab-off-spe', document.querySelector('[onclick*=\'tab-off-spe\']'))">
+Line 2117: <div class="kpi-card info" id="kpi-volume-creation-card" style="cursor: pointer;" onclick="switchTab('tab-volume-creation', document.querySelector('[onclick*=\'tab-volume-creation\']'))">
+Line 3343: function switchTab(tabId, el) {
+Line 3504: switchTab(firstAllowedTab, navBtn);

@@ -1,0 +1,9 @@
+=== STEP 1415 | Tool: replace_file_content ===
+Description: "Update target rates for ranking tables in templates/index.html"
+Instruction: "Change target variables for LTC and GTC ranking tables to 90% and 65%"
+
+--- TARGET CONTENT ---
+"            let items = [];\n            const target = type === 'ltc' ? 80 : 60;"
+
+--- REPLACEMENT CONTENT ---
+"            let items = [];\n            const target = type === 'ltc' ? 90 : 65;"

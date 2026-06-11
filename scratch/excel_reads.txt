@@ -1,0 +1,45 @@
+L9: # Monkey patch pd.ExcelFile and pd.read_excel to use read_only=True by default for openpyxl
+L11: _original_ExcelFile = pd.ExcelFile
+L12: def _patched_ExcelFile(*args, **kwargs):
+L21: return _original_ExcelFile(*args, **kwargs)
+L22: pd.ExcelFile = _patched_ExcelFile
+L24: _original_read_excel = pd.read_excel
+L25: def _patched_read_excel(*args, **kwargs):
+L27: if not isinstance(io, _original_ExcelFile):
+L36: return _original_read_excel(*args, **kwargs)
+L37: pd.read_excel = _patched_read_excel
+L258: def load_sheet_cached(excel_filename, sheet_name, load_fn):
+L470: df = pd.read_excel(xls, sheet_name=xls.sheet_names[idx])
+L501: df = pd.read_excel(xls, sheet_name=xls.sheet_names[idx])
+L571: df = pd.read_excel(xls, sheet_name=s)
+L640: return pd.read_excel(xls, sheet_name=xls.sheet_names[idx])
+L647: df = pd.read_excel(xls, sheet_name=xls.sheet_names[idx])
+L682: with pd.ExcelFile(file_path) as xls:
+L884: with pd.ExcelFile(file_path) as xls_meta:
+L888: df_opr = load_sheet_cached('OPR TTS.xlsx', 'OPR', lambda p: pd.read_excel(p, sheet_name="OPR"))
+L890: df_oe = load_sheet_cached('OPR TTS.xlsx', 'OE_madh', lambda p: pd.read_excel(p, sheet_name="OE_madh"))
+L892: df_rawopr = load_sheet_cached('OPR TTS.xlsx', 'rawopr', lambda p: pd.read_excel(p, sheet_name="rawopr"))
+L999: df_oe = pd.read_excel(file_path, sheet_name="OE_madh")
+L1039: df_raw = load_sheet_cached('Aging _5 ngày.xlsx', 'Đơn giao aging trên 5 ngày', lambda p: pd.read_excel(p, sheet_name="Đơn giao aging trên 5 ngày"))
+L1041: df_co_cau = load_sheet_cached('Aging _5 ngày.xlsx', 'Cơ cấu', lambda p: pd.read_excel(p, sheet_name="Cơ cấu"))
+L1121: df_raw = load_sheet_cached('Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx', 'stuck', lambda p: pd.read_excel(p, sheet_name="stuck"))
+L1123: df_co_cau = load_sheet_cached('Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx', 'Cơ cấu', lambda p: pd.read_excel(p, sheet_name="Cơ cấu"))
+L1269: with pd.ExcelFile(file_path) as xls_meta:
+L1281: df_raw = load_sheet_cached('buu_cuc_bat_on.xlsx', f'raw_{sheet_name}', lambda p: pd.read_excel(p, sheet_name=sheet_name, header=None))
+L1341: df_cc = load_sheet_cached('co_cau_ntb.xlsx', 'Sheet1', lambda p: pd.read_excel(p, sheet_name='Sheet1'))
+L1459: with pd.ExcelFile(file_path) as xls_meta:
+L1471: df_raw = load_sheet_cached('off_tuyen_spe.xlsx', sheet_name, lambda p: pd.read_excel(p, sheet_name=sheet_name))
+L1725: with pd.ExcelFile(file_path) as xls_meta:
+L1737: df_raw = load_sheet_cached('buu_cuc_bat_on.xlsx', f'raw_{sheet_name}', lambda p: pd.read_excel(p, sheet_name=sheet_name, header=None))
+L1776: with pd.ExcelFile(file_path) as xls_meta:
+L1779: df = load_sheet_cached('vols_tao_don.xlsx', sheet_name, lambda p: pd.read_excel(p, sheet_name=sheet_name))
+L1826: with pd.ExcelFile(p) as xls:
+L1830: raw_gtc = load_sheet_cached('Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', 'gtc', lambda p: load_ops_sheet_raw(p, 'gtc'))
+L1832: raw_ltc = load_sheet_cached('Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', 'ltc', lambda p: load_ops_sheet_raw(p, 'ltc'))
+L1834: raw_co_cau = load_sheet_cached('Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', 'co_cau', lambda p: load_ops_sheet_raw(p, 'co_cau'))
+L1837: raw_tts = load_sheet_cached('Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', 'tts', lambda p: load_ops_sheet_raw(p, 'tts'))
+L1883: raw_aging = load_sheet_cached('Aging _5 ngày.xlsx', 'Đơn giao aging trên 5 ngày', lambda p: pd.read_excel(p, sheet_name="Đơn giao aging trên 5 ngày"))
+L1885: raw_co_cau_aging = load_sheet_cached('Aging _5 ngày.xlsx', 'Cơ cấu', lambda p: pd.read_excel(p, sheet_name="Cơ cấu"))
+L1914: raw_treo = load_sheet_cached('Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx', 'stuck', lambda p: pd.read_excel(p, sheet_name="stuck"))
+L1916: raw_co_cau_treo = load_sheet_cached('Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx', 'Cơ cấu', lambda p: pd.read_excel(p, sheet_name="Cơ cấu"))
+L3513: df = pd.read_excel(path, sheet_name='Sheet1')

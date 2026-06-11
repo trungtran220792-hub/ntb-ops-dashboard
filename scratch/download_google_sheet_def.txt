@@ -1,0 +1,40 @@
+L395: def download_google_sheet(url, output_path):
+L396:     if not url or not url.strip():
+L397:         return True, "Không có link, sử dụng file local."
+L398:         
+L399:     url = url.strip()
+L400:     if not (url.startswith("https://docs.google.com/spreadsheets/") or url.startswith("http://docs.google.com/spreadsheets/")):
+L401:         return False, "Link không hợp lệ. Phải bắt đầu bằng https://docs.google.com/spreadsheets/"
+L402:         
+L403:     if "/export" in url:
+L404:         export_url = url
+L405:     else:
+L406:         match = re.search(r'/spreadsheets/d/([a-zA-Z0-9-_]+)', url)
+L407:         if not match:
+L408:             return False, "Không tìm thấy Spreadsheet ID hợp lệ trong link."
+L409:         spreadsheet_id = match.group(1)
+L410:         export_url = f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}/export?format=xlsx"
+L411:     
+L412:     import urllib.request
+L413:     import http.client
+L414:     import time
+L415:     
+L416:     max_retries = 3
+L417:     for attempt in range(1, max_retries + 1):
+L418:         try:
+L419:             req = urllib.request.Request(
+L420:                 export_url,
+L421:                 headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)'}
+L422:             )
+L423:             with urllib.request.urlopen(req, timeout=90) as response:
+L424:                 # Read in chunks to avoid incomplete read errors
+L425:                 CHUNK_SIZE = 1024 * 64 # 64 KB
+L426:                 with open(output_path, 'wb') as f:
+L427:                     while True:
+L428:                         chunk = response.read(CHUNK_SIZE)
+L429:                         if not chunk:
+L430:                             break
+L431:                         f.write(chunk)
+L432:                 return True, "Tải thành công."
+L433:         except (http.client.IncompleteRead, urllib.error.URLError, TimeoutError) as e:
+L434:             if attempt == max_retries:

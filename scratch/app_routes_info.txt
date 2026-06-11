@@ -1,0 +1,294 @@
+=========================================
+ROUTE: /api/summary-dashboard (found at index 103140)
+=========================================
+@app.route('/api/summary-dashboard')
+@requires_permission('tab-dashboard')
+def api_summary_dashboard():
+    try:
+        df_gtc, df_ltc, df_aging, df_treo = get_dataframes()
+        
+        # Filters from query params
+        am = request.args.get('am')
+        province = request.args.get('province')
+        post_office = request.args.get('post_office')
+        selected_date = request.args.get('date')
+        
+        # Find latest date dynamically
+        all_times = set(df_gtc['Time'].dropna().unique()).union(set(df_ltc['Time'].dropna().unique()))
+        dates_sorted = sorted(list(all_times), key=lambda x: pd.to_datetime(x.split(' - ')[0]))
+        if not dates_sorted:
+            return jsonify({"error": "Không có dữ liệu ngày trong Datagtc hoặc Dataltc"})
+            
+        if selected_date and selected_date in dates_sorted:
+            latest_date = selected_date
+        else:
+            latest_date = dates_sorted[-1]
+        
+        prev_date = dates_sorted[-2] if len(dates_sorted) >= 2 else None
+        
+        # Find same day of week last week (7 days ago)
+        latest_dt = pd.to_datetime(latest_date.split(' - ')[0])
+        last_week_date = None
+        for d in dates_sorted:
+            dt = pd.to_datetime(d.split(' - ')[0])
+            if (latest_dt - dt).days == 7:
+                last_week_date = d
+                break
+                
+        def compute_kpi_for_date(date_str, filter_am=None, filter_prov=None, filter_po=None):
+            if not date_str:
+                return None
+            gtc_d = df_gtc[df_gtc['Time'] == date_str]
+            ltc_d = df_ltc[df_ltc['Time'] == date_str]
+            
+            gtc_d = apply_filters(gtc_d, filter_am, filter_prov, filter_po)
+            ltc_d = apply_filters(ltc_d, filter_am, filter_prov, filter_po)
+            
+            ltc_vol = ltc_d['Volume'].sum()
+            ltc_done = ltc_d['ltc_vol'].sum()
+            gtc_vol = gtc_d['Volume'].sum()
+            gtc_done = gtc_d['delivered_vol'].sum()
+            ttc_done = gtc_d['ttc_vol'].sum()
+            
+            return {
+                'ltc': round((ltc_done / ltc_vol * 100), 2) if ltc_vol > 0 else 0.0,
+                'gtc': round((gtc_done / gtc_vol * 100), 2) if gtc_vol > 0 else 0.0,
+                'ttc': round((ttc_done / gtc_vol * 100), 2) if gtc_vol > 0 else 0.0,
+                'vol_ltc': int(ltc_vol),
+                'vol_gtc': int(gtc_vol)
+            }
+        
+        # Filter for latest date
+        today_gtc = df_gtc[df_gtc['Time'] == latest_date]
+        today_ltc = df_ltc[df_ltc['Time'] == latest_date]
+        
+        # Apply filters to today's data
+        today_gtc = apply_filters(today_gtc, am, province, post_office)
+        today_ltc = apply_filters(today_ltc, am, province, post_office)
+        
+        # Apply filters to backlog datasets
+        curr_aging = apply_filters(df_aging, am, province, post_office)
+        curr_treo = apply_filters(df_treo, am, province, post_office)
+        
+        # 1. Completed Volume Grouped by Province
+        gtc_prov = today_gtc.groupby('mapped_prov').agg({'Volume': 'sum', 'delivered_vol': 'sum', 'ttc_vol': 'sum'}).reset_index()
+        ltc_prov = today_ltc.groupby('mapped_prov').agg({'Volume': 'sum', 'ltc_vol': 'sum'}).reset_index()
+        
+        merged_prov = pd.merge(gtc_prov, ltc_prov, on='mapped_prov', suffixes=('_gtc', '_ltc'), how='outer').fillna(0)
+        completed_vols = []
+        for _, r in merged_prov.iterrows():
+            prov_name = r['mapped_prov']
+            completed_vols.append({
+                'province': prov_name,
+                'LTC': int(r['ltc_vol']),
+                'GTC': int(r['delivered_vol']),
+                'TTC': int(r['ttc_vol']),
+                'LTC_pct': round((r['ltc_vol'] / r['Volume_ltc'] * 100), 2) if r['Volume_ltc'] > 0 else 0.0,
+                'GTC_pct': round((r['delivered_vol'] / r['Volume_gtc'] * 100), 2) if r['Volume_gtc'] > 0 else 0.0,
+                'TTC_pct': round((r['ttc_vol'] / r['Volume_gtc'] * 100), 2) if r['Volume_gtc'] > 0 else 0.0,
+                'Volume_gtc': int(r['Volume_gtc']),
+                'Volume_ltc': int(r['Volume_ltc'])
+            })
+            
+        # 2. Backlog by AM
+        treo_giao = curr_treo[curr_treo['Loại đơn'] == 'Luân chuyển giao']
+        treo_tra = curr_treo[curr_treo['Loại đơn'] == 'Luân chuyển trả']
+        
+        aging_am = curr_aging.groupby('mapped_am').size().reset_index(name='chua_giao')
+        treo_giao_am = treo_giao.groupby('mapped_am').size().reset_index(name='chua_lay')
+        treo_tra_am = treo_tra.groupby('mapped_am').size().reset_index(name='chua_tra')
+        
+        backlog_am = pd.merge(treo_giao_am, aging_am, on='mapped_am', how='outer')
+        backlog_am = pd.merge(backlog_am, treo_tra_am, on='mapped_am', how='outer').fillna(0)
+        
+        backlog_by_am = []
+        for _, r in backlog_am.iterrows():
+            backlog_by_am.append({
+                'am': r['mapped_am'],
+                'chua_lay': int(r['chua_lay']),
+                'chua_giao': int(r['chua_giao']),
+                'chua_tra': int(r['chua_tra'])
+            })
+            
+        # 3. Overall & Province-specific KPIs
+        kpis = {}
+        
+        def format_kpi_dict(latest_kpi, prev_kpi, lw_kpi):
+            res = {
+                'ltc': latest_kpi['ltc'] if latest_kpi else 0.0,
+                'gtc': latest_kpi['gtc'] if latest_kpi else 0.0,
+                'ttc': latest_kpi['ttc'] if latest_kpi else 0.0,
+                'vol_ltc': latest_kpi['vol_ltc'] if latest_kpi else 0,
+                'vol_gtc': latest_kpi['vol_gtc'] if latest_kpi else 0
+            }
+            if latest_kpi:
+                if prev_kpi:
+                    res['dod'] = {
+                        'ltc': round(latest_kpi['ltc'] - prev_kpi['ltc'], 2),
+                        'gtc': round(latest_kpi['gtc'] - prev_kpi['gtc'], 2),
+                        'ttc': round(latest_kpi['ttc'] - prev_kpi['ttc'], 2)
+                    }
+                else:
+                    res['dod'] = None
+                
+                if lw_kpi:
+                    res['wow'] = {
+                        'ltc': round(latest_kpi['ltc'] - lw_kpi['ltc'], 2),
+                        'gtc': round(latest_kpi['gtc'] - lw_kpi['gtc'], 2),
+                        'ttc': round(latest_kpi['ttc'] - lw_kpi['ttc'], 2)
+                    }
+                else:
+                    res['wow'] = None
+            else:
+                res['dod'] = None
+                res['wow'] = None
+            return res
+            
+        overall_latest = compute_kpi_for_date(latest_date, am, province, post_office)
+        overall_prev = compute_kpi_for_date(prev_date, am, province, post_office) if prev_date else None
+        overall_lw = compute_kpi_for_date(last_week_date, am, province, post_office) if last_week_date else None
+        
+        kpis['overall'] = format_kpi_dict(overall_latest, overall_prev, overall_lw)
+        
+        # Compute for each province
+        all_provinces = set(df_ltc['mapped_prov'].unique()).union(set(df_gtc['mapped_prov'].unique()))
+        for prov_name in all_provinces:
+            if prov_name == "Không xác định":
+                continue
+            prov_latest = compute_kpi_for_date(latest_date, am, prov_name, post_office)
+            prov_prev = compute_kpi_for_date(prev_date, am, prov_name, post_office) if prev_date else None
+            prov_lw = compute_kpi_for_date(last_week_date, am, prov_name, post_office) if last_week_date else None
+            
+            clean_key = clean_str_key(prov_name)
+            kpis[clean_key] = format_kpi_dict(prov_latest, prov_prev, prov_lw)
+            kpis[clean_key]['name'] = prov_name
+            
+        return jsonify(clean_nan({
+            'latest_date': latest_date,
+            'all_dates': dates_sorted[::-1],
+            'completed_vols': completed_vols,
+            'backlog_by_am': backlog_by_am,
+            'kpis': kpis
+        }))
+        
+    except Exception as e:
+        import traceback
+        print(traceback.format_exc())
+        return jsonify({"error": f"Lỗi tính toán summary: {str(e)}"}), 500
+
+
+
+=========================================
+ROUTE: /api/opr (found at index 88952)
+=========================================
+@app.route('/api/opr')
+@requires_permission('tab-opr')
+def get_opr():
+    global OPR_CACHE
+    with CACHE_LOCK:
+        if OPR_CACHE is None:
+            OPR_CACHE = process_opr_report()
+    return jsonify(clean_nan(OPR_CACHE))
+
+
+
+=========================================
+ROUTE: /api/matrix-tables (found at index 115145)
+=========================================
+@app.route('/api/matrix-tables')
+@requires_permission('tab-volume-creation')
+def api_matrix_tables():
+    try:
+        df_gtc, df_ltc, _, _ = get_dataframes()
+        
+        am_filter = request.args.get('am')
+        province_filter = request.args.get('province')
+        post_office_filter = request.args.get('post_office')
+        
+        # Apply filters
+        df_gtc_f = apply_filters(df_gtc, am_filter, province_filter, post_office_filter)
+        df_ltc_f = apply_filters(df_ltc, am_filter, province_filter, post_office_filter)
+        
+        # Find last 6 dates available
+        all_times = set(df_gtc['Time'].dropna().unique()).union(set(df_ltc['Time'].dropna().unique()))
+        dates_sorted = sorted(list(all_times), key=lambda x: pd.to_datetime(x.split(' - ')[0]))
+        last_6_dates = dates_sorted[-6:][::-1]
+        
+        def build_matrix_data(df, vol_col, target_val_col):
+            df_6 = df[df['Time'].isin(last_6_dates)].copy()
+            if len(df_6) == 0:
+                return {'dates': last_6_dates, 'rows': []}
+                
+            # Group by AM, Chi tiết, Time
+            grouped = df_6.groupby(['mapped_am', 'Chi tiết', 'Time']).agg({'Volume': 'sum', target_val_col: 'sum'}).reset_index()
+            
+            # AM overall totals for each date
+            am_totals = df_6.groupby(['mapped_am', 'Time']).agg({'Volume': 'sum', target_val_col: 'sum'}).reset_index()
+            
+            rows = []
+            unique_ams = sorted(df_6['mapped_am'].unique())
+            
+            for am in unique_ams:
+                if am == "Không xác định":
+                    continue
+                
+                am_time_df = am_totals[am_totals['mapped_am'] == am]
+                totals_dict = {}
+                for d in last_6_dates:
+                    d_row = am_time_df[am_time_df['Time'] == d]
+                    if len(d_row) > 0:
+                        vol = float(d_row['Volume'].iloc[0])
+                        target_val = float(d_row[target_val_col].iloc[0])
+                        pct = round((target_val / vol * 100), 2) if vol > 0 else 0.0
+                        totals_dict[d] = {'vol': int(vol), 'pct': pct}
+                    else:
+                        totals_dict[d] = {'vol': 0, 'pct': 0.0}
+                        
+                am_details_df = grouped[grouped['mapped_am'] == am]
+                unique_pos = sorted(am_details_df['Chi tiết'].unique())
+                pos_list = []
+                
+                for po in unique_pos:
+                    po_time_df = am_details_df[am_details_df['Chi tiết'] == po]
+                    po_data_dict = {}
+                    for d in last_6_dates:
+                        d_row = po_time_df[po_time_df['Time'] == d]
+                        if len(d_row) > 0:
+                            vol = float(d_row['Volume'].iloc[0])
+                            target_val = float(d_row[target_val_col].iloc[0])
+                            pct = round((target_val / vol * 100), 2) if vol > 0 else 0.0
+                            po_data_dict[d] = {'vol': int(vol), 'pct': pct}
+                        else:
+                            po_data_dict[d] = {'vol': 0, 'pct': 0.0}
+                    pos_list.append({
+                        'bc': po,
+                        'data': po_data_dict
+                    })
+                    
+                rows.append({
+                    'am': am,
+                    'is_header': True,
+                    'totals': totals_dict,
+                    'pos': pos_list
+                })
+                
+            return {
+                'dates': last_6_dates,
+                'rows': rows
+            }
+            
+        ltc_matrix = build_matrix_data(df_ltc_f, 'Volume', 'ltc_vol')
+        gtc_matrix = build_matrix_data(df_gtc_f, 'Volume', 'delivered_vol')
+        
+        return jsonify(clean_nan({
+            'ltc': ltc_matrix,
+            'gtc': gtc_matrix
+        }))
+        
+    except Exception as e:
+        import traceback
+        print(traceback.format_exc())
+        return jsonify({"error": f"Lỗi tính toán matrix tables: {str(e)}"}), 500
+
+
+

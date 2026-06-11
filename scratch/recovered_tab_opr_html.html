@@ -1,0 +1,85 @@
+<!-- TAB 3: OPR TTS -->
+            <div id="tab-opr" class="content-panel">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-header"><span>Tổng đơn OPR</span></div>
+                        <div class="kpi-value" id="opr-total-vol">0</div>
+                    </div>
+                    <div class="kpi-card success">
+                        <div class="kpi-header"><span>Đơn đúng hạn</span></div>
+                        <div class="kpi-value" id="opr-total-ot">0</div>
+                    </div>
+                    <div class="kpi-card danger">
+                        <div class="kpi-header"><span>Đơn trễ hạn</span></div>
+                        <div class="kpi-value" id="opr-total-late">0</div>
+                    </div>
+                </div>
+
+                <div class="columns-layout">
+                    <!-- OPR by Time slots -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>% OPR theo khung giờ tạo đơn</h3>
+                        </div>
+                        <div id="chart-opr-slots" style="min-height: 250px;"></div>
+                    </div>
+                    <!-- OPR by AM -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Biểu đồ OPR xếp hạng lỗi trễ của AM</h3>
+                        </div>
+                        <div id="chart-opr-am" style="min-height: 250px;"></div>
+                    </div>
+                </div>
+
+                <div class="columns-layout">
+                    <!-- Error Reasons weight -->
+                    <div class="card" style="flex-grow: 1.5;">
+                        <div class="card-header">
+                            <h3>Tỷ trọng và lý do trễ hạn OPR</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="custom-table" id="table-opr-errors">
+                                <thead>
+                                    <tr>
+                                        <th>Lý do trễ</th>
+                                        <th>Số đơn trễ</th>
+                                        <th>Tỷ trọng %</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detail list of day N-1 errors -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Tra cứu Chi tiết Đơn lỗi ngày N-1 (AM Check Shop)</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="custom-table" id="table-opr-details">
+                            <thead>
+                                <tr>
+                                    <th>Mã vận đơn</th>
+                                    <th>Tỉnh</th>
+                                    <th>Kho/Bưu cục lấy</th>
+                                    <th>Tên Shop</th>
+                                    <th>AM phụ trách</th>
+                                    <th>Lý do trễ</th>
+                                    <th>Khung giờ tạo</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="pagination" id="opr-details-pagination">
+                        <button class="btn btn-secondary" onclick="prevPage('opr')">Trước</button>
+                        <span id="opr-page-num">1 / 1</span>
+                        <button class="btn btn-secondary" onclick="nextPage('opr')">Sau</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: BACKLOG

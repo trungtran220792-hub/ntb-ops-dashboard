@@ -1,0 +1,24 @@
+Line 2962: function getApiUrl(endpoint) {
+Line 2968: function getFetchOptions(options = {}) {
+Line 3110: const res = await fetch(getApiUrl('/api/user-role'), getFetchOptions());
+Line 3145: const res = await fetch(getApiUrl('/api/config'), getFetchOptions());
+Line 3174: const res = await fetch(getApiUrl('/api/config'), getFetchOptions({
+Line 3207: const opsPromise = fetch(getApiUrl('/api/operational'), getFetchOptions()).then(r => r.json());
+Line 3208: const oprPromise = fetch(getApiUrl('/api/opr'), getFetchOptions()).then(r => r.json());
+Line 3209: const backlogPromise = fetch(getApiUrl(`/api/backlog?baseline=${baseline}`), getFetchOptions()).then(r => r.json());
+Line 3210: const unstablePromise = fetch(getApiUrl('/api/unstable-po'), getFetchOptions()).then(r => r.json());
+Line 3211: const offSpePromise = fetch(getApiUrl('/api/off-spe'), getFetchOptions()).then(r => r.json());
+Line 3212: const volCreationPromise = fetch(getApiUrl('/api/volume-creation'), getFetchOptions()).then(r => r.json());
+Line 3259: const res = await fetch(getApiUrl('/api/files-status'), getFetchOptions());
+Line 3287: <a href="${getApiUrl('/api/download-template?filename=' + encodeURIComponent(f.name))}"
+Line 3341: const res = await fetch(getApiUrl('/api/upload'), getFetchOptions({
+Line 3367: const res = await fetch(getApiUrl('/api/history'), getFetchOptions());
+Line 3399: const res = await fetch(getApiUrl('/api/sync'), getFetchOptions({ method: 'POST' }));
+Line 3409: const statusRes = await fetch(getApiUrl('/api/sync/status'), getFetchOptions());
+Line 3447: const res = await fetch(getApiUrl(`/api/backlog?baseline=${baseline}`), getFetchOptions());
+Line 4485: const res = await fetch(getApiUrl(`/api/volume-creation?${queryParams.toString()}`), getFetchOptions());
+Line 4982: const summaryRes = await fetch(getApiUrl(`/api/summary-dashboard?${params.toString()}`), getFetchOptions());
+Line 5175: const trendsRes = await fetch(getApiUrl(`/api/trends-dashboard?${params.toString()}`), getFetchOptions());
+Line 5279: const matrixRes = await fetch(getApiUrl(`/api/matrix-tables?${params.toString()}`), getFetchOptions());
+Line 5442: const res = await fetch(getApiUrl('/api/chat'), getFetchOptions({
+Line 5496: const res = await fetch(getApiUrl('/api/ntb-structure'), getFetchOptions());

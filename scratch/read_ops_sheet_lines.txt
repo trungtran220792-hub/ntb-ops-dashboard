@@ -1,0 +1,40 @@
+401:     elif pd.isna(obj):
+402:         return None
+403:     return obj
+404: 
+405: def read_ops_sheet(xls, sheet_type):
+406:     sheet_names_lower = [s.strip().lower() for s in xls.sheet_names]
+407:     
+408:     if sheet_type == "gtc":
+409:         for candidate in ["datagtc", "data"]:
+410:             if candidate in sheet_names_lower:
+411:                 idx = sheet_names_lower.index(candidate)
+412:                 df = pd.read_excel(xls, sheet_name=xls.sheet_names[idx])
+413:                 
+414:                 # Normalize column names in df to standard GTC ones
+415:                 cols_lower = {c.strip().lower(): c for c in df.columns}
+416:                 rename_map = {}
+417:                 core_gtc_cols = {
+418:                     'cấp quản lý': 'Cấp Quản Lý',
+419:                     'chi tiết': 'Chi tiết',
+420:                     'loại hàng': 'Loại Hàng',
+421:                     'time': 'Time',
+422:                     'volume': 'Volume',
+423:                     '% gán': '% Gán',
+424:                     '% gtc': '% GTC',
+425:                     '% chuyển trả': '% Chuyển trả',
+426:                     'leadtime': 'Leadtime',
+427:                     'am': 'AM',
+428:                     'tỉnh': 'Tỉnh'
+429:                 }
+430:                 for k, standard_name in core_gtc_cols.items():
+431:                     if k in cols_lower and cols_lower[k] != standard_name:
+432:                         rename_map[cols_lower[k]] = standard_name
+433:                 if rename_map:
+434:                     df = df.rename(columns=rename_map)
+435:                 return df
+436:         raise ValueError(f"Không tìm thấy sheet GTC (cần Datagtc hoặc Data) trong file. Các sheet hiện có: {xls.sheet_names}")
+437:         
+438:     elif sheet_type == "ltc":
+439:         # First priority: look for dataltc, rawltc, datalts, ltc
+440:         for candidate in ["dataltc", "rawltc", "datalts", "ltc"]:

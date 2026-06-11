@@ -1,0 +1,7 @@
+Total lines: 295
+Last 100 matching lines:
++ CategoryInfo          : NotSpecified: (WARNING: This i...server instead.:String) [], RemoteException
++ FullyQualifiedErrorId : NativeCommandError
+127.0.0.1 - - [09/Jun/2026 01:25:21] "POST /api/sync HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:39:43] "POST /api/sync HTTP/1.1" 200 -
+127.0.0.1 - - [09/Jun/2026 07:39:46] "GET /api/sync/status HTTP/1.1" 404 -

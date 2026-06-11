@@ -1,0 +1,6 @@
+=== BC 158 on 2026-05-30 in rawltc ===
+         Cấp quản lý                                Chi tiết             Ca                Time  Volume  %Gán      %LTC       %LC            Leadtime
+23  NTB - Bình Thuận  BC 158 Quốc lộ 55-Tánh Linh-Bình Thuận       Hàng Tồn  2026-05-30 - Thứ 7      60   1.0  0.900000  0.900000  26.613636363636363
+50  NTB - Bình Thuận  BC 158 Quốc lộ 55-Tánh Linh-Bình Thuận  Hàng Mới Ca 1  2026-05-30 - Thứ 7     527   1.0  0.888046  0.886148   5.905701754385965
+Volume sum: 587
+

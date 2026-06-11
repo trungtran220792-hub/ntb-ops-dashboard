@@ -1,0 +1,9 @@
+Sheet names: ['Tổng quan', 'Trang tính12', 'Bưu cục', 'Thứ cùng kỳ', 'Ca1 - Ca2 - Tồn', 'Trang tính6', 'Data', 'TTS', 'DataLTC', 'ODR TTS', 'rawltc', 'Sheet13', 'Cơ cấu']
+Columns for sheet 'Cơ cấu': ['Mã bưu cục', 'Bưu cục', 'BC', 'Tỉnh', 'Am', 'ID - Họ Tên Am']
+First 5 rows:
+   Mã bưu cục                             Bưu cục                                  BC        Tỉnh                 Am     ID - Họ Tên Am
+0        1909          Kho Trung Chuyển Khánh Hòa          Kho Trung Chuyển Khánh Hòa   Khánh Hòa    Nguyễn Tiến Lực    Nguyễn Tiến Lực
+1    20336000  Kho Chuyển Tiếp Đức Trọng-Lâm Đồng  Kho Chuyển Tiếp Đức Trọng-Lâm Đồng    Lâm Đồng         Võ Tấn Lợi         Võ Tấn Lợi
+2    20797000            Kho Chuyển Tiếp Đắk Nông            Kho Chuyển Tiếp Đắk Nông    Đắk Nông      Trần Công Hậu      Trần Công Hậu
+3    20745000          Kho Chuyển Tiếp Bình Thuận          Kho Chuyển Tiếp Bình Thuận  Bình Thuận  Nguyễn Ngọc Khánh  Nguyễn Ngọc Khánh
+4    22915000    Kho Chuyển Tiếp Bảo Lộc-Lâm Đồng    Kho Chuyển Tiếp Bảo Lộc-Lâm Đồng    Lâm Đồng    Nguyễn Tiến Lực    Nguyễn Tiến Lực

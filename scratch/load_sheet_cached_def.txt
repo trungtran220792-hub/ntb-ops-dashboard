@@ -1,0 +1,40 @@
+L240: def load_sheet_cached(excel_filename, sheet_name, load_fn):
+L241:     """
+L242:     Loads a sheet from an Excel file, caching it as a pickle file.
+L243:     If the pickle file exists and is newer than the Excel file, loads from pickle.
+L244:     Otherwise, parses Excel, saves pickle, and returns the dataframe.
+L245:     """
+L246:     excel_path = resolve_path(excel_filename, write=False)
+L247:     safe_sheet = "".join(c for c in sheet_name if c.isalnum() or c in ('_', '-')).strip()
+L248:     pkl_filename = f".cache_{excel_filename}_{safe_sheet}.pkl"
+L249:     pkl_path = resolve_path(pkl_filename, write=True)
+L250:     
+L251:     excel_exists = os.path.exists(excel_path)
+L252:     pkl_exists = os.path.exists(pkl_path)
+L253:     
+L254:     if pkl_exists:
+L255:         if not excel_exists or os.path.getmtime(pkl_path) >= os.path.getmtime(excel_path):
+L256:             try:
+L257:                 df = pd.read_pickle(pkl_path)
+L258:                 return df
+L259:             except Exception as e:
+L260:                 print(f"Error reading pickle cache for {excel_filename} [{sheet_name}]: {e}")
+L261:                 
+L262:     if not excel_exists:
+L263:         raise FileNotFoundError(f"Không tìm thấy file: {excel_filename}")
+L264:         
+L265:     df = load_fn(excel_path)
+L266:     
+L267:     try:
+L268:         df.to_pickle(pkl_path)
+L269:     except Exception as e:
+L270:         print(f"Error saving pickle cache for {excel_filename} [{sheet_name}]: {e}")
+L271:         
+L272:     return df
+L273: 
+L274: WORKSPACE_DIR = os.getcwd()
+L275: 
+L276: def load_config():
+L277:     defaults = {
+L278:         "ops_url": os.environ.get("OPS_URL", ""),
+L279:         "opr_url": os.environ.get("OPR_URL", ""),

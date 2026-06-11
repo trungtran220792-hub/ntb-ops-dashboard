@@ -1,0 +1,128 @@
+Total diff sections: 28
+
+Section 1: @@ -1634,80 +1634,6 @@
+  Deleted count: 74, Added count: 0
+  First deleted: -        }
+
+Section 2: @@ -1764,11 +1690,11 @@
+  Deleted count: 4, Added count: 4
+  First deleted: -                <li class="menu-item active" id="nav-tab-introduction" onclick="switchTab('tab-introduction', this)">
+  First added:   +                <li class="menu-item active" id="nav-tab-dashboard" onclick="switchTab('tab-dashboard', this)">
+
+Section 3: @@ -1791,7 +1717,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -                                <li class="menu-item" id="nav-tab-nhan-su" onclick="switchTab('tab-nhan-su', this)">
+  First added:   +                <li class="menu-item" id="nav-tab-nhan-su" onclick="switchTab('tab-nhan-su', this)">
+
+Section 4: @@ -1811,7 +1737,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -                    <h1 id="page-title">GIỚI THIỆU VÙNG NAM TRUNG BỘ</h1>
+  First added:   +                    <h1 id="page-title">Tổng quan Dashboard</h1>
+
+Section 5: @@ -1857,7 +1783,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -            <div id="tab-introduction" class="content-panel active">
+  First added:   +            <div id="tab-introduction" class="content-panel">
+
+Section 6: @@ -2049,7 +1975,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -            <div id="tab-dashboard" class="content-panel">
+  First added:   +            <div id="tab-dashboard" class="content-panel active">
+
+Section 7: @@ -2059,6 +1985,7 @@
+  Deleted count: 0, Added count: 1
+  First added:   +                        <div class="kpi-trend trend-neutral">Target: 60.0%</div>
+
+Section 8: @@ -2067,6 +1994,7 @@
+  Deleted count: 0, Added count: 1
+  First added:   +                        <div class="kpi-trend trend-neutral">Tỷ lệ gán đơn hàng</div>
+
+Section 9: @@ -2075,6 +2003,7 @@
+  Deleted count: 0, Added count: 1
+  First added:   +                        <div class="kpi-trend trend-neutral">Gán đơn TTS</div>
+
+Section 10: @@ -2094,14 +2023,14 @@
+  Deleted count: 3, Added count: 3
+  First deleted: -                    <div class="kpi-card success">
+  First added:   +                    <div class="kpi-card">
+
+Section 11: @@ -2177,6 +2106,57 @@
+  Deleted count: 0, Added count: 51
+  First added:   +
+
+Section 12: @@ -2186,9 +2166,8 @@
+  Deleted count: 2, Added count: 1
+  First deleted: -                        <select class="select-input" id="ntb-time-group" onchange="onTimeGroupChange()" style="padding: 6px 12px;">
+  First added:   +                        <select class="select-input" id="ntb-time-group" disabled style="padding: 6px 12px;">
+
+Section 13: @@ -2202,9 +2181,7 @@
+  Deleted count: 3, Added count: 1
+  First deleted: -
+  First added:   +                <div style="display: grid; grid-template-columns: 1.2fr 1.2fr 1fr; gap: 16px; margin-bottom: 24px;">
+
+Section 14: @@ -2219,202 +2196,186 @@
+  Deleted count: 177, Added count: 161
+  First deleted: -                </div>
+  First added:   +                    <!-- Card 3: 9-KPI Grid -->
+
+Section 15: @@ -3121,7 +3082,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -            <!-- TAB 6: DATA SYNC & FILES STATUS -->
+  First added:   +            <!-- TAB: NHÂN SỰ -->
+
+Section 16: @@ -3195,7 +3156,6 @@
+  Deleted count: 1, Added count: 0
+  First deleted: -
+
+Section 17: @@ -3214,66 +3174,54 @@
+  Deleted count: 52, Added count: 40
+  First deleted: -                    <div style="margin-bottom: 24px;">
+  First added:   +                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; margin-bottom: 24px;">
+
+Section 18: @@ -3345,6 +3293,7 @@
+  Deleted count: 0, Added count: 1
+  First added:   +                                    <label class="permission-item"><input type="checkbox" value="tab-nhan-su"> Quản lý Nhân sự</label>
+
+Section 19: @@ -3522,6 +3471,7 @@
+  Deleted count: 0, Added count: 1
+  First added:   +
+
+Section 20: @@ -3933,16 +3883,35 @@
+  Deleted count: 3, Added count: 22
+  First deleted: -                    document.getElementById('sheet-consolidated-url').value = config.consolidated_url || '';
+  First added:   +                    document.getElementById('sheet-ops-url').value = config.ops_url || '';
+
+Section 21: @@ -3971,6 +3940,92 @@
+  Deleted count: 0, Added count: 86
+  First added:   +        async function sendTelegramAiBriefing() {
+
+Section 22: @@ -4051,8 +4106,8 @@
+  Deleted count: 2, Added count: 2
+  First deleted: -                            <div class="file-icon ${f.exists ? '' : 'missing'}" style="${f.exists ? 'background-color: rgba(16, 185, 129, 0.1); color
+  First added:   +                            <div class="file-icon ${f.exists ? '' : 'missing'}">
+
+Section 23: @@ -4072,7 +4127,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -                                    <input type="file" style="display: none;" onchange="uploadFile(this.files[0], '${f.name}')" accept=".csv">
+  First added:   +                                    <input type="file" style="display: none;" onchange="uploadFile(this.files[0], '${f.name}')" accept=".xlsx, .xls">
+
+Section 24: @@ -4107,8 +4162,8 @@
+  Deleted count: 2, Added count: 2
+  First deleted: -            if (ext !== 'csv') {
+  First added:   +            if (ext !== 'xlsx' && ext !== 'xls') {
+
+Section 25: @@ -4430,17 +4485,8 @@
+  Deleted count: 9, Added count: 0
+  First deleted: -            if (document.getElementById('kpi-gan')) {
+
+Section 26: @@ -4476,36 +4522,6 @@
+  Deleted count: 30, Added count: 0
+  First deleted: -            const ganDeltas = getCompareDeltas(ops.trend_gtc, '% Gán');
+
+Section 27: @@ -4533,21 +4549,6 @@
+  Deleted count: 15, Added count: 0
+  First deleted: -                    </div>
+
+Section 28: @@ -7040,6 +7041,131 @@
+  Deleted count: 0, Added count: 125
+  First added:   +

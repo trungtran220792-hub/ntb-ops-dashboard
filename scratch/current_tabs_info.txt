@@ -1,0 +1,150 @@
+Found tab-ntb-summary starting at line 2106: <div id="tab-ntb-summary" class="content-panel">
+Found tab-ntb-summary ending at line 2325: </div>
+--- CONTENT OF tab-ntb-summary (220 lines) ---
+2106:             <div id="tab-ntb-summary" class="content-panel">
+2107:                 <!-- Sub filter bar -->
+2108:                 <div class="filters-panel"
+2109:                     style="margin-bottom: 20px; background: rgba(255, 255, 255, 0.5); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 10px; display: flex; gap: 16px;">
+2110:                     <div class="filter-group" style="margin-bottom: 0;">
+2111:                         <label style="margin-bottom: 4px;">Nhóm thời gian</label>
+2112:                         <select class="select-input" id="ntb-time-group" disabled style="padding: 6px 12px;">
+2113:                             <option value="ngay">Ngày</option>
+2114:                         </select>
+2115:                     </div>
+2116:                     <div class="filter-group" style="margin-bottom: 0;">
+2117:                         <label style="margin-bottom: 4px;">Thời gian</label>
+2118:                         <select class="select-input" id="ntb-date-select" onchange="loadNtbSummaryData()"
+2119:                             style="padding: 6px 12px;">
+2120:                             <!-- Will populate dynamically -->
+2121:                         </select>
+2122:                     </div>
+2123:                 </div>
+2124: 
+2125:                 <!-- Section 1 -->
+2126:                 <div class="ntb-section-title">1. Hôm nay (chỉ số tại thời điểm hiện tại)</div>
+2127:                 <div style="display: grid; grid-template-columns: 1.2fr 1.2fr 1fr; gap: 16px; margin-bottom: 24px;">
+2128:                     <!-- Card 1: Completed Volume -->
+2129:                     <div class="card" style="margin-bottom: 0;">
+2130:                         <div class="card-header">
+2131:                             <h3>Số đơn hoàn thành</h3>
+2132:                         </div>
+2133:                         <div id="chart-ntb-completed" style="min-height: 280px; padding: 10px;"></div>
+2134:                     </div>
+2135:                     <!-- Card 2: Backlog by AM -->
+2136:                     <div class="card" style="margin-bottom: 0;">
+2137:                         <div class="card-header">
+2138:                             <h3>Số đơn chưa hoàn thành theo kế hoạch</h3>
+2139:                         </div>
+2140:                         <div id="chart-ntb-backlog-am" style="min-height: 280px; padding: 10px;"></div>
+2141:                     </div>
+2142:                     <!-- Card 3: 9-KPI Grid -->
+2143:                     <div class="card"
+2144:                         style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: stretch;">
+2145:                         <div class="card-header">
+2146:                             <h3>Chỉ số chất lượng</h3>
+2147:                         </div>
+2148:                         <div class="ntb-kpi-grid" style="flex-grow: 1; padding: 5px;">
+2149:                             <!-- ROW 1: LTC -->
+2150:                             <div class="ntb-kpi-card" style="border-left: 3px solid var(--color-indigo);">
+2151:                                 <div class="kpi-label">% LTC</div>
+2152:                                 <div class="kpi-value" id="ntb-kpi-ltc-overall">0%</div>
+2153:                                 <div class="kpi-subtext" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+2154:                                     <span>Toàn vùng</span>
+2155:                                     <span id="ntb-kpi-ltc-overall-trend" style="font-size: 9px; scale: 0.95;"></span>
+...
+2305:                                 <div class="sub" id="ntb-trend-gtc-bt-diff">-</div>
+2306:                             </div>
+2307:                         </div>
+2308:                     </div>
+2309:                 </div>
+2310: 
+2311:                 <!-- Matrix Table: %GTC theo bưu cục -->
+2312:                 <div class="card" style="margin-bottom: 24px;">
+2313:                     <div class="card-header"
+2314:                         style="display: flex; justify-content: space-between; align-items: center;">
+2315:                         <h3>%GTC theo bưu cục</h3>
+2316:                         <span style="font-size: 12px; color: var(--text-muted); font-style: italic;">Nhấp vào dòng AM để
+2317:                             xem chi tiết bưu cục</span>
+2318:                     </div>
+2319:                     <div class="table-responsive">
+2320:                         <table class="custom-table ntb-matrix-table" id="table-ntb-gtc-matrix">
+2321:                             <!-- We will build the thead and tbody dynamically -->
+2322:                         </table>
+2323:                     </div>
+2324:                 </div>
+2325:             </div>
+Found tab-opr starting at line 2416: <div id="tab-opr" class="content-panel">
+Found tab-opr ending at line 2497: </div>
+--- CONTENT OF tab-opr (82 lines) ---
+2416:             <div id="tab-opr" class="content-panel">
+2417:                 <div class="kpi-grid">
+2418:                     <div class="kpi-card">
+2419:                         <div class="kpi-header"><span>Tổng đơn OPR</span></div>
+2420:                         <div class="kpi-value" id="opr-total-vol">0</div>
+2421:                     </div>
+2422:                     <div class="kpi-card success">
+2423:                         <div class="kpi-header"><span>Đơn đúng hạn</span></div>
+2424:                         <div class="kpi-value" id="opr-total-ot">0</div>
+2425:                     </div>
+2426:                     <div class="kpi-card danger">
+2427:                         <div class="kpi-header"><span>Đơn trễ hạn</span></div>
+2428:                         <div class="kpi-value" id="opr-total-late">0</div>
+2429:                     </div>
+2430:                 </div>
+2431: 
+2432:                 <div class="columns-layout">
+2433:                     <!-- OPR by Time slots -->
+2434:                     <div class="card">
+2435:                         <div class="card-header">
+2436:                             <h3>% OPR theo khung giờ tạo đơn</h3>
+2437:                         </div>
+2438:                         <div id="chart-opr-slots" style="min-height: 250px;"></div>
+2439:                     </div>
+2440:                     <!-- OPR by AM -->
+2441:                     <div class="card">
+2442:                         <div class="card-header">
+2443:                             <h3>Biểu đồ OPR xếp hạng lỗi trễ của AM</h3>
+2444:                         </div>
+2445:                         <div id="chart-opr-am" style="min-height: 250px;"></div>
+2446:                     </div>
+2447:                 </div>
+2448: 
+2449:                 <div class="columns-layout">
+2450:                     <!-- Error Reasons weight -->
+2451:                     <div class="card" style="flex-grow: 1.5;">
+2452:                         <div class="card-header">
+2453:                             <h3>Tỷ trọng và lý do trễ hạn OPR</h3>
+2454:                         </div>
+2455:                         <div class="table-responsive">
+2456:                             <table class="custom-table" id="table-opr-errors">
+2457:                                 <thead>
+2458:                                     <tr>
+2459:                                         <th>Lý do trễ</th>
+2460:                                         <th>Số đơn trễ</th>
+2461:                                         <th>Tỷ trọng %</th>
+2462:                                     </tr>
+2463:                                 </thead>
+2464:                                 <tbody></tbody>
+2465:                             </table>
+...
+2477:                             <thead>
+2478:                                 <tr>
+2479:                                     <th>Mã vận đơn</th>
+2480:                                     <th>Tỉnh</th>
+2481:                                     <th>Kho/Bưu cục lấy</th>
+2482:                                     <th>Tên Shop</th>
+2483:                                     <th>AM phụ trách</th>
+2484:                                     <th>Lý do trễ</th>
+2485:                                     <th>Khung giờ tạo</th>
+2486:                                 </tr>
+2487:                             </thead>
+2488:                             <tbody></tbody>
+2489:                         </table>
+2490:                     </div>
+2491:                     <div class="pagination" id="opr-details-pagination">
+2492:                         <button class="btn btn-secondary" onclick="prevPage('opr')">Trước</button>
+2493:                         <span id="opr-page-num">1 / 1</span>
+2494:                         <button class="btn btn-secondary" onclick="nextPage('opr')">Sau</button>
+2495:                     </div>
+2496:                 </div>
+2497:             </div>

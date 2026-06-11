@@ -1,0 +1,1 @@
+"            let items = [];\n            const target = type === 'ltc' ? 90 : 65;"

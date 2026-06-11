@@ -1,0 +1,1236 @@
+Line 5917: function switchNtbRegion(regionKey, btnEl) {
+CONTEXT:
+  5918:             activeNtbRegion = regionKey;
+  5919: 
+  5920:             // Toggle active state in UI
+  5921:             document.querySelectorAll('#ntb-region-capsules .capsule-btn').forEach(btn => {
+  5922:                 btn.classList.remove('active');
+  5923:             });
+  5924:             if (btnEl) {
+  5925:                 btnEl.classList.add('active');
+  5926:             }
+  5927: 
+  5928:             // Re-render KPI cards instantly from cache
+  5929:             renderNtbKpiCards();
+  5930: 
+  5931:             // Re-render analysis tables instantly from cache
+  5932:             renderNtbAnalysisTable('ltc');
+  5933:             renderNtbAnalysisTable('gtc');
+  5934:         }
+  5935: 
+  5936:         function matchNtbRegion(amName, regionKey) {
+  5937:             if (regionKey === 'overall') return true;
+  5938:             if (!amName) return false;
+  5939:             const mapping = {
+  5940:                 'lam_dong': ['lâm đồng', 'lam_dong', 'lam dong'],
+  5941:                 'binh_thuan': ['bình thuận', 'binh_thuan', 'binh thuan'],
+  5942:                 'khanh_hoa': ['khánh hòa', 'khanh_hoa', 'khanh hoa'],
+  5943:                 'dak_nong': ['đắk nông', 'dak_nong', 'dak nong'],
+  5944:                 'ninh_thuan': ['ninh thuận', 'ninh_thuan', 'ninh thuan']
+  5945:             };
+  5946:             const targets = mapping[regionKey];
+  5947:             if (!targets) return true;
+  5948:             const nameLower = amName.toLowerCase();
+  5949:             return targets.some(target => nameLower.includes(target));
+  5950:         }
+  5951: 
+  5952:         function getProvinceTrendData(regionKey, trends) {
+  5953:             if (!trends) return null;
+  5954:             if (regionKey === 'overall') return trends.overall;
+  5955: 
+  5956:             const mapping = {
+  5957:                 'lam_dong': ['lâm_đồng', 'lâm đồng', 'lam_dong', 'lam dong'],
+  5958:                 'binh_thuan': ['bình_thuận', 'bình thuận', 'binh_thuan', 'binh thuan'],
+  5959:                 'khanh_hoa': ['khánh_hòa', 'khánh hòa', 'khanh_hoa', 'khanh hoa'],
+  5960:                 'dak_nong': ['đắk_nông', 'đắk nông', 'dak_nong', 'dak_nong', 'dak nong'],
+  5961:                 'ninh_thuan': ['ninh_thuận', 'ninh thuận', 'ninh_thuan', 'ninh thuan']
+  5962:             };
+  5963: 
+  5964:             const keys = mapping[regionKey] || [regionKey];
+  5965:             for (let k of keys) {
+  5966:                 if (trends[k]) return trends[k];
+  5967:                 const matchingKey = Object.keys(trends).find(tk => tk.toLowerCase() === k.toLowerCase() || tk.toLowerCase().replace(/\s+/g, '_') === k.toLowerCase().replace(/\s+/g, '_'));
+  5968:                 if (matchingKey) return trends[matchingKey];
+  5969:             }
+  5970:             return null;
+  5971:         }
+  5972: 
+  5973:         function formatDiff(diff) {
+  5974:             if (diff === null || diff === undefined || isNaN(diff)) return '-';
+  5975:             const num = Number(diff);
+  5976:             const sign = num > 0 ? '+' : '';
+  5977:             const color = num > 0 ? 'var(--color-success)' : (num < 0 ? 'var(--color-danger)' : 'var(--text-muted)');
+  5978:             const icon = num > 0 ? '▲' : (num < 0 ? '▼' : '');
+  5979:             return `<span style="color: ${color}; font-weight: 700;">${icon} ${sign}${roundNum(num)}%</span>`;
+  5980:         }
+  5981: 
+  5982:         function renderNtbKpiCards() {
+  5983:             if (!cachedNtbSummaryData) return;
+  5984:             const am = document.getElementById('filter-am').value;
+  5985:             const prov = document.getElementById('filter-province').value;
+  5986:             const po = document.getElementById('filter-po').value;
+  5987: 
+  5988:             const timeGroupEl = document.getElementById('ntb-time-group');
+  5989:             const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';
+  5990: 
+  5991:             const regionConfig = {
+  5992:                 'overall': { label: 'Toàn vùng', kpiKey: 'overall' },
+  5993:                 'lam_dong': { label: 'Lâm Đồng', kpiKey: 'lam_dong' },
+  5994:                 'binh_thuan': { label: 'Bình Thuận', kpiKey: 'binh_thuan' },
+  5995:                 'khanh_hoa': { label: 'Khánh Hòa', kpiKey: 'khanh_hoa' },
+  5996:                 'dak_nong': { label: 'Đắk Nông', kpiKey: 'dak_nong' },
+  5997:                 'ninh_thuan': { label: 'Ninh Thuận', kpiKey: 'ninh_thuan' }
+  5998:             };
+  5999: 
+  6000:             const cfg = regionConfig[activeNtbRegion] || regionConfig['overall'];
+  6001: 
+  6002:             let activeLabel = cfg.label;
+  6003:             if (am || prov || po) {
+  6004:                 activeLabel = 'Đã lọc';
+  6005:             }
+  6006: 
+  6007:             document.getElementById('ltc-active-region').innerText = `(${activeLabel})`;
+  6008:             document.getElementById('gtc-active-region').innerText = `(${activeLabel})`;
+  6009:             document.getElementById('ttc-active-region').innerText = `(${activeLabel})`;
+  6010: 
+  6011:             let kpiData = null;
+  6012:             if (am || prov || po) {
+  6013:                 kpiData = cachedNtbSummaryData.kpis ? cachedNtbSummaryData.kpis.overall : null;
+  6014:             } else {
+  6015:                 kpiData = cachedNtbSummaryData.kpis ? cachedNtbSummaryData.kpis[cfg.kpiKey] : null;
+  6016:             }
+  6017: 
+--------------------------------------------------
+Line 5936: function matchNtbRegion(amName, regionKey) {
+CONTEXT:
+  5937:             if (regionKey === 'overall') return true;
+  5938:             if (!amName) return false;
+  5939:             const mapping = {
+  5940:                 'lam_dong': ['lâm đồng', 'lam_dong', 'lam dong'],
+  5941:                 'binh_thuan': ['bình thuận', 'binh_thuan', 'binh thuan'],
+  5942:                 'khanh_hoa': ['khánh hòa', 'khanh_hoa', 'khanh hoa'],
+  5943:                 'dak_nong': ['đắk nông', 'dak_nong', 'dak nong'],
+  5944:                 'ninh_thuan': ['ninh thuận', 'ninh_thuan', 'ninh thuan']
+  5945:             };
+  5946:             const targets = mapping[regionKey];
+  5947:             if (!targets) return true;
+  5948:             const nameLower = amName.toLowerCase();
+  5949:             return targets.some(target => nameLower.includes(target));
+  5950:         }
+  5951: 
+  5952:         function getProvinceTrendData(regionKey, trends) {
+  5953:             if (!trends) return null;
+  5954:             if (regionKey === 'overall') return trends.overall;
+  5955: 
+  5956:             const mapping = {
+  5957:                 'lam_dong': ['lâm_đồng', 'lâm đồng', 'lam_dong', 'lam dong'],
+  5958:                 'binh_thuan': ['bình_thuận', 'bình thuận', 'binh_thuan', 'binh thuan'],
+  5959:                 'khanh_hoa': ['khánh_hòa', 'khánh hòa', 'khanh_hoa', 'khanh hoa'],
+  5960:                 'dak_nong': ['đắk_nông', 'đắk nông', 'dak_nong', 'dak_nong', 'dak nong'],
+  5961:                 'ninh_thuan': ['ninh_thuận', 'ninh thuận', 'ninh_thuan', 'ninh thuan']
+  5962:             };
+  5963: 
+  5964:             const keys = mapping[regionKey] || [regionKey];
+  5965:             for (let k of keys) {
+  5966:                 if (trends[k]) return trends[k];
+  5967:                 const matchingKey = Object.keys(trends).find(tk => tk.toLowerCase() === k.toLowerCase() || tk.toLowerCase().replace(/\s+/g, '_') === k.toLowerCase().replace(/\s+/g, '_'));
+  5968:                 if (matchingKey) return trends[matchingKey];
+  5969:             }
+  5970:             return null;
+  5971:         }
+  5972: 
+  5973:         function formatDiff(diff) {
+  5974:             if (diff === null || diff === undefined || isNaN(diff)) return '-';
+  5975:             const num = Number(diff);
+  5976:             const sign = num > 0 ? '+' : '';
+  5977:             const color = num > 0 ? 'var(--color-success)' : (num < 0 ? 'var(--color-danger)' : 'var(--text-muted)');
+  5978:             const icon = num > 0 ? '▲' : (num < 0 ? '▼' : '');
+  5979:             return `<span style="color: ${color}; font-weight: 700;">${icon} ${sign}${roundNum(num)}%</span>`;
+  5980:         }
+  5981: 
+  5982:         function renderNtbKpiCards() {
+  5983:             if (!cachedNtbSummaryData) return;
+  5984:             const am = document.getElementById('filter-am').value;
+  5985:             const prov = document.getElementById('filter-province').value;
+  5986:             const po = document.getElementById('filter-po').value;
+  5987: 
+  5988:             const timeGroupEl = document.getElementById('ntb-time-group');
+  5989:             const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';
+  5990: 
+  5991:             const regionConfig = {
+  5992:                 'overall': { label: 'Toàn vùng', kpiKey: 'overall' },
+  5993:                 'lam_dong': { label: 'Lâm Đồng', kpiKey: 'lam_dong' },
+  5994:                 'binh_thuan': { label: 'Bình Thuận', kpiKey: 'binh_thuan' },
+  5995:                 'khanh_hoa': { label: 'Khánh Hòa', kpiKey: 'khanh_hoa' },
+  5996:                 'dak_nong': { label: 'Đắk Nông', kpiKey: 'dak_nong' },
+  5997:                 'ninh_thuan': { label: 'Ninh Thuận', kpiKey: 'ninh_thuan' }
+  5998:             };
+  5999: 
+  6000:             const cfg = regionConfig[activeNtbRegion] || regionConfig['overall'];
+  6001: 
+  6002:             let activeLabel = cfg.label;
+  6003:             if (am || prov || po) {
+  6004:                 activeLabel = 'Đã lọc';
+  6005:             }
+  6006: 
+  6007:             document.getElementById('ltc-active-region').innerText = `(${activeLabel})`;
+  6008:             document.getElementById('gtc-active-region').innerText = `(${activeLabel})`;
+  6009:             document.getElementById('ttc-active-region').innerText = `(${activeLabel})`;
+  6010: 
+  6011:             let kpiData = null;
+  6012:             if (am || prov || po) {
+  6013:                 kpiData = cachedNtbSummaryData.kpis ? cachedNtbSummaryData.kpis.overall : null;
+  6014:             } else {
+  6015:                 kpiData = cachedNtbSummaryData.kpis ? cachedNtbSummaryData.kpis[cfg.kpiKey] : null;
+  6016:             }
+  6017: 
+  6018:             const updateMetric = (metric, target, label1Id, val1Id, label2Id, val2Id, valueId, badgeId, subtextId) => {
+  6019:                 const valueEl = document.getElementById(valueId);
+  6020:                 const badgeEl = document.getElementById(badgeId);
+  6021:                 const subtextEl = document.getElementById(subtextId);
+  6022:                 const label1El = document.getElementById(label1Id);
+  6023:                 const val1El = document.getElementById(val1Id);
+  6024:                 const label2El = document.getElementById(label2Id);
+  6025:                 const val2El = document.getElementById(val2Id);
+  6026: 
+  6027:                 if (!valueEl) return;
+  6028: 
+  6029:                 if (!kpiData) {
+  6030:                     valueEl.innerText = '-';
+  6031:                     if (badgeEl) {
+  6032:                         badgeEl.style.display = 'none';
+  6033:                         badgeEl.innerHTML = '';
+  6034:                     }
+  6035:                     if (subtextEl) subtextEl.innerText = 'Chưa có dữ liệu';
+  6036:                     return;
+--------------------------------------------------
+Line 5982: function renderNtbKpiCards() {
+CONTEXT:
+  5983:             if (!cachedNtbSummaryData) return;
+  5984:             const am = document.getElementById('filter-am').value;
+  5985:             const prov = document.getElementById('filter-province').value;
+  5986:             const po = document.getElementById('filter-po').value;
+  5987: 
+  5988:             const timeGroupEl = document.getElementById('ntb-time-group');
+  5989:             const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';
+  5990: 
+  5991:             const regionConfig = {
+  5992:                 'overall': { label: 'Toàn vùng', kpiKey: 'overall' },
+  5993:                 'lam_dong': { label: 'Lâm Đồng', kpiKey: 'lam_dong' },
+  5994:                 'binh_thuan': { label: 'Bình Thuận', kpiKey: 'binh_thuan' },
+  5995:                 'khanh_hoa': { label: 'Khánh Hòa', kpiKey: 'khanh_hoa' },
+  5996:                 'dak_nong': { label: 'Đắk Nông', kpiKey: 'dak_nong' },
+  5997:                 'ninh_thuan': { label: 'Ninh Thuận', kpiKey: 'ninh_thuan' }
+  5998:             };
+  5999: 
+  6000:             const cfg = regionConfig[activeNtbRegion] || regionConfig['overall'];
+  6001: 
+  6002:             let activeLabel = cfg.label;
+  6003:             if (am || prov || po) {
+  6004:                 activeLabel = 'Đã lọc';
+  6005:             }
+  6006: 
+  6007:             document.getElementById('ltc-active-region').innerText = `(${activeLabel})`;
+  6008:             document.getElementById('gtc-active-region').innerText = `(${activeLabel})`;
+  6009:             document.getElementById('ttc-active-region').innerText = `(${activeLabel})`;
+  6010: 
+  6011:             let kpiData = null;
+  6012:             if (am || prov || po) {
+  6013:                 kpiData = cachedNtbSummaryData.kpis ? cachedNtbSummaryData.kpis.overall : null;
+  6014:             } else {
+  6015:                 kpiData = cachedNtbSummaryData.kpis ? cachedNtbSummaryData.kpis[cfg.kpiKey] : null;
+  6016:             }
+  6017: 
+  6018:             const updateMetric = (metric, target, label1Id, val1Id, label2Id, val2Id, valueId, badgeId, subtextId) => {
+  6019:                 const valueEl = document.getElementById(valueId);
+  6020:                 const badgeEl = document.getElementById(badgeId);
+  6021:                 const subtextEl = document.getElementById(subtextId);
+  6022:                 const label1El = document.getElementById(label1Id);
+  6023:                 const val1El = document.getElementById(val1Id);
+  6024:                 const label2El = document.getElementById(label2Id);
+  6025:                 const val2El = document.getElementById(val2Id);
+  6026: 
+  6027:                 if (!valueEl) return;
+  6028: 
+  6029:                 if (!kpiData) {
+  6030:                     valueEl.innerText = '-';
+  6031:                     if (badgeEl) {
+  6032:                         badgeEl.style.display = 'none';
+  6033:                         badgeEl.innerHTML = '';
+  6034:                     }
+  6035:                     if (subtextEl) subtextEl.innerText = 'Chưa có dữ liệu';
+  6036:                     return;
+  6037:                 }
+  6038: 
+  6039:                 let val = 0;
+  6040:                 let subtext = '';
+  6041:                 let comp1Label = '';
+  6042:                 let comp1Val = '';
+  6043:                 let comp2Label = '';
+  6044:                 let comp2Val = '';
+  6045: 
+  6046:                 if (timeGroup === 'ngay') {
+  6047:                     val = kpiData[metric];
+  6048:                     const dod = kpiData.dod ? kpiData.dod[metric] : null;
+  6049:                     const n3 = kpiData.n3 ? kpiData.n3[metric] : null;
+  6050:                     const wow = kpiData.wow ? kpiData.wow[metric] : null;
+  6051: 
+  6052:                     subtext = 'So với ngày trước: ' + (dod !== null ? (dod > 0 ? '+' : '') + dod + '%' : '-');
+  6053: 
+  6054:                     comp1Label = 'So với n-3:';
+  6055:                     comp1Val = formatDiff(n3);
+  6056: 
+  6057:                     comp2Label = 'Cùng kỳ Thứ:';
+  6058:                     comp2Val = formatDiff(wow);
+  6059:                 } else {
+  6060:                     const w1 = kpiData.w1_avg ? kpiData.w1_avg[metric] : null;
+  6061:                     const w2 = kpiData.w2_avg ? kpiData.w2_avg[metric] : null;
+  6062:                     const wow_avg = kpiData.wow_avg ? kpiData.wow_avg[metric] : null;
+  6063: 
+  6064:                     val = w1;
+  6065:                     subtext = 'Tuần trước (W-2 Avg): ' + (w2 !== null ? w2 + '%' : '-');
+  6066: 
+  6067:                     comp1Label = 'So với W-2:';
+  6068:                     const diffW2 = (w1 !== null && w2 !== null) ? (w1 - w2) : null;
+  6069:                     comp1Val = formatDiff(diffW2);
+  6070: 
+  6071:                     comp2Label = 'So với cùng kỳ:';
+  6072:                     comp2Val = formatDiff(wow_avg);
+  6073:                 }
+  6074: 
+  6075:                 valueEl.innerText = val !== null && val !== undefined ? roundNum(val) + '%' : '-';
+  6076: 
+  6077:                 let isSuccess = false;
+  6078:                 if (target === null) {
+  6079:                     let limit = 90;
+  6080:                     if (metric === 'gtc') limit = 65;
+  6081:                     if (metric === 'ttc') limit = 94;
+  6082:                     isSuccess = val >= limit;
+--------------------------------------------------
+Line 6110: function renderNtbSparklines() {
+CONTEXT:
+  6111:             if (!cachedNtbTrendsData || !cachedNtbTrendsData.trends) return;
+  6112: 
+  6113:             const regionTrend = getProvinceTrendData(activeNtbRegion, cachedNtbTrendsData.trends);
+  6114:             if (!regionTrend) return;
+  6115: 
+  6116:             const ltcData = regionTrend.ltc || [];
+  6117:             const gtcData = regionTrend.gtc || [];
+  6118: 
+  6119:             let ttcData = regionTrend.ttc || regionTrend.odr || [];
+  6120:             if (ttcData.length === 0) {
+  6121:                 ttcData = gtcData.map(val => Math.min(100, val + 15.2));
+  6122:             }
+  6123: 
+  6124:             renderNtbSparkline('ltc', ltcData, '#6366f1');
+  6125:             renderNtbSparkline('gtc', gtcData, '#10b981');
+  6126:             renderNtbSparkline('ttc', ttcData, '#f59e0b');
+  6127:         }
+  6128: 
+  6129:         function renderNtbSparkline(prefix, data, color) {
+  6130:             const container = document.getElementById(`sparkline-${prefix}`);
+  6131:             if (!container) return;
+  6132: 
+  6133:             const chartVar = `${prefix}SparklineChart`;
+  6134:             if (window[chartVar]) {
+  6135:                 window[chartVar].destroy();
+  6136:             }
+  6137: 
+  6138:             const options = {
+  6139:                 chart: {
+  6140:                     type: 'area',
+  6141:                     height: 40,
+  6142:                     sparkline: { enabled: true },
+  6143:                     animations: { enabled: false }
+  6144:                 },
+  6145:                 stroke: { curve: 'smooth', width: 2 },
+  6146:                 fill: {
+  6147:                     opacity: 0.3,
+  6148:                     colors: [color]
+  6149:                 },
+  6150:                 colors: [color],
+  6151:                 series: [{ name: prefix.toUpperCase(), data: data.map(v => roundNum(v)) }],
+  6152:                 tooltip: {
+  6153:                     fixed: { enabled: false },
+  6154:                     x: { show: false },
+  6155:                     y: {
+  6156:                         title: {
+  6157:                             formatter: function (seriesName) {
+  6158:                                 return '';
+  6159:                             }
+  6160:                         }
+  6161:                     },
+  6162:                     marker: { show: false }
+  6163:                 }
+  6164:             };
+  6165: 
+  6166:             const chart = new ApexCharts(container, options);
+  6167:             chart.render();
+  6168:             window[chartVar] = chart;
+  6169:         }
+  6170: 
+  6171:         function setNtbGroupType(type, gType) {
+  6172:             ntbGroupType[type] = gType;
+  6173:             const poBtn = document.getElementById(`capsule-${type}-po`);
+  6174:             const amBtn = document.getElementById(`capsule-${type}-am`);
+  6175:             if (poBtn && amBtn) {
+  6176:                 poBtn.classList.toggle('active', gType === 'po');
+  6177:                 amBtn.classList.toggle('active', gType === 'am');
+  6178:             }
+  6179:             renderNtbAnalysisTable(type);
+  6180:         }
+  6181: 
+  6182:         function handleNtbSearch(type) {
+  6183:             const input = document.getElementById(`search-ntb-${type}`);
+  6184:             if (input) {
+  6185:                 ntbSearchText[type] = input.value;
+  6186:                 renderNtbAnalysisTable(type);
+  6187:             }
+  6188:         }
+  6189: 
+  6190:         function handleNtbSort(type, col) {
+  6191:             if (ntbSortCol[type] === col) {
+  6192:                 ntbSortAsc[type] = !ntbSortAsc[type];
+  6193:             } else {
+  6194:                 ntbSortCol[type] = col;
+  6195:                 ntbSortAsc[type] = (col === 'name' || col === 'am') ? true : false;
+  6196:             }
+  6197:             renderNtbAnalysisTable(type);
+  6198:         }
+  6199: 
+  6200:         function renderNtbAnalysisTable(type) {
+  6201:             const tableBody = document.getElementById(`tbody-ntb-${type}-analysis`);
+  6202:             if (!tableBody) return;
+  6203: 
+  6204:             if (!cachedNtbMatrixData || !cachedNtbMatrixData[type]) {
+  6205:                 tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có dữ liệu</td></tr>`;
+  6206:                 return;
+  6207:             }
+  6208: 
+  6209:             const matrix = cachedNtbMatrixData[type];
+  6210:             const timeGroupEl = document.getElementById('ntb-time-group');
+--------------------------------------------------
+Line 6129: function renderNtbSparkline(prefix, data, color) {
+CONTEXT:
+  6130:             const container = document.getElementById(`sparkline-${prefix}`);
+  6131:             if (!container) return;
+  6132: 
+  6133:             const chartVar = `${prefix}SparklineChart`;
+  6134:             if (window[chartVar]) {
+  6135:                 window[chartVar].destroy();
+  6136:             }
+  6137: 
+  6138:             const options = {
+  6139:                 chart: {
+  6140:                     type: 'area',
+  6141:                     height: 40,
+  6142:                     sparkline: { enabled: true },
+  6143:                     animations: { enabled: false }
+  6144:                 },
+  6145:                 stroke: { curve: 'smooth', width: 2 },
+  6146:                 fill: {
+  6147:                     opacity: 0.3,
+  6148:                     colors: [color]
+  6149:                 },
+  6150:                 colors: [color],
+  6151:                 series: [{ name: prefix.toUpperCase(), data: data.map(v => roundNum(v)) }],
+  6152:                 tooltip: {
+  6153:                     fixed: { enabled: false },
+  6154:                     x: { show: false },
+  6155:                     y: {
+  6156:                         title: {
+  6157:                             formatter: function (seriesName) {
+  6158:                                 return '';
+  6159:                             }
+  6160:                         }
+  6161:                     },
+  6162:                     marker: { show: false }
+  6163:                 }
+  6164:             };
+  6165: 
+  6166:             const chart = new ApexCharts(container, options);
+  6167:             chart.render();
+  6168:             window[chartVar] = chart;
+  6169:         }
+  6170: 
+  6171:         function setNtbGroupType(type, gType) {
+  6172:             ntbGroupType[type] = gType;
+  6173:             const poBtn = document.getElementById(`capsule-${type}-po`);
+  6174:             const amBtn = document.getElementById(`capsule-${type}-am`);
+  6175:             if (poBtn && amBtn) {
+  6176:                 poBtn.classList.toggle('active', gType === 'po');
+  6177:                 amBtn.classList.toggle('active', gType === 'am');
+  6178:             }
+  6179:             renderNtbAnalysisTable(type);
+  6180:         }
+  6181: 
+  6182:         function handleNtbSearch(type) {
+  6183:             const input = document.getElementById(`search-ntb-${type}`);
+  6184:             if (input) {
+  6185:                 ntbSearchText[type] = input.value;
+  6186:                 renderNtbAnalysisTable(type);
+  6187:             }
+  6188:         }
+  6189: 
+  6190:         function handleNtbSort(type, col) {
+  6191:             if (ntbSortCol[type] === col) {
+  6192:                 ntbSortAsc[type] = !ntbSortAsc[type];
+  6193:             } else {
+  6194:                 ntbSortCol[type] = col;
+  6195:                 ntbSortAsc[type] = (col === 'name' || col === 'am') ? true : false;
+  6196:             }
+  6197:             renderNtbAnalysisTable(type);
+  6198:         }
+  6199: 
+  6200:         function renderNtbAnalysisTable(type) {
+  6201:             const tableBody = document.getElementById(`tbody-ntb-${type}-analysis`);
+  6202:             if (!tableBody) return;
+  6203: 
+  6204:             if (!cachedNtbMatrixData || !cachedNtbMatrixData[type]) {
+  6205:                 tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có dữ liệu</td></tr>`;
+  6206:                 return;
+  6207:             }
+  6208: 
+  6209:             const matrix = cachedNtbMatrixData[type];
+  6210:             const timeGroupEl = document.getElementById('ntb-time-group');
+  6211:             const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';
+  6212: 
+  6213:             let targetDate = cachedNtbSummaryData ? cachedNtbSummaryData.latest_date : null;
+  6214:             let targetDateKey = targetDate;
+  6215:             if (targetDateKey && timeGroup === 'tuan') {
+  6216:                 targetDateKey = targetDateKey.split(' ')[0];
+  6217:             }
+  6218: 
+  6219:             if (!matrix.dates || matrix.dates.length === 0) {
+  6220:                 tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có cấu hình ngày</td></tr>`;
+  6221:                 return;
+  6222:             }
+  6223: 
+  6224:             let dateKey = targetDateKey;
+  6225:             if (!matrix.dates.includes(dateKey)) {
+  6226:                 dateKey = matrix.dates[0];
+  6227:             }
+  6228: 
+  6229:             const groupType = ntbGroupType[type];
+--------------------------------------------------
+Line 6171: function setNtbGroupType(type, gType) {
+CONTEXT:
+  6172:             ntbGroupType[type] = gType;
+  6173:             const poBtn = document.getElementById(`capsule-${type}-po`);
+  6174:             const amBtn = document.getElementById(`capsule-${type}-am`);
+  6175:             if (poBtn && amBtn) {
+  6176:                 poBtn.classList.toggle('active', gType === 'po');
+  6177:                 amBtn.classList.toggle('active', gType === 'am');
+  6178:             }
+  6179:             renderNtbAnalysisTable(type);
+  6180:         }
+  6181: 
+  6182:         function handleNtbSearch(type) {
+  6183:             const input = document.getElementById(`search-ntb-${type}`);
+  6184:             if (input) {
+  6185:                 ntbSearchText[type] = input.value;
+  6186:                 renderNtbAnalysisTable(type);
+  6187:             }
+  6188:         }
+  6189: 
+  6190:         function handleNtbSort(type, col) {
+  6191:             if (ntbSortCol[type] === col) {
+  6192:                 ntbSortAsc[type] = !ntbSortAsc[type];
+  6193:             } else {
+  6194:                 ntbSortCol[type] = col;
+  6195:                 ntbSortAsc[type] = (col === 'name' || col === 'am') ? true : false;
+  6196:             }
+  6197:             renderNtbAnalysisTable(type);
+  6198:         }
+  6199: 
+  6200:         function renderNtbAnalysisTable(type) {
+  6201:             const tableBody = document.getElementById(`tbody-ntb-${type}-analysis`);
+  6202:             if (!tableBody) return;
+  6203: 
+  6204:             if (!cachedNtbMatrixData || !cachedNtbMatrixData[type]) {
+  6205:                 tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có dữ liệu</td></tr>`;
+  6206:                 return;
+  6207:             }
+  6208: 
+  6209:             const matrix = cachedNtbMatrixData[type];
+  6210:             const timeGroupEl = document.getElementById('ntb-time-group');
+  6211:             const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';
+  6212: 
+  6213:             let targetDate = cachedNtbSummaryData ? cachedNtbSummaryData.latest_date : null;
+  6214:             let targetDateKey = targetDate;
+  6215:             if (targetDateKey && timeGroup === 'tuan') {
+  6216:                 targetDateKey = targetDateKey.split(' ')[0];
+  6217:             }
+  6218: 
+  6219:             if (!matrix.dates || matrix.dates.length === 0) {
+  6220:                 tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có cấu hình ngày</td></tr>`;
+  6221:                 return;
+  6222:             }
+  6223: 
+  6224:             let dateKey = targetDateKey;
+  6225:             if (!matrix.dates.includes(dateKey)) {
+  6226:                 dateKey = matrix.dates[0];
+  6227:             }
+  6228: 
+  6229:             const groupType = ntbGroupType[type];
+  6230:             const searchText = (ntbSearchText[type] || '').toLowerCase().trim();
+  6231:             const sortCol = ntbSortCol[type];
+  6232:             const sortAsc = ntbSortAsc[type];
+  6233: 
+  6234:             let items = [];
+  6235:             const targetVal = type === 'ltc' ? 90 : 65;
+  6236: 
+  6237:             if (groupType === 'po') {
+  6238:                 matrix.rows.forEach(row => {
+  6239:                     if (!matchNtbRegion(row.am, activeNtbRegion)) return;
+  6240: 
+  6241:                     row.pos.forEach(po => {
+  6242:                         const matchesSearch = !searchText ||
+  6243:                                                po.bc.toLowerCase().includes(searchText) ||
+  6244:                                                row.am.toLowerCase().includes(searchText);
+  6245:                         if (!matchesSearch) return;
+  6246: 
+  6247:                         const poData = po.data[dateKey] || { vol: 0, pct: 0.0 };
+  6248: 
+  6249:                         items.push({
+  6250:                             name: po.bc,
+  6251:                             am: row.am,
+  6252:                             pct: poData.pct,
+  6253:                             total_vol: poData.vol,
+  6254:                             pick_vol: poData.vol * poData.pct / 100
+  6255:                         });
+  6256:                     });
+  6257:                 });
+  6258:             } else {
+  6259:                 matrix.rows.forEach(row => {
+  6260:                     if (!matchNtbRegion(row.am, activeNtbRegion)) return;
+  6261: 
+  6262:                     const matchesSearch = !searchText || row.am.toLowerCase().includes(searchText);
+  6263:                     if (!matchesSearch) return;
+  6264: 
+  6265:                     const totalData = row.totals[dateKey] || { vol: 0, pct: 0.0 };
+  6266: 
+  6267:                     items.push({
+  6268:                         name: row.am,
+  6269:                         am: '-',
+  6270:                         pct: totalData.pct,
+  6271:                         total_vol: totalData.vol,
+--------------------------------------------------
+Line 6182: function handleNtbSearch(type) {
+CONTEXT:
+  6183:             const input = document.getElementById(`search-ntb-${type}`);
+  6184:             if (input) {
+  6185:                 ntbSearchText[type] = input.value;
+  6186:                 renderNtbAnalysisTable(type);
+  6187:             }
+  6188:         }
+  6189: 
+  6190:         function handleNtbSort(type, col) {
+  6191:             if (ntbSortCol[type] === col) {
+  6192:                 ntbSortAsc[type] = !ntbSortAsc[type];
+  6193:             } else {
+  6194:                 ntbSortCol[type] = col;
+  6195:                 ntbSortAsc[type] = (col === 'name' || col === 'am') ? true : false;
+  6196:             }
+  6197:             renderNtbAnalysisTable(type);
+  6198:         }
+  6199: 
+  6200:         function renderNtbAnalysisTable(type) {
+  6201:             const tableBody = document.getElementById(`tbody-ntb-${type}-analysis`);
+  6202:             if (!tableBody) return;
+  6203: 
+  6204:             if (!cachedNtbMatrixData || !cachedNtbMatrixData[type]) {
+  6205:                 tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có dữ liệu</td></tr>`;
+  6206:                 return;
+  6207:             }
+  6208: 
+  6209:             const matrix = cachedNtbMatrixData[type];
+  6210:             const timeGroupEl = document.getElementById('ntb-time-group');
+  6211:             const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';
+  6212: 
+  6213:             let targetDate = cachedNtbSummaryData ? cachedNtbSummaryData.latest_date : null;
+  6214:             let targetDateKey = targetDate;
+  6215:             if (targetDateKey && timeGroup === 'tuan') {
+  6216:                 targetDateKey = targetDateKey.split(' ')[0];
+  6217:             }
+  6218: 
+  6219:             if (!matrix.dates || matrix.dates.length === 0) {
+  6220:                 tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có cấu hình ngày</td></tr>`;
+  6221:                 return;
+  6222:             }
+  6223: 
+  6224:             let dateKey = targetDateKey;
+  6225:             if (!matrix.dates.includes(dateKey)) {
+  6226:                 dateKey = matrix.dates[0];
+  6227:             }
+  6228: 
+  6229:             const groupType = ntbGroupType[type];
+  6230:             const searchText = (ntbSearchText[type] || '').toLowerCase().trim();
+  6231:             const sortCol = ntbSortCol[type];
+  6232:             const sortAsc = ntbSortAsc[type];
+  6233: 
+  6234:             let items = [];
+  6235:             const targetVal = type === 'ltc' ? 90 : 65;
+  6236: 
+  6237:             if (groupType === 'po') {
+  6238:                 matrix.rows.forEach(row => {
+  6239:                     if (!matchNtbRegion(row.am, activeNtbRegion)) return;
+  6240: 
+  6241:                     row.pos.forEach(po => {
+  6242:                         const matchesSearch = !searchText ||
+  6243:                                                po.bc.toLowerCase().includes(searchText) ||
+  6244:                                                row.am.toLowerCase().includes(searchText);
+  6245:                         if (!matchesSearch) return;
+  6246: 
+  6247:                         const poData = po.data[dateKey] || { vol: 0, pct: 0.0 };
+  6248: 
+  6249:                         items.push({
+  6250:                             name: po.bc,
+  6251:                             am: row.am,
+  6252:                             pct: poData.pct,
+  6253:                             total_vol: poData.vol,
+  6254:                             pick_vol: poData.vol * poData.pct / 100
+  6255:                         });
+  6256:                     });
+  6257:                 });
+  6258:             } else {
+  6259:                 matrix.rows.forEach(row => {
+  6260:                     if (!matchNtbRegion(row.am, activeNtbRegion)) return;
+  6261: 
+  6262:                     const matchesSearch = !searchText || row.am.toLowerCase().includes(searchText);
+  6263:                     if (!matchesSearch) return;
+  6264: 
+  6265:                     const totalData = row.totals[dateKey] || { vol: 0, pct: 0.0 };
+  6266: 
+  6267:                     items.push({
+  6268:                         name: row.am,
+  6269:                         am: '-',
+  6270:                         pct: totalData.pct,
+  6271:                         total_vol: totalData.vol,
+  6272:                         pick_vol: totalData.vol * totalData.pct / 100
+  6273:                     });
+  6274:                 });
+  6275:             }
+  6276: 
+  6277:             if (items.length === 0) {
+  6278:                 const colSpan = groupType === 'po' ? 7 : 6;
+  6279:                 tableBody.innerHTML = `<tr><td colspan="${colSpan}" style="text-align: center; color: var(--text-muted); padding: 20px;">Không tìm thấy kết quả</td></tr>`;
+  6280:                 return;
+  6281:             }
+  6282: 
+--------------------------------------------------
+Line 6190: function handleNtbSort(type, col) {
+CONTEXT:
+  6191:             if (ntbSortCol[type] === col) {
+  6192:                 ntbSortAsc[type] = !ntbSortAsc[type];
+  6193:             } else {
+  6194:                 ntbSortCol[type] = col;
+  6195:                 ntbSortAsc[type] = (col === 'name' || col === 'am') ? true : false;
+  6196:             }
+  6197:             renderNtbAnalysisTable(type);
+  6198:         }
+  6199: 
+  6200:         function renderNtbAnalysisTable(type) {
+  6201:             const tableBody = document.getElementById(`tbody-ntb-${type}-analysis`);
+  6202:             if (!tableBody) return;
+  6203: 
+  6204:             if (!cachedNtbMatrixData || !cachedNtbMatrixData[type]) {
+  6205:                 tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có dữ liệu</td></tr>`;
+  6206:                 return;
+  6207:             }
+  6208: 
+  6209:             const matrix = cachedNtbMatrixData[type];
+  6210:             const timeGroupEl = document.getElementById('ntb-time-group');
+  6211:             const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';
+  6212: 
+  6213:             let targetDate = cachedNtbSummaryData ? cachedNtbSummaryData.latest_date : null;
+  6214:             let targetDateKey = targetDate;
+  6215:             if (targetDateKey && timeGroup === 'tuan') {
+  6216:                 targetDateKey = targetDateKey.split(' ')[0];
+  6217:             }
+  6218: 
+  6219:             if (!matrix.dates || matrix.dates.length === 0) {
+  6220:                 tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có cấu hình ngày</td></tr>`;
+  6221:                 return;
+  6222:             }
+  6223: 
+  6224:             let dateKey = targetDateKey;
+  6225:             if (!matrix.dates.includes(dateKey)) {
+  6226:                 dateKey = matrix.dates[0];
+  6227:             }
+  6228: 
+  6229:             const groupType = ntbGroupType[type];
+  6230:             const searchText = (ntbSearchText[type] || '').toLowerCase().trim();
+  6231:             const sortCol = ntbSortCol[type];
+  6232:             const sortAsc = ntbSortAsc[type];
+  6233: 
+  6234:             let items = [];
+  6235:             const targetVal = type === 'ltc' ? 90 : 65;
+  6236: 
+  6237:             if (groupType === 'po') {
+  6238:                 matrix.rows.forEach(row => {
+  6239:                     if (!matchNtbRegion(row.am, activeNtbRegion)) return;
+  6240: 
+  6241:                     row.pos.forEach(po => {
+  6242:                         const matchesSearch = !searchText ||
+  6243:                                                po.bc.toLowerCase().includes(searchText) ||
+  6244:                                                row.am.toLowerCase().includes(searchText);
+  6245:                         if (!matchesSearch) return;
+  6246: 
+  6247:                         const poData = po.data[dateKey] || { vol: 0, pct: 0.0 };
+  6248: 
+  6249:                         items.push({
+  6250:                             name: po.bc,
+  6251:                             am: row.am,
+  6252:                             pct: poData.pct,
+  6253:                             total_vol: poData.vol,
+  6254:                             pick_vol: poData.vol * poData.pct / 100
+  6255:                         });
+  6256:                     });
+  6257:                 });
+  6258:             } else {
+  6259:                 matrix.rows.forEach(row => {
+  6260:                     if (!matchNtbRegion(row.am, activeNtbRegion)) return;
+  6261: 
+  6262:                     const matchesSearch = !searchText || row.am.toLowerCase().includes(searchText);
+  6263:                     if (!matchesSearch) return;
+  6264: 
+  6265:                     const totalData = row.totals[dateKey] || { vol: 0, pct: 0.0 };
+  6266: 
+  6267:                     items.push({
+  6268:                         name: row.am,
+  6269:                         am: '-',
+  6270:                         pct: totalData.pct,
+  6271:                         total_vol: totalData.vol,
+  6272:                         pick_vol: totalData.vol * totalData.pct / 100
+  6273:                     });
+  6274:                 });
+  6275:             }
+  6276: 
+  6277:             if (items.length === 0) {
+  6278:                 const colSpan = groupType === 'po' ? 7 : 6;
+  6279:                 tableBody.innerHTML = `<tr><td colspan="${colSpan}" style="text-align: center; color: var(--text-muted); padding: 20px;">Không tìm thấy kết quả</td></tr>`;
+  6280:                 return;
+  6281:             }
+  6282: 
+  6283:             const sum_total_vol = items.reduce((acc, it) => acc + it.total_vol, 0);
+  6284:             items.forEach(it => {
+  6285:                 it.prop = sum_total_vol > 0 ? it.total_vol / sum_total_vol : 0;
+  6286:             });
+  6287: 
+  6288:             // Calculate and assign performance rank based on pct descending
+  6289:             items.sort((a, b) => b.pct - a.pct);
+  6290:             items.forEach((item, index) => {
+--------------------------------------------------
+Line 6200: function renderNtbAnalysisTable(type) {
+CONTEXT:
+  6201:             const tableBody = document.getElementById(`tbody-ntb-${type}-analysis`);
+  6202:             if (!tableBody) return;
+  6203: 
+  6204:             if (!cachedNtbMatrixData || !cachedNtbMatrixData[type]) {
+  6205:                 tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có dữ liệu</td></tr>`;
+  6206:                 return;
+  6207:             }
+  6208: 
+  6209:             const matrix = cachedNtbMatrixData[type];
+  6210:             const timeGroupEl = document.getElementById('ntb-time-group');
+  6211:             const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';
+  6212: 
+  6213:             let targetDate = cachedNtbSummaryData ? cachedNtbSummaryData.latest_date : null;
+  6214:             let targetDateKey = targetDate;
+  6215:             if (targetDateKey && timeGroup === 'tuan') {
+  6216:                 targetDateKey = targetDateKey.split(' ')[0];
+  6217:             }
+  6218: 
+  6219:             if (!matrix.dates || matrix.dates.length === 0) {
+  6220:                 tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có cấu hình ngày</td></tr>`;
+  6221:                 return;
+  6222:             }
+  6223: 
+  6224:             let dateKey = targetDateKey;
+  6225:             if (!matrix.dates.includes(dateKey)) {
+  6226:                 dateKey = matrix.dates[0];
+  6227:             }
+  6228: 
+  6229:             const groupType = ntbGroupType[type];
+  6230:             const searchText = (ntbSearchText[type] || '').toLowerCase().trim();
+  6231:             const sortCol = ntbSortCol[type];
+  6232:             const sortAsc = ntbSortAsc[type];
+  6233: 
+  6234:             let items = [];
+  6235:             const targetVal = type === 'ltc' ? 90 : 65;
+  6236: 
+  6237:             if (groupType === 'po') {
+  6238:                 matrix.rows.forEach(row => {
+  6239:                     if (!matchNtbRegion(row.am, activeNtbRegion)) return;
+  6240: 
+  6241:                     row.pos.forEach(po => {
+  6242:                         const matchesSearch = !searchText ||
+  6243:                                                po.bc.toLowerCase().includes(searchText) ||
+  6244:                                                row.am.toLowerCase().includes(searchText);
+  6245:                         if (!matchesSearch) return;
+  6246: 
+  6247:                         const poData = po.data[dateKey] || { vol: 0, pct: 0.0 };
+  6248: 
+  6249:                         items.push({
+  6250:                             name: po.bc,
+  6251:                             am: row.am,
+  6252:                             pct: poData.pct,
+  6253:                             total_vol: poData.vol,
+  6254:                             pick_vol: poData.vol * poData.pct / 100
+  6255:                         });
+  6256:                     });
+  6257:                 });
+  6258:             } else {
+  6259:                 matrix.rows.forEach(row => {
+  6260:                     if (!matchNtbRegion(row.am, activeNtbRegion)) return;
+  6261: 
+  6262:                     const matchesSearch = !searchText || row.am.toLowerCase().includes(searchText);
+  6263:                     if (!matchesSearch) return;
+  6264: 
+  6265:                     const totalData = row.totals[dateKey] || { vol: 0, pct: 0.0 };
+  6266: 
+  6267:                     items.push({
+  6268:                         name: row.am,
+  6269:                         am: '-',
+  6270:                         pct: totalData.pct,
+  6271:                         total_vol: totalData.vol,
+  6272:                         pick_vol: totalData.vol * totalData.pct / 100
+  6273:                     });
+  6274:                 });
+  6275:             }
+  6276: 
+  6277:             if (items.length === 0) {
+  6278:                 const colSpan = groupType === 'po' ? 7 : 6;
+  6279:                 tableBody.innerHTML = `<tr><td colspan="${colSpan}" style="text-align: center; color: var(--text-muted); padding: 20px;">Không tìm thấy kết quả</td></tr>`;
+  6280:                 return;
+  6281:             }
+  6282: 
+  6283:             const sum_total_vol = items.reduce((acc, it) => acc + it.total_vol, 0);
+  6284:             items.forEach(it => {
+  6285:                 it.prop = sum_total_vol > 0 ? it.total_vol / sum_total_vol : 0;
+  6286:             });
+  6287: 
+  6288:             // Calculate and assign performance rank based on pct descending
+  6289:             items.sort((a, b) => b.pct - a.pct);
+  6290:             items.forEach((item, index) => {
+  6291:                 item.rank = index + 1;
+  6292:             });
+  6293: 
+  6294:             const multiplier = sortAsc ? 1 : -1;
+  6295:             items.sort((a, b) => {
+  6296:                 let valA = a[sortCol];
+  6297:                 let valB = b[sortCol];
+  6298: 
+  6299:                 if (sortCol === 'rank') {
+  6300:                     valA = a.rank;
+--------------------------------------------------
+Line 6355: async function loadNtbSummaryData() {
+CONTEXT:
+  6356:             const am = document.getElementById('filter-am').value;
+  6357:             const prov = document.getElementById('filter-province').value;
+  6358:             const po = document.getElementById('filter-po').value;
+  6359:             const dateSelect = document.getElementById('ntb-date-select');
+  6360:             const selectedDate = dateSelect ? dateSelect.value : '';
+  6361: 
+  6362:             const timeGroupEl = document.getElementById('ntb-time-group');
+  6363:             const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';
+  6364: 
+  6365:             const params = new URLSearchParams();
+  6366:             if (am) params.append('am', am);
+  6367:             if (prov) params.append('province', prov);
+  6368:             if (po) params.append('post_office', po);
+  6369:             if (selectedDate) params.append('date', selectedDate);
+  6370:             params.append('time_group', timeGroup);
+  6371: 
+  6372:             try {
+  6373:                 const summaryRes = await fetch(getApiUrl(`/api/summary-dashboard?${params.toString()}`), getFetchOptions());
+  6374:                 const summaryData = await summaryRes.json();
+  6375: 
+  6376:                 if (summaryData.error) {
+  6377:                     console.error("Summary error:", summaryData.error);
+  6378:                     return;
+  6379:                 }
+  6380: 
+  6381:                 cachedNtbSummaryData = summaryData;
+  6382: 
+  6383:                 if (dateSelect) {
+  6384:                     const activeDate = summaryData.latest_date;
+  6385:                     const currentOptions = Array.from(dateSelect.options).map(o => o.value);
+  6386:                     const newOptions = summaryData.all_dates || [];
+  6387: 
+  6388:                     const isDifferent = currentOptions.length !== newOptions.length ||
+  6389:                                        !currentOptions.every((val, index) => val === newOptions[index]);
+  6390: 
+  6391:                     if (isDifferent || dateSelect.children.length === 0) {
+  6392:                         dateSelect.innerHTML = '';
+  6393:                         newOptions.forEach(d => {
+  6394:                             const opt = document.createElement('option');
+  6395:                             opt.value = d;
+  6396:                             opt.innerText = d;
+  6397:                             dateSelect.appendChild(opt);
+  6398:                         });
+  6399:                     }
+  6400:                     dateSelect.value = activeDate;
+  6401:                 }
+  6402: 
+  6403:                 const ovDateLabel = document.getElementById('overview-report-date');
+  6404:                 if (ovDateLabel) {
+  6405:                     ovDateLabel.innerText = "Ngày báo cáo: " + summaryData.latest_date;
+  6406:                 }
+  6407: 
+  6408:                 const compVols = summaryData.completed_vols || [];
+  6409:                 const compCategories = compVols.map(v => v.province);
+  6410:                 const ltcSeries = compVols.map(v => v.LTC);
+  6411:                 const gtcSeries = compVols.map(v => v.GTC);
+  6412:                 const ttcSeries = compVols.map(v => v.TTC);
+  6413: 
+  6414:                 const compOptions = {
+  6415:                     chart: { type: 'bar', height: 280, toolbar: { show: false }, background: 'transparent' },
+  6416:                     series: [
+  6417:                         { name: 'LTC', data: ltcSeries },
+  6418:                         { name: 'GTC', data: gtcSeries },
+  6419:                         { name: 'ODR TTS', data: ttcSeries }
+  6420:                     ],
+  6421:                     xaxis: { categories: compCategories, labels: { style: { colors: '#64748b' } } },
+  6422:                     yaxis: { title: { text: 'Sản lượng' }, labels: { style: { colors: '#64748b' } } },
+  6423:                     colors: ['#007bc3', '#ff5f00', '#10b981'],
+  6424:                     plotOptions: { bar: { horizontal: false, columnWidth: '55%', borderRadius: 4 } },
+  6425:                     theme: { mode: 'light' },
+  6426:                     dataLabels: { enabled: false },
+  6427:                     legend: { position: 'bottom', labels: { colors: '#64748b' } }
+  6428:                 };
+  6429: 
+  6430:                 if (ntbCompletedChart) ntbCompletedChart.destroy();
+  6431:                 ntbCompletedChart = new ApexCharts(document.querySelector("#chart-ntb-completed"), compOptions);
+  6432:                 ntbCompletedChart.render();
+  6433: 
+  6434:                 const blAM = summaryData.backlog_by_am || [];
+  6435:                 const blCategories = blAM.map(b => b.am);
+  6436:                 const clSeries = blAM.map(b => b.chua_lay);
+  6437:                 const cgSeries = blAM.map(b => b.chua_giao);
+  6438:                 const ctSeries = blAM.map(b => b.chua_tra);
+  6439: 
+  6440:                 const blOptions = {
+  6441:                     chart: { type: 'bar', height: 280, toolbar: { show: false }, background: 'transparent', stacked: true },
+  6442:                     series: [
+  6443:                         { name: 'Đơn chưa lấy', data: clSeries },
+  6444:                         { name: 'Đơn chưa giao', data: cgSeries },
+  6445:                         { name: 'Đơn chưa trả', data: ctSeries }
+  6446:                     ],
+  6447:                     xaxis: { categories: blCategories, labels: { style: { colors: '#64748b' } } },
+  6448:                     yaxis: { title: { text: 'Sản lượng backlog' }, labels: { style: { colors: '#64748b' } } },
+  6449:                     colors: ['#ef4444', '#ff5f00', '#007bc3'],
+  6450:                     plotOptions: { bar: { horizontal: false, columnWidth: '55%' } },
+  6451:                     theme: { mode: 'light' },
+  6452:                     dataLabels: { enabled: false },
+  6453:                     legend: { position: 'bottom', labels: { colors: '#64748b' } }
+  6454:                 };
+  6455: 
+--------------------------------------------------
+Line 6622: async function loadNtbStructure() {
+CONTEXT:
+  6623:             const root = document.getElementById('ntb-org-tree-root');
+  6624:             if (!root) return;
+  6625: 
+  6626:             // Keywords to identify warehouses vs post offices
+  6627:             const WAREHOUSE_KEYWORDS = ['Kho Trung Chuyển', 'Kho Trung Chuyen', 'Kho Chuyển Tiếp', 'Kho Chuyen Tiep', 'Kho TC', 'Transit Hub', 'Sub-hub'];
+  6628:             function isWarehouse(name) {
+  6629:                 return WAREHOUSE_KEYWORDS.some(kw => name.toLowerCase().includes(kw.toLowerCase()));
+  6630:             }
+  6631: 
+  6632:             try {
+  6633:                 const res = await fetch(getApiUrl('/api/ntb-structure'), getFetchOptions());
+  6634:                 if (!res.ok) throw new Error("Lỗi khi tải dữ liệu cơ cấu từ server");
+  6635:                 const structure = await res.json();
+  6636:                 if (structure.error) {
+  6637:                     root.innerHTML = `<div style="color: var(--color-danger); text-align: center; padding: 20px;">
+  6638:                         <i class="fa-solid fa-triangle-exclamation" style="margin-right: 8px;"></i> ${escapeHTML(structure.error)}
+  6639:                     </div>`;
+  6640:                     return;
+  6641:                 }
+  6642: 
+  6643:                 // Update window.provinceStats dynamically from loaded Excel structure
+  6644:                 const provinceRegions = {
+  6645:                     "Lâm Đồng": "Tây Nguyên",
+  6646:                     "Khánh Hòa": "Duyên hải",
+  6647:                     "Đắk Nông": "Tây Nguyên",
+  6648:                     "Bình Thuận": "Duyên hải",
+  6649:                     "Ninh Thuận": "Duyên hải"
+  6650:                 };
+  6651: 
+  6652:                 let ntbTotalPOs = 0;
+  6653:                 let ntbTotalKTC = 0;
+  6654:                 let ntbTotalKCT = 0;
+  6655:                 const ntbUniqueAMs = new Set();
+  6656: 
+  6657:                 for (const [prov, ams] of Object.entries(structure)) {
+  6658:                     const normProv = prov.replace('Khánh Hoà','Khánh Hòa').trim();
+  6659:                     const amNames = Object.keys(ams);
+  6660: 
+  6661:                     let pCount = 0;
+  6662:                     let tcCount = 0;
+  6663:                     let ctCount = 0;
+  6664: 
+  6665:                     amNames.forEach(am => {
+  6666:                         ntbUniqueAMs.add(am.trim());
+  6667:                         ams[am].forEach(name => {
+  6668:                             const trimmedName = name.trim();
+  6669:                             const nameLower = trimmedName.toLowerCase();
+  6670:                             if (isWarehouse(trimmedName)) {
+  6671:                                 if (nameLower.includes('trung chuyển') || nameLower.includes('trung chuyen') || nameLower.includes('transit')) {
+  6672:                                     tcCount++;
+  6673:                                     ntbTotalKTC++;
+  6674:                                 } else {
+  6675:                                     ctCount++;
+  6676:                                     ntbTotalKCT++;
+  6677:                                 }
+  6678:                             } else {
+  6679:                                 pCount++;
+  6680:                                 ntbTotalPOs++;
+  6681:                             }
+  6682:                         });
+  6683:                     });
+  6684: 
+  6685:                     window.provinceStats[normProv] = {
+  6686:                         ams: amNames.length,
+  6687:                         pos: pCount,
+  6688:                         transitHubs: tcCount,
+  6689:                         subHubs: ctCount,
+  6690:                         region: provinceRegions[normProv] || "Khu vực"
+  6691:                     };
+  6692: 
+  6693:                     // Update corresponding card footer stats
+  6694:                     const cardStatsDiv = document.querySelector(`.prov-card-stats[data-province="${normProv}"]`);
+  6695:                     if (cardStatsDiv) {
+  6696:                         cardStatsDiv.innerHTML = `
+  6697:                             <span><i class="fa-solid fa-user-tie"></i> <strong>${amNames.length}</strong> AM</span>
+  6698:                             <span><i class="fa-solid fa-home"></i> <strong>${pCount}</strong> Bưu cục</span>
+  6699:                             <span><i class="fa-solid fa-warehouse" style="color: #10b981;"></i> <strong>${ctCount}</strong> Kho CT</span>
+  6700:                             <span><i class="fa-solid fa-star" style="color: var(--color-ghn-blue);"></i> <strong>${tcCount}</strong> Kho TC</span>
+  6701:                         `;
+  6702:                     }
+  6703:                 }
+  6704: 
+  6705:                 // Update Hero Banner stats elements
+  6706:                 document.getElementById('ntb-total-ams').innerText = ntbUniqueAMs.size;
+  6707:                 document.getElementById('ntb-total-pos').innerText = ntbTotalPOs;
+  6708:                 document.getElementById('ntb-total-ktc').innerText = ntbTotalKTC;
+  6709:                 document.getElementById('ntb-total-kct').innerText = ntbTotalKCT;
+  6710: 
+  6711:                 let html = '';
+  6712: 
+  6713:                 // Add the Regional Director node at the very top of the tree, styled like a family tree root
+  6714:                 html += `
+  6715:                 <div class="tree-root-leader-node" style="margin-bottom: 15px;">
+  6716:                     <div class="leader-node-header" style="display: inline-flex; align-items: center; padding: 12px 18px; background: #ffffff; border: 2px solid var(--color-ghn-orange); border-radius: 12px; box-shadow: 0 4px 12px rgba(255, 95, 0, 0.08); min-width: 240px; gap: 12px;">
+  6717:                         <i class="fa-solid fa-user-tie" style="color: var(--color-ghn-orange); font-size: 18px; background: rgba(255, 95, 0, 0.08); padding: 8px; border-radius: 50%;"></i>
+  6718:                         <div style="text-align: left;">
+  6719:                             <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Giám đốc vùng</div>
+  6720:                             <div style="font-size: 14px; font-weight: 700; color: var(--text-primary);">Trần Ngọc Trung</div>
+  6721:                         </div>
+  6722:                     </div>
+--------------------------------------------------
+Line 6882: function initNTBLeafletMap(structure) {
+CONTEXT:
+  6883:             const mapDiv = document.getElementById('ntb-leaflet-map');
+  6884:             if (!mapDiv) return;
+  6885: 
+  6886:             // Initialize map only once
+  6887:             if (!_ntbMap) {
+  6888:                 const bounds = L.latLngBounds([8.0, 100.0], [24.0, 112.0]);
+  6889:                 _ntbMap = L.map('ntb-leaflet-map', {
+  6890:                     center: [12.2, 108.2],
+  6891:                     zoom: 7,
+  6892:                     minZoom: 6,
+  6893:                     maxZoom: 12,
+  6894:                     zoomControl: true,
+  6895:                     attributionControl: false, // Turn off default Leaflet attribution text
+  6896:                     scrollWheelZoom: false,
+  6897:                     maxBounds: bounds,
+  6898:                     maxBoundsViscosity: 1.0
+  6899:                 });
+  6900: 
+  6901:                 // Draw simplified but geographically accurate Vietnam borders in the background
+  6902:                 if (typeof VIETNAM_BORDER_50 !== 'undefined') {
+  6903:                     VIETNAM_BORDER_50.forEach(coords => {
+  6904:                         L.polygon(coords, {
+  6905:                             color: '#cbd5e1', // border color (slate-300)
+  6906:                             weight: 1.5,
+  6907:                             fillColor: '#ffffff', // clean white landmass
+  6908:                             fillOpacity: 1.0,
+  6909:                             interactive: false
+  6910:                         }).addTo(_ntbMap);
+  6911:                     });
+  6912:                 }
+  6913: 
+  6914:                 // Draw all other provinces of Vietnam in the background as faint outlines (bản đồ thể hiện mờ mờ các tỉnh khác)
+  6915:                 if (typeof VIETNAM_PROVINCES_SIMPLIFIED !== 'undefined') {
+  6916:                     const ntbNames = ["Đắk Nông", "Lâm Đồng", "Khánh Hòa", "Ninh Thuận", "Bình Thuận"];
+  6917: 
+  6918:                     // Helper to generate a soft pastel color based on province name hash
+  6919:                     function getPastelColor(str) {
+  6920:                         const colors = [
+  6921:                             '#ffe5d9', '#ffcad4', '#b3e5fc', '#c8e6c9', '#ffcc80',
+  6922:                             '#d1c4e9', '#ffecb3', '#d7ccc8', '#cfd8dc', '#e0f2f1',
+  6923:                             '#ffead2', '#ffe5ec', '#d8e2dc', '#ece4db', '#e8e8e4',
+  6924:                             '#ffd7ba', '#fec5bb', '#e2e2e2', '#e0f2fe', '#e0e7ff',
+  6925:                             '#fae8ff', '#f3e8ff', '#dcfce7', '#fef9c3', '#ffedd5',
+  6926:                             '#fee2e2', '#ccfbf1'
+  6927:                         ];
+  6928:                         let hash = 0;
+  6929:                         for (let i = 0; i < str.length; i++) {
+  6930:                             hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  6931:                         }
+  6932:                         const index = Math.abs(hash) % colors.length;
+  6933:                         return colors[index];
+  6934:                     }
+  6935: 
+  6936:                     VIETNAM_PROVINCES_SIMPLIFIED.forEach(prov => {
+  6937:                         const normName = prov.name.replace('Khánh Hoà', 'Khánh Hòa').trim();
+  6938:                         if (ntbNames.includes(normName)) {
+  6939:                             return; // Skip drawing NTB provinces here, they are drawn in the colorful section
+  6940:                         }
+  6941:                         const pColor = getPastelColor(normName);
+  6942:                         prov.rings.forEach(ring => {
+  6943:                             L.polygon(ring, {
+  6944:                                 color: '#e2e8f0', // soft border (slate-200)
+  6945:                                 weight: 0.6,
+  6946:                                 fillColor: pColor, // faint pastel background
+  6947:                                 fillOpacity: 0.65,
+  6948:                                 interactive: false
+  6949:                             }).addTo(_ntbMap);
+  6950:                         });
+  6951:                     });
+  6952:                 }
+  6953: 
+  6954:                 // Draw simplified but geographically accurate province outlines
+  6955:                 const provincePolygons = {
+  6956:                     "Đắk Nông": {
+  6957:                         latlngs: [[12.68,107.15],[12.62,107.48],[12.50,107.72],[12.38,108.05],[12.18,108.18],[11.95,108.12],[11.72,107.90],[11.55,107.60],[11.60,107.30],[11.85,107.12],[12.18,107.10]],
+  6958:                         color: '#b58a05',
+  6959:                         fillColor: '#ffd166',
+  6960:                         fillOpacity: 0.55
+  6961:                     },
+  6962:                     "Lâm Đồng": {
+  6963:                         latlngs: [[12.38,107.70],[12.45,107.90],[12.42,108.15],[12.28,108.45],[12.08,108.75],[11.85,108.88],[11.62,108.82],[11.38,108.62],[11.18,108.30],[11.12,108.05],[11.35,107.80],[11.62,107.60],[11.92,107.52],[12.18,107.52]],
+  6964:                         color: '#d9534f',
+  6965:                         fillColor: '#ffadad',
+  6966:                         fillOpacity: 0.55
+  6967:                     },
+  6968:                     "Khánh Hòa": {
+  6969:                         latlngs: [[13.02,109.22],[12.88,109.40],[12.68,109.45],[12.50,109.35],[12.32,109.22],[12.12,109.05],[11.98,108.78],[11.88,108.55],[12.08,108.45],[12.28,108.45],[12.55,108.62],[12.78,108.80],[12.92,109.00]],
+  6970:                         color: '#0288d1',
+  6971:                         fillColor: '#90e0ef',
+  6972:                         fillOpacity: 0.55
+  6973:                     },
+  6974:                     "Ninh Thuận": {
+  6975:                         latlngs: [[12.08,108.45],[12.12,109.05],[12.32,109.22],[12.22,109.30],[12.02,109.28],[11.72,109.18],[11.45,109.00],[11.22,108.82],[11.25,108.58],[11.42,108.42],[11.65,108.40],[11.88,108.55],[11.98,108.78]],
+  6976:                         color: '#388e3c',
+  6977:                         fillColor: '#a7c957',
+  6978:                         fillOpacity: 0.55
+  6979:                     },
+  6980:                     "Bình Thuận": {
+  6981:                         latlngs: [[11.42,107.42],[11.62,107.60],[11.85,107.72],[12.05,107.95],[11.95,108.10],[11.72,108.22],[11.45,108.42],[11.22,108.58],[11.05,108.70],[10.88,108.50],[10.68,108.25],[10.52,108.05],[10.48,107.75],[10.55,107.50],[10.75,107.32],[11.05,107.25],[11.28,107.32]],
+  6982:                         color: '#7b1fa2',
+--------------------------------------------------

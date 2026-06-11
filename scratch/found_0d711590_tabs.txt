@@ -1,0 +1,136 @@
+Step 64 | Tool: replace_file_content
+  Description: "Redesign OPR TTS tab: Add OPR Overall KPI card, add style section headers, style charts, style error reasons table with custom progress bars, and replace old waybill details table with a Google Sheet CTA card linking to the spreadsheet."
+  Instruction: "Replace old OPR TTS tab HTML code with modern layout, including KPI overall card and CTA button link."
+  Target length: 2024 chars
+  Replacement length: 2038 chars
+  Target start: '"            <!-- TAB 3: OPR TTS -->\\n            <div id=\\"tab-opr\\" class=\\"content-panel\\">\\n    '
+  Replace start: '"            <!-- TAB 3: OPR TTS -->\\n            <div id=\\"tab-opr\\" class=\\"content-panel\\">\\n    '
+
+Step 73 | Tool: replace_file_content
+  Description: "Redesign OPR dashboard and error reasons rendering; deprecate OPR details table rendering since it is replaced by Google Sheet link."
+  Instruction: "Replace OPR javascript rendering methods with updated Overall KPI support and progress bar styling."
+  Target length: 2067 chars
+  Replacement length: 2067 chars
+  Target start: '"        function renderOprDashboard() {\\n            const opr = globalData.opr;\\n\\n            doc'
+  Replace start: '"        function renderOprDashboard() {\\n            const opr = globalData.opr;\\n\\n            doc'
+
+Step 151 | Tool: replace_file_content
+  Description: "Add sort capsules to OPR AM ranking chart card header in index.html."
+  Instruction: "Update card-header style and structure to include sorting toggle buttons for the AM OPR chart."
+  Target length: 685 chars
+  Replacement length: 1233 chars
+  Target start: '"                    <div class=\\"card\\" style=\\"margin-bottom: 0;\\">\\n                        <div '
+  Replace start: '"                    <div class=\\"card\\" style=\\"margin-bottom: 0;\\">\\n                        <div '
+
+Step 157 | Tool: replace_file_content
+  Description: "Define sorting and dynamic loading for OPR tab in index.html."
+  Instruction: "Insert loadOprData, setAmOprSort, and renderOprAmChartOnly functions, and update renderOprDashboard."
+  Target length: 2067 chars
+  Replacement length: 2065 chars
+  Target start: '"        let oprSlotsChart = null;\\n        let oprAmChart = null;\\n\\n        function renderOprDash'
+  Replace start: '"        let oprSlotsChart = null;\\n        let oprAmChart = null;\\n        let amOprSortDir = \'asc\''
+
+Step 161 | Tool: replace_file_content
+  Description: "Trigger loadOprData in applyFilters."
+  Instruction: "Add loadOprData call to applyFilters."
+  Target length: 196 chars
+  Replacement length: 224 chars
+  Target start: '"            // Re-render tables\\n            renderOprDetailsTable();\\n            renderAgingDetai'
+  Replace start: '"            // Re-render tables\\n            renderOprDetailsTable();\\n            renderAgingDetai'
+
+Step 184 | Tool: replace_file_content
+  Description: "Remove applyFilters call from renderOprDashboard."
+  Instruction: "Remove applyFilters call from end of renderOprDashboard."
+  Target length: 141 chars
+  Replacement length: 112 chars
+  Target start: '"            // Set details search data\\n            filteredData.oe_details = opr.oe_details || [];'
+  Replace start: '"            // Set details search data\\n            filteredData.oe_details = opr.oe_details || [];'
+
+Step 186 | Tool: replace_file_content
+  Description: "Replace applyFilters call with renderAgingDetailsTable in renderAgingDashboard."
+  Instruction: "Update renderAgingDashboard to call renderAgingDetailsTable directly."
+  Target length: 121 chars
+  Replacement length: 132 chars
+  Target start: '"            }\\n\\n            filteredData.aging_details = bl.raw_records || [];\\n            applyF'
+  Replace start: '"            }\\n\\n            filteredData.aging_details = bl.raw_records || [];\\n            render'
+
+Step 188 | Tool: replace_file_content
+  Description: "Replace applyFilters with renderTreoDetailsTable in renderTreoDashboard."
+  Instruction: "Update renderTreoDashboard to call renderTreoDetailsTable directly."
+  Target length: 120 chars
+  Replacement length: 130 chars
+  Target start: '"            }\\n\\n            filteredData.treo_details = bl.raw_records || [];\\n            applyFi'
+  Replace start: '"            }\\n\\n            filteredData.treo_details = bl.raw_records || [];\\n            renderT'
+
+Step 192 | Tool: replace_file_content
+  Description: "Trigger initial applyFilters at the end of loadAllData function."
+  Instruction: "Insert applyFilters call at the end of loadAllData."
+  Target length: 87 chars
+  Replacement length: 183 chars
+  Target start: '"                renderVolumeCreation(volCreationData);\\n\\n            } catch (err) {"'
+  Replace start: '"                renderVolumeCreation(volCreationData);\\n\\n                // Run initial filters an'
+
+Step 544 | Tool: replace_file_content
+  Description: "Fix chart sorting and enhance OPR AM chart aesthetics by placing data labels outside, adjusting grid lines, and using updateOptions instead of destroy"
+  Instruction: "Replace setAmOprSort and renderOprAmChartOnly in templates/index.html"
+  Target length: 1916 chars
+  Replacement length: 2071 chars
+  Target start: '"        function setAmOprSort(dir) {\\n            amOprSortDir = dir;\\n            document.getElem'
+  Replace start: '"        function setAmOprSort(dir) {\\n            amOprSortDir = dir;\\n            document.getElem'
+
+Step 931 | Tool: replace_file_content
+  Description: "Update index.html configuration form to present 14 CSV inputs grouped by topic"
+  Instruction: "Replace the old 7 Excel inputs with 14 new GID-specific CSV inputs, logically grouped into sections."
+  Target length: 2057 chars
+  Replacement length: 2045 chars
+  Target start: '"                    <div style=\\"display: grid; grid-template-columns: repeat(auto-fit, minmax(400p'
+  Replace start: '"                    <h3 style=\\"margin-bottom: 16px; font-weight: 700; color: var(--color-indigo); '
+
+Step 937 | Tool: replace_file_content
+  Description: "Update configuration load and save functions in index.html to handle 14 CSV keys"
+  Instruction: "Replace old configuration fields with the 14 new CSV endpoint URL fields in both loadGoogleSheetsConfig and saveGoogleSheetsConfig JS functions."
+  Target length: 2060 chars
+  Replacement length: 2066 chars
+  Target start: '"        async function loadGoogleSheetsConfig() {\\n            try {\\n                const res = a'
+  Replace start: '"        async function loadGoogleSheetsConfig() {\\n            try {\\n                const res = a'
+
+Step 941 | Tool: replace_file_content
+  Description: "Update file card icon and upload file accepts in index.html for CSV support"
+  Instruction: "Change file icon to conditionally display fa-file-csv for CSV files and accept .csv extensions on input."
+  Target length: 2044 chars
+  Replacement length: 2044 chars
+  Target start: '"                        <div style=\\"display: flex; align-items: center; gap: 16px; margin-bottom: '
+  Replace start: '"                        <div style=\\"display: flex; align-items: center; gap: 16px; margin-bottom: '
+
+Step 953 | Tool: replace_file_content
+  Description: "Update loadFilesStatus innerHTML in index.html to support CSV files"
+  Instruction: "Update card.innerHTML in loadFilesStatus to use fa-file-csv for CSV files and accept .csv extension on file input."
+  Target length: 2044 chars
+  Replacement length: 2044 chars
+  Target start: '"                    card.innerHTML = `\\n                        <div style=\\"display: flex; align-i'
+  Replace start: '"                    card.innerHTML = `\\n                        <div style=\\"display: flex; align-i'
+
+Step 959 | Tool: replace_file_content
+  Description: "Update loadFilesStatus function to display CSV icon and support CSV upload"
+  Instruction: "Update icon display and accept attribute in loadFilesStatus card HTML template."
+  Target length: 2047 chars
+  Replacement length: 2047 chars
+  Target start: '"        async function loadFilesStatus() {\\n            try {\\n                const res = await fe'
+  Replace start: '"        async function loadFilesStatus() {\\n            try {\\n                const res = await fe'
+
+Step 994 | Tool: replace_file_content
+  Description: "Update the file card HTML in templates/index.html to display CSV icon when filename ends in .csv, and allow csv file upload."
+  Instruction: "Replace the file card innerHTML block to support CSV files and icons"
+  Target length: 2044 chars
+  Replacement length: 2044 chars
+  Target start: '"                    card.innerHTML = `\\n                        <div style=\\"display: flex; align-i'
+  Replace start: '"                    card.innerHTML = `\\n                        <div style=\\"display: flex; align-i'
+
+Step 998 | Tool: replace_file_content
+  Description: "Remove backslashes from template literal expressions in templates/index.html to ensure JS parses them correctly."
+  Instruction: "Remove the backslashes before dollar signs in the template literal block"
+  Target length: 2044 chars
+  Replacement length: 2044 chars
+  Target start: '"                    card.innerHTML = `\\n                        <div style=\\"display: flex; align-i'
+  Replace start: '"                    card.innerHTML = `\\n                        <div style=\\"display: flex; align-i'
+

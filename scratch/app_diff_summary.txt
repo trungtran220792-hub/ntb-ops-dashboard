@@ -1,0 +1,361 @@
+Total app.py diff sections: 73
+
+Section 1: @@ -1,12 +1,6 @@
+  Deleted count: 7, Added count: 1
+  First deleted: -import sys
+  First added:   +load_dotenv()
+
+Section 2: @@ -246,6 +240,19 @@
+  Deleted count: 0, Added count: 13
+  First added:   +    defaults = {
+
+Section 3: @@ -256,47 +263,58 @@
+  Deleted count: 35, Added count: 46
+  First deleted: -    val = os.environ.get("CONSOLIDATED_URL", "")
+  First added:   +    keys_map = {
+
+Section 4: @@ -304,26 +322,21 @@
+  Deleted count: 16, Added count: 11
+  First deleted: -            keys_to_write = {
+  First added:   +            keys_written = set()
+
+Section 5: @@ -366,38 +379,208 @@
+  Deleted count: 31, Added count: 201
+  First deleted: -# Safe AM Name Standardization
+  First added:   +# Helper function to clean strings for merge
+
+Section 6: @@ -421,227 +604,36 @@
+  Deleted count: 213, Added count: 22
+  First deleted: -def parse_unstable_pct(val):
+  First added:   +def safe_read_csv(file_path, **kwargs):
+
+Section 7: @@ -649,42 +641,17 @@
+  Deleted count: 29, Added count: 4
+  First deleted: -        # Calculate overall metrics
+  First added:   +        # Normalize columns
+
+Section 8: @@ -711,10 +678,6 @@
+  Deleted count: 4, Added count: 0
+  First deleted: -        if date:
+
+Section 9: @@ -728,10 +691,9 @@
+  Deleted count: 3, Added count: 2
+  First deleted: -        total_ltc_vol_raw = float(df_ltc_latest['Volume'].sum())
+  First added:   +        total_ltc_vol = float(df_ltc_latest['Volume'].sum())
+
+Section 10: @@ -743,7 +705,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -        po_gtc = df_gtc_latest.groupby('Chi tiết').agg({'Volume': 'sum', 'delivered_vol': 'sum', 'Leadtime': 'mean'}).reset_index()
+  First added:   +        po_gtc = df_gtc.groupby('Chi tiết').agg({'Volume': 'sum', 'delivered_vol': 'sum', 'Leadtime': 'mean'}).reset_index()
+
+Section 11: @@ -751,7 +713,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -        po_ltc = df_ltc_latest.groupby('Chi tiết').agg({'Volume': 'sum', 'ltc_vol': 'sum', 'Leadtime': 'mean'}).reset_index()
+  First added:   +        po_ltc = df_ltc.groupby('Chi tiết').agg({'Volume': 'sum', 'ltc_vol': 'sum', 'Leadtime': 'mean'}).reset_index()
+
+Section 12: @@ -759,9 +721,8 @@
+  Deleted count: 2, Added count: 1
+  First deleted: -        trend_gtc = df_gtc.groupby('Time').agg({'Volume': 'sum', 'delivered_vol': 'sum', 'assigned_vol': 'sum'}).reset_index()
+  First added:   +        trend_gtc = df_gtc.groupby('Time').agg({'Volume': 'sum', 'delivered_vol': 'sum'}).reset_index()
+
+Section 13: @@ -789,8 +750,20 @@
+  Deleted count: 2, Added count: 14
+  First deleted: -                    if latest_date_gtc:
+  First added:   +                    latest_date_odr = None
+
+Section 14: @@ -801,38 +774,42 @@
+  Deleted count: 30, Added count: 34
+  First deleted: -        if df_tts is not None:
+  First added:   +        tts_path = resolve_path('ops_tts.csv', write=False)
+
+Section 15: @@ -864,109 +841,20 @@
+  Deleted count: 102, Added count: 13
+  First deleted: -        if df_opr is None:
+  First added:   +    file_path = resolve_path('OPR TTS.xlsx', write=False)
+
+Section 16: @@ -1046,13 +934,9 @@
+  Deleted count: 7, Added count: 3
+  First deleted: -        # Detail N-1 error orders (filter by NTB region only)
+  First added:   +        # Load OE_madh sheet (Detail N-1 error orders)
+
+Section 17: @@ -1085,15 +969,18 @@
+  Deleted count: 7, Added count: 10
+  First deleted: -        if df_raw is None:
+  First added:   +    file_path = resolve_path('Aging _5 ngày.xlsx', write=False)
+
+Section 18: @@ -1165,14 +1052,17 @@
+  Deleted count: 6, Added count: 9
+  First deleted: -        if df_raw is None:
+  First added:   +    file_path = resolve_path('Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx', write=False)
+
+Section 19: @@ -1313,15 +1203,23 @@
+  Deleted count: 6, Added count: 14
+  First deleted: -    file_path = resolve_path('buu_cuc_bat_on.csv', write=False)
+  First added:   +    file_path = resolve_path('buu_cuc_bat_on.xlsx', write=False)
+
+Section 20: @@ -1361,9 +1259,7 @@
+  Deleted count: 3, Added count: 1
+  First deleted: -        df_table = safe_read_csv(file_path, skiprows=header_row_idx)
+  First added:   +        df_table = pd.read_excel(xls, sheet_name=sheet_name, skiprows=header_row_idx)
+
+Section 21: @@ -1373,15 +1269,15 @@
+  Deleted count: 3, Added count: 3
+  First deleted: -        # Ensure we have clean mappings from co_cau_ntb.csv
+  First added:   +        # Ensure we have clean mappings from co_cau_ntb.xlsx
+
+Section 22: @@ -1403,7 +1299,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -                print(f"Error reading co_cau_ntb.csv in process_unstable_po: {e}")
+  First added:   +                print(f"Error reading co_cau_ntb.xlsx in process_unstable_po: {e}")
+
+Section 23: @@ -1450,10 +1346,10 @@
+  Deleted count: 2, Added count: 2
+  First deleted: -                "pct_lm_5n": round(parse_unstable_pct(r.get('%BL LM >5 ngay', 0)), 2),
+  First added:   +                "pct_lm_5n": round(float(r.get('%BL LM >5 ngay', 0)) * 100, 2) if pd.notna(r.get('%BL LM >5 ngay')) else 0.0,
+
+Section 24: @@ -1494,14 +1390,22 @@
+  Deleted count: 5, Added count: 13
+  First deleted: -    file_path = resolve_path('off_tuyen_spe.csv', write=False)
+  First added:   +    file_path = resolve_path('off_tuyen_spe.xlsx', write=False)
+
+Section 25: @@ -1746,18 +1650,24 @@
+  Deleted count: 5, Added count: 11
+  First deleted: -DF_TTS_CACHE = None
+  First added:   +    file_path = resolve_path('buu_cuc_bat_on.xlsx', write=False)
+
+Section 26: @@ -1768,9 +1678,7 @@
+  Deleted count: 3, Added count: 1
+  First deleted: -        df_table = safe_read_csv(file_path, skiprows=header_row_idx)
+  First added:   +        df_table = pd.read_excel(xls, sheet_name=sheet_name, skiprows=header_row_idx)
+
+Section 27: @@ -1792,19 +1700,19 @@
+  Deleted count: 5, Added count: 5
+  First deleted: -    file_path = resolve_path('vols_tao_don.csv', write=False)
+  First added:   +    file_path = resolve_path('vols_tao_don.xlsx', write=False)
+
+Section 28: @@ -1821,55 +1729,41 @@
+  Deleted count: 29, Added count: 15
+  First deleted: -def get_dataframes(force=False, raw_gtc=None, raw_ltc=None, raw_co_cau=None, raw_aging=None, raw_co_cau_aging=None, raw_treo=None, raw_co_cau_treo=No
+  First added:   +def get_dataframes(force=False, raw_gtc=None, raw_ltc=None, raw_co_cau=None, raw_aging=None, raw_co_cau_aging=None, raw_treo=None, raw_co_cau_treo=No
+
+Section 29: @@ -1882,30 +1776,26 @@
+  Deleted count: 14, Added count: 10
+  First deleted: -        if raw_tts is not None:
+  First added:   +        path_aging = resolve_path('Aging _5 ngày.xlsx', write=False)
+
+Section 30: @@ -1920,25 +1810,23 @@
+  Deleted count: 12, Added count: 10
+  First deleted: -        if raw_treo is None:
+  First added:   +        path_treo = resolve_path('Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx', write=False)
+
+Section 31: @@ -1973,36 +1861,7 @@
+  Deleted count: 30, Added count: 1
+  First deleted: -
+  First added:   +        df_ltc['ltc_vol'] = df_ltc['Volume'] * df_ltc['%LTC']
+
+Section 32: @@ -2037,7 +1896,6 @@
+  Deleted count: 1, Added count: 0
+  First deleted: -        DF_TTS_CACHE = df_tts
+
+Section 33: @@ -2081,7 +1939,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -        ops = process_operational_report(df_gtc=DF_GTC_CACHE, df_ltc=DF_LTC_CACHE, df_tts=DF_TTS_CACHE)
+  First added:   +        ops = process_operational_report(df_gtc=DF_GTC_CACHE, df_ltc=DF_LTC_CACHE)
+
+Section 34: @@ -2091,20 +1949,22 @@
+  Deleted count: 6, Added count: 8
+  First deleted: -
+  First added:   +        # Since OPR TTS is loaded here, we load it and process it
+
+Section 35: @@ -2112,10 +1972,25 @@
+  Deleted count: 4, Added count: 19
+  First deleted: -        # Fallback to ops_co_cau.csv automatically by passing df_co_cau=None
+  First added:   +        # We pass the cached dataframes!
+
+Section 36: @@ -2124,7 +1999,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -
+  First added:   +
+
+Section 37: @@ -2292,28 +2167,7 @@
+  Deleted count: 22, Added count: 1
+  First deleted: -    global OPERATIONAL_CACHE, DF_GTC_CACHE, DF_LTC_CACHE, DF_TTS_CACHE
+  First added:   +    global OPERATIONAL_CACHE
+
+Section 38: @@ -2405,9 +2259,19 @@
+  Deleted count: 0, Added count: 10
+  First added:   +    token = token.strip()
+
+Section 39: @@ -2420,56 +2284,20 @@
+  Deleted count: 45, Added count: 9
+  First deleted: -            if "consolidated_url" in data:
+  First added:   +            for k in ["ops_url", "opr_url", "aging_url", "treo_url", "bat_on_url", "off_spe_url", "tao_don_url", "telegram_bot_token", "telegram_chat
+
+Section 40: @@ -2477,12 +2305,7 @@
+  Deleted count: 6, Added count: 1
+  First deleted: -        masked_config = {
+  First added:   +        masked_config = {k: mask_config_value(k, v) for k, v in config.items()}
+
+Section 41: @@ -2491,47 +2314,21 @@
+  Deleted count: 36, Added count: 10
+  First deleted: -        'ops_gtc.csv',
+  First added:   +        'Aging _5 ngày.xlsx',
+
+Section 42: @@ -2549,25 +2346,20 @@
+  Deleted count: 14, Added count: 9
+  First deleted: -        'ops_gtc.csv',
+  First added:   +        'Aging _5 ngày.xlsx',
+
+Section 43: @@ -2588,85 +2380,40 @@
+  Deleted count: 74, Added count: 29
+  First deleted: -def split_excel_to_csvs(xlsx_path):
+  First added:   +            download_errors = []
+
+Section 44: @@ -2723,7 +2470,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -@requires_permission('tab-dashboard')
+  First added:   +@requires_permission('tab-nhan-su')
+
+Section 45: @@ -2860,9 +2607,6 @@
+  Deleted count: 3, Added count: 0
+  First deleted: -        latest_idx = dates_sorted.index(latest_date) if latest_date in dates_sorted else len(dates_sorted) - 1
+
+Section 46: @@ -2872,21 +2616,32 @@
+  Deleted count: 9, Added count: 20
+  First deleted: -            # Fallback if date is not present in df_ltc
+  First added:   +        def get_ltc_date_for_gtc_date(gtc_date):
+
+Section 47: @@ -2901,23 +2656,17 @@
+  Deleted count: 11, Added count: 5
+  First deleted: -                'vol_ltc': int(ltc_done),
+  First added:   +                'vol_ltc': int(ltc_vol),
+
+Section 48: @@ -2944,7 +2693,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -                'Volume_ltc': int(r['ltc_vol'])
+  First added:   +                'Volume_ltc': int(r['Volume_ltc'])
+
+Section 49: @@ -2970,7 +2719,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -        def format_kpi_dict(latest_kpi, prev_kpi, lw_kpi, n3_kpi=None):
+  First added:   +        def format_kpi_dict(latest_kpi, prev_kpi, lw_kpi):
+
+Section 50: @@ -2996,27 +2745,16 @@
+  Deleted count: 13, Added count: 2
+  First deleted: -
+  First added:   +
+
+Section 51: @@ -3026,10 +2764,9 @@
+  Deleted count: 2, Added count: 1
+  First deleted: -            prov_n3 = compute_kpi_for_date(n3_date, am, prov_name, post_office) if n3_date else None
+  First added:   +            kpis[clean_key] = format_kpi_dict(prov_latest, prov_prev, prov_lw)
+
+Section 52: @@ -3104,9 +2841,7 @@
+  Deleted count: 3, Added count: 1
+  First deleted: -            # Normalize key to lowercase with underscores to match frontend (e.g. 'lâm_đồng', 'bình_thuận')
+  First added:   +            trends[prov] = {
+
+Section 53: @@ -3281,7 +3016,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -                    df_odr['%Ontime'] = normalize_pct_col(df_odr['%Ontime'])
+  First added:   +                    df_odr['%Ontime'] = pd.to_numeric(df_odr['%Ontime'].astype(str).str.rstrip('%'), errors='coerce') / 100
+
+Section 54: @@ -3302,7 +3037,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -                        reply += "⚠️ Hiệu suất OPR hiện tại dưới mục tiêu tối thiểu (Target: >= 80%). Cần tập trung cải thiện thời gian xử lý đơn hàn
+  First added:   +                        reply += "⚠️ Hiệu suất OPR hiện tại chưa đạt mục tiêu tối thiểu (Target: >= 80%). Cần tập trung cải thiện thời gian xử lý đơn
+
+Section 55: @@ -3316,7 +3051,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -                    df_odr['%Ontime'] = normalize_pct_col(df_odr['%Ontime'])
+  First added:   +                    df_odr['%Ontime'] = pd.to_numeric(df_odr['%Ontime'].astype(str).str.rstrip('%'), errors='coerce') / 100
+
+Section 56: @@ -3383,14 +3118,11 @@
+  Deleted count: 7, Added count: 4
+  First deleted: -        path = resolve_path('co_cau_ntb.csv', write=False)
+  First added:   +        path = resolve_path('co_cau_ntb.xlsx', write=False)
+
+Section 57: @@ -3409,18 +3141,14 @@
+  Deleted count: 12, Added count: 8
+  First deleted: -        'ops_gtc.csv',
+  First added:   +        'Aging _5 ngày.xlsx',
+
+Section 58: @@ -3445,7 +3173,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -        return jsonify({"error": "Không tìm thấy file vols_tao_don.csv. Vui lòng cấu hình Google Sheet và đồng bộ!"}), 404
+  First added:   +        return jsonify({"error": "Không tìm thấy file vols_tao_don.xlsx. Vui lòng cấu hình Google Sheet và đồng bộ!"}), 404
+
+Section 59: @@ -3691,7 +3419,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -            merged_growth['growth_pct'] = (merged_growth['growth_abs'] / merged_growth['Volume_d7'] * 100).replace(np.inf, 100.0).replace(-np.inf, -1
+  First added:   +            merged_growth['growth_pct'] = (merged_growth['growth_abs'] / merged_growth['Volume_d7'] * 100).replace([np.inf, -np.inf], 0).fillna(0)
+
+Section 60: @@ -3764,27 +3492,27 @@
+  Deleted count: 7, Added count: 7
+  First deleted: -
+  First added:   +
+
+Section 61: @@ -3803,40 +3531,35 @@
+  Deleted count: 17, Added count: 12
+  First deleted: -
+  First added:   +
+
+Section 62: @@ -3849,7 +3572,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -
+  First added:   +
+
+Section 63: @@ -3857,12 +3580,12 @@
+  Deleted count: 2, Added count: 2
+  First deleted: -
+  First added:   +
+
+Section 64: @@ -3871,16 +3594,16 @@
+  Deleted count: 3, Added count: 3
+  First deleted: -
+  First added:   +
+
+Section 65: @@ -3888,42 +3611,42 @@
+  Deleted count: 8, Added count: 8
+  First deleted: -
+  First added:   +
+
+Section 66: @@ -3932,7 +3655,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -
+  First added:   +
+
+Section 67: @@ -3941,9 +3664,9 @@
+  Deleted count: 2, Added count: 2
+  First deleted: -
+  First added:   +
+
+Section 68: @@ -3971,60 +3694,54 @@
+  Deleted count: 22, Added count: 16
+  First deleted: -
+  First added:   +
+
+Section 69: @@ -4062,7 +3779,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -
+  First added:   +
+
+Section 70: @@ -4070,13 +3787,13 @@
+  Deleted count: 2, Added count: 2
+  First deleted: -
+  First added:   +
+
+Section 71: @@ -4084,14 +3801,14 @@
+  Deleted count: 2, Added count: 2
+  First deleted: -
+  First added:   +
+
+Section 72: @@ -4100,7 +3817,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -
+  First added:   +
+
+Section 73: @@ -4110,7 +3827,7 @@
+  Deleted count: 1, Added count: 1
+  First deleted: -
+  First added:   +

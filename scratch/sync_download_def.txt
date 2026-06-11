@@ -1,0 +1,40 @@
+L214:     response.headers['Content-Security-Policy'] = "default-src 'self' http://127.0.0.1:5000; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://*.basemaps.cartocdn.com https://unpkg.com; connect-src 'self' http://127.0.0.1:5000;"
+L215:     response.headers['X-Frame-Options'] = 'DENY'
+L216:     response.headers['X-Content-Type-Options'] = 'nosniff'
+L217:     response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+L218:     response.headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
+L219:     response.headers.pop('X-Powered-By', None)
+L220:     return response
+L221: def resolve_path(filename, write=False):
+L222:     """
+L223:     Tự động phân giải đường dẫn đọc/ghi file.
+L224:     Trên Vercel hoặc môi trường read-only:
+L225:       - Ghi file (write=True): Lưu vào /tmp/<filename>
+L226:       - Đọc file (write=False): Đọc từ /tmp/<filename> nếu tồn tại, ngược lại đọc từ thư mục gốc.
+L227:     """
+L228:     if os.environ.get("VERCEL") or not os.access(os.getcwd(), os.W_OK):
+L229:         tmp_path = os.path.join('/tmp', filename)
+L230:         if write:
+L231:             # Đảm bảo thư mục /tmp tồn tại (trong trường hợp chạy cục bộ mô phỏng)
+L232:             os.makedirs('/tmp', exist_ok=True)
+L233:             return tmp_path
+L234:         else:
+L235:             if os.path.exists(tmp_path):
+L236:                 return tmp_path
+L237:             return os.path.join(os.getcwd(), filename)
+L238:     return os.path.join(os.getcwd(), filename)
+L239: 
+L240: def standardize_am_names(df):
+L241:     if df is not None:
+L242:         for col in ['AM', 'am_name', 'final_am', 'mapped_am']:
+L243:             if col in df.columns:
+L244:                 try:
+L245:                     df[col] = df[col].apply(lambda x: str(x).strip() if pd.notnull(x) else x)
+L246:                     df[col] = df[col].replace({
+L247:                         'Huỳnh Tấn Hiền': 'Huỳnh Tấn Hiển',
+L248:                         'Huỳnh Tấn HIền': 'Huỳnh Tấn Hiển',
+L249:                         'Huỳnh Tấn Hiến': 'Huỳnh Tấn Hiển',
+L250:                         'Huỳnh Tấn HIển': 'Huỳnh Tấn Hiển',
+L251:                         'Nguyễn Tiến Lực ': 'Nguyễn Tiến Lực',
+L252:                         'Trần Công Hậu ': 'Trần Công Hậu'
+L253:                     })

@@ -1,0 +1,40 @@
+L1771: def load_vols_tao_don_df():
+L1772:     file_path = resolve_path('vols_tao_don.xlsx', write=False)
+L1773:     if not os.path.exists(file_path):
+L1774:         return None
+L1775:     try:
+L1776:         with pd.ExcelFile(file_path) as xls_meta:
+L1777:             sheet_names = xls_meta.sheet_names
+L1778:         sheet_name = "shopee_tiktok" if "shopee_tiktok" in sheet_names else sheet_names[0]
+L1779:         df = load_sheet_cached('vols_tao_don.xlsx', sheet_name, lambda p: pd.read_excel(p, sheet_name=sheet_name))
+L1780:         df.columns = [str(c).strip() for c in df.columns]
+L1781:         df['Date'] = pd.to_datetime(df['Date'])
+L1782:         df = df[df['bat_on'].fillna('').str.strip() != 'BC Cũ/Không thuộc ĐCL'].copy()
+L1783:         return df
+L1784:     except Exception as e:
+L1785:         print(f"Error loading vols_tao_don.xlsx: {e}")
+L1786:     return None
+L1787: 
+L1788: def clean_str_key(val):
+L1789:     if pd.isna(val):
+L1790:         return "unknown"
+L1791:     val = str(val).strip().lower()
+L1792:     replacements = {
+L1793:         "lâm đồng": "lam_dong",
+L1794:         "bình thuận": "binh_thuan",
+L1795:         "khánh hòa": "khanh_hoa",
+L1796:         "ninh thuận": "ninh_thuan",
+L1797:         "đắk nông": "dak_nong",
+L1798:         "đắc nông": "dak_nong"
+L1799:     }
+L1800:     return replacements.get(val, val.replace(" ", "_"))
+L1801: 
+L1802: def get_dataframes(force=False, raw_gtc=None, raw_ltc=None, raw_co_cau=None, raw_aging=None, raw_co_cau_aging=None, raw_treo=None, raw_co_cau_treo=None, raw_tts=None):
+L1803:     global DF_GTC_CACHE, DF_LTC_CACHE, DF_CO_CAU_CACHE, DF_AGING_CACHE, DF_TREO_CACHE, DF_TTS_CACHE
+L1804:     import gc
+L1805:     if force or DF_GTC_CACHE is None or DF_LTC_CACHE is None or DF_CO_CAU_CACHE is None or DF_AGING_CACHE is None or DF_TREO_CACHE is None or DF_TTS_CACHE is None:
+L1806:         if not force:
+L1807:             required_pickles = [
+L1808:                 f".cache_Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx_gtc.pkl",
+L1809:                 f".cache_Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx_ltc.pkl",
+L1810:                 f".cache_Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx_co_cau.pkl",

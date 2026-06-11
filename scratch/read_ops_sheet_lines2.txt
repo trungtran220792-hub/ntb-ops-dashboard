@@ -1,0 +1,55 @@
+436:         raise ValueError(f"Không tìm thấy sheet GTC (cần Datagtc hoặc Data) trong file. Các sheet hiện có: {xls.sheet_names}")
+437:         
+438:     elif sheet_type == "ltc":
+439:         # First priority: look for dataltc, rawltc, datalts, ltc
+440:         for candidate in ["dataltc", "rawltc", "datalts", "ltc"]:
+441:             if candidate in sheet_names_lower:
+442:                 idx = sheet_names_lower.index(candidate)
+443:                 df = pd.read_excel(xls, sheet_name=xls.sheet_names[idx])
+444:                 
+445:                 cols_lower = {c.strip().lower(): c for c in df.columns}
+446:                 rename_map = {}
+447:                 
+448:                 # Check for shifted column signature in dataltc style
+449:                 if 'loại hàng' in cols_lower and 'time' in cols_lower and 'volume' in cols_lower and '% gán' in cols_lower:
+450:                     rename_map[cols_lower['loại hàng']] = 'Time'
+451:                     rename_map[cols_lower['time']] = 'Volume'
+452:                     rename_map[cols_lower['volume']] = '% Gán'
+453:                     rename_map[cols_lower['% gán']] = '%LTC'
+454:                     if '% ltc' in cols_lower:
+455:                         rename_map[cols_lower['% ltc']] = '%LC'
+456:                     elif '%ltc' in cols_lower:
+457:                         rename_map[cols_lower['%ltc']] = '%LC'
+458:                     
+459:                     other_cols = {
+460:                         'cấp quản lý': 'Cấp quản lý',
+461:                         'chi tiết': 'Chi tiết',
+462:                         'leadtime': 'Leadtime'
+463:                     }
+464:                     for k, standard_name in other_cols.items():
+465:                         if k in cols_lower and cols_lower[k] != standard_name:
+466:                             rename_map[cols_lower[k]] = standard_name
+467:                 else:
+468:                     # Normalize core columns
+469:                     core_ltc_cols = {
+470:                         'cấp quản lý': 'Cấp quản lý',
+471:                         'chi tiết': 'Chi tiết',
+472:                         'ca': 'Ca',
+473:                         'time': 'Time',
+474:                         'volume': 'Volume',
+475:                         'leadtime': 'Leadtime'
+476:                     }
+477:                     for k, standard_name in core_ltc_cols.items():
+478:                         if k in cols_lower and cols_lower[k] != standard_name:
+479:                             rename_map[cols_lower[k]] = standard_name
+480:                             
+481:                     # Rename `% gtc` -> `%LTC` or `% ltc` -> `%LTC` if %ltc is not present
+482:                     if '%ltc' not in cols_lower:
+483:                         if '% ltc' in cols_lower:
+484:                             rename_map[cols_lower['% ltc']] = '%LTC'
+485:                         elif '% gtc' in cols_lower:
+486:                             rename_map[cols_lower['% gtc']] = '%LTC'
+487:                     else:
+488:                         rename_map[cols_lower['%ltc']] = '%LTC'
+489:                         
+490:                     # Rename `% lc` -> `%LC` or `% chuyển trả` -> `%LC` if %lc is not present

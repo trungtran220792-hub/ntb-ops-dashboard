@@ -1,0 +1,90 @@
+Element 'kpi-ltc-value' matches: 1
+
+--- Context for 'kpi-ltc-value' at position 90091 ---
+lue-row" style="display: flex; align-items: baseline; gap: 10px; margin-top: 8px;">
+                                    <div class="metric-value" id="kpi-ltc-value" style="font-size: 28px; font-weight: 800;">0%</div>
+                                    <div id="kpi-ltc-badge" class="metric-badge neutral" style="font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">
+                                        <span>-</span>
+                                    </div>
+                                </div>
+                                <div class="metric-subtext" id="kpi-ltc-subtext" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">So với ngày trước: -</div>
+                            </div>
+                            <!-- Sparkline Chart -->
+                            <div class="sparkline-container" id="sparkline-ltc" style="margin-top: 10px; min-height: 40px;"></div>
+                            <d
+--------------------------------------------------
+Element 'kpi-gtc-value' matches: 1
+
+--- Context for 'kpi-gtc-value' at position 92885 ---
+lue-row" style="display: flex; align-items: baseline; gap: 10px; margin-top: 8px;">
+                                    <div class="metric-value" id="kpi-gtc-value" style="font-size: 28px; font-weight: 800;">0%</div>
+                                    <div id="kpi-gtc-badge" class="metric-badge neutral" style="font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">
+                                        <span>-</span>
+                                    </div>
+                                </div>
+                                <div class="metric-subtext" id="kpi-gtc-subtext" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">So với ngày trước: -</div>
+                            </div>
+                            <!-- Sparkline Chart -->
+                            <div class="sparkline-container" id="sparkline-gtc" style="margin-top: 10px; min-height: 40px;"></div>
+                            <d
+--------------------------------------------------
+Element 'kpi-ttc-value' matches: 1
+
+--- Context for 'kpi-ttc-value' at position 95694 ---
+lue-row" style="display: flex; align-items: baseline; gap: 10px; margin-top: 8px;">
+                                    <div class="metric-value" id="kpi-ttc-value" style="font-size: 28px; font-weight: 800;">0%</div>
+                                    <div id="kpi-ttc-badge" class="metric-badge neutral" style="font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">
+                                        <span>-</span>
+                                    </div>
+                                </div>
+                                <div class="metric-subtext" id="kpi-ttc-subtext" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">So với ngày trước: -</div>
+                            </div>
+                            <!-- Sparkline Chart -->
+                            <div class="sparkline-container" id="sparkline-ttc" style="margin-top: 10px; min-height: 40px;"></div>
+                            <d
+--------------------------------------------------
+Element 'kpi-ltc-badge' matches: 1
+
+--- Context for 'kpi-ltc-badge' at position 90203 ---
+        <div class="metric-value" id="kpi-ltc-value" style="font-size: 28px; font-weight: 800;">0%</div>
+                                    <div id="kpi-ltc-badge" class="metric-badge neutral" style="font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">
+                                        <span>-</span>
+                                    </div>
+                                </div>
+                                <div class="metric-subtext" id="kpi-ltc-subtext" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">So với ngày trước: -</div>
+                            </div>
+                            <!-- Sparkline Chart -->
+                            <div class="sparkline-container" id="sparkline-ltc" style="margin-top: 10px; min-height: 40px;"></div>
+                            <div class="comparison-divider" style="border-top: 1px solid var(--border-color); margin: 12px 0 8px 0;"></div>
+  
+--------------------------------------------------
+Element 'kpi-gtc-badge' matches: 1
+
+--- Context for 'kpi-gtc-badge' at position 92997 ---
+        <div class="metric-value" id="kpi-gtc-value" style="font-size: 28px; font-weight: 800;">0%</div>
+                                    <div id="kpi-gtc-badge" class="metric-badge neutral" style="font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">
+                                        <span>-</span>
+                                    </div>
+                                </div>
+                                <div class="metric-subtext" id="kpi-gtc-subtext" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">So với ngày trước: -</div>
+                            </div>
+                            <!-- Sparkline Chart -->
+                            <div class="sparkline-container" id="sparkline-gtc" style="margin-top: 10px; min-height: 40px;"></div>
+                            <div class="comparison-divider" style="border-top: 1px solid var(--border-color); margin: 12px 0 8px 0;"></div>
+  
+--------------------------------------------------
+Element 'kpi-ttc-badge' matches: 1
+
+--- Context for 'kpi-ttc-badge' at position 95806 ---
+        <div class="metric-value" id="kpi-ttc-value" style="font-size: 28px; font-weight: 800;">0%</div>
+                                    <div id="kpi-ttc-badge" class="metric-badge neutral" style="font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">
+                                        <span>-</span>
+                                    </div>
+                                </div>
+                                <div class="metric-subtext" id="kpi-ttc-subtext" style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">So với ngày trước: -</div>
+                            </div>
+                            <!-- Sparkline Chart -->
+                            <div class="sparkline-container" id="sparkline-ttc" style="margin-top: 10px; min-height: 40px;"></div>
+                            <div class="comparison-divider" style="border-top: 1px solid var(--border-color); margin: 12px 0 8px 0;"></div>
+  
+--------------------------------------------------

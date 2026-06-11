@@ -1,0 +1,74 @@
+<div id="tab-nhan-su" class="content-panel">
+                <!-- HR Summary Cards -->
+                <div class="metrics-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                    <div class="kpi-card" style="border-left: 5px solid #00bfa5; background: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                        <p style="font-size: 13px; font-weight: 600; color: #64748b; margin-bottom: 8px; margin-top: 0;">Đang làm việc</p>
+                        <h2 id="ns-card-active" style="font-size: 32px; font-weight: 700; color: #1e293b; margin: 0;">0</h2>
+                    </div>
+                    <div class="kpi-card" style="border-left: 5px solid #ef5350; background: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                        <p style="font-size: 13px; font-weight: 600; color: #64748b; margin-bottom: 8px; margin-top: 0;">Đã nghỉ</p>
+                        <h2 id="ns-card-resigned" style="font-size: 32px; font-weight: 700; color: #1e293b; margin: 0;">0</h2>
+                    </div>
+                    <div class="kpi-card" style="border-left: 5px solid #ffa726; background: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+                        <p style="font-size: 13px; font-weight: 600; color: #64748b; margin-bottom: 8px; margin-top: 0;">Bưu cục</p>
+                        <h2 id="ns-card-po" style="font-size: 32px; font-weight: 700; color: #1e293b; margin: 0;">0</h2>
+                    </div>
+                </div>
+
+                <!-- Scenario Planner Configuration -->
+                <div class="card" style="margin-bottom: 24px;">
+                    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding: 16px 20px; border-bottom: 1px solid var(--border-color);">
+                        <h3 style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 18px; color: var(--text-primary); margin: 0;">
+                            <i class="fa-solid fa-users-gear" style="color: var(--color-ghn-orange); margin-right: 8px;"></i>
+                            Bảng Điều Khiển Định Biên Tương Tác (Scenario Planner)
+                        </h3>
+                        <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 13px; font-weight: 600; color: #64748b;">Mục tiêu (đơn/ngày):</span>
+                                <input type="number" id="ns-input-target-daily" value="70" min="1" class="form-input" style="width: 80px; padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 6px;" oninput="renderNhanSuTable()">
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 13px; font-weight: 600; color: #64748b;">Tăng trưởng chung %:</span>
+                                <input type="number" id="ns-input-global-growth" value="10" min="-100" class="form-input" style="width: 80px; padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 6px;" oninput="renderNhanSuTable()">
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 13px; font-weight: 600; color: #64748b;">Tìm kiếm:</span>
+                                <input type="text" id="ns-search-input" placeholder="Tìm bưu cục, tỉnh, AM..." class="form-input" style="width: 200px; padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 6px;" oninput="renderNhanSuTable()">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="custom-table" id="table-users-mgmt-planner" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>Bưu cục</th>
+                                    <th>Tỉnh</th>
+                                    <th>AM</th>
+                                    <th>Nhân sự hiện tại</th>
+                                    <th>Volume TB/Ngày 2025</th>
+                                    <th>% Tăng trưởng</th>
+                                    <th>Dự báo Vol 2026</th>
+                                    <th>HC Cần (2026)</th>
+                                    <th>Chênh lệch</th>
+                                </tr>
+                                <tr id="ns-row-grand-total" style="background: rgba(79, 70, 229, 0.08); font-weight: 700; border-bottom: 2px solid var(--border-color);">
+                                    <td style="color: var(--color-indigo); font-weight: 800;">Tổng NTB</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td id="ns-total-hc">0</td>
+                                    <td id="ns-total-vol2025">0</td>
+                                    <td id="ns-total-growth">10%</td>
+                                    <td id="ns-total-vol2026">0</td>
+                                    <td id="ns-total-hc-needed">0</td>
+                                    <td id="ns-total-diff">-</td>
+                                </tr>
+                            </thead>
+                            <tbody id="table-nhan-su-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 6: DATA SYNC & FILES STATUS -->
+            

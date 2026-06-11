@@ -1,127 +1,67 @@
 import pandas as pd
 import os
-import numpy as np
 
 workspace_dir = r"c:\Users\lap4all\Desktop\New folder"
-
-targets_d = {
-    'Bình Thuận': 10371,
-    'Khánh Hòa': 11517,
-    'Lâm Đồng': 9190,
-    'Ninh Thuận': 3725,
-    'Đắk Nông': 4764
-}
-
-targets_d1 = {
-    'Bình Thuận': 18143,
-    'Khánh Hòa': 19228,
-    'Lâm Đồng': 14658,
-    'Ninh Thuận': 6249,
-    'Đắk Nông': 7409
-}
-
-def clean_province(p):
-    p = str(p).strip()
-    if p == 'Đắc Nông':
-        return 'Đắk Nông'
-    if p == 'Khánh Hoà':
-        return 'Khánh Hòa'
-    return p
-
-# We will load Data, DataLTC, and Sheet13 from Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx
 file_path = os.path.join(workspace_dir, "Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx")
-xls = pd.ExcelFile(file_path)
+output_path = os.path.join(workspace_dir, "scratch", "find_looker_formula_res.txt")
 
-with open(os.path.join(workspace_dir, "scratch", "find_looker_formula_res.txt"), "w", encoding="utf-8") as out:
-    for sheet in ['Data', 'DataLTC', 'Sheet13']:
-        if sheet in xls.sheet_names:
-            out.write(f"\n================= SHEET: {sheet} =================\n")
-            df = pd.read_excel(xls, sheet_name=sheet)
+with open(output_path, "w", encoding="utf-8") as f:
+    df_data = pd.read_excel(file_path, sheet_name="DataLTC")
+    
+    # 1. Search for value 0.9142 in any column
+    f.write("=== Searching for 0.9142 in DataLTC ===\n")
+    for col in df_data.columns:
+        # Convert to numeric, handle string/percent formatting
+        col_numeric = pd.to_numeric(df_data[col], errors='coerce')
+        matches = df_data[(col_numeric >= 0.9141) & (col_numeric <= 0.9143)]
+        if len(matches) > 0:
+            f.write(f"Matches in column '{col}':\n")
+            f.write(matches[[col]].head(10).to_string() + "\n\n")
             
-            # Find province column
-            prov_col = None
-            for c in df.columns:
-                if 'tỉnh' in c.lower() or 'cấp quản lý' in c.lower():
-                    prov_col = c
-                    break
-            if not prov_col:
-                # try to map via a dictionary if Chi tiết is present
-                continue
-                
-            # Find time column
-            time_col = None
-            for c in df.columns:
-                if 'time' in c.lower() or 'ngay' in c.lower():
-                    time_col = c
-                    break
-            if not time_col:
-                continue
-                
-            # Add clean province and date
-            if 'cấp quản lý' in prov_col.lower():
-                df['clean_prov'] = df[prov_col].apply(lambda x: str(x).split(' - ')[1].strip() if ' - ' in str(x) else str(x).strip())
-            else:
-                df['clean_prov'] = df[prov_col].apply(clean_province)
-                
-            df['date'] = pd.to_datetime(df[time_col].apply(lambda x: str(x).split(' - ')[0]), errors='coerce')
-            
-            # Get numeric columns and percentage columns
-            num_cols = []
-            pct_cols = []
-            for c in df.columns:
-                if c in ['clean_prov', 'date', prov_col, time_col]:
-                    continue
-                # check if numeric
-                dtype = df[c].dtype
-                if np.issubdtype(dtype, np.number):
-                    num_cols.append(c)
-                else:
-                    # check if it contains percentage strings
-                    sample = df[c].dropna().head(10).astype(str)
-                    if sample.str.contains('%').any():
-                        pct_cols.append(c)
-                        # convert to float
-                        df[c+'_float'] = df[c].astype(str).str.replace('%', '', regex=False).str.replace(',', '.', regex=False)
-                        df[c+'_float'] = pd.to_numeric(df[c+'_float'], errors='coerce') / 100.0
-                        num_cols.append(c+'_float')
-            
-            out.write(f"Numeric columns: {num_cols}\n")
-            
-            # Let's test different calculations for D (2026-06-07) and D-1 (2026-06-06)
-            df_d = df[df['date'] == '2026-06-07']
-            df_d1 = df[df['date'] == '2026-06-06']
-            
-            # 1. Single column sum
-            for c in num_cols:
-                sum_d = df_d.groupby('clean_prov')[c].sum().to_dict()
-                sum_d1 = df_d1.groupby('clean_prov')[c].sum().to_dict()
-                
-                # check match
-                match_d = all(abs(sum_d.get(p, 0) - val) < 5 for p, val in targets_d.items())
-                match_d1 = all(abs(sum_d1.get(p, 0) - val) < 5 for p, val in targets_d1.items())
-                
-                if match_d or match_d1:
-                    out.write(f"MATCH found in single column '{c}':\n")
-                    out.write(f"  D matches? {match_d} (Bình Thuận: {sum_d.get('Bình Thuận')}, Khánh Hòa: {sum_d.get('Khánh Hòa')})\n")
-                    out.write(f"  D-1 matches? {match_d1} (Bình Thuận: {sum_d1.get('Bình Thuận')}, Khánh Hòa: {sum_d1.get('Khánh Hòa')})\n")
-            
-            # 2. Product of two columns (e.g. Volume * % GTC)
-            for c1 in num_cols:
-                for c2 in num_cols:
-                    if c1 == c2:
-                        continue
-                    df_d['prod'] = df_d[c1] * df_d[c2]
-                    df_d1['prod'] = df_d1[c1] * df_d1[c2]
-                    
-                    sum_d = df_d.groupby('clean_prov')['prod'].sum().to_dict()
-                    sum_d1 = df_d1.groupby('clean_prov')['prod'].sum().to_dict()
-                    
-                    match_d = all(abs(sum_d.get(p, 0) - val) < 5 for p, val in targets_d.items())
-                    match_d1 = all(abs(sum_d1.get(p, 0) - val) < 5 for p, val in targets_d1.items())
-                    
-                    if match_d or match_d1:
-                        out.write(f"MATCH found in product '{c1} * {c2}':\n")
-                        out.write(f"  D matches? {match_d} (Bình Thuận: {sum_d.get('Bình Thuận')}, Khánh Hòa: {sum_d.get('Khánh Hòa')})\n")
-                        out.write(f"  D-1 matches? {match_d1} (Bình Thuận: {sum_d1.get('Bình Thuận')}, Khánh Hòa: {sum_d1.get('Khánh Hòa')})\n")
+    # 2. Let's calculate the average of '% LTC' column or weighted average
+    f.write("=== Averages of % LTC column in DataLTC ===\n")
+    df_data.columns = [c.strip() for c in df_data.columns]
+    
+    # Average of '% LTC'
+    pct_ltc_col = pd.to_numeric(df_data['% LTC'], errors='coerce').dropna()
+    f.write(f"Average of % LTC column: {pct_ltc_col.mean() * 100:.4f}%\n")
+    
+    # Weighted average: sum(Sản Lượng Lấy Thành Công) / sum(Volume)
+    vol_col = pd.to_numeric(df_data['Volume'], errors='coerce').fillna(0)
+    success_col = pd.to_numeric(df_data['Sản Lượng Lấy Thành Công'], errors='coerce').fillna(0)
+    
+    f.write(f"Total Volume in DataLTC: {vol_col.sum()}\n")
+    f.write(f"Total success in DataLTC: {success_col.sum()}\n")
+    f.write(f"Overall Success % (success / vol): {success_col.sum() / vol_col.sum() * 100:.4f}%\n")
+    
+    # Let's inspect unique values of Time
+    f.write(f"Time column describe:\n")
+    f.write(df_data['Time'].describe().to_string() + "\n")
+    
+    # Let's group by Time and calculate Success %
+    f.write("=== Success % grouped by Time (first 20 rows) ===\n")
+    grouped = df_data.groupby('Time').agg({
+        'Volume': 'sum',
+        'Sản Lượng Lấy Thành Công': 'sum'
+    }).reset_index()
+    grouped['% success'] = (grouped['Sản Lượng Lấy Thành Công'] / grouped['Volume']) * 100
+    
+    f.write(grouped.head(20).to_string() + "\n")
+    
+    # Let's search for any time group where % success is close to 91.42%
+    f.write("\n=== Time groups with % success close to 91.42% ===\n")
+    matches_group = grouped[(grouped['% success'] >= 91.41) & (grouped['% success'] <= 91.43)]
+    f.write(matches_group.to_string() + "\n")
+    
+    # Let's search for any time group where average of % LTC is close to 91.42%
+    grouped_avg_ltc = df_data.groupby('Time').agg({
+        '% LTC': 'mean',
+        'Volume': 'sum'
+    }).reset_index()
+    grouped_avg_ltc['% LTC_scaled'] = grouped_avg_ltc['% LTC'] * 100
+    
+    f.write("\n=== Time groups with avg % LTC close to 91.42% ===\n")
+    matches_avg = grouped_avg_ltc[(grouped_avg_ltc['% LTC_scaled'] >= 91.41) & (grouped_avg_ltc['% LTC_scaled'] <= 91.43)]
+    f.write(matches_avg.to_string() + "\n")
 
-print("Done searching for looker formulas.")
+print("Done find_looker_formula.")

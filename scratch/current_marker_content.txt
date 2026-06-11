@@ -1,0 +1,440 @@
+        // ==========================================
+        // NTB SUMMARY DASHBOARD TAB LOGIC
+        // ==========================================
+        let ntbCompletedChart = null;
+        let ntbBacklogChart = null;
+        let ntbLtcTrendChart = null;
+        let ntbGtcTrendChart = null;
+
+        async function loadNtbSummaryData() {
+            const am = document.getElementById('filter-am').value;
+            const prov = document.getElementById('filter-province').value;
+            const po = document.getElementById('filter-po').value;
+            const dateSelect = document.getElementById('ntb-date-select');
+            const selectedDate = dateSelect ? dateSelect.value : '';
+
+            const params = new URLSearchParams();
+            if (am) params.append('am', am);
+            if (prov) params.append('province', prov);
+            if (po) params.append('post_office', po);
+            if (selectedDate) params.append('date', selectedDate);
+
+            try {
+                // Fetch summary dashboard data
+                const summaryRes = await fetch(getApiUrl(`/api/summary-dashboard?${params.toString()}`), getFetchOptions());
+                const summaryData = await summaryRes.json();
+
+                if (summaryData.error) {
+                    console.error("Summary error:", summaryData.error);
+                    return;
+                }
+
+                // Populate date dropdown
+                if (dateSelect) {
+                    const activeDate = summaryData.latest_date;
+                    const currentOptions = Array.from(dateSelect.options).map(o => o.value);
+                    const newOptions = summaryData.all_dates || [];
+                    
+                    const isDifferent = currentOptions.length !== newOptions.length || 
+                                      !currentOptions.every((val, index) => val === newOptions[index]);
+                    
+                    if (isDifferent || dateSelect.children.length === 0) {
+                        dateSelect.innerHTML = '';
+                        newOptions.forEach(d => {
+                            const opt = document.createElement('option');
+                            opt.value = d;
+                            opt.innerText = d;
+                            dateSelect.appendChild(opt);
+                        });
+                    }
+                    dateSelect.value = activeDate;
+                }
+
+                // Update 9 KPI Grid
+                const kpis = summaryData.kpis;
+                if (kpis) {
+                    const updateKpiCard = (metric, provKey, kpiData) => {
+                        const valEl = document.getElementById(`ntb-kpi-${metric}-${provKey}`);
+                        const trendEl = document.getElementById(`ntb-kpi-${metric}-${provKey}-trend`);
+                        if (!valEl || !trendEl) return;
+                        
+                        if (kpiData) {
+                            valEl.innerText = kpiData[metric] + "%";
+                            
+                            let trendHtml = '';
+                            if (kpiData.dod) {
+                                const diff = kpiData.dod[metric];
+                                if (diff > 0) {
+                                    trendHtml += `<span style="color: var(--color-success); font-weight:600;"><i class="fa-solid fa-caret-up"></i> +${diff}%</span>`;
+                                } else if (diff < 0) {
+                                    trendHtml += `<span style="color: var(--color-danger); font-weight:600;"><i class="fa-solid fa-caret-down"></i> ${diff}%</span>`;
+                                } else {
+                                    trendHtml += `<span style="color: var(--text-muted);">-</span>`;
+                                }
+                            }
+                            if (kpiData.wow) {
+                                const diff = kpiData.wow[metric];
+                                if (diff > 0) {
+                                    trendHtml += ` <span style="color: #007bc3; font-weight:600;" title="So với cùng kỳ tuần trước"><i class="fa-solid fa-clock"></i> ↑ +${diff}%</span>`;
+                                } else if (diff < 0) {
+                                    trendHtml += ` <span style="color: #ef4444; font-weight:600;" title="So với cùng kỳ tuần trước"><i class="fa-solid fa-clock"></i> ↓ ${diff}%</span>`;
+                                } else {
+                                    trendHtml += ` <span style="color: var(--text-muted);" title="So với cùng kỳ tuần trước"><i class="fa-solid fa-clock"></i> -</span>`;
+                                }
+                            }
+                            trendEl.innerHTML = trendHtml;
+                        } else {
+                            valEl.innerText = "0%";
+                            trendEl.innerHTML = "";
+                        }
+                    };
+
+                    updateKpiCard('ltc', 'overall', kpis.overall);
+                    updateKpiCard('gtc', 'overall', kpis.overall);
+                    updateKpiCard('ttc', 'overall', kpis.overall);
+
+                    updateKpiCard('ltc', 'lamdong', kpis.lam_dong);
+                    updateKpiCard('gtc', 'lamdong', kpis.lam_dong);
+                    updateKpiCard('ttc', 'lamdong', kpis.lam_dong);
+
+                    updateKpiCard('ltc', 'binhthuan', kpis.binh_thuan);
+                    updateKpiCard('gtc', 'binhthuan', kpis.binh_thuan);
+                    updateKpiCard('ttc', 'binhthuan', kpis.binh_thuan);
+                }
+
+                // Update new overview report date label
+                const ovReportDateEl = document.getElementById('overview-report-date');
+                if (ovReportDateEl) {
+                    ovReportDateEl.innerText = "Ngày báo cáo: " + summaryData.latest_date;
+                }
+
+                // Populate new overview provinces table
+                const ovTableBody = document.querySelector('#table-overview-provinces tbody');
+                if (ovTableBody) {
+                    ovTableBody.innerHTML = '';
+                    
+                    const compVols = summaryData.completed_vols || [];
+                    
+                    // Sort provinces alphabetically so they are neat
+                    const sortedVols = [...compVols].sort((a, b) => a.province.localeCompare(b.province));
+                    
+                    sortedVols.forEach(provData => {
+                        if (provData.province === "Không xác định") return;
+                        
+                        const tr = document.createElement('tr');
+                        
+                        const gtcVol = provData.Volume_gtc || 0;
+                        const ltcVol = provData.Volume_ltc || 0;
+                        
+                        tr.innerHTML = `
+                            <td style="text-align: left; font-weight: 600;">${escapeHTML(provData.province)}</td>
+                            <td style="text-align: center;">${gtcVol.toLocaleString()}</td>
+                            <td style="text-align: center;"><span class="badge ${provData.GTC_pct >= 60 ? 'badge-success' : 'badge-danger'}">${provData.GTC_pct}%</span></td>
+                            <td style="text-align: center;">${ltcVol.toLocaleString()}</td>
+                            <td style="text-align: center;"><span class="badge ${provData.LTC_pct >= 80 ? 'badge-success' : 'badge-danger'}">${provData.LTC_pct}%</span></td>
+                            <td style="text-align: center;"><span class="badge badge-secondary">${provData.TTC_pct}%</span></td>
+                        `;
+                        ovTableBody.appendChild(tr);
+                    });
+                    
+                    // Add region total row (Toàn vùng NTB)
+                    const overall = summaryData.kpis ? summaryData.kpis.overall : null;
+                    if (overall) {
+                        const tr = document.createElement('tr');
+                        tr.style.backgroundColor = 'rgba(255, 95, 0, 0.05)';
+                        tr.style.borderTop = '2px solid var(--color-ghn-orange)';
+                        
+                        const gtcVol = overall.vol_gtc || 0;
+                        const ltcVol = overall.vol_ltc || 0;
+                        
+                        tr.innerHTML = `
+                            <td style="text-align: left; font-weight: 800; color: var(--color-ghn-orange);">Toàn vùng NTB</td>
+                            <td style="text-align: center; font-weight: 700;">${gtcVol.toLocaleString()}</td>
+                            <td style="text-align: center;"><span class="badge ${overall.gtc >= 60 ? 'badge-success' : 'badge-danger'}" style="font-weight: 700;">${overall.gtc}%</span></td>
+                            <td style="text-align: center; font-weight: 700;">${ltcVol.toLocaleString()}</td>
+                            <td style="text-align: center;"><span class="badge ${overall.ltc >= 80 ? 'badge-success' : 'badge-danger'}" style="font-weight: 700;">${overall.ltc}%</span></td>
+                            <td style="text-align: center;"><span class="badge badge-secondary" style="font-weight: 700; background-color: var(--color-warning); color: white;">${overall.ttc}%</span></td>
+                        `;
+                        ovTableBody.appendChild(tr);
+                    }
+                }
+
+                // Render Completed Volume Chart (Grouped bars by province)
+                const compVols = summaryData.completed_vols || [];
+                const compCategories = compVols.map(v => v.province);
+                const ltcSeries = compVols.map(v => v.LTC);
+                const gtcSeries = compVols.map(v => v.GTC);
+                const ttcSeries = compVols.map(v => v.TTC);
+
+                const compOptions = {
+                    chart: { type: 'bar', height: 280, toolbar: { show: false }, background: 'transparent' },
+                    series: [
+                        { name: 'LTC', data: ltcSeries },
+                        { name: 'GTC', data: gtcSeries },
+                        { name: 'TTC', data: ttcSeries }
+                    ],
+                    xaxis: { categories: compCategories, labels: { style: { colors: '#64748b' } } },
+                    yaxis: { title: { text: 'Sản lượng' }, labels: { style: { colors: '#64748b' } } },
+                    colors: ['#007bc3', '#ff5f00', '#10b981'],
+                    plotOptions: { bar: { horizontal: false, columnWidth: '55%', borderRadius: 4 } },
+                    theme: { mode: 'light' },
+                    dataLabels: { enabled: false },
+                    legend: { position: 'bottom', labels: { colors: '#64748b' } }
+                };
+
+                if (ntbCompletedChart) ntbCompletedChart.destroy();
+                ntbCompletedChart = new ApexCharts(document.querySelector("#chart-ntb-completed"), compOptions);
+                ntbCompletedChart.render();
+
+                // Render Backlog Chart by AM
+                const blAM = summaryData.backlog_by_am || [];
+                const blCategories = blAM.map(b => b.am);
+                const clSeries = blAM.map(b => b.chua_lay);
+                const cgSeries = blAM.map(b => b.chua_giao);
+                const ctSeries = blAM.map(b => b.chua_tra);
+
+                const blOptions = {
+                    chart: { type: 'bar', height: 280, toolbar: { show: false }, background: 'transparent', stacked: true },
+                    series: [
+                        { name: 'Đơn chưa lấy', data: clSeries },
+                        { name: 'Đơn chưa giao', data: cgSeries },
+                        { name: 'Đơn chưa trả', data: ctSeries }
+                    ],
+                    xaxis: { categories: blCategories, labels: { style: { colors: '#64748b' } } },
+                    yaxis: { title: { text: 'Sản lượng backlog' }, labels: { style: { colors: '#64748b' } } },
+                    colors: ['#ef4444', '#ff5f00', '#007bc3'],
+                    plotOptions: { bar: { horizontal: false, columnWidth: '55%' } },
+                    theme: { mode: 'light' },
+                    dataLabels: { enabled: false },
+                    legend: { position: 'bottom', labels: { colors: '#64748b' } }
+                };
+
+                if (ntbBacklogChart) ntbBacklogChart.destroy();
+                ntbBacklogChart = new ApexCharts(document.querySelector("#chart-ntb-backlog-am"), blOptions);
+                ntbBacklogChart.render();
+
+                // Fetch trends data
+                const trendsRes = await fetch(getApiUrl(`/api/trends-dashboard?${params.toString()}`), getFetchOptions());
+                const trendsData = await trendsRes.json();
+
+                const trendDates = trendsData.dates || [];
+                const trends = trendsData.trends || {};
+
+                const ltcLines = [];
+                if (trends.overall) ltcLines.push({ name: 'Toàn vùng', data: trends.overall.ltc });
+                if (trends['lâm_đồng']) ltcLines.push({ name: 'Lâm Đồng', data: trends['lâm_đồng'].ltc });
+                if (trends['bình_thuận']) ltcLines.push({ name: 'Bình Thuận', data: trends['bình_thuận'].ltc });
+
+                const ltcTrendOptions = {
+                    chart: { type: 'line', height: 280, toolbar: { show: false }, background: 'transparent' },
+                    series: ltcLines,
+                    xaxis: { categories: trendDates.map(d => d.split(" - ")[0]), labels: { style: { colors: '#64748b' } } },
+                    yaxis: { title: { text: 'Tỷ lệ %' }, min: 40, max: 100, labels: { style: { colors: '#64748b' } } },
+                    colors: ['#ff5f00', '#007bc3', '#10b981'],
+                    stroke: { width: 3, curve: 'smooth' },
+                    theme: { mode: 'light' },
+                    legend: { position: 'bottom', labels: { colors: '#64748b' } },
+                    dataLabels: { enabled: true, formatter: val => val + "%", style: { fontSize: '9px' } }
+                };
+
+                if (ntbLtcTrendChart) ntbLtcTrendChart.destroy();
+                ntbLtcTrendChart = new ApexCharts(document.querySelector("#chart-ntb-ltc-trend"), ltcTrendOptions);
+                ntbLtcTrendChart.render();
+
+                const gtcLines = [];
+                if (trends.overall) gtcLines.push({ name: 'Toàn vùng', data: trends.overall.gtc });
+                if (trends['lâm_đồng']) gtcLines.push({ name: 'Lâm Đồng', data: trends['lâm_đồng'].gtc });
+                if (trends['bình_thuận']) gtcLines.push({ name: 'Bình Thuận', data: trends['bình_thuận'].gtc });
+
+                const gtcTrendOptions = {
+                    chart: { type: 'line', height: 280, toolbar: { show: false }, background: 'transparent' },
+                    series: gtcLines,
+                    xaxis: { categories: trendDates.map(d => d.split(" - ")[0]), labels: { style: { colors: '#64748b' } } },
+                    yaxis: { title: { text: 'Tỷ lệ %' }, min: 40, max: 100, labels: { style: { colors: '#64748b' } } },
+                    colors: ['#ff5f00', '#007bc3', '#10b981'],
+                    stroke: { width: 3, curve: 'smooth' },
+                    theme: { mode: 'light' },
+                    legend: { position: 'bottom', labels: { colors: '#64748b' } },
+                    dataLabels: { enabled: true, formatter: val => val + "%", style: { fontSize: '9px' } }
+                };
+
+                if (ntbGtcTrendChart) ntbGtcTrendChart.destroy();
+                ntbGtcTrendChart = new ApexCharts(document.querySelector("#chart-ntb-gtc-trend"), gtcTrendOptions);
+                ntbGtcTrendChart.render();
+
+                // Update trend cards
+                const updateTrendKPI = (prefix, valKey) => {
+                    const valEl = document.getElementById(`ntb-trend-${prefix}-val`);
+                    const diffEl = document.getElementById(`ntb-trend-${prefix}-diff`);
+
+                    if (trends.overall && trends.overall[valKey]) {
+                        const len = trends.overall[valKey].length;
+                        if (len >= 1) {
+                            const latestVal = trends.overall[valKey][len - 1];
+                            valEl.innerText = latestVal ? latestVal + "%" : "- %";
+
+                            if (len >= 2) {
+                                const prevVal = trends.overall[valKey][len - 2];
+                                const diff = (latestVal - prevVal).toFixed(2);
+                                if (diff > 0) {
+                                    diffEl.innerHTML = `<span class="trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +${diff}%</span> vs ngày trước (${prevVal}%)`;
+                                } else if (diff < 0) {
+                                    diffEl.innerHTML = `<span class="trend-down"><i class="fa-solid fa-arrow-trend-down"></i> ${diff}%</span> vs ngày trước (${prevVal}%)`;
+                                } else {
+                                    diffEl.innerHTML = `<span class="trend-neutral">Không đổi</span> vs ngày trước (${prevVal}%)`;
+                                }
+                            }
+                        }
+                    }
+
+                    const ldValEl = document.getElementById(`ntb-trend-${prefix}-ld-val`);
+                    const ldDiffEl = document.getElementById(`ntb-trend-${prefix}-ld-diff`);
+                    if (trends['lâm_đồng'] && trends['lâm_đồng'][valKey]) {
+                        const len = trends['lâm_đồng'][valKey].length;
+                        const latestVal = trends['lâm_đồng'][valKey][len - 1];
+                        ldValEl.innerText = latestVal ? latestVal + "%" : "- %";
+                        if (len >= 2) {
+                            const prevVal = trends['lâm_đồng'][valKey][len - 2];
+                            const diff = (latestVal - prevVal).toFixed(2);
+                            ldDiffEl.innerHTML = diff > 0 ? `<span style="color: var(--color-success)">↑ ${diff}%</span>` : (diff < 0 ? `<span style="color: var(--color-danger)">↓ ${Math.abs(diff)}%</span>` : `<span style="color: var(--text-muted)">-</span>`);
+                        }
+                    }
+
+                    const btValEl = document.getElementById(`ntb-trend-${prefix}-bt-val`);
+                    const btDiffEl = document.getElementById(`ntb-trend-${prefix}-bt-diff`);
+                    if (trends['bình_thuận'] && trends['bình_thuận'][valKey]) {
+                        const len = trends['bình_thuận'][valKey].length;
+                        const latestVal = trends['bình_thuận'][valKey][len - 1];
+                        btValEl.innerText = latestVal ? latestVal + "%" : "- %";
+                        if (len >= 2) {
+                            const prevVal = trends['bình_thuận'][valKey][len - 2];
+                            const diff = (latestVal - prevVal).toFixed(2);
+                            btDiffEl.innerHTML = diff > 0 ? `<span style="color: var(--color-success)">↑ ${diff}%</span>` : (diff < 0 ? `<span style="color: var(--color-danger)">↓ ${Math.abs(diff)}%</span>` : `<span style="color: var(--text-muted)">-</span>`);
+                        }
+                    }
+                };
+
+                updateTrendKPI('ltc', 'ltc');
+                updateTrendKPI('gtc', 'gtc');
+
+                // Fetch matrix tables data
+                const matrixRes = await fetch(getApiUrl(`/api/matrix-tables?${params.toString()}`), getFetchOptions());
+                const matrixData = await matrixRes.json();
+
+                renderMatrixTable('table-ntb-ltc-matrix', matrixData.ltc, 'LTC');
+                renderMatrixTable('table-ntb-gtc-matrix', matrixData.gtc, 'GTC');
+
+            } catch (err) {
+                console.error("Error loading NTB data:", err);
+            }
+        }
+
+        function renderMatrixTable(tableId, matrix, typeLabel) {
+            const table = document.getElementById(tableId);
+            if (!table) return;
+
+            table.innerHTML = '';
+
+            if (!matrix || !matrix.dates || matrix.dates.length === 0 || !matrix.rows || matrix.rows.length === 0) {
+                table.innerHTML = `<thead><tr><th>AM / Bưu cục</th><th>Không có dữ liệu</th></tr></thead>`;
+                return;
+            }
+
+            const dates = matrix.dates;
+
+            const thead = document.createElement('thead');
+            const hRow = document.createElement('tr');
+
+            hRow.innerHTML = `
+                <th rowspan="2" style="width: 250px; text-align: left !important;">AM / Bưu cục</th>
+            `;
+
+            dates.forEach(d => {
+                const displayDate = d.split(" - ")[0];
+                hRow.innerHTML += `
+                    <th colspan="2" style="text-align: center;">${displayDate}</th>
+                `;
+            });
+            thead.appendChild(hRow);
+
+            const subRow = document.createElement('tr');
+            dates.forEach(() => {
+                subRow.innerHTML += `
+                    <th style="font-size: 10px; text-align: center;">Số đơn</th>
+                    <th style="font-size: 10px; text-align: center;">% ${typeLabel}</th>
+                `;
+            });
+            thead.appendChild(subRow);
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+
+            matrix.rows.forEach((row, amIdx) => {
+                const amId = tableId + '-am-' + amIdx;
+
+                const amRow = document.createElement('tr');
+                amRow.className = 'am-header-row';
+                amRow.onclick = () => toggleAmGroup(amId);
+
+                let cellsHtml = `
+                    <td style="text-align: left;">
+                        <i id="icon-${amId}" class="fa-solid fa-plus" style="margin-right: 8px; font-size: 11px; color: var(--color-indigo);"></i>
+                        <strong>Totals for ${escapeHTML(row.am)}</strong>
+                    </td>
+                `;
+
+                dates.forEach(d => {
+                    const totalData = row.totals[d] || { vol: 0, pct: 0.0 };
+                    cellsHtml += `
+                        <td style="text-align: center;"><strong>${totalData.vol.toLocaleString()}</strong></td>
+                        <td style="text-align: center;"><strong>${totalData.pct}%</strong></td>
+                    `;
+                });
+
+                amRow.innerHTML = cellsHtml;
+                tbody.appendChild(amRow);
+
+                row.pos.forEach(po => {
+                    const poRow = document.createElement('tr');
+                    poRow.className = `po-row po-row-${amId} collapsed`;
+
+                    let poCellsHtml = `
+                        <td style="text-align: left; padding-left: 28px; color: var(--text-secondary);">${escapeHTML(po.bc)}</td>
+                    `;
+
+                    dates.forEach(d => {
+                        const poData = po.data[d] || { vol: 0, pct: 0.0 };
+                        const target = typeLabel === 'LTC' ? 80 : 60;
+                        const badgeClass = poData.pct >= target ? 'badge-success' : 'badge-danger';
+                        poCellsHtml += `
+                            <td style="text-align: center; color: var(--text-secondary);">${poData.vol.toLocaleString()}</td>
+                            <td style="text-align: center;">
+                                <span class="badge ${badgeClass}">${poData.pct}%</span>
+                            </td>
+                        `;
+                    });
+
+                    poRow.innerHTML = poCellsHtml;
+                    tbody.appendChild(poRow);
+                });
+            });
+
+            table.appendChild(tbody);
+        }
+
+        function toggleAmGroup(amId) {
+            const rows = document.querySelectorAll(`.po-row-${amId}`);
+            rows.forEach(r => r.classList.toggle('collapsed'));
+
+            const icon = document.querySelector(`#icon-${amId}`);
+            if (icon) {
+                if (icon.classList.contains('fa-plus')) {
+                    icon.classList.remove('fa-plus');
+                    icon.classList.add('fa-minus');
+                } else {
+                    icon.classList.remove('fa-minus');
+                    icon.classList.add('fa-plus');
+                }
+            }
+        }
+

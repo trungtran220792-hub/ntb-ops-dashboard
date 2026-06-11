@@ -1,0 +1,51 @@
+updateMetricCardUI = (metric, cardIdPrefix) => {
+                const valEl = document.getElementById(`kpi-${cardIdPrefix}-value`);
+                const badgeEl = document.getElementById(`kpi-${cardIdPrefix}-badge`);
+                const subtextEl = document.getElementById(`kpi-${cardIdPrefix}-subtext`);
+                const w1El = document.getElementById(`${cardIdPrefix}-w1-avg`);
+                const w2El = document.getElementById(`${cardIdPrefix}-w2-avg`);
+                const diffEl = document.getElementById(`${cardIdPrefix}-wow-diff`);
+                
+                if (!valEl) return;
+                
+                if (kpiData) {
+                    val
+<truncated 4527 bytes>
+
+--- REPLACEMENT CONTENT ---
+"        function renderNtbKpiCards() {
+            if (!cachedNtbSummaryData) return;
+            
+            const timeGroupEl = document.getElementById('ntb-time-group');
+            const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';
+            
+            const regionConfig = {
+                'overall': { label: 'Toàn vùng', kpiKey: 'overall' },
+                'lam_dong': { label: 'Lâm Đồng', kpiKey: 'lam_dong' },
+                'binh_thuan': { label: 'Bình Thuận', kpiKey: 'binh_thuan' },
+                'khanh_hoa': { label: 'Khánh Hòa', kpiKey: 'khanh_hoa' },
+                'dak_nong': { label: 'Đắk Nông', kpiKey: 'dak_nong' },
+                'ninh_thuan': { label: 'Ninh Thuận', kpiKey: 'ninh_thuan' }
+            };
+            
+            const cfg = regionConfig[activeNtbRegion] || regionConfig['overall'];
+            
+            // Update active region labels in cards
+            document.getElementById('ltc-active-region').innerText = `(${cfg.label})`;
+            document.getElementById('gtc-active-region').innerText = `(${cfg.label})`;
+            document.getElementById('ttc-active-region').innerText = `(${cfg.label})`;
+            
+            const kpis = cachedNtbSummaryData.kpis || {};
+            const kpiData = kpis[cfg.kpiKey];
+            
+            const updateMetricCardUI = (metric, cardIdPrefix) => {
+                const valEl = document.getElementById(`kpi-${cardIdPrefix}-value`);
+                const badgeEl = document.getElementById(`kpi-${cardIdPrefix}-badge`);
+                const subtextEl = document.getElementById(`kpi-${cardIdPrefix}-subtext`);
+                
+                const comp1LabelEl = document.getElementById(`${cardIdPrefix}-comp-1-label`);
+                const comp1ValEl = document.getElementById(`${cardIdPrefix}-comp-1-val`);
+                const comp1DiffEl = document.getElementById(`${cardIdPrefix}-comp-1-diff`);
+                
+                const comp2LabelEl = document.getElementById
+<truncated 8790 bytes>

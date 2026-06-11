@@ -1,0 +1,3 @@
+=== Online Google Sheet 'Cơ cấu' Tab ===
+Columns: ['MÃ£ bÆ°u cá»¥c', 'BÆ°u cá»¥c', 'BC', 'Tá»\x89nh', 'Am', 'ID - Há»\x8d TÃªn Am']
+Row 6: {'MÃ£ bÆ°u cá»¥c': 22048001, 'BÆ°u cá»¥c': 'Ä\x90iá»\x83m Xá»\xad LÃ½ HÃ\xa0ng TDP 8 Quá»\x91c Lá»\x99 14-Ä\x90Ã´ng Gia NghÄ©a-LÃ¢m Ä\x90á»\x93ng', 'BC': 'Ä\x90iá»\x83m Xá»\xad LÃ½ HÃ\xa0ng TDP 8 Quá»\x91c Lá»\x99 14-Ä\x90Ã´ng Gia NghÄ©a-LÃ¢m Ä\x90á»\x93ng', 'Tá»\x89nh': 'Ä\x90áº¯k NÃ´ng', 'Am': 'Tráº§n CÃ´ng Háº\xadu', 'ID - Há»\x8d TÃªn Am': 'Tráº§n CÃ´ng Háº\xadu'}

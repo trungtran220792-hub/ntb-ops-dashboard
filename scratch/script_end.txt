@@ -1,0 +1,63 @@
+nnerText;
+                        if (title.includes(provName)) {
+                            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            card.style.borderColor = 'var(--color-ghn-orange)';
+                            card.style.boxShadow = '0 10px 20px rgba(255,95,0,0.15)';
+                            setTimeout(() => {
+                                card.style.borderColor = '';
+                                card.style.boxShadow = '';
+                            }, 2000);
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+    <!-- GHN AI Chat Widget -->
+    <div class="ghn-chat-widget">
+        <!-- Floating Trigger (motorcycle rider shipper avatar) -->
+        <div class="ghn-chat-trigger" id="chat-trigger" onclick="toggleChatWindow(true)">
+            <div class="ghn-chat-tooltip">Trợ lý NTB!</div>
+            <div class="ghn-shipper-avatar">
+                <i class="fa-solid fa-person-biking"></i>
+                <div class="ghn-package-box">
+                    <i class="fa-solid fa-box"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Window -->
+        <div class="ghn-chat-window" id="chat-window">
+            <div class="ghn-chat-header">
+                <div class="ghn-chat-title">
+                    <i class="fa-solid fa-robot"></i> Trợ lý NTB
+                </div>
+                <button class="ghn-chat-close" onclick="toggleChatWindow(false)">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="ghn-chat-messages" id="chat-messages">
+                <div class="chat-message ai">
+                    Xin chào! Mình là <strong>Trợ lý NTB</strong>. Mình hỗ trợ trả lời nhanh các câu hỏi vận hành khu vực NTB. Bạn có thể hỏi về OPR, ODR, Bưu cục tệ nhất, Backlog, GTC/LTC.
+                </div>
+            </div>
+            <div class="ghn-chat-suggestions">
+                <button class="suggestion-btn" onclick="sendQuickPrompt('Bưu cục tệ nhất')">📍 Bưu cục tệ nhất</button>
+                <button class="suggestion-btn" onclick="sendQuickPrompt('Tỷ lệ OPR')">📊 Tỷ lệ OPR</button>
+                <button class="suggestion-btn" onclick="sendQuickPrompt('Tỷ lệ ODR')">🚚 Tỷ lệ ODR</button>
+                <button class="suggestion-btn" onclick="sendQuickPrompt('Số đơn backlog')">📦 Số đơn backlog</button>
+            </div>
+            <div class="ghn-chat-input-area">
+                <input type="text" class="ghn-chat-input" id="chat-input" placeholder="Hỏi Trợ lý NTB..." onkeydown="handleChatKey(event)">
+                <button class="ghn-chat-send" onclick="sendChatMessage()">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Leaflet.js Map Library -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</body>
+
+</html>

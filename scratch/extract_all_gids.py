@@ -1,60 +1,71 @@
-import urllib.request
-import re
 import json
-import os
+import re
+import urllib.request
 
-workspace_dir = r"c:\Users\lap4all\Desktop\New folder"
-url = "https://docs.google.com/spreadsheets/d/1DAwY-46twFrHIs77R4p4IMuIZ6JTE-e58Aj-9Kcr5Jk/edit"
-output_path = os.path.join(workspace_dir, "scratch", "sheet_gids_extracted.txt")
-
-os.makedirs(os.path.dirname(output_path), exist_ok=True)
-
-req = urllib.request.Request(url)
-req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)')
-
-try:
-    with urllib.request.urlopen(req) as response:
-        html = response.read().decode('utf-8')
+def get_gids(url):
+    req = urllib.request.Request(url)
+    req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)')
+    try:
+        with urllib.request.urlopen(req, timeout=15) as response:
+            html = response.read().decode('utf-8')
         
-    with open(output_path, "w", encoding="utf-8") as f:
-        # Save HTML snippet to check structure if needed
-        # Search for sheetName, sheetId, gid, etc.
-        # Often it is: {"sheetId":1400910659,"title":"Thứ cùng kỳ",...} or "title":"Thứ cùng kỳ","sheetId":1400910659
-        
-        # Let's search for sheetId and title
-        pairs = []
-        
-        # Find all occurrences of "title" and "sheetId" or "sheetId" and "title"
-        # We can extract all {"sheetId": X, "title": "Y"} patterns
-        matches1 = re.findall(r'\"sheetId\"\s*:\s*(\d+)\s*,\s*\"title\"\s*:\s*\"([^\"]+)\"', html)
-        matches2 = re.findall(r'\"title\"\s*:\s*\"([^\"]+)\"\s*,\s*\"sheetId\"\s*:\s*(\d+)', html)
-        
-        for sid, title in matches1:
-            pairs.append((title, sid))
-        for title, sid in matches2:
-            pairs.append((title, sid))
+        # Look for sheet info patterns in bootstrapData
+        # e.g., [gid, name, index] or similar JSON-like structures
+        # We can find all occurrences of "gid" or look for matches like: [1884142015,"Sheet Name",...]
+        # A common pattern is: [id, 0, "gid", [{"1":[[0,0,"name"]]
+        # Let's extract any occurrence of a number followed by the sheet name in double quotes
+        # Or look for '"gid":"<number>"' or similar
+        # Let's print out some parts or use regex to search for tab names:
+        results = []
+        matches = re.finditer(r'\[\d+,\s*0,\s*"([^"]+)",\s*\[\s*\{\s*"1"\s*:\s*\[\s*\[\s*0,\s*0,\s*"([^"]+)"', html)
+        for m in matches:
+            results.append((m.group(2), m.group(1)))
             
-        # Also look for properties block containing title and sheetId:
-        # e.g., properties: {title: "...", sheetId: ...}
-        properties = re.findall(r'properties\s*:\s*\{[^\}]+title\s*:\s*\"([^\"]+)\"[^\}]+sheetId\s*:\s*(\d+)', html)
-        for title, sid in properties:
-            pairs.append((title, sid))
-            
-        pairs = list(set(pairs))
-        f.write(f"Found {len(pairs)} sheets:\n")
-        for title, sid in sorted(pairs):
-            f.write(f"Sheet Name: '{title}' -> GID: {sid}\n")
-            
-        # If no sheets found, write a block of HTML for debugging
-        if len(pairs) == 0:
-            f.write("No pairs found. Showing re.findall on title/gid...\n")
-            titles = re.findall(r'\"title\"\s*:\s*\"([^\"]+)\"', html)
-            gids = re.findall(r'\"sheetId\"\s*:\s*(\d+)', html)
-            f.write(f"Titles found: {set(titles)}\n")
-            f.write(f"Sheet IDs found: {set(gids)}\n")
-            
-except Exception as e:
-    with open(output_path, "w", encoding="utf-8") as f:
-        f.write(f"Error: {e}\n")
+        matches_v2 = re.findall(r'"([^"]+)"\s*,\s*\[\s*\{\s*"1"\s*:\s*\[\s*\[\s*0,\s*0,\s*"([^"]+)"', html)
+        for gid, name in matches_v2:
+            if (name, gid) not in results:
+                results.append((name, gid))
 
-print("GIDs extraction completed.")
+        # Additional regex fallback
+        matches_v3 = re.findall(r'\[(\d+),\d+,"([^"]+)",', html)
+        for gid, name in matches_v3:
+            if len(gid) > 3 and (name, gid) not in results:
+                results.append((name, gid))
+
+        # Check for sheet metadata inside scripts: {"name":"<name>","sheetId":<id>}
+        matches_v4 = re.findall(r'"name"\s*:\s*"([^"]+)"\s*,\s*"sheetId"\s*:\s*(\d+)', html)
+        for name, gid in matches_v4:
+            if (name, gid) not in results:
+                results.append((name, gid))
+                
+        matches_v5 = re.findall(r'"sheetId"\s*:\s*(\d+)\s*,\s*"name"\s*:\s*"([^"]+)"', html)
+        for gid, name in matches_v5:
+            if (name, gid) not in results:
+                results.append((name, gid))
+                
+        return results
+    except Exception as e:
+        print(f"Error fetching URL: {e}")
+        return []
+
+def main():
+    with open('config.json', 'r', encoding='utf-8') as f:
+        config = json.load(f)
+        
+    for key, url in config.items():
+        print(f"\nSpreadsheet for {key}:")
+        if not url:
+            print("  Empty URL")
+            continue
+        # Strip gid if present to get main URL
+        base_url = url
+        match = re.search(r'(/spreadsheets/d/[a-zA-Z0-9-_]+)', url)
+        if match:
+            base_url = "https://docs.google.com/spreadsheets/d/" + match.group(1).split('/')[-1] + "/edit"
+        print(f"  Base URL: {base_url}")
+        tabs = get_gids(base_url)
+        for name, gid in tabs:
+            print(f"  Tab: '{name}' -> GID: '{gid}'")
+
+if __name__ == '__main__':
+    main()

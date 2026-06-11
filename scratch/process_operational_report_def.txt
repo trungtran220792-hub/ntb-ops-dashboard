@@ -1,0 +1,200 @@
+L675: def process_operational_report(df_gtc=None, df_ltc=None, df_tts=None):
+L676:     file_path = resolve_path('Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx', write=False)
+L677:     
+L678:     try:
+L679:         if df_gtc is None or df_ltc is None or df_tts is None:
+L680:             if not os.path.exists(file_path):
+L681:                 return {"error": f"Không tìm thấy file: {os.path.basename(file_path)}"}
+L682:             with pd.ExcelFile(file_path) as xls:
+L683:                 if df_gtc is None:
+L684:                     df_gtc = read_ops_sheet(xls, "gtc")
+L685:                 if df_ltc is None:
+L686:                     df_ltc = read_ops_sheet(xls, "ltc")
+L687:                 if df_tts is None:
+L688:                     try:
+L689:                         df_tts = read_ops_sheet(xls, "tts")
+L690:                     except Exception as e:
+L691:                         print(f"Lỗi đọc sheet TTS: {e}")
+L692:                         df_tts = None
+L693:         
+L694:         df_gtc = df_gtc.dropna(subset=["Volume"]).copy()
+L695:         df_gtc['Leadtime'] = pd.to_numeric(df_gtc['Leadtime'], errors='coerce')
+L696:         
+L697:         df_ltc = df_ltc.dropna(subset=["Volume"]).copy()
+L698:         df_ltc['Leadtime'] = pd.to_numeric(df_ltc['Leadtime'], errors='coerce')
+L699:         
+L700:         # Calculate overall metrics
+L701:         df_gtc['delivered_vol'] = df_gtc['Volume'] * df_gtc['% GTC']
+L702:         df_gtc['assigned_vol'] = df_gtc['Volume'] * df_gtc['% Gán']
+L703:         df_gtc['return_vol'] = df_gtc['Volume'] * df_gtc['% Chuyển trả']
+L704:         df_ltc['ltc_vol'] = df_ltc['Volume'] * df_ltc['%LTC']
+L705:         
+L706:         # Determine the latest date dynamically from Time column safely
+L707:         latest_date_gtc = None
+L708:         if 'Time' in df_gtc.columns and len(df_gtc) > 0:
+L709:             times = df_gtc['Time'].dropna().unique()
+L710:             try:
+L711:                 dates_sorted = sorted(times, key=lambda x: pd.to_datetime(str(x).split(' - ')[0]))
+L712:                 if dates_sorted:
+L713:                     latest_date_gtc = dates_sorted[-1]
+L714:             except Exception as e:
+L715:                 print(f"Error sorting GTC dates: {e}")
+L716:                 if len(times) > 0:
+L717:                     latest_date_gtc = times[-1]
+L718:                     
+L719:         latest_date_ltc = None
+L720:         if 'Time' in df_ltc.columns and len(df_ltc) > 0:
+L721:             times = df_ltc['Time'].dropna().unique()
+L722:             try:
+L723:                 dates_sorted = sorted(times, key=lambda x: pd.to_datetime(str(x).split(' - ')[0]))
+L724:                 if dates_sorted:
+L725:                     latest_date_ltc = dates_sorted[-1]
+L726:             except Exception as e:
+L727:                 print(f"Error sorting LTC dates: {e}")
+L728:                 if len(times) > 0:
+L729:                     latest_date_ltc = times[-1]
+L730:                     
+L731:         df_gtc_latest = df_gtc[df_gtc['Time'] == latest_date_gtc] if latest_date_gtc else df_gtc
+L732:         df_ltc_latest = df_ltc[df_ltc['Time'] == latest_date_ltc] if latest_date_ltc else df_ltc
+L733:         
+L734:         total_vol = float(df_gtc_latest['Volume'].sum())
+L735:         total_gtc_vol = float(df_gtc_latest['delivered_vol'].sum())
+L736:         total_assigned_vol = float(df_gtc_latest['assigned_vol'].sum())
+L737:         total_return_vol = float(df_gtc_latest['return_vol'].sum())
+L738:         total_inventory_vol = float((df_gtc_latest['Volume'] - df_gtc_latest['delivered_vol'] - df_gtc_latest['return_vol']).sum()) # rough estimate of tồn
+L739:         
+L740:         overall_gtc = safe_divide(total_gtc_vol, total_vol)
+L741:         overall_gan = safe_divide(total_assigned_vol, total_vol)
+L742:         
+L743:         # Calculate LTC metrics
+L744:         total_ltc_vol = float(df_ltc_latest['Volume'].sum())
+L745:         total_on_ltc_vol = float(df_ltc_latest['ltc_vol'].sum())
+L746:         overall_ltc = safe_divide(total_on_ltc_vol, total_ltc_vol)
+L747:         
+L748:         # Average Leadtime
+L749:         avg_leadtime = float(df_gtc_latest['Leadtime'].mean())
+L750:         
+L751:         # Shift breakdown (Ca 1, Ca 2, Tồn) in Datagtc
+L752:         ca1_vol = float(df_gtc_latest[df_gtc_latest['Loại Hàng'] == 'Hàng Mới Ca 1']['Volume'].sum())
+L753:         ca2_vol = float(df_gtc_latest[df_gtc_latest['Loại Hàng'] == 'Hàng Mới Ca 2']['Volume'].sum())
+L754:         ton_vol = float(df_gtc_latest[df_gtc_latest['Loại Hàng'] == 'Hàng Tồn']['Volume'].sum())
+L755:         new_vol = ca1_vol + ca2_vol
+L756:         
+L757:         # Top 10 Best and Worst Post Offices by GTC
+L758:         po_gtc = df_gtc.groupby('Chi tiết').agg({'Volume': 'sum', 'delivered_vol': 'sum', 'Leadtime': 'mean'}).reset_index()
+L759:         po_gtc['% GTC'] = (po_gtc['delivered_vol'] / po_gtc['Volume']) * 100
+L760:         po_gtc = po_gtc[po_gtc['Volume'] >= 100] # filter out small volumes for ranking
+L761:         
+L762:         top_10_gtc = po_gtc.sort_values(by='% GTC', ascending=False).head(10).to_dict(orient='records')
+L763:         worst_10_gtc = po_gtc.sort_values(by='% GTC', ascending=True).head(10).to_dict(orient='records')
+L764:         
+L765:         # Top 10 Best and Worst Post Offices by LTC
+L766:         po_ltc = df_ltc.groupby('Chi tiết').agg({'Volume': 'sum', 'ltc_vol': 'sum', 'Leadtime': 'mean'}).reset_index()
+L767:         po_ltc['% LTC'] = (po_ltc['ltc_vol'] / po_ltc['Volume']) * 100
+L768:         po_ltc = po_ltc[po_ltc['Volume'] >= 100]
+L769:         
+L770:         top_10_ltc = po_ltc.sort_values(by='% LTC', ascending=False).head(10).to_dict(orient='records')
+L771:         worst_10_ltc = po_ltc.sort_values(by='% LTC', ascending=True).head(10).to_dict(orient='records')
+L772:         
+L773:         # Xu hướng GTC & Volume theo ngày
+L774:         trend_gtc = df_gtc.groupby('Time').agg({'Volume': 'sum', 'delivered_vol': 'sum', 'assigned_vol': 'sum'}).reset_index()
+L775:         trend_gtc['% GTC'] = (trend_gtc['delivered_vol'] / trend_gtc['Volume']) * 100
+L776:         trend_gtc['% Gán'] = (trend_gtc['assigned_vol'] / trend_gtc['Volume']) * 100
+L777:         trend_gtc_list = trend_gtc.sort_values('Time').to_dict(orient='records')
+L778:         
+L779:         # Xu hướng LTC theo ngày
+L780:         trend_ltc = df_ltc.groupby('Time').agg({'Volume': 'sum', 'ltc_vol': 'sum'}).reset_index()
+L781:         trend_ltc['% LTC'] = (trend_ltc['ltc_vol'] / trend_ltc['Volume']) * 100
+L782:         trend_ltc_list = trend_ltc.sort_values('Time').to_dict(orient='records')
+L783:         
+L784:         # Calculate ODR TTS from ODR TTS.csv
+L785:         overall_odr_tts = None
+L786:         trend_odr_list = []
+L787:         odr_path = resolve_path('ODR TTS.csv', write=False)
+L788:         if os.path.exists(odr_path):
+L789:             try:
+L790:                 df_odr = pd.read_csv(odr_path)
+L791:                 df_odr['GTC'] = pd.to_numeric(df_odr['GTC'], errors='coerce')
+L792:                 df_odr['%Ontime'] = pd.to_numeric(df_odr['%Ontime'].astype(str).str.replace(',', '.').str.rstrip('%'), errors='coerce') / 100
+L793:                 df_odr['ontime_vol'] = df_odr['GTC'] * df_odr['%Ontime']
+L794:                 
+L795:                 # Trend
+L796:                 trend_odr = df_odr.groupby('Time').agg({'GTC': 'sum', 'ontime_vol': 'sum'}).reset_index()
+L797:                 trend_odr['% ODR'] = (trend_odr['ontime_vol'] / trend_odr['GTC']) * 100
+L798:                 trend_odr_list = trend_odr.sort_values('Time').to_dict(orient='records')
+L799:                 
+L800:                 # Find for latest_date_gtc
+L801:                 if latest_date_gtc:
+L802:                     df_latest_odr = df_odr[df_odr['Time'] == latest_date_gtc]
+L803:                     if not df_latest_odr.empty:
+L804:                         gtc_sum_odr = df_latest_odr['GTC'].sum()
+L805:                         ontime_sum_odr = df_latest_odr['ontime_vol'].sum()
+L806:                         overall_odr_tts = round(ontime_sum_odr / gtc_sum_odr * 100, 2) if gtc_sum_odr > 0 else 0.0
+L807:             except Exception as e:
+L808:                 print(f"Error processing ODR TTS.csv: {e}")
+L809:                 
+L810:         # Calculate TTS overall assign rate and daily trend
+L811:         overall_gan_tts = None
+L812:         trend_tts_list = []
+L813:         if df_tts is not None:
+L814:             try:
+L815:                 df_tts = df_tts.dropna(subset=["Volume"]).copy()
+L816:                 df_tts['Volume'] = pd.to_numeric(df_tts['Volume'], errors='coerce')
+L817:                 df_tts['% Gán'] = pd.to_numeric(df_tts['% Gán'], errors='coerce')
+L818:                 df_tts['assigned_vol'] = df_tts['Volume'] * df_tts['% Gán']
+L819:                 
+L820:                 # Determine the latest date dynamically from TTS Time column safely
+L821:                 latest_date_tts = None
+L822:                 if 'Time' in df_tts.columns and len(df_tts) > 0:
+L823:                     times_tts = df_tts['Time'].dropna().unique()
+L824:                     try:
+L825:                         dates_sorted_tts = sorted(times_tts, key=lambda x: pd.to_datetime(str(x).split(' - ')[0]))
+L826:                         if dates_sorted_tts:
+L827:                             latest_date_tts = dates_sorted_tts[-1]
+L828:                     except Exception as e:
+L829:                         print(f"Error sorting TTS dates: {e}")
+L830:                         if len(times_tts) > 0:
+L831:                             latest_date_tts = times_tts[-1]
+L832:                             
+L833:                 # Calculate overall_gan_tts for latest date
+L834:                 if latest_date_tts:
+L835:                     df_tts_latest = df_tts[df_tts['Time'] == latest_date_tts]
+L836:                     if not df_tts_latest.empty:
+L837:                         vol_sum_tts = df_tts_latest['Volume'].sum()
+L838:                         assigned_sum_tts = df_tts_latest['assigned_vol'].sum()
+L839:                         overall_gan_tts = safe_divide(assigned_sum_tts, vol_sum_tts)
+L840:                         
+L841:                 # Daily Gán TTS Trend
+L842:                 if 'Time' in df_tts.columns:
+L843:                     trend_tts = df_tts.groupby('Time').agg({'Volume': 'sum', 'assigned_vol': 'sum'}).reset_index()
+L844:                     trend_tts['% Gán'] = (trend_tts['assigned_vol'] / trend_tts['Volume']) * 100
+L845:                     trend_tts_list = trend_tts.sort_values('Time').to_dict(orient='records')
+L846:             except Exception as e:
+L847:                 print(f"Error processing TTS sheet: {e}")
+L848:         
+L849:         return {
+L850:             "total_volume": int(total_vol),
+L851:             "overall_gtc": overall_gtc,
+L852:             "overall_gan": overall_gan,
+L853:             "overall_gan_tts": overall_gan_tts,
+L854:             "overall_ltc": overall_ltc,
+L855:             "overall_odr_tts": overall_odr_tts,
+L856:             "avg_leadtime": round(avg_leadtime, 2),
+L857:             "ca1_vol": int(ca1_vol),
+L858:             "ca2_vol": int(ca2_vol),
+L859:             "ton_vol": int(ton_vol),
+L860:             "new_vol": int(new_vol),
+L861:             "top_10_gtc": top_10_gtc,
+L862:             "worst_10_gtc": worst_10_gtc,
+L863:             "top_10_ltc": top_10_ltc,
+L864:             "worst_10_ltc": worst_10_ltc,
+L865:             "trend_gtc": trend_gtc_list,
+L866:             "trend_ltc": trend_ltc_list,
+L867:             "trend_odr": trend_odr_list,
+L868:             "trend_tts": trend_tts_list
+L869:         }
+L870:     except Exception as e:
+L871:         return {"error": f"Lỗi xử lý file báo cáo vận hành: {str(e)}"}
+L872: 
+L873: # ==========================================
+L874: # 2. PROCESS OPR TTS REPORT

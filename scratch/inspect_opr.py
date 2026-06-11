@@ -1,24 +1,17 @@
-import openpyxl
+import sys
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+
+import pandas as pd
 import os
 
-workspace_dir = r"c:\Users\lap4all\Desktop\New folder"
-file_path = os.path.join(workspace_dir, "OPR TTS.xlsx")
-output_path = os.path.join(workspace_dir, "scratch", "inspect_opr_sheet_res.txt")
-
-with open(output_path, "w", encoding="utf-8") as f:
-    try:
-        wb = openpyxl.load_workbook(file_path, read_only=True, data_only=True)
-        if 'OPR' in wb.sheetnames:
-            ws = wb['OPR']
-            f.write("OPR sheet exists. Reading first 50 rows...\n")
-            for row in ws.iter_rows(max_row=50, max_col=15, values_only=True):
-                if any(v is not None for v in row):
-                    row_str = [str(v) if v is not None else "" for v in row]
-                    f.write(f"{row_str}\n")
-        else:
-            f.write("OPR sheet does not exist.\n")
-        wb.close()
-    except Exception as e:
-        f.write(f"Error: {e}\n")
-
-print("Done inspecting OPR sheet.")
+for f in ['opr_opr.csv', 'opr_oe.csv', 'opr_raw.csv']:
+    if os.path.exists(f):
+        try:
+            df = pd.read_csv(f, nrows=10)
+            print(f"\n{f} columns: {list(df.columns)}")
+            print(df.head(5))
+        except Exception as e:
+            print(f"Error reading {f}: {e}")
+    else:
+        print(f"{f} does not exist.")

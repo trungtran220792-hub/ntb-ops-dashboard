@@ -1,0 +1,72 @@
+Step 407 | Tool: replace_file_content
+  Description: "Move Giới thiệu NTB to the top of the sidebar navigation and make it active"
+  Instruction: "Move Giới thiệu NTB menu item above Tổng quan, and set it to active by default"
+  Target length: 478 chars
+  Replacement length: 478 chars
+  Target start: '"            <ul class=\\"sidebar-menu\\">\\n                <li class=\\"menu-item active\\" id=\\"nav-ta'
+  Replace start: '"            <ul class=\\"sidebar-menu\\">\\n                <li class=\\"menu-item active\\" id=\\"nav-ta'
+
+Step 409 | Tool: replace_file_content
+  Description: "Change the initial header page-title to GIỚI THIỆU VÙNG NAM TRUNG BỘ"
+  Instruction: "Change page-title text to GIỚI THIỆU VÙNG NAM TRUNG BỘ"
+  Target length: 68 chars
+  Replacement length: 77 chars
+  Target start: '"                    <h1 id=\\"page-title\\">Tổng quan Dashboard</h1>"'
+  Replace start: '"                    <h1 id=\\"page-title\\">GIỚI THIỆU VÙNG NAM TRUNG BỘ</h1>"'
+
+Step 415 | Tool: multi_replace_file_content
+  Description: "Toggle default active state of Introduction and Dashboard content panels in index.html"
+  Instruction: "Set tab-introduction class to active and tab-dashboard class to inactive (remove active class)"
+  Target length: 0 chars
+  Replacement length: 0 chars
+  Target start: ''
+  Replace start: ''
+
+Step 417 | Tool: replace_file_content
+  Description: "Replace seven Google Sheet URL input fields with a single Consolidated Google Sheet URL input field"
+  Instruction: "Replace the sheet URLs inputs block with a single sheet-consolidated-url input block"
+  Target length: 2057 chars
+  Replacement length: 767 chars
+  Target start: '"                    <div style=\\"display: grid; grid-template-columns: repeat(auto-fit, minmax(400p'
+  Replace start: '"                    <div style=\\"margin-bottom: 24px;\\">\\n                        <div class=\\"filt'
+
+Step 863 | Tool: replace_file_content
+  Description: "Restored the customized overview KPI cards layout, adding Tỷ lệ gán tất cả hàng, Tỷ lệ gán TTS, and Tỷ lệ ODR TTS cards, and removing target/unnecessary text from GTC."
+  Instruction: "Replace overview KPI cards html layout."
+  Target length: 1669 chars
+  Replacement length: 2039 chars
+  Target start: '"                <div class=\\"kpi-grid\\">\\n                    <div class=\\"kpi-card success\\">\\n   '
+  Replace start: '"                <div class=\\"kpi-grid\\">\\n                    <div class=\\"kpi-card success\\">\\n   '
+
+Step 871 | Tool: replace_file_content
+  Description: "Bound new metrics (kpi-gan, kpi-gan-tts, kpi-odr) and populated their WoW/DoD comparison values in renderOverviewDashboard()."
+  Instruction: "Update javascript bindings inside renderOverviewDashboard() function in templates/index.html to populate new KPI cards and metrics."
+  Target length: 2048 chars
+  Replacement length: 2055 chars
+  Target start: '"            // Fill metrics\\n            document.getElementById(\'kpi-gtc\').innerText = ops.overall'
+  Replace start: '"            // Fill metrics\\n            document.getElementById(\'kpi-gtc\').innerText = ops.overall'
+
+Step 877 | Tool: replace_file_content
+  Description: "Cleaned up duplicate template syntax lines at the end of the odrCompEl section."
+  Instruction: "Remove the trailing duplicated javascript block."
+  Target length: 1024 chars
+  Replacement length: 782 chars
+  Target start: '"            const odrDeltas = getCompareDeltas(ops.trend_odr, \'% ODR\');\\n            const odrCompE'
+  Replace start: '"            const odrDeltas = getCompareDeltas(ops.trend_odr, \'% ODR\');\\n            const odrCompE'
+
+Step 895 | Tool: replace_file_content
+  Description: "Updated manual upload validation and status icons to use green fa-file-csv exclusively for .csv files."
+  Instruction: "Update loadFilesStatus and uploadFile javascript functions to restrict to .csv files and render green CSV icons."
+  Target length: 2047 chars
+  Replacement length: 2047 chars
+  Target start: '"        async function loadFilesStatus() {\\n            try {\\n                const res = await fe'
+  Replace start: '"        async function loadFilesStatus() {\\n            try {\\n                const res = await fe'
+
+Step 921 | Tool: replace_file_content
+  Description: "Updated loadGoogleSheetsConfig and saveGoogleSheetsConfig JS bindings to save consolidated_url only."
+  Instruction: "Modify loadGoogleSheetsConfig and saveGoogleSheetsConfig javascript in templates/index.html to use sheet-consolidated-url."
+  Target length: 2060 chars
+  Replacement length: 1535 chars
+  Target start: '"        async function loadGoogleSheetsConfig() {\\n            try {\\n                const res = a'
+  Replace start: '"        async function loadGoogleSheetsConfig() {\\n            try {\\n                const res = a'
+

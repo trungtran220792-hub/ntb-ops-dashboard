@@ -1,0 +1,200 @@
+L856: def process_opr_report(df_opr=None, df_oe=None, df_rawopr=None, am=None, province=None, post_office=None):
+L857:     file_path = resolve_path('OPR TTS.xlsx', write=False)
+L858:     
+L859:     try:
+L860:         if df_opr is None or df_oe is None or df_rawopr is None:
+L861:             if not os.path.exists(file_path):
+L862:                 return {"error": f"Không tìm thấy file OPR: {os.path.basename(file_path)}"}
+L863:                 
+L864:             with pd.ExcelFile(file_path) as xls_meta:
+L865:                 sheet_names = xls_meta.sheet_names
+L866:                 
+L867:             if df_opr is None:
+L868:                 df_opr = load_sheet_cached('OPR TTS.xlsx', 'OPR', lambda p: pd.read_excel(p, sheet_name="OPR"))
+L869:             if df_oe is None:
+L870:                 df_oe = load_sheet_cached('OPR TTS.xlsx', 'OE_madh', lambda p: pd.read_excel(p, sheet_name="OE_madh"))
+L871:             if df_rawopr is None and "rawopr" in sheet_names:
+L872:                 df_rawopr = load_sheet_cached('OPR TTS.xlsx', 'rawopr', lambda p: pd.read_excel(p, sheet_name="rawopr"))
+L873:         
+L874:         # Standardize AM spelling mismatches
+L875:         for df in [df_opr, df_oe, df_rawopr]:
+L876:             if df is not None and 'AM' in df.columns:
+L877:                 df['AM'] = df['AM'].replace({'Huỳnh Tấn Hiền': 'Huỳnh Tấn Hiển'})
+L878:                 
+L879:         df_opr = df_opr.dropna(subset=["vol_ltc"]).copy()
+L880: 
+L881:         # Apply filters
+L882:         if am and am.strip():
+L883:             df_opr = df_opr[df_opr['AM'].astype(str).str.strip() == am.strip()]
+L884:             if df_oe is not None:
+L885:                 df_oe = df_oe[df_oe['AM'].astype(str).str.strip() == am.strip()]
+L886:             if df_rawopr is not None and not df_rawopr.empty:
+L887:                 df_rawopr = df_rawopr[df_rawopr['AM'].astype(str).str.strip() == am.strip()]
+L888:         if province and province.strip():
+L889:             df_opr = df_opr[df_opr['tutinh'].astype(str).str.strip() == province.strip()]
+L890:             if df_oe is not None:
+L891:                 df_oe = df_oe[df_oe['tutinh'].astype(str).str.strip() == province.strip()]
+L892:             if df_rawopr is not None and not df_rawopr.empty:
+L893:                 df_rawopr = df_rawopr[df_rawopr['tutinh'].astype(str).str.strip() == province.strip()]
+L894:         if post_office and post_office.strip():
+L895:             df_opr = df_opr[df_opr['kholay'].astype(str).str.strip() == post_office.strip()]
+L896:             if df_oe is not None:
+L897:                 df_oe = df_oe[df_oe['kholay'].astype(str).str.strip() == post_office.strip()]
+L898:             if df_rawopr is not None and not df_rawopr.empty:
+L899:                 df_rawopr = df_rawopr[df_rawopr['kholay'].astype(str).str.strip() == post_office.strip()]
+L900:         
+L901:         # Calculate OPR Overall
+L902:         total_vol = float(df_opr['vol_ltc'].sum())
+L903:         total_ot = float(df_opr['ot'].sum())
+L904:         overall_opr = safe_divide(total_ot, total_vol)
+L905:         
+L906:         # Calculate OPR comparisons (n-1 and cùng kỳ thứ)
+L907:         opr_n1 = None
+L908:         opr_wk = None
+L909:         delta_n1 = None
+L910:         delta_wk = None
+L911:         
+L912:         if df_rawopr is not None and not df_rawopr.empty:
+L913:             try:
+L914:                 # Normalize dates to YYYY-MM-DD
+L915:                 df_opr_dates = pd.to_datetime(df_opr['NgayLTC'], errors='coerce').dt.strftime('%Y-%m-%d')
+L916:                 df_rawopr_dates = pd.to_datetime(df_rawopr['NgayLTC'], errors='coerce').dt.strftime('%Y-%m-%d')
+L917:                 
+L918:                 valid_dates = df_opr_dates.dropna().unique()
+L919:                 if len(valid_dates) > 0:
+L920:                     report_date_str = max(valid_dates)
+L921:                     report_dt = pd.to_datetime(report_date_str)
+L922:                     
+L923:                     n1_date_str = (report_dt - pd.Timedelta(days=1)).strftime('%Y-%m-%d')
+L924:                     wk_date_str = (report_dt - pd.Timedelta(days=7)).strftime('%Y-%m-%d')
+L925:                     
+L926:                     # Create temporary date columns
+L927:                     df_opr_temp = df_opr.copy()
+L928:                     df_rawopr_temp = df_rawopr.copy()
+L929:                     df_opr_temp['NgayLTC_str'] = df_opr_dates
+L930:                     df_rawopr_temp['NgayLTC_str'] = df_rawopr_dates
+L931:                     
+L932:                     cols = ['NgayLTC_str', 'vol_ltc', 'ot']
+L933:                     df_comb = pd.concat([df_opr_temp[cols], df_rawopr_temp[cols]], ignore_index=True)
+L934:                     df_comb = df_comb.dropna(subset=['NgayLTC_str', 'vol_ltc', 'ot'])
+L935:                     
+L936:                     def get_opr_for_date(df, date_str):
+L937:                         df_date = df[df['NgayLTC_str'] == date_str]
+L938:                         if len(df_date) == 0:
+L939:                             return None
+L940:                         t_vol = float(df_date['vol_ltc'].sum())
+L941:                         t_ot = float(df_date['ot'].sum())
+L942:                         return safe_divide(t_ot, t_vol)
+L943:                     
+L944:                     opr_n1 = get_opr_for_date(df_comb, n1_date_str)
+L945:                     opr_wk = get_opr_for_date(df_comb, wk_date_str)
+L946:                     
+L947:                     if opr_n1 is not None:
+L948:                         delta_n1 = round(overall_opr - opr_n1, 2)
+L949:                     if opr_wk is not None:
+L950:                         delta_wk = round(overall_opr - opr_wk, 2)
+L951:             except Exception as ex:
+L952:                 print(f"Lỗi tính toán OPR so sánh: {ex}")
+L953:         
+L954:         # Calculate OPR by Creation Time Slot (Khung giờ tạo)
+L955:         time_slot_col = 'Khung giờ tạo' if 'Khung giờ tạo' in df_opr.columns else 'khung_gio_tao_don'
+L956:         slot_opr = df_opr.groupby(time_slot_col).agg({'vol_ltc': 'sum', 'ot': 'sum'}).reset_index()
+L957:         slot_opr['% OPR'] = (slot_opr['ot'] / slot_opr['vol_ltc']) * 100
+L958:         slot_opr_list = slot_opr.to_dict(orient='records')
+L959:         
+L960:         # Calculate Error Reasons (Sắp xếp theo tỷ trọng lỗi)
+L961:         reason_col = 'ly_do_tre_12h'
+L962:         df_late = df_opr[df_opr[reason_col] != '0.Ontime OPR']
+L963:         df_late = df_late.dropna(subset=[reason_col])
+L964:         
+L965:         # Late orders column
+L966:         if 'Đơn trễ' in df_late.columns:
+L967:             df_late['late_orders'] = df_late['Đơn trễ']
+L968:         else:
+L969:             df_late['late_orders'] = df_late['vol_ltc'] - df_late['ot']
+L970:             
+L971:         total_late = float(df_late['late_orders'].sum())
+L972:         
+L973:         errors = df_late.groupby(reason_col).agg({'late_orders': 'sum'}).reset_index()
+L974:         errors['weight'] = (errors['late_orders'] / total_late) * 100 if total_late > 0 else 0
+L975:         errors = errors.sort_values(by='late_orders', ascending=False)
+L976:         errors_list = errors.to_dict(orient='records')
+L977:         
+L978:         # Load OE_madh sheet (Detail N-1 error orders)
+L979:         if df_oe is None:
+L980:             df_oe = pd.read_excel(file_path, sheet_name="OE_madh")
+L981:         df_oe = df_oe.dropna(subset=["madh"]).copy()
+L982:         
+L983:         # Clean details
+L984:         df_oe = df_oe.where(pd.notnull(df_oe), None)
+L985:         oe_details = df_oe[['tutinh', 'kholay', 'sellername', 'khung_gio_tao_don', 'ly_do_tre_12h', 'madh', 'AM']].to_dict(orient='records')
+L986:         
+L987:         # Calculate OPR performance by AM
+L988:         am_opr = df_opr.groupby('AM').agg({'vol_ltc': 'sum', 'ot': 'sum'}).reset_index()
+L989:         am_opr['% OPR'] = (am_opr['ot'] / am_opr['vol_ltc']) * 100
+L990:         am_opr = am_opr.sort_values(by='% OPR', ascending=True).to_dict(orient='records')
+L991:         
+L992:         return {
+L993:             "overall_opr": overall_opr,
+L994:             "total_volume": int(total_vol),
+L995:             "total_ontime": int(total_ot),
+L996:             "total_late": int(total_late),
+L997:             "time_slots": slot_opr_list,
+L998:             "error_reasons": errors_list,
+L999:             "am_performance": am_opr,
+L1000:             "oe_details": oe_details,
+L1001:             "opr_n1": opr_n1,
+L1002:             "opr_wk": opr_wk,
+L1003:             "delta_n1": delta_n1,
+L1004:             "delta_wk": delta_wk
+L1005:         }
+L1006:     except Exception as e:
+L1007:         return {"error": f"Lỗi xử lý file OPR: {str(e)}"}
+L1008: 
+L1009: # ==========================================
+L1010: # 3. PROCESS BACKLOG AGING
+L1011: # ==========================================
+L1012: def process_aging_backlog(df_raw=None, df_co_cau=None):
+L1013:     file_path = resolve_path('Aging _5 ngày.xlsx', write=False)
+L1014:     
+L1015:     try:
+L1016:         if df_raw is None or df_co_cau is None:
+L1017:             if not os.path.exists(file_path):
+L1018:                 return {"error": f"Không tìm thấy file: {os.path.basename(file_path)}"}
+L1019:             if df_raw is None:
+L1020:                 df_raw = load_sheet_cached('Aging _5 ngày.xlsx', 'Đơn giao aging trên 5 ngày', lambda p: pd.read_excel(p, sheet_name="Đơn giao aging trên 5 ngày"))
+L1021:             if df_co_cau is None:
+L1022:                 df_co_cau = load_sheet_cached('Aging _5 ngày.xlsx', 'Cơ cấu', lambda p: pd.read_excel(p, sheet_name="Cơ cấu"))
+L1023:                     
+L1024:         df_raw = df_raw.dropna(subset=["Mã đơn"]).copy()
+L1025:         df_co_cau = df_co_cau.dropna(subset=["Bưu cục"]).copy()
+L1026:         
+L1027:         df_raw = df_raw.dropna(subset=["Mã đơn"])
+L1028:         df_co_cau = df_co_cau.dropna(subset=["Bưu cục"])
+L1029:         
+L1030:         # Map AM dynamically for rows where it is NaN
+L1031:         # Clean warehouse strings for merge
+L1032:         df_raw['bc_clean'] = df_raw['BC'].astype(str).str.strip().str.lower()
+L1033:         df_co_cau['bc_clean'] = df_co_cau['Bưu cục'].astype(str).str.strip().str.lower()
+L1034:         
+L1035:         bc_to_am = dict(zip(df_co_cau['bc_clean'], df_co_cau['AM']))
+L1036:         bc_to_province = dict(zip(df_co_cau['bc_clean'], df_co_cau['Tỉnh']))
+L1037:         
+L1038:         df_raw['mapped_am'] = df_raw['bc_clean'].map(bc_to_am)
+L1039:         df_raw['mapped_province'] = df_raw['bc_clean'].map(bc_to_province)
+L1040:         
+L1041:         # Fallback to existing columns if map fails
+L1042:         df_raw['final_am'] = df_raw['mapped_am'].fillna(df_raw['am_name']).fillna("Không xác định")
+L1043:         df_raw['final_province'] = df_raw['mapped_province'].fillna(df_raw['Tỉnh']).fillna("Không xác định")
+L1044:         
+L1045:         # Categorize into aging brackets
+L1046:         def get_aging_bracket(days):
+L1047:             try:
+L1048:                 d = float(days)
+L1049:                 if d >= 5 and d < 8:
+L1050:                     return "5 - 8 ngày"
+L1051:                 elif d >= 8 and d < 15:
+L1052:                     return "8 - 15 ngày"
+L1053:                 elif d >= 15:
+L1054:                     return "Trên 15 ngày"
+L1055:             except:

@@ -1,0 +1,553 @@
+File: added_lines.txt | Line: 337 | Keyword: Volume tạo đơn | Context: +                                <i class="fa-solid fa-file-invoice" style="color: var(--color-indigo);"></i> Volume tạo
+File: added_lines.txt | Line: 10 | Keyword: tab-nhan-su | Context: +                <li class="menu-item" id="nav-tab-nhan-su" onclick="switchTab('tab-nhan-su', this)">
+File: added_lines.txt | Line: 229 | Keyword: tab-nhan-su | Context: +            <div id="tab-nhan-su" class="content-panel">
+File: added_lines.txt | Line: 341 | Keyword: tab-nhan-su | Context: +                                    <label class="permission-item"><input type="checkbox" value="tab-nhan-su"> Quản lý 
+File: added_lines.txt | Line: 343 | Keyword: tab-nhan-su | Context: +            if (tabId === 'tab-nhan-su') {
+File: added_lines.txt | Line: 347 | Keyword: tab-nhan-su | Context: +                'tab-nhan-su',
+File: apply_premium_dashboard_patch.py | Line: 826 | Keyword: nhan_su | Context: nhan_su_js = """
+File: apply_premium_dashboard_patch.py | Line: 956 | Keyword: nhan_su | Context: new_text = new_text[:script_end_idx] + nhan_su_js + new_text[script_end_idx:]
+File: apply_premium_dashboard_patch.py | Line: 957 | Keyword: nhan_su | Context: print("Inserted nhan_su functions successfully!")
+File: app_backup_before_reset.py | Line: 62 | Keyword: tab-ntb-summary | Context: "tab-ntb-summary",
+File: app_backup_before_reset.py | Line: 79 | Keyword: tab-ntb-summary | Context: "tab-ntb-summary",
+File: app_backup_before_reset.py | Line: 68 | Keyword: tab-volume-creation | Context: "tab-volume-creation",
+File: app_backup_before_reset.py | Line: 85 | Keyword: tab-volume-creation | Context: "tab-volume-creation"
+File: app_backup_before_reset.py | Line: 2879 | Keyword: tab-volume-creation | Context: @requires_permission('tab-volume-creation')
+File: app_backup_before_reset.py | Line: 3165 | Keyword: tab-volume-creation | Context: @requires_permission('tab-volume-creation')
+File: app_backup_before_reset.py | Line: 3528 | Keyword: tab-volume-creation | Context: @requires_permission('tab-volume-creation')
+File: app_backup_before_reset.py | Line: 3690 | Keyword: tab-volume-creation | Context: @requires_permission('tab-volume-creation')
+File: app_backup_before_reset.py | Line: 2397 | Keyword: Volume tạo đơn | Context: ("tao_don_url", 'vols_tao_don.xlsx', "Volume tạo đơn")
+File: app_backup_before_reset.py | Line: 2473 | Keyword: tab-nhan-su | Context: @requires_permission('tab-nhan-su')
+File: app_backup_before_reset.py | Line: 2474 | Keyword: nhan_su | Context: def api_nhan_su():
+File: app_backup_before_reset.py | Line: 2476 | Keyword: nhan_su | Context: ns_path = resolve_path('ops_nhan_su.csv', write=False)
+File: app_backup_before_reset.py | Line: 2478 | Keyword: nhan_su | Context: return jsonify({"error": "Không tìm thấy file ops_nhan_su.csv. Vui lòng thực hiện Đồng bộ dữ liệu."}), 404
+File: app_backup_before_reset.py | Line: 2579 | Keyword: nhan_su | Context: print(f"Error in api_nhan_su: {e}")
+File: app_diff_summary.txt | Line: 217 | Keyword: tab-nhan-su | Context: First added:   +@requires_permission('tab-nhan-su')
+File: app_endpoints_code.txt | Line: 271 | Keyword: tab-volume-creation | Context: @requires_permission('tab-volume-creation')
+File: app_endpoints_code.txt | Line: 371 | Keyword: tab-volume-creation | Context: @requires_permission('tab-volume-creation')
+File: app_py_diff.txt | Line: 1807 | Keyword: Volume tạo đơn | Context: +                ("tao_don_url", 'vols_tao_don.xlsx', "Volume tạo đơn")
+File: app_py_diff.txt | Line: 1835 | Keyword: tab-nhan-su | Context: +@requires_permission('tab-nhan-su')
+File: app_py_diff.txt | Line: 1743 | Keyword: nhan_su | Context: -            (["nhân sự", "nhan su"], "ops_nhan_su.csv")
+File: app_py_diff.txt | Line: 1836 | Keyword: nhan_su | Context: def api_nhan_su():
+File: app_py_diff.txt | Line: 1838 | Keyword: nhan_su | Context: ns_path = resolve_path('ops_nhan_su.csv', write=False)
+File: app_routes_info.txt | Line: 199 | Keyword: tab-volume-creation | Context: @requires_permission('tab-volume-creation')
+File: app_sync_lines.txt | Line: 350 | Keyword: Volume tạo đơn | Context: 2397:                 ("tao_don_url", 'vols_tao_don.xlsx', "Volume tạo đơn")
+File: check_current_tabs.py | Line: 38 | Keyword: tab-ntb-summary | Context: print_section("tab-ntb-summary")
+File: compare_app_versions_output.txt | Line: 1802 | Keyword: Volume tạo đơn | Context: +                ("tao_don_url", 'vols_tao_don.xlsx', "Volume tạo đơn")
+File: compare_app_versions_output.txt | Line: 1830 | Keyword: tab-nhan-su | Context: +@requires_permission('tab-nhan-su')
+File: compare_app_versions_output.txt | Line: 1738 | Keyword: nhan_su | Context: -            (["nhân sự", "nhan su"], "ops_nhan_su.csv")
+File: compare_app_versions_output.txt | Line: 1831 | Keyword: nhan_su | Context: def api_nhan_su():
+File: compare_app_versions_output.txt | Line: 1833 | Keyword: nhan_su | Context: ns_path = resolve_path('ops_nhan_su.csv', write=False)
+File: compare_tabs.py | Line: 69 | Keyword: tab-ntb-summary | Context: # Compare HTML for tab-ntb-summary
+File: compare_tabs.py | Line: 70 | Keyword: tab-ntb-summary | Context: print("\n--- tab-ntb-summary in Current vs Base ---")
+File: compare_tabs.py | Line: 71 | Keyword: tab-ntb-summary | Context: current_ntb = get_block(current, r'<div[^>]*id="tab-ntb-summary"', r'</div>\s*</div>\s*</div>')
+File: compare_tabs.py | Line: 72 | Keyword: tab-ntb-summary | Context: base_ntb = get_block(base, r'<div[^>]*id="tab-ntb-summary"', r'</div>\s*</div>\s*</div>')
+File: compare_tabs.py | Line: 75 | Keyword: tab-ntb-summary | Context: print("HTML for tab-ntb-summary is DIFFERENT!")
+File: compare_tabs.py | Line: 78 | Keyword: tab-ntb-summary | Context: print("HTML for tab-ntb-summary is SAME.")
+File: compare_tab_contents.py | Line: 34 | Keyword: tab-volume-creation | Context: # Compare tab-volume-creation
+File: compare_tab_contents.py | Line: 35 | Keyword: tab-volume-creation | Context: v_curr = extract_div("c:/Users/lap4all/Desktop/New folder/templates/index.html", "tab-volume-creation")
+File: compare_tab_contents.py | Line: 36 | Keyword: tab-volume-creation | Context: v_back = extract_div("c:/Users/lap4all/Desktop/New folder/scratch/templates_index_backup_before_reset.html", "tab-volume
+File: compare_tab_contents.py | Line: 46 | Keyword: tab-nhan-su | Context: # Compare tab-nhan-su
+File: compare_tab_contents.py | Line: 47 | Keyword: tab-nhan-su | Context: n_curr = extract_div("c:/Users/lap4all/Desktop/New folder/templates/index.html", "tab-nhan-su")
+File: compare_tab_contents.py | Line: 48 | Keyword: tab-nhan-su | Context: n_back = extract_div("c:/Users/lap4all/Desktop/New folder/scratch/templates_index_backup_before_reset.html", "tab-nhan-s
+File: create_sample_csvs.py | Line: 66 | Keyword: nhan_su | Context: 'ops_nhan_su.csv': (
+File: current_ntb_html.txt | Line: 7 | Keyword: tab-ntb-summary | Context: 2106:             <div id="tab-ntb-summary" class="content-panel">
+File: current_tabs_info.txt | Line: 1 | Keyword: tab-ntb-summary | Context: Found tab-ntb-summary starting at line 2106: <div id="tab-ntb-summary" class="content-panel">
+File: current_tabs_info.txt | Line: 2 | Keyword: tab-ntb-summary | Context: Found tab-ntb-summary ending at line 2325: </div>
+File: current_tabs_info.txt | Line: 3 | Keyword: tab-ntb-summary | Context: --- CONTENT OF tab-ntb-summary (220 lines) ---
+File: current_tabs_info.txt | Line: 4 | Keyword: tab-ntb-summary | Context: 2106:             <div id="tab-ntb-summary" class="content-panel">
+File: diff_app_utf8.txt | Line: 2129 | Keyword: tab-volume-creation | Context: +@requires_permission('tab-volume-creation')
+File: diff_app_utf8.txt | Line: 2296 | Keyword: tab-volume-creation | Context: +@requires_permission('tab-volume-creation')
+File: diff_app_utf8.txt | Line: 1719 | Keyword: Volume tạo đơn | Context: -                ("tao_don_url", 'vols_tao_don.xlsx', "Volume tạo đơn")
+File: diff_app_utf8.txt | Line: 1672 | Keyword: nhan_su | Context: +            (["nhân sự", "nhan su"], "ops_nhan_su.csv")
+File: diff_app_utf8.txt | Line: 1765 | Keyword: nhan_su | Context: +def api_nhan_su():
+File: diff_app_utf8.txt | Line: 1767 | Keyword: nhan_su | Context: +        ns_path = resolve_path('ops_nhan_su.csv', write=False)
+File: diff_app_utf8.txt | Line: 1769 | Keyword: nhan_su | Context: +            return jsonify({"error": "Không tìm thấy file ops_nhan_su.csv. Vui lòng thực hiện Đồng bộ dữ liệu."}), 404
+File: diff_app_utf8.txt | Line: 1870 | Keyword: nhan_su | Context: +        print(f"Error in api_nhan_su: {e}")
+File: diff_index_head.txt | Line: 19 | Keyword: tab-ntb-summary | Context: <li class="menu-item" id="nav-tab-ntb-summary" onclick="switchTab('tab-ntb-summary', this)">
+File: diff_index_utf8.txt | Line: 118 | Keyword: Volume tạo đơn | Context: -                                <i class="fa-solid fa-file-invoice" style="color: var(--color-indigo);"></i> Volume tạo
+File: diff_summary.txt | Line: 14 | Keyword: tab-nhan-su | Context: First deleted: -                                <li class="menu-item" id="nav-tab-nhan-su" onclick="switchTab('tab-nhan-
+File: diff_summary.txt | Line: 15 | Keyword: tab-nhan-su | Context: First added:   +                <li class="menu-item" id="nav-tab-nhan-su" onclick="switchTab('tab-nhan-su', this)">
+File: diff_summary.txt | Line: 84 | Keyword: tab-nhan-su | Context: First added:   +                                    <label class="permission-item"><input type="checkbox" value="tab-nha
+File: diff_summary_detailed.txt | Line: 96 | Keyword: tab-nhan-su | Context: <li class="menu-item" id="nav-tab-nhan-su" onclick="switchTab('tab-nhan-su', this)">
+File: diff_summary_detailed.txt | Line: 384 | Keyword: tab-nhan-su | Context: <div id="tab-nhan-su" class="content-panel">
+File: diff_summary_detailed.txt | Line: 531 | Keyword: tab-nhan-su | Context: if (tabId === 'tab-nhan-su') {
+File: diff_summary_detailed.txt | Line: 539 | Keyword: tab-nhan-su | Context: 'tab-nhan-su',
+File: diff_volume_html.py | Line: 4 | Keyword: tab-volume-creation | Context: v_curr = extract_div("c:/Users/lap4all/Desktop/New folder/templates/index.html", "tab-volume-creation")
+File: diff_volume_html.py | Line: 5 | Keyword: tab-volume-creation | Context: v_back = extract_div("c:/Users/lap4all/Desktop/New folder/scratch/templates_index_backup_before_reset.html", "tab-volume
+File: extracted_step_2970.txt | Line: 1 | Keyword: tab-volume-creation | Context: "                <li class=\"menu-item\" id=\"nav-tab-volume-creation\" onclick=\"switchTab('tab-volume-creation', this)
+File: extracted_step_2970.txt | Line: 1 | Keyword: Volume tạo đơn | Context: "                <li class=\"menu-item\" id=\"nav-tab-volume-creation\" onclick=\"switchTab('tab-volume-creation', this)
+File: extracted_step_2970.txt | Line: 1 | Keyword: tab-nhan-su | Context: "                <li class=\"menu-item\" id=\"nav-tab-volume-creation\" onclick=\"switchTab('tab-volume-creation', this)
+File: extracted_step_2976.txt | Line: 1 | Keyword: tab-nhan-su | Context: "            </div>\n\n            <!-- TAB: NHÂN SỰ -->\n            <div id=\"tab-nhan-su\" class=\"content-panel\">\n
+File: extracted_step_2994.txt | Line: 1 | Keyword: tab-ntb-summary | Context: "{\n    \"admin\": {\n        \"username\": \"admin\",\n        \"password\": \"pbkdf2:sha256:1000000$osaaU1njNDF1x8ji$c
+File: extracted_step_2994.txt | Line: 1 | Keyword: tab-volume-creation | Context: "{\n    \"admin\": {\n        \"username\": \"admin\",\n        \"password\": \"pbkdf2:sha256:1000000$osaaU1njNDF1x8ji$c
+File: extracted_step_2994.txt | Line: 1 | Keyword: tab-nhan-su | Context: "{\n    \"admin\": {\n        \"username\": \"admin\",\n        \"password\": \"pbkdf2:sha256:1000000$osaaU1njNDF1x8ji$c
+File: extracted_step_2996.txt | Line: 1 | Keyword: tab-ntb-summary | Context: "        function gateMenuTabs() {\n            // Define all tab mappings\n            const tabIds = [\n              
+File: extracted_step_2996.txt | Line: 1 | Keyword: tab-volume-creation | Context: "        function gateMenuTabs() {\n            // Define all tab mappings\n            const tabIds = [\n              
+File: extracted_step_2996.txt | Line: 1 | Keyword: tab-nhan-su | Context: "        function gateMenuTabs() {\n            // Define all tab mappings\n            const tabIds = [\n              
+File: extracted_step_3014.txt | Line: 1 | Keyword: tab-nhan-su | Context: "            // Force donut chart update when switching to backlog tab\n            if (tabId === 'tab-backlog') {\n    
+File: extract_from_logs.py | Line: 5 | Keyword: tab-nhan-su | Context: keywords = ['table-nhan-su-body', 'renderNhanSuTable', 'loadNhanSuData', 'ns-total-hc', 'ns-input-global-growth', 'tab-n
+File: extract_ntb_tab_html.py | Line: 11 | Keyword: tab-ntb-summary | Context: # We know tab-ntb-summary is between line 2106 and 2325 (1-indexed)
+File: extract_ntb_tab_html.py | Line: 16 | Keyword: tab-ntb-summary | Context: print("Saved tab-ntb-summary HTML to ntb_tab_html.txt")
+File: find_lines.py | Line: 7 | Keyword: tab-ntb-summary | Context: "tab-ntb-summary",
+File: find_ntb_kpi_cards.py | Line: 6 | Keyword: tab-ntb-summary | Context: if 'id="tab-ntb-summary"' in line:
+File: find_script_diffs.py | Line: 35 | Keyword: nhan_su | Context: keywords = ["volume", "nhan", "user", "role", "nhansu", "nhan_su", "active_tab", "switchtab"]
+File: found_index_html_writes.txt | Line: 217 | Keyword: tab-ntb-summary | Context: Instruction: "Insert a new menu list item for tab-ntb-summary after tab-dashboard."
+File: found_index_html_writes.txt | Line: 221 | Keyword: tab-ntb-summary | Context: Description: "Insert the tab-ntb-summary HTML panel container before tab-operational in index.html"
+File: found_index_html_writes.txt | Line: 222 | Keyword: tab-ntb-summary | Context: Instruction: "Insert tab-ntb-summary content block before tab-operational block."
+File: found_index_html_writes.txt | Line: 216 | Keyword: Chỉ số NTB | Context: Description: "Add Chỉ số NTB tab to the sidebar menu in index.html"
+File: found_index_html_writes.txt | Line: 570 | Keyword: tab-volume-creation | Context: Description: "Add filters, heatmap matrix, line trends chart, province daily chart, and growth treemap to the tab-volume
+File: found_index_html_writes.txt | Line: 571 | Keyword: tab-volume-creation | Context: Instruction: "Replace the tab-volume-creation panel with the expanded interactive filters, table, and charts containers"
+File: full_html_diff.txt | Line: 98 | Keyword: tab-ntb-summary | Context: <li class="menu-item" id="nav-tab-ntb-summary" onclick="switchTab('tab-ntb-summary', this)">
+File: full_html_diff.txt | Line: 99 | Keyword: Chỉ số NTB | Context: <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
+File: full_html_diff.txt | Line: 101 | Keyword: tab-volume-creation | Context: <li class="menu-item" id="nav-tab-volume-creation" onclick="switchTab('tab-volume-creation', this)">
+File: full_html_diff.txt | Line: 749 | Keyword: tab-volume-creation | Context: <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tạo đơn</label>
+File: full_html_diff.txt | Line: 102 | Keyword: Volume tạo đơn | Context: <i class="fa-solid fa-file-invoice"></i> Volume tạo đơn
+File: full_html_diff.txt | Line: 686 | Keyword: Volume tạo đơn | Context: +                                <i class="fa-solid fa-file-invoice" style="color: var(--color-indigo);"></i> Volume tạo
+File: full_html_diff.txt | Line: 749 | Keyword: Volume tạo đơn | Context: <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tạo đơn</label>
+File: full_html_diff.txt | Line: 104 | Keyword: tab-nhan-su | Context: -                                <li class="menu-item" id="nav-tab-nhan-su" onclick="switchTab('tab-nhan-su', this)">
+File: full_html_diff.txt | Line: 105 | Keyword: tab-nhan-su | Context: +                <li class="menu-item" id="nav-tab-nhan-su" onclick="switchTab('tab-nhan-su', this)">
+File: full_html_diff.txt | Line: 628 | Keyword: tab-nhan-su | Context: <div id="tab-nhan-su" class="content-panel">
+File: full_html_diff.txt | Line: 750 | Keyword: tab-nhan-su | Context: +                                    <label class="permission-item"><input type="checkbox" value="tab-nhan-su"> Quản lý 
+File: full_html_diff.txt | Line: 759 | Keyword: tab-nhan-su | Context: if (tabId === 'tab-nhan-su') {
+File: gate_menu_tabs_inspect.txt | Line: 9 | Keyword: tab-ntb-summary | Context: 3469:                 'tab-ntb-summary',
+File: gate_menu_tabs_inspect.txt | Line: 15 | Keyword: tab-volume-creation | Context: 3475:                 'tab-volume-creation',
+File: git_diff_index.txt | Line: 92 | Keyword: tab-ntb-summary | Context: <li class="menu-item" id="nav-tab-ntb-summary" onclick="switchTab('tab-ntb-summary', this)">
+File: git_diff_index.txt | Line: 93 | Keyword: Chỉ số NTB | Context: <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
+File: git_diff_index.txt | Line: 582 | Keyword: Volume tạo đơn | Context: -                                <i class="fa-solid fa-file-invoice" style="color: var(--color-indigo);"></i> Volume tạo
+File: git_diff_index_utf8.txt | Line: 19 | Keyword: tab-ntb-summary | Context: <li class="menu-item" id="nav-tab-ntb-summary" onclick="switchTab('tab-ntb-summary', this)">
+File: git_diff_index_utf8.txt | Line: 20 | Keyword: Chỉ số NTB | Context: <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
+File: git_diff_index_utf8.txt | Line: 136 | Keyword: Volume tạo đơn | Context: -                                <i class="fa-solid fa-file-invoice" style="color: var(--color-indigo);"></i> Volume tạo
+File: index_base_utf8.html | Line: 1699 | Keyword: tab-ntb-summary | Context: <li class="menu-item" id="nav-tab-ntb-summary" onclick="switchTab('tab-ntb-summary', this)">
+File: index_base_utf8.html | Line: 2082 | Keyword: tab-ntb-summary | Context: <div id="tab-ntb-summary" class="content-panel">
+File: index_base_utf8.html | Line: 3135 | Keyword: tab-ntb-summary | Context: <label class="permission-item"><input type="checkbox" value="tab-ntb-summary" checked> Chß╗ë sß╗æ NTB</label>
+File: index_base_utf8.html | Line: 3396 | Keyword: tab-ntb-summary | Context: 'tab-ntb-summary',
+File: index_base_utf8.html | Line: 3519 | Keyword: tab-ntb-summary | Context: 'tab-ntb-summary': 'Chß╗ë sß╗æ',
+File: index_base_utf8.html | Line: 1717 | Keyword: tab-volume-creation | Context: <li class="menu-item" id="nav-tab-volume-creation" onclick="switchTab('tab-volume-creation', this)">
+File: index_base_utf8.html | Line: 2027 | Keyword: tab-volume-creation | Context: <div class="kpi-card info" id="kpi-volume-creation-card" style="cursor: pointer;" onclick="switchTab('tab-volume-creatio
+File: index_base_utf8.html | Line: 2862 | Keyword: tab-volume-creation | Context: <div id="tab-volume-creation" class="content-panel">
+File: index_base_utf8.html | Line: 3141 | Keyword: tab-volume-creation | Context: <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tß║ío ─æ╞ín</label>
+File: index_base_utf8.html | Line: 3402 | Keyword: tab-volume-creation | Context: 'tab-volume-creation',
+File: index_base_utf8.html | Line: 3525 | Keyword: tab-volume-creation | Context: 'tab-volume-creation': 'Sß║ún l╞░ß╗úng',
+File: index_current_backup.html | Line: 1699 | Keyword: tab-ntb-summary | Context: <li class="menu-item" id="nav-tab-ntb-summary" onclick="switchTab('tab-ntb-summary', this)">
+File: index_current_backup.html | Line: 2163 | Keyword: tab-ntb-summary | Context: <div id="tab-ntb-summary" class="content-panel">
+File: index_current_backup.html | Line: 3289 | Keyword: tab-ntb-summary | Context: <label class="permission-item"><input type="checkbox" value="tab-ntb-summary" checked> Chỉ số NTB</label>
+File: index_current_backup.html | Line: 3555 | Keyword: tab-ntb-summary | Context: 'tab-ntb-summary',
+File: index_current_backup.html | Line: 3679 | Keyword: tab-ntb-summary | Context: 'tab-ntb-summary': 'Chỉ số',
+File: index_current_backup.html | Line: 1700 | Keyword: Chỉ số NTB | Context: <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
+File: index_current_backup.html | Line: 3289 | Keyword: Chỉ số NTB | Context: <label class="permission-item"><input type="checkbox" value="tab-ntb-summary" checked> Chỉ số NTB</label>
+File: index_current_backup.html | Line: 1717 | Keyword: tab-volume-creation | Context: <li class="menu-item" id="nav-tab-volume-creation" onclick="switchTab('tab-volume-creation', this)">
+File: index_current_backup.html | Line: 2057 | Keyword: tab-volume-creation | Context: <div class="kpi-card info" id="kpi-volume-creation-card" style="cursor: pointer;" onclick="switchTab('tab-volume-creatio
+File: index_current_backup.html | Line: 2943 | Keyword: tab-volume-creation | Context: <div id="tab-volume-creation" class="content-panel">
+File: index_current_backup.html | Line: 3295 | Keyword: tab-volume-creation | Context: <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tạo đơn</label>
+File: index_current_backup.html | Line: 3561 | Keyword: tab-volume-creation | Context: 'tab-volume-creation',
+File: index_current_backup.html | Line: 3685 | Keyword: tab-volume-creation | Context: 'tab-volume-creation': 'Sản lượng',
+File: index_current_backup.html | Line: 1718 | Keyword: Volume tạo đơn | Context: <i class="fa-solid fa-file-invoice"></i> Volume tạo đơn
+File: index_current_backup.html | Line: 2059 | Keyword: Volume tạo đơn | Context: <span>Volume tạo đơn</span>
+File: index_current_backup.html | Line: 2996 | Keyword: Volume tạo đơn | Context: <i class="fa-solid fa-file-invoice"></i> Báo cáo So sánh Volume tạo đơn
+File: index_current_backup.html | Line: 3216 | Keyword: Volume tạo đơn | Context: <i class="fa-solid fa-file-invoice" style="color: var(--color-indigo);"></i> Volume tạo đơn (shopee_tiktok)
+File: index_current_backup.html | Line: 3295 | Keyword: Volume tạo đơn | Context: <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tạo đơn</label>
+File: index_current_backup.html | Line: 1720 | Keyword: tab-nhan-su | Context: <li class="menu-item" id="nav-tab-nhan-su" onclick="switchTab('tab-nhan-su', this)">
+File: index_current_backup.html | Line: 3086 | Keyword: tab-nhan-su | Context: <div id="tab-nhan-su" class="content-panel">
+File: index_current_backup.html | Line: 3296 | Keyword: tab-nhan-su | Context: <label class="permission-item"><input type="checkbox" value="tab-nhan-su"> Quản lý Nhân sự</label>
+File: index_current_backup.html | Line: 3475 | Keyword: tab-nhan-su | Context: if (tabId === 'tab-nhan-su') {
+File: index_current_backup.html | Line: 3562 | Keyword: tab-nhan-su | Context: 'tab-nhan-su',
+File: index_head.html | Line: 1699 | Keyword: tab-ntb-summary | Context: <li class="menu-item" id="nav-tab-ntb-summary" onclick="switchTab('tab-ntb-summary', this)">
+File: index_head.html | Line: 2082 | Keyword: tab-ntb-summary | Context: <div id="tab-ntb-summary" class="content-panel">
+File: index_head.html | Line: 3135 | Keyword: tab-ntb-summary | Context: <label class="permission-item"><input type="checkbox" value="tab-ntb-summary" checked> Chỉ số NTB</label>
+File: index_head.html | Line: 3396 | Keyword: tab-ntb-summary | Context: 'tab-ntb-summary',
+File: index_head.html | Line: 3519 | Keyword: tab-ntb-summary | Context: 'tab-ntb-summary': 'Chỉ số',
+File: index_head.html | Line: 1700 | Keyword: Chỉ số NTB | Context: <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
+File: index_head.html | Line: 3135 | Keyword: Chỉ số NTB | Context: <label class="permission-item"><input type="checkbox" value="tab-ntb-summary" checked> Chỉ số NTB</label>
+File: index_head.html | Line: 1717 | Keyword: tab-volume-creation | Context: <li class="menu-item" id="nav-tab-volume-creation" onclick="switchTab('tab-volume-creation', this)">
+File: index_head.html | Line: 2027 | Keyword: tab-volume-creation | Context: <div class="kpi-card info" id="kpi-volume-creation-card" style="cursor: pointer;" onclick="switchTab('tab-volume-creatio
+File: index_head.html | Line: 2862 | Keyword: tab-volume-creation | Context: <div id="tab-volume-creation" class="content-panel">
+File: index_head.html | Line: 3141 | Keyword: tab-volume-creation | Context: <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tạo đơn</label>
+File: index_head.html | Line: 3402 | Keyword: tab-volume-creation | Context: 'tab-volume-creation',
+File: index_head.html | Line: 3525 | Keyword: tab-volume-creation | Context: 'tab-volume-creation': 'Sản lượng',
+File: index_head.html | Line: 1718 | Keyword: Volume tạo đơn | Context: <i class="fa-solid fa-file-invoice"></i> Volume tạo đơn
+File: index_head.html | Line: 2029 | Keyword: Volume tạo đơn | Context: <span>Volume tạo đơn</span>
+File: index_head.html | Line: 2915 | Keyword: Volume tạo đơn | Context: <i class="fa-solid fa-file-invoice"></i> Báo cáo So sánh Volume tạo đơn
+File: index_head.html | Line: 3062 | Keyword: Volume tạo đơn | Context: <i class="fa-solid fa-file-invoice" style="color: var(--color-indigo);"></i> Volume tạo đơn (shopee_tiktok)
+File: index_head.html | Line: 3141 | Keyword: Volume tạo đơn | Context: <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tạo đơn</label>
+File: inspect_app_nhansu.py | Line: 7 | Keyword: nhan_su | Context: if "nhan" in line or "nhan-su" in line or "nhan_su" in line:
+File: inspect_app_nhansu_output.txt | Line: 3 | Keyword: tab-nhan-su | Context: Line 2473: @requires_permission('tab-nhan-su')
+File: inspect_app_nhansu_output.txt | Line: 4 | Keyword: nhan_su | Context: Line 2474: def api_nhan_su():
+File: inspect_app_nhansu_output.txt | Line: 5 | Keyword: nhan_su | Context: Line 2476: ns_path = resolve_path('ops_nhan_su.csv', write=False)
+File: inspect_app_nhansu_output.txt | Line: 6 | Keyword: nhan_su | Context: Line 2478: return jsonify({"error": "Không tìm thấy file ops_nhan_su.csv. Vui lòng thực hiện Đồng bộ dữ liệu."}), 404
+File: inspect_app_nhansu_output.txt | Line: 7 | Keyword: nhan_su | Context: Line 2579: print(f"Error in api_nhan_su: {e}")
+File: inspect_backup_panels.py | Line: 8 | Keyword: tab-nhan-su | Context: # Let's extract the div with id="tab-nhan-su"
+File: inspect_backup_panels.py | Line: 9 | Keyword: tab-nhan-su | Context: start_str = '<div id="tab-nhan-su" class="content-panel">'
+File: inspect_backup_panels.py | Line: 27 | Keyword: tab-nhan-su | Context: print("tab-nhan-su not found")
+File: inspect_backup_panels.py | Line: 23 | Keyword: nhan_su | Context: with open(r"scratch\nhan_su_panel.html", "w", encoding="utf-8") as out:
+File: inspect_backup_panels.py | Line: 25 | Keyword: nhan_su | Context: print(f"Extracted nhan_su_panel.html, size={len(panel_content)} chars")
+File: inspect_backup_sidebar.py | Line: 8 | Keyword: tab-nhan-su | Context: idx = content.find("nav-tab-nhan-su")
+File: inspect_backup_sidebar.py | Line: 14 | Keyword: tab-nhan-su | Context: out.write("nav-tab-nhan-su not found\n")
+File: inspect_backup_sidebar_output.txt | Line: 2 | Keyword: tab-volume-creation | Context: creation" onclick="switchTab('tab-volume-creation', this)">
+File: inspect_backup_sidebar_output.txt | Line: 3 | Keyword: Volume tạo đơn | Context: <i class="fa-solid fa-file-invoice"></i> Volume tạo đơn
+File: inspect_backup_sidebar_output.txt | Line: 5 | Keyword: tab-nhan-su | Context: <li class="menu-item" id="nav-tab-nhan-su" onclick="switchTab('tab-nhan-su', this)">
+File: inspect_diffs_output.txt | Line: 11 | Keyword: tab-nhan-su | Context: +@requires_permission('tab-nhan-su')
+File: inspect_diffs_output.txt | Line: 12 | Keyword: nhan_su | Context: +def api_nhan_su():
+File: inspect_diffs_output.txt | Line: 14 | Keyword: nhan_su | Context: +        ns_path = resolve_path('ops_nhan_su.csv', write=False)
+File: inspect_diffs_output.txt | Line: 16 | Keyword: nhan_su | Context: +            return jsonify({"error": "Kh├┤ng t├¼m thß║Ñy file ops_nhan_su.csv. Vui l├▓ng thß╗▒c hiß╗çn ─Éß╗ông bß╗Ö dß╗
+File: inspect_diffs_output.txt | Line: 45 | Keyword: nhan_su | Context: +def api_nhan_su():
+File: inspect_diffs_output.txt | Line: 47 | Keyword: nhan_su | Context: +        ns_path = resolve_path('ops_nhan_su.csv', write=False)
+File: inspect_diffs_output.txt | Line: 49 | Keyword: nhan_su | Context: +            return jsonify({"error": "Không tìm thấy file ops_nhan_su.csv. Vui lòng thực hiện Đồng bộ dữ liệu."}), 404
+File: inspect_diffs_output.txt | Line: 118 | Keyword: nhan_su | Context: +def api_nhan_su():
+File: inspect_diffs_output.txt | Line: 120 | Keyword: nhan_su | Context: +        ns_path = resolve_path('ops_nhan_su.csv', write=False)
+File: inspect_diffs_output.txt | Line: 122 | Keyword: nhan_su | Context: +            return jsonify({"error": "Không tìm thấy file ops_nhan_su.csv. Vui lòng thực hiện Đồng bộ dữ liệu."}), 404
+File: inspect_git_diff_index_chunks_output.txt | Line: 91 | Keyword: tab-ntb-summary | Context: <li class="menu-item" id="nav-tab-ntb-summary" onclick="switchTab('tab-ntb-summary', this)">
+File: inspect_git_diff_index_chunks_output.txt | Line: 92 | Keyword: Chỉ số NTB | Context: <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
+File: inspect_git_diff_index_chunks_output.txt | Line: 605 | Keyword: Volume tạo đơn | Context: -                                <i class="fa-solid fa-file-invoice" style="color: var(--color-indigo);"></i> Volume tạo
+File: inspect_index_html_res.txt | Line: 20 | Keyword: tab-ntb-summary | Context: Container 5: <div id="tab-ntb-summary" class="content-panel">
+File: inspect_menu_res.txt | Line: 8 | Keyword: tab-ntb-summary | Context: <li class="menu-item" onclick="switchTab('tab-ntb-summary', this)">
+File: inspect_menu_res.txt | Line: 9 | Keyword: Chỉ số NTB | Context: <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
+File: inspect_ntb_tab_html_res.txt | Line: 3 | Keyword: tab-ntb-summary | Context: <div id="tab-ntb-summary" class="content-panel">
+File: inspect_tabs_res.txt | Line: 28 | Keyword: tab-ntb-summary | Context: Line 3186: <label class="permission-item"><input type="checkbox" value="tab-ntb-summary" checked> Chỉ số NTB</label>
+File: inspect_tabs_res.txt | Line: 39 | Keyword: tab-ntb-summary | Context: Line 2133: <div id="tab-ntb-summary" class="content-panel">
+File: inspect_tabs_res.txt | Line: 64 | Keyword: tab-ntb-summary | Context: Line 2082: <div id="tab-ntb-summary" class="content-panel">
+File: inspect_tabs_res.txt | Line: 5 | Keyword: Chỉ số NTB | Context: Line 1700: <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
+File: inspect_tabs_res.txt | Line: 28 | Keyword: Chỉ số NTB | Context: Line 3186: <label class="permission-item"><input type="checkbox" value="tab-ntb-summary" checked> Chỉ số NTB</label>
+File: inspect_tabs_res.txt | Line: 32 | Keyword: tab-volume-creation | Context: Line 3192: <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tạo đơn</la
+File: inspect_tabs_res.txt | Line: 45 | Keyword: tab-volume-creation | Context: Line 2913: <div id="tab-volume-creation" class="content-panel">
+File: inspect_tabs_res.txt | Line: 60 | Keyword: tab-volume-creation | Context: Line 3141: <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tß║ío ─æ╞ín
+File: inspect_tabs_res.txt | Line: 70 | Keyword: tab-volume-creation | Context: Line 2862: <div id="tab-volume-creation" class="content-panel">
+File: inspect_tabs_res.txt | Line: 9 | Keyword: Volume tạo đơn | Context: Line 1718: <i class="fa-solid fa-file-invoice"></i> Volume tạo đơn
+File: inspect_tabs_res.txt | Line: 23 | Keyword: Volume tạo đơn | Context: Line 2966: <i class="fa-solid fa-file-invoice"></i> Báo cáo So sánh Volume tạo đơn
+File: inspect_tabs_res.txt | Line: 25 | Keyword: Volume tạo đơn | Context: Line 3113: <i class="fa-solid fa-file-invoice" style="color: var(--color-indigo);"></i> Volume tạo đơn (shopee_tiktok)
+File: inspect_tabs_res.txt | Line: 32 | Keyword: Volume tạo đơn | Context: Line 3192: <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tạo đơn</la
+File: inspect_zip_res.txt | Line: 1569 | Keyword: tab-ntb-summary | Context: Line 1699: <li class="menu-item" id="nav-tab-ntb-summary" onclick="switchTab('tab-ntb-summary', this)">
+File: inspect_zip_res.txt | Line: 1620 | Keyword: tab-ntb-summary | Context: Line 3135: <label class="permission-item"><input type="checkbox" value="tab-ntb-summary" checked> Chỉ số NTB</label>
+File: inspect_zip_res.txt | Line: 1632 | Keyword: tab-ntb-summary | Context: Line 2082: <div id="tab-ntb-summary" class="content-panel">
+File: inspect_zip_res.txt | Line: 1570 | Keyword: Chỉ số NTB | Context: Line 1700: <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
+File: inspect_zip_res.txt | Line: 1597 | Keyword: Chỉ số NTB | Context: Line 1700: <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
+File: inspect_zip_res.txt | Line: 1620 | Keyword: Chỉ số NTB | Context: Line 3135: <label class="permission-item"><input type="checkbox" value="tab-ntb-summary" checked> Chỉ số NTB</label>
+File: inspect_zip_res.txt | Line: 1587 | Keyword: tab-volume-creation | Context: Line 1717: <li class="menu-item" id="nav-tab-volume-creation" onclick="switchTab('tab-volume-creation', this)">
+File: inspect_zip_res.txt | Line: 1624 | Keyword: tab-volume-creation | Context: Line 3141: <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tạo đơn</la
+File: inspect_zip_res.txt | Line: 1638 | Keyword: tab-volume-creation | Context: Line 2862: <div id="tab-volume-creation" class="content-panel">
+File: inspect_zip_res.txt | Line: 1588 | Keyword: Volume tạo đơn | Context: Line 1718: <i class="fa-solid fa-file-invoice"></i> Volume tạo đơn
+File: inspect_zip_res.txt | Line: 1601 | Keyword: Volume tạo đơn | Context: Line 1718: <i class="fa-solid fa-file-invoice"></i> Volume tạo đơn
+File: inspect_zip_res.txt | Line: 1615 | Keyword: Volume tạo đơn | Context: Line 2915: <i class="fa-solid fa-file-invoice"></i> Báo cáo So sánh Volume tạo đơn
+File: inspect_zip_res.txt | Line: 1617 | Keyword: Volume tạo đơn | Context: Line 3062: <i class="fa-solid fa-file-invoice" style="color: var(--color-indigo);"></i> Volume tạo đơn (shopee_tiktok)
+File: inspect_zip_res.txt | Line: 1624 | Keyword: Volume tạo đơn | Context: Line 3141: <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tạo đơn</la
+File: js_diff.txt | Line: 8 | Keyword: tab-nhan-su | Context: if (tabId === 'tab-nhan-su') {
+File: list_functions_res.txt | Line: 86 | Keyword: tab-ntb-summary | Context: - nav-tab-ntb-summary
+File: list_functions_res.txt | Line: 131 | Keyword: tab-ntb-summary | Context: - tab-ntb-summary
+File: list_functions_res.txt | Line: 223 | Keyword: tab-ntb-summary | Context: - nav-tab-ntb-summary
+File: list_functions_res.txt | Line: 269 | Keyword: tab-ntb-summary | Context: - tab-ntb-summary
+File: list_functions_res.txt | Line: 361 | Keyword: tab-ntb-summary | Context: - nav-tab-ntb-summary
+File: list_functions_res.txt | Line: 407 | Keyword: tab-ntb-summary | Context: - tab-ntb-summary
+File: list_functions_res.txt | Line: 499 | Keyword: tab-ntb-summary | Context: - nav-tab-ntb-summary
+File: list_functions_res.txt | Line: 545 | Keyword: tab-ntb-summary | Context: - tab-ntb-summary
+File: local_html_fetched.html | Line: 1699 | Keyword: tab-ntb-summary | Context: <li class="menu-item" id="nav-tab-ntb-summary" onclick="switchTab('tab-ntb-summary', this)">
+File: local_html_fetched.html | Line: 2106 | Keyword: tab-ntb-summary | Context: <div id="tab-ntb-summary" class="content-panel">
+File: local_html_fetched.html | Line: 3123 | Keyword: tab-ntb-summary | Context: <label class="permission-item"><input type="checkbox" value="tab-ntb-summary" checked> Chỉ số NTB</label>
+File: local_html_fetched.html | Line: 3384 | Keyword: tab-ntb-summary | Context: 'tab-ntb-summary',
+File: local_html_fetched.html | Line: 3507 | Keyword: tab-ntb-summary | Context: 'tab-ntb-summary': 'Chỉ số',
+File: local_html_fetched.html | Line: 1700 | Keyword: Chỉ số NTB | Context: <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
+File: local_html_fetched.html | Line: 3123 | Keyword: Chỉ số NTB | Context: <label class="permission-item"><input type="checkbox" value="tab-ntb-summary" checked> Chỉ số NTB</label>
+File: local_html_fetched.html | Line: 1717 | Keyword: tab-volume-creation | Context: <li class="menu-item" id="nav-tab-volume-creation" onclick="switchTab('tab-volume-creation', this)">
+File: local_html_fetched.html | Line: 2051 | Keyword: tab-volume-creation | Context: <div class="kpi-card info" id="kpi-volume-creation-card" style="cursor: pointer;" onclick="switchTab('tab-volume-creatio
+File: local_html_fetched.html | Line: 2886 | Keyword: tab-volume-creation | Context: <div id="tab-volume-creation" class="content-panel">
+File: local_html_fetched.html | Line: 3129 | Keyword: tab-volume-creation | Context: <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tạo đơn</label>
+File: local_html_fetched.html | Line: 3390 | Keyword: tab-volume-creation | Context: 'tab-volume-creation',
+File: local_html_fetched.html | Line: 3513 | Keyword: tab-volume-creation | Context: 'tab-volume-creation': 'Sản lượng',
+File: local_html_fetched.html | Line: 1718 | Keyword: Volume tạo đơn | Context: <i class="fa-solid fa-file-invoice"></i> Volume tạo đơn
+File: local_html_fetched.html | Line: 2053 | Keyword: Volume tạo đơn | Context: <span>Volume tạo đơn</span>
+File: local_html_fetched.html | Line: 2939 | Keyword: Volume tạo đơn | Context: <i class="fa-solid fa-file-invoice"></i> Báo cáo So sánh Volume tạo đơn
+File: local_html_fetched.html | Line: 3129 | Keyword: Volume tạo đơn | Context: <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tạo đơn</label>
+File: main_script_back.js | Line: 227 | Keyword: tab-ntb-summary | Context: 'tab-ntb-summary',
+File: main_script_back.js | Line: 351 | Keyword: tab-ntb-summary | Context: 'tab-ntb-summary': 'Chỉ số',
+File: main_script_back.js | Line: 233 | Keyword: tab-volume-creation | Context: 'tab-volume-creation',
+File: main_script_back.js | Line: 357 | Keyword: tab-volume-creation | Context: 'tab-volume-creation': 'Sản lượng',
+File: main_script_back.js | Line: 147 | Keyword: tab-nhan-su | Context: if (tabId === 'tab-nhan-su') {
+File: main_script_back.js | Line: 234 | Keyword: tab-nhan-su | Context: 'tab-nhan-su',
+File: main_script_curr.js | Line: 226 | Keyword: tab-ntb-summary | Context: 'tab-ntb-summary',
+File: main_script_curr.js | Line: 350 | Keyword: tab-ntb-summary | Context: 'tab-ntb-summary': 'Chỉ số',
+File: main_script_curr.js | Line: 232 | Keyword: tab-volume-creation | Context: 'tab-volume-creation',
+File: main_script_curr.js | Line: 356 | Keyword: tab-volume-creation | Context: 'tab-volume-creation': 'Sản lượng',
+File: main_script_curr.js | Line: 146 | Keyword: tab-nhan-su | Context: if (tabId === 'tab-nhan-su') {
+File: main_script_curr.js | Line: 233 | Keyword: tab-nhan-su | Context: 'tab-nhan-su',
+File: nhan_su_api_decor.txt | Line: 8 | Keyword: nhan_su | Context: def api_nhan_su():
+File: nhan_su_api_decor.txt | Line: 10 | Keyword: nhan_su | Context: ns_path = resolve_path('ops_nhan_su.csv', write=False)
+File: nhan_su_api_decor.txt | Line: 12 | Keyword: nhan_su | Context: return jsonify({"error": "Không tìm thấy file ops_nhan_su.csv. Vui lòng thực hiện Đồng bộ dữ liệu."}), 404
+File: nhan_su_panel.html | Line: 1 | Keyword: tab-nhan-su | Context: <div id="tab-nhan-su" class="content-panel">
+File: ntb_tab_html.txt | Line: 1 | Keyword: tab-ntb-summary | Context: <div id="tab-ntb-summary" class="content-panel">
+File: past_conversations_search.txt | Line: 4431 | Keyword: tab-ntb-summary | Context: +                <li class="menu-item" onclick="switchTab('tab-ntb-summary', this)">
+File: past_conversations_search.txt | Line: 6329 | Keyword: tab-ntb-summary | Context: I will search for `tab-ntb-summary` literal matches to locate where the "Chỉ số NTB" tab panel is defined in the HTML.
+File: past_conversations_search.txt | Line: 6388 | Keyword: tab-ntb-summary | Context: {"File":"c:\\Users\\lap4all\\Desktop\\New folder\\scratch\\app.py.patched","LineNumber":62,"LineContent":"            \"
+File: past_conversations_search.txt | Line: 6389 | Keyword: tab-ntb-summary | Context: {"File":"c:\\Users\\lap4all\\Desktop\\New folder\\scratch\\app.py.patched","LineNumber":79,"LineContent":"            \"
+File: past_conversations_search.txt | Line: 6390 | Keyword: tab-ntb-summary | Context: {"File":"c:\\Users\\lap4all\\Desktop\\New folder\\scratch\\compare_tabs.py","LineNumber":69,"LineContent":"# Compare HTM
+File: past_conversations_search.txt | Line: 6391 | Keyword: tab-ntb-summary | Context: {"File":"c:\\Users\\lap4all\\Desktop\\New folder\\scratch\\compare_tabs.py","LineNumber":70,"LineContent":"print(\"\\n--
+File: past_conversations_search.txt | Line: 6392 | Keyword: tab-ntb-summary | Context: {"File":"c:\\Users\\lap4all\\Desktop\\New folder\\scratch\\compare_tabs.py","LineNumber":71,"LineContent":"current_ntb =
+File: past_conversations_search.txt | Line: 6548 | Keyword: tab-ntb-summary | Context: 1507:                 <li class="menu-item" onclick="switchTab('tab-ntb-summary', this)">
+File: past_conversations_search.txt | Line: 8846 | Keyword: tab-ntb-summary | Context: -  - `[ ]` Restructure grid layout of Section 1 in `tab-ntb-summary`
+File: past_conversations_search.txt | Line: 8941 | Keyword: tab-ntb-summary | Context: 8:   - `[x]` Restructure grid layout of Section 1 in `tab-ntb-summary`
+File: past_conversations_search.txt | Line: 8977 | Keyword: tab-ntb-summary | Context: {"step_index":153,"source":"MODEL","type":"PLANNER_RESPONSE","status":"DONE","created_at":"2026-06-09T11:21:20Z","tool_c
+File: past_conversations_search.txt | Line: 9059 | Keyword: tab-ntb-summary | Context: I will search for the occurrence of `"tab-ntb-summary"` to locate where the "Chỉ số NTB" tab HTML is defined.
+File: past_conversations_search.txt | Line: 9068 | Keyword: tab-ntb-summary | Context: {"File":"c:\\Users\\lap4all\\Desktop\\New folder\\templates\\index.html","LineNumber":1699,"LineContent":"              
+File: past_conversations_search.txt | Line: 9069 | Keyword: tab-ntb-summary | Context: {"File":"c:\\Users\\lap4all\\Desktop\\New folder\\templates\\index.html","LineNumber":2082,"LineContent":"            \u
+File: past_conversations_search.txt | Line: 9070 | Keyword: tab-ntb-summary | Context: {"File":"c:\\Users\\lap4all\\Desktop\\New folder\\templates\\index.html","LineNumber":3135,"LineContent":"              
+File: past_conversations_search.txt | Line: 9071 | Keyword: tab-ntb-summary | Context: {"File":"c:\\Users\\lap4all\\Desktop\\New folder\\templates\\index.html","LineNumber":3396,"LineContent":"              
+File: past_conversations_search.txt | Line: 583 | Keyword: Chỉ số NTB | Context: 4: L1700: <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
+File: past_conversations_search.txt | Line: 4218 | Keyword: Chỉ số NTB | Context: 7:   - [ ] Add the new tab "Chỉ số NTB" (or "Báo cáo Tổng hợp NTB")
+File: past_conversations_search.txt | Line: 4416 | Keyword: Chỉ số NTB | Context: I will add the "Chỉ số NTB" tab button to the sidebar navigation in `templates/index.html`.
+File: past_conversations_search.txt | Line: 4432 | Keyword: Chỉ số NTB | Context: +                    <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
+File: past_conversations_search.txt | Line: 4446 | Keyword: Chỉ số NTB | Context: I will add the premium styling classes for the "Chỉ số NTB" tab inside the style block of `templates/index.html`.
+File: past_conversations_search.txt | Line: 4453 | Keyword: Chỉ số NTB | Context: I will append the javascript implementation for rendering the "Chỉ số NTB" tab dashboard components, trend lines, dynami
+File: past_conversations_search.txt | Line: 4460 | Keyword: Chỉ số NTB | Context: I will update the tab switching, initialization, and `loadAllData()` methods in `templates/index.html` to integrate the 
+File: past_conversations_search.txt | Line: 4467 | Keyword: Chỉ số NTB | Context: I will view lines 1640 to 1710 of `templates/index.html` to locate the `applyFilters()` function and add a call to reloa
+File: past_conversations_search.txt | Line: 4512 | Keyword: Chỉ số NTB | Context: I will start a browser subagent to interactively verify the newly added "Chỉ số NTB" dashboard tab, its charts, the KPI 
+File: past_conversations_search.txt | Line: 4771 | Keyword: Chỉ số NTB | Context: 7:   - [ ] Add the new tab "Chỉ số NTB" (or "Báo cáo Tổng hợp NTB")
+File: past_conversations_search.txt | Line: 5918 | Keyword: Chỉ số NTB | Context: L1700: <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
+File: past_conversations_search.txt | Line: 6211 | Keyword: Chỉ số NTB | Context: I will search `templates/index.html` for references to "chỉ số" or similar Vietnamese terms to find the "Chỉ số NTB" sec
+File: past_conversations_search.txt | Line: 6225 | Keyword: Chỉ số NTB | Context: 1700:                     <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
+File: past_conversations_search.txt | Line: 6280 | Keyword: Chỉ số NTB | Context: I will run `git diff` to inspect the differences between the current workspace files and the clean repository head. This
+File: past_conversations_search.txt | Line: 6322 | Keyword: Chỉ số NTB | Context: I will run a git log search to locate commits that mention NTB Summary ("Chỉ số NTB") or OPR TTS to find where these fea
+File: past_conversations_search.txt | Line: 6329 | Keyword: Chỉ số NTB | Context: I will search for `tab-ntb-summary` literal matches to locate where the "Chỉ số NTB" tab panel is defined in the HTML.
+File: past_conversations_search.txt | Line: 6336 | Keyword: Chỉ số NTB | Context: I will view `templates/index.html` lines 2100 to 2200 to inspect the "Chỉ số NTB" HTML layout.
+File: past_conversations_search.txt | Line: 8817 | Keyword: Chỉ số NTB | Context: I have navigated to the dashboard, opened the **Chỉ số NTB** tab, and verified the redesigned layout of the **Chỉ số chấ
+File: past_conversations_search.txt | Line: 8907 | Keyword: Chỉ số NTB | Context: 3: Redesign the quality index cards in the "Chỉ số NTB" tab of the dashboard to deliver a highly premium, visual, and an
+File: past_conversations_search.txt | Line: 8918 | Keyword: Chỉ số NTB | Context: I have drafted an implementation plan to enable week-based grouping and comparisons for the Quality Index (Chỉ số NTB) d
+File: past_conversations_search.txt | Line: 9059 | Keyword: Chỉ số NTB | Context: I will search for the occurrence of `"tab-ntb-summary"` to locate where the "Chỉ số NTB" tab HTML is defined.
+File: past_conversations_search.txt | Line: 9070 | Keyword: Chỉ số NTB | Context: {"File":"c:\\Users\\lap4all\\Desktop\\New folder\\templates\\index.html","LineNumber":3135,"LineContent":"              
+File: past_conversations_search.txt | Line: 9138 | Keyword: Chỉ số NTB | Context: 1: # Implementation Plan: Week-based Comparisons in Quality Index Dashboard (Chỉ số NTB)
+File: past_conversations_search.txt | Line: 9140 | Keyword: Chỉ số NTB | Context: 3: Enable the "Nhóm thời gian" (Time group) selector to support switching between **Ngày** (Day) and **Tuần** (Week) vie
+File: past_conversations_search.txt | Line: 9165 | Keyword: Chỉ số NTB | Context: 2. Click chọn mục **"Chỉ số NTB"** trên thanh menu (sidebar) ở bên trái.
+File: past_conversations_search.txt | Line: 9500 | Keyword: Chỉ số NTB | Context: 1: # Implementation Plan: Week-based Comparisons in Quality Index Dashboard (Chỉ số NTB)
+File: past_conversations_search.txt | Line: 9502 | Keyword: Chỉ số NTB | Context: 3: Enable the "Nhóm thời gian" (Time group) selector to support switching between **Ngày** (Day) and **Tuần** (Week) vie
+File: past_conversations_search.txt | Line: 9647 | Keyword: Chỉ số NTB | Context: Tôi đã lập kế hoạch chi tiết thiết kế lại mục **Chỉ số NTB**:
+File: past_conversations_search.txt | Line: 9692 | Keyword: Chỉ số NTB | Context: 1: # Implementation Plan: Redesigning Quality Index (Chỉ số NTB) Tab & Comparisons
+File: past_conversations_search.txt | Line: 9694 | Keyword: Chỉ số NTB | Context: 3: This plan details the updates to the Quality Index (Chỉ số NTB) tab based on user feedback. It replaces the old matri
+File: past_conversations_search.txt | Line: 9896 | Keyword: Chỉ số NTB | Context: I have successfully redesigned the Quality Index (Chỉ số NTB) tab on the dashboard, implementing dynamic KPI comparisons
+File: past_conversations_search.txt | Line: 9991 | Keyword: Chỉ số NTB | Context: - Switched to the **Chỉ số NTB** (Quality Index) tab.
+File: past_conversations_search.txt | Line: 10019 | Keyword: Chỉ số NTB | Context: - Under the **"Chỉ số NTB"** tab, switching the metric toggle from **"% GTC"** to **"% LTC"** updates both the trend lin
+File: past_conversations_search.txt | Line: 10030 | Keyword: Chỉ số NTB | Context: I have verified the "Chỉ số NTB" tab and the "Số đơn chưa hoàn thành theo kế hoạch" chart after performing a data sync a
+File: past_conversations_search.txt | Line: 10754 | Keyword: Chỉ số NTB | Context: I will view lines 6000 to 6070 in `templates/index.html` to see the logic for updating metric cards on the "Chỉ số NTB" 
+File: past_conversations_search.txt | Line: 13250 | Keyword: Chỉ số NTB | Context: Nguyên nhân trang **Chỉ số NTB** chưa cập nhật ngày mới nhất (Chủ Nhật, ngày 07/06) là do **dữ liệu nguồn trên Google Sh
+File: past_conversations_search.txt | Line: 13253 | Keyword: Chỉ số NTB | Context: 1. **Dữ liệu GTC/LTC (Chỉ số NTB & Báo cáo Vận hành)**: Được lấy từ link Google Sheet [ops_url](https://docs.google.com/
+File: past_conversations_search.txt | Line: 13313 | Keyword: Chỉ số NTB | Context: 2. **Phần Frontend (`index.html`)**: Cập nhật hàm tải dữ liệu của tab **Chỉ số NTB** để nạp toàn bộ danh sách ngày vào ô
+File: past_conversations_search.txt | Line: 10551 | Keyword: tab-volume-creation | Context: 2051:                     <div class="kpi-card info" id="kpi-volume-creation-card" style="cursor: pointer;" onclick="swi
+File: past_conversations_search.txt | Line: 11683 | Keyword: tab-volume-creation | Context: 2723:             <div id="tab-volume-creation" class="content-panel">
+File: past_conversations_search.txt | Line: 1913 | Keyword: Volume tạo đơn | Context: -                ("tao_don_url", 'vols_tao_don.xlsx', "Volume tạo đơn")
+File: past_conversations_search.txt | Line: 7430 | Keyword: Volume tạo đơn | Context: *   Họ **không thể click chuyển tab** ("Tổng quan", "OPR TTS", "Volume tạo đơn"...) để xem biểu đồ hay số liệu gì cả. Vì
+File: past_conversations_search.txt | Line: 10555 | Keyword: Volume tạo đơn | Context: 2053:                             <span>Volume tạo đơn</span>
+File: past_conversations_search.txt | Line: 12609 | Keyword: Volume tạo đơn | Context: [131.4s] Status: processing | Progress: Đang tải Volume tạo đơn (7/
+File: past_conversations_search_recent.txt | Line: 3580 | Keyword: tab-ntb-summary | Context: I will search for `tab-ntb-summary` literal matches to locate where the "Chỉ số NTB" tab panel is defined in the HTML.
+File: past_conversations_search_recent.txt | Line: 3639 | Keyword: tab-ntb-summary | Context: {"File":"c:\\Users\\lap4all\\Desktop\\New folder\\scratch\\app.py.patched","LineNumber":62,"LineContent":"            \"
+File: past_conversations_search_recent.txt | Line: 3640 | Keyword: tab-ntb-summary | Context: {"File":"c:\\Users\\lap4all\\Desktop\\New folder\\scratch\\app.py.patched","LineNumber":79,"LineContent":"            \"
+File: past_conversations_search_recent.txt | Line: 3641 | Keyword: tab-ntb-summary | Context: {"File":"c:\\Users\\lap4all\\Desktop\\New folder\\scratch\\compare_tabs.py","LineNumber":69,"LineContent":"# Compare HTM
+File: past_conversations_search_recent.txt | Line: 3642 | Keyword: tab-ntb-summary | Context: {"File":"c:\\Users\\lap4all\\Desktop\\New folder\\scratch\\compare_tabs.py","LineNumber":70,"LineContent":"print(\"\\n--
+File: past_conversations_search_recent.txt | Line: 3643 | Keyword: tab-ntb-summary | Context: {"File":"c:\\Users\\lap4all\\Desktop\\New folder\\scratch\\compare_tabs.py","LineNumber":71,"LineContent":"current_ntb =
+File: past_conversations_search_recent.txt | Line: 553 | Keyword: Chỉ số NTB | Context: 4: L1700: <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
+File: past_conversations_search_recent.txt | Line: 3169 | Keyword: Chỉ số NTB | Context: L1700: <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
+File: past_conversations_search_recent.txt | Line: 3462 | Keyword: Chỉ số NTB | Context: I will search `templates/index.html` for references to "chỉ số" or similar Vietnamese terms to find the "Chỉ số NTB" sec
+File: past_conversations_search_recent.txt | Line: 3476 | Keyword: Chỉ số NTB | Context: 1700:                     <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
+File: past_conversations_search_recent.txt | Line: 3531 | Keyword: Chỉ số NTB | Context: I will run `git diff` to inspect the differences between the current workspace files and the clean repository head. This
+File: past_conversations_search_recent.txt | Line: 3573 | Keyword: Chỉ số NTB | Context: I will run a git log search to locate commits that mention NTB Summary ("Chỉ số NTB") or OPR TTS to find where these fea
+File: past_conversations_search_recent.txt | Line: 3580 | Keyword: Chỉ số NTB | Context: I will search for `tab-ntb-summary` literal matches to locate where the "Chỉ số NTB" tab panel is defined in the HTML.
+File: past_conversations_search_recent.txt | Line: 3587 | Keyword: Chỉ số NTB | Context: I will view `templates/index.html` lines 2100 to 2200 to inspect the "Chỉ số NTB" HTML layout.
+File: past_conversations_search_recent.txt | Line: 4297 | Keyword: Chỉ số NTB | Context: I will view lines 6000 to 6070 in `templates/index.html` to see the logic for updating metric cards on the "Chỉ số NTB" 
+File: past_conversations_search_recent.txt | Line: 4094 | Keyword: tab-volume-creation | Context: 2051:                     <div class="kpi-card info" id="kpi-volume-creation-card" style="cursor: pointer;" onclick="swi
+File: past_conversations_search_recent.txt | Line: 1866 | Keyword: Volume tạo đơn | Context: -                ("tao_don_url", 'vols_tao_don.xlsx', "Volume tạo đơn")
+File: past_conversations_search_recent.txt | Line: 4098 | Keyword: Volume tạo đơn | Context: 2053:                             <span>Volume tạo đơn</span>
+File: patch_all_files.py | Line: 91 | Keyword: tab-ntb-summary | Context: 'tab-ntb-summary',
+File: patch_all_files.py | Line: 104 | Keyword: tab-ntb-summary | Context: 'tab-ntb-summary',
+File: patch_all_files.py | Line: 97 | Keyword: tab-volume-creation | Context: 'tab-volume-creation',
+File: patch_all_files.py | Line: 110 | Keyword: tab-volume-creation | Context: 'tab-volume-creation',
+File: patch_all_files.py | Line: 11 | Keyword: tab-nhan-su | Context: # 1. Add sidebar tab 'nav-tab-nhan-su' right before 'nav-tab-sync'
+File: patch_all_files.py | Line: 13 | Keyword: tab-nhan-su | Context: nhan_su_li = '''                <li class="menu-item" id="nav-tab-nhan-su" onclick="switchTab('tab-nhan-su', this)">
+File: patch_all_files.py | Line: 19 | Keyword: tab-nhan-su | Context: # 2. Extract and insert '#tab-nhan-su' content panel right before '#tab-sync'
+File: patch_all_files.py | Line: 26 | Keyword: tab-nhan-su | Context: if 'id="tab-nhan-su"' not in content:
+File: patch_all_files.py | Line: 87 | Keyword: tab-nhan-su | Context: # 4. Update gateMenuTabs() to include 'tab-nhan-su'
+File: patch_all_files.py | Line: 111 | Keyword: tab-nhan-su | Context: 'tab-nhan-su',
+File: patch_all_files.py | Line: 116 | Keyword: tab-nhan-su | Context: # 5. Update switchTab() to load nhan su data when switching to 'tab-nhan-su'
+File: patch_all_files.py | Line: 143 | Keyword: tab-nhan-su | Context: if (tabId === 'tab-nhan-su') {
+File: patch_all_files.py | Line: 13 | Keyword: nhan_su | Context: nhan_su_li = '''                <li class="menu-item" id="nav-tab-nhan-su" onclick="switchTab('tab-nhan-su', this)">
+File: patch_all_files.py | Line: 16 | Keyword: nhan_su | Context: if nhan_su_li.strip() not in content:
+File: patch_all_files.py | Line: 17 | Keyword: nhan_su | Context: content = content.replace(sync_tab_li, nhan_su_li + "                " + sync_tab_li)
+File: patch_all_files.py | Line: 20 | Keyword: nhan_su | Context: nhan_su_panel_path = "scratch/nhan_su_panel.html"
+File: patch_all_files.py | Line: 21 | Keyword: nhan_su | Context: if os.path.exists(nhan_su_panel_path):
+File: patch_all_files.py | Line: 22 | Keyword: nhan_su | Context: with open(nhan_su_panel_path, "r", encoding="utf-8") as f:
+File: patch_all_files.py | Line: 23 | Keyword: nhan_su | Context: nhan_su_panel_html = f.read()
+File: patch_all_files.py | Line: 27 | Keyword: nhan_su | Context: content = content.replace(sync_panel_div, nhan_su_panel_html + "\n            " + sync_panel_div)
+File: print_diffs.py | Line: 74 | Keyword: tab-ntb-summary | Context: all_diffs.append(show_diff("tab-ntb-summary HTML",
+File: print_diffs.py | Line: 75 | Keyword: tab-ntb-summary | Context: get_block(current, r'<div[^>]*id="tab-ntb-summary"', r'</div>\s*</div>\s*</div>'),
+File: print_diffs.py | Line: 76 | Keyword: tab-ntb-summary | Context: get_block(base, r'<div[^>]*id="tab-ntb-summary"', r'</div>\s*</div>\s*</div>')))
+File: print_diffs_res.txt | Line: 2 | Keyword: tab-ntb-summary | Context: ===== DIFF FOR tab-ntb-summary HTML =====
+File: query_server_api.py | Line: 9 | Keyword: tab-volume-creation | Context: # @requires_permission('tab-volume-creation')
+File: raw_jsonl_.system_generated_step_2097_replacement.txt | Line: 1 | Keyword: tab-ntb-summary | Context: "            <!-- TAB: NTB SUMMARY DASHBOARD -->\n            <div id=\"tab-ntb-summary\" class=\"content-panel\">\n    
+File: recovered_4336314d-71dd-4e55-8828-c64201e3d4a3_2976_ReplacementContent.txt | Line: 1 | Keyword: tab-nhan-su | Context: "            </div>\n\n            <!-- TAB: NHÂN SỰ -->\n            <div id=\"tab-nhan-su\" class=\"content-panel\">\n
+File: render_index.html | Line: 1699 | Keyword: tab-ntb-summary | Context: <li class="menu-item" id="nav-tab-ntb-summary" onclick="switchTab('tab-ntb-summary', this)">
+File: render_index.html | Line: 2082 | Keyword: tab-ntb-summary | Context: <div id="tab-ntb-summary" class="content-panel">
+File: render_index.html | Line: 3135 | Keyword: tab-ntb-summary | Context: <label class="permission-item"><input type="checkbox" value="tab-ntb-summary" checked> Chỉ số NTB</label>
+File: render_index.html | Line: 3396 | Keyword: tab-ntb-summary | Context: 'tab-ntb-summary',
+File: render_index.html | Line: 3519 | Keyword: tab-ntb-summary | Context: 'tab-ntb-summary': 'Chỉ số',
+File: render_index.html | Line: 1700 | Keyword: Chỉ số NTB | Context: <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
+File: render_index.html | Line: 3135 | Keyword: Chỉ số NTB | Context: <label class="permission-item"><input type="checkbox" value="tab-ntb-summary" checked> Chỉ số NTB</label>
+File: render_index.html | Line: 1717 | Keyword: tab-volume-creation | Context: <li class="menu-item" id="nav-tab-volume-creation" onclick="switchTab('tab-volume-creation', this)">
+File: render_index.html | Line: 2027 | Keyword: tab-volume-creation | Context: <div class="kpi-card info" id="kpi-volume-creation-card" style="cursor: pointer;" onclick="switchTab('tab-volume-creatio
+File: render_index.html | Line: 2862 | Keyword: tab-volume-creation | Context: <div id="tab-volume-creation" class="content-panel">
+File: render_index.html | Line: 3141 | Keyword: tab-volume-creation | Context: <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tạo đơn</label>
+File: render_index.html | Line: 3402 | Keyword: tab-volume-creation | Context: 'tab-volume-creation',
+File: render_index.html | Line: 3525 | Keyword: tab-volume-creation | Context: 'tab-volume-creation': 'Sản lượng',
+File: render_index.html | Line: 1718 | Keyword: Volume tạo đơn | Context: <i class="fa-solid fa-file-invoice"></i> Volume tạo đơn
+File: render_index.html | Line: 2029 | Keyword: Volume tạo đơn | Context: <span>Volume tạo đơn</span>
+File: render_index.html | Line: 2915 | Keyword: Volume tạo đơn | Context: <i class="fa-solid fa-file-invoice"></i> Báo cáo So sánh Volume tạo đơn
+File: render_index.html | Line: 3062 | Keyword: Volume tạo đơn | Context: <i class="fa-solid fa-file-invoice" style="color: var(--color-indigo);"></i> Volume tạo đơn (shopee_tiktok)
+File: render_index.html | Line: 3141 | Keyword: Volume tạo đơn | Context: <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tạo đơn</label>
+File: scan_steps_1510_2100.txt | Line: 1151 | Keyword: tab-volume-creation | Context: Content: I will search for `tab-volume-creation` in `templates/index.html` to find where the tab is defined.
+File: scan_steps_1510_2100.txt | Line: 1161 | Keyword: tab-volume-creation | Context: Select-String : The string id=" tab-volume-creation\ is not a valid regular expression: parsing "id="
+File: scan_steps_1510_2100.txt | Line: 1163 | Keyword: tab-volume-creation | Context: tab-volume-creation\" - Illegal \ at end of pattern.
+File: scan_steps_1510_2100.txt | Line: 1169 | Keyword: tab-volume-creation | Context: Content: I will search for `tab-volume-creation` occurrences in `templates/index.html`.
+File: scan_steps_1510_2100.txt | Line: 1181 | Keyword: tab-volume-creation | Context: templates\index.html:1717:                <li class="menu-item" id="nav-tab-volume-creation"
+File: scan_steps_1510_2100.txt | Line: 1183 | Keyword: tab-volume-creation | Context: onclick="switchTab('tab-volume-creation', this)">
+File: scan_steps_1510_2100.txt | Line: 1204 | Keyword: tab-volume-creation | Context: Content: I will view lines 2980 to 3006 of `templates/index.html` to see the end of the `tab-volume-creation` container.
+File: scan_steps_1510_2100.txt | Line: 171 | Keyword: Volume tạo đơn | Context: Content: I will now move the Telegram Alert & AI Configuration card from the "Volume tạo đơn" tab to the bottom of the "
+File: scan_steps_1510_2100.txt | Line: 1189 | Keyword: Volume tạo đơn | Context: Content: I will view lines 2860 to 2920 of `templates/index.html` to inspect the Volume tạo đơn tab.
+File: scan_steps_1510_2100.txt | Line: 4134 | Keyword: tab-nhan-su | Context: Content: I will query the git history of `templates/index.html` to see if there was a `tab-nhan-su` or `nhân sự` sidebar
+File: scan_steps_1510_2100.txt | Line: 4123 | Keyword: nhan_su | Context: 2602: (["nhân sự", "nhan su"], "ops_nhan_su.csv")
+File: search_app_res.txt | Line: 23 | Keyword: tab-volume-creation | Context: Line 2610: @app.route('/api/matrix-tables') -> @requires_permission('tab-volume-creation')
+File: search_app_res.txt | Line: 27 | Keyword: tab-volume-creation | Context: Line 2896: @app.route('/api/volume-creation') -> @requires_permission('tab-volume-creation')
+File: search_app_res.txt | Line: 28 | Keyword: tab-volume-creation | Context: Line 3259: @app.route('/api/send-telegram-warning', methods=['POST']) -> @requires_permission('tab-volume-creation')
+File: search_app_res.txt | Line: 29 | Keyword: tab-volume-creation | Context: Line 3421: @app.route('/api/send-telegram-ai-briefing', methods=['POST']) -> @requires_permission('tab-volume-creation')
+File: search_app_res.txt | Line: 52 | Keyword: tab-volume-creation | Context: Line 2580: @app.route('/api/matrix-tables') -> @requires_permission('tab-volume-creation')
+File: search_app_res.txt | Line: 56 | Keyword: tab-volume-creation | Context: Line 2866: @app.route('/api/volume-creation') -> @requires_permission('tab-volume-creation')
+File: search_extracted_steps.py | Line: 16 | Keyword: nhan_su | Context: keywords = ["gán tất cả", "gán tts", "odr tts", "nhân sự", "nhan_su", "quản lý nhân sự"]
+File: search_kpis_results.txt | Line: 74 | Keyword: nhan_su | Context: Context: ... ', "off", "off_tuyen", "off tuyến"], "off_tuyen_spe.csv"),\n+            (["shopee_tiktok", "tao_don", "tạo
+File: search_kpis_results.txt | Line: 75 | Keyword: nhan_su | Context: Context: ... 'off tuyến"], "off_tuyen_spe.csv"),\n+            (["shopee_tiktok", "tao_don", "tạo đơn"], "vols_tao_don.c
+File: search_ntb_summary_lines.py | Line: 5 | Keyword: tab-ntb-summary | Context: if 'ntb-kpi-card' in line or 'tab-ntb-summary' in line:
+File: search_opr_res.txt | Line: 4 | Keyword: Chỉ số NTB | Context: L1700: <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
+File: search_past_diffs.py | Line: 4 | Keyword: tab-ntb-summary | Context: keywords = ["tab-ntb-summary", "Chỉ số NTB", "tab-volume-creation", "Volume tạo đơn", "tab-nhan-su", "Quản lý nhân sự", 
+File: search_past_diffs.py | Line: 4 | Keyword: Chỉ số NTB | Context: keywords = ["tab-ntb-summary", "Chỉ số NTB", "tab-volume-creation", "Volume tạo đơn", "tab-nhan-su", "Quản lý nhân sự", 
+File: search_past_diffs.py | Line: 4 | Keyword: tab-volume-creation | Context: keywords = ["tab-ntb-summary", "Chỉ số NTB", "tab-volume-creation", "Volume tạo đơn", "tab-nhan-su", "Quản lý nhân sự", 
+File: search_past_diffs.py | Line: 4 | Keyword: Volume tạo đơn | Context: keywords = ["tab-ntb-summary", "Chỉ số NTB", "tab-volume-creation", "Volume tạo đơn", "tab-nhan-su", "Quản lý nhân sự", 
+File: search_past_diffs.py | Line: 4 | Keyword: tab-nhan-su | Context: keywords = ["tab-ntb-summary", "Chỉ số NTB", "tab-volume-creation", "Volume tạo đơn", "tab-nhan-su", "Quản lý nhân sự", 
+File: search_past_diffs.py | Line: 4 | Keyword: Quản lý nhân sự | Context: keywords = ["tab-ntb-summary", "Chỉ số NTB", "tab-volume-creation", "Volume tạo đơn", "tab-nhan-su", "Quản lý nhân sự", 
+File: search_past_diffs.py | Line: 4 | Keyword: nhan_su | Context: keywords = ["tab-ntb-summary", "Chỉ số NTB", "tab-volume-creation", "Volume tạo đơn", "tab-nhan-su", "Quản lý nhân sự", 
+File: search_render_index.py | Line: 22 | Keyword: tab-ntb-summary | Context: check_word("tab-ntb-summary")
+File: search_render_index.py | Line: 31 | Keyword: tab-ntb-summary | Context: results.append("\n--- tab-ntb-summary HTML snippet ---")
+File: search_render_index.py | Line: 32 | Keyword: tab-ntb-summary | Context: results.append(get_block(r'<div[^>]*id="tab-ntb-summary"', r'</div>\s*</div>\s*</div>')[:1000])
+File: search_render_index_res.txt | Line: 2 | Keyword: tab-ntb-summary | Context: Word 'tab-ntb-summary': FOUND
+File: search_render_index_res.txt | Line: 25 | Keyword: tab-ntb-summary | Context: --- tab-ntb-summary HTML snippet ---
+File: search_render_index_res.txt | Line: 26 | Keyword: tab-ntb-summary | Context: <div id="tab-ntb-summary" class="content-panel">
+File: search_results.txt | Line: 1 | Keyword: tab-volume-creation | Context: Line 1791: <li class="menu-item" id="nav-tab-volume-creation" onclick="switchTab('tab-volume-creation', this)">
+File: search_results.txt | Line: 5 | Keyword: tab-volume-creation | Context: Line 2128: <div class="kpi-card info" id="kpi-volume-creation-card" style="cursor: pointer;" onclick="switchTab('tab-vol
+File: search_results.txt | Line: 12 | Keyword: tab-volume-creation | Context: Line 2982: <div id="tab-volume-creation" class="content-panel">
+File: search_results.txt | Line: 32 | Keyword: tab-volume-creation | Context: Line 3347: <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tạo đơn</la
+File: search_results.txt | Line: 35 | Keyword: tab-volume-creation | Context: Line 3611: 'tab-volume-creation',
+File: search_results.txt | Line: 37 | Keyword: tab-volume-creation | Context: Line 3735: 'tab-volume-creation': 'Sản lượng',
+File: search_results.txt | Line: 2 | Keyword: Volume tạo đơn | Context: Line 1792: <i class="fa-solid fa-file-invoice"></i> Volume tạo đơn
+File: search_results.txt | Line: 6 | Keyword: Volume tạo đơn | Context: Line 2130: <span>Volume tạo đơn</span>
+File: search_results.txt | Line: 15 | Keyword: Volume tạo đơn | Context: Line 3035: <i class="fa-solid fa-file-invoice"></i> Báo cáo So sánh Volume tạo đơn
+File: search_results.txt | Line: 32 | Keyword: Volume tạo đơn | Context: Line 3347: <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tạo đơn</la
+File: search_results.txt | Line: 3 | Keyword: tab-nhan-su | Context: Line 1794: <li class="menu-item" id="nav-tab-nhan-su" onclick="switchTab('tab-nhan-su', this)">
+File: search_results.txt | Line: 25 | Keyword: tab-nhan-su | Context: Line 3125: <div id="tab-nhan-su" class="content-panel">
+File: search_results.txt | Line: 33 | Keyword: tab-nhan-su | Context: Line 3525: if (tabId === 'tab-nhan-su') {
+File: search_results.txt | Line: 36 | Keyword: tab-nhan-su | Context: Line 3612: 'tab-nhan-su',
+File: search_scratch_htmls.py | Line: 29 | Keyword: nhan_su | Context: # Search for lines containing "nhân sự" or "nhan-su" or "nhan_su"
+File: search_scratch_htmls.py | Line: 33 | Keyword: nhan_su | Context: if any(k in line.lower() for k in ["nhân sự", "nhan-su", "nhan_su"]):
+File: search_scratch_py.py | Line: 23 | Keyword: nhan_su | Context: keywords = ["nhân sự", "nhan-su", "nhan_su"]
+File: search_scratch_res.txt | Line: 3 | Keyword: nhan_su | Context: File: create_sample_csvs.py | Found keywords: ['nhan_su']
+File: search_scratch_res.txt | Line: 4 | Keyword: nhan_su | Context: File: diff_app_utf8.txt | Found keywords: ['nhân sự', 'nhan-su', 'nhan_su']
+File: search_scratch_res.txt | Line: 20 | Keyword: nhan_su | Context: File: search_kpis_results.txt | Found keywords: ['nhân sự', 'nhan_su']
+File: search_scratch_res.txt | Line: 21 | Keyword: nhan_su | Context: File: search_scratch_htmls.py | Found keywords: ['nhân sự', 'nhan-su', 'nhan_su']
+File: search_scratch_res.txt | Line: 22 | Keyword: nhan_su | Context: File: search_scratch_py.py | Found keywords: ['nhân sự', 'nhan-su', 'nhan_su']
+File: search_scratch_res.txt | Line: 23 | Keyword: nhan_su | Context: File: search_utf16_base.py | Found keywords: ['nhân sự', 'nhan-su', 'nhan_su']
+File: search_scratch_res.txt | Line: 24 | Keyword: nhan_su | Context: File: search_utf16_base_results.txt | Found keywords: ['nhân sự', 'nhan-su', 'nhan_su']
+File: search_tabs.py | Line: 3 | Keyword: tab-ntb-summary | Context: if 'tab-ntb-summary' in line or 'tab-opr' in line:
+File: search_utf16_base.py | Line: 29 | Keyword: nhan_su | Context: res.write("\nLines containing 'Nhân sự' or 'nhan-su' or 'nhan_su':\n")
+File: search_utf16_base.py | Line: 31 | Keyword: nhan_su | Context: if any(k in line.lower() for k in ["nhân sự", "nhan-su", "nhan_su"]):
+File: search_utf16_base_results.txt | Line: 12 | Keyword: nhan_su | Context: Lines containing 'Nhân sự' or 'nhan-su' or 'nhan_su':
+File: split_excel_logic.txt | Line: 25 | Keyword: nhan_su | Context: +            (["nhân sự", "nhan su"], "ops_nhan_su.csv")
+File: step_14_output.txt | Line: 130 | Keyword: Volume tạo đơn | Context: -                                <i class="fa-solid fa-file-invoice" style="color: var(--color-indigo);"></i> Volume tạo
+File: step_2097_repl.txt | Line: 1 | Keyword: tab-ntb-summary | Context: "            <!-- TAB: NTB SUMMARY DASHBOARD -->\n            <div id=\"tab-ntb-summary\" class=\"content-panel\">\n    
+File: step_2097_target.txt | Line: 1 | Keyword: tab-ntb-summary | Context: "            <!-- TAB: NTB SUMMARY DASHBOARD -->\n            <div id=\"tab-ntb-summary\" class=\"content-panel\">\n    
+File: step_2910_raw.txt | Line: 1 | Keyword: tab-nhan-su | Context: {"step_index":2910,"source":"MODEL","type":"PLANNER_RESPONSE","status":"DONE","created_at":"2026-06-11T13:37:31Z","think
+File: step_2910_raw.txt | Line: 1 | Keyword: nhan_su | Context: {"step_index":2910,"source":"MODEL","type":"PLANNER_RESPONSE","status":"DONE","created_at":"2026-06-11T13:37:31Z","think
+File: step_details_extracted.txt | Line: 6 | Keyword: nhan_su | Context: CodeContent: "import time\nimport openpyxl\nimport csv\nimport os\n\ndef resolve_path(filename):\n    return f\"c:/Users
+File: step_details_extracted.txt | Line: 20 | Keyword: nhan_su | Context: CodeContent: "import time\nimport openpyxl\nimport csv\nimport os\n\ndef resolve_path(filename):\n    return f\"c:/Users
+File: step_details_extracted.txt | Line: 34 | Keyword: nhan_su | Context: CodeContent: "import time\nimport multiprocessing\nimport openpyxl\nimport csv\nimport os\n\ndef resolve_path(filename):
+File: step_details_extracted.txt | Line: 51 | Keyword: nhan_su | Context: ReplacementContent: "def split_excel_to_csvs(xlsx_path):\n    print(f\"Splitting {xlsx_path} to CSV files using optimize
+File: step_details_extracted.txt | Line: 54 | Keyword: nhan_su | Context: TargetContent: "def split_excel_to_csvs(xlsx_path):\n    print(f\"Splitting {xlsx_path} to CSV files...\")\n    import p
+File: step_details_extracted.txt | Line: 246 | Keyword: nhan_su | Context: Query: "nhan_su"
+File: step_details_extracted.txt | Line: 248 | Keyword: nhan_su | Context: toolAction: "Search for nhan_su"
+File: step_details_extracted.txt | Line: 249 | Keyword: nhan_su | Context: toolSummary: "Search for nhan_su"
+File: step_details_extracted.txt | Line: 258 | Keyword: nhan_su | Context: Query: "nhan_su"
+File: step_details_extracted.txt | Line: 260 | Keyword: nhan_su | Context: toolAction: "Search for nhan_su in app.py"
+File: step_details_extracted.txt | Line: 261 | Keyword: nhan_su | Context: toolSummary: "Search for nhan_su in app.py"
+File: step_details_extracted.txt | Line: 269 | Keyword: nhan_su | Context: CodeContent: "# -*- coding: utf-8 -*-\nimport os\n\nfiles = [\n    r\"c:\\Users\\lap4all\\Desktop\\New folder\\templates
+File: step_details_extracted.txt | Line: 302 | Keyword: nhan_su | Context: CommandLine: "git log -S \"nhan_su\" --oneline"
+File: step_details_extracted.txt | Line: 305 | Keyword: nhan_su | Context: toolAction: "Git log search nhan_su"
+File: step_details_extracted.txt | Line: 306 | Keyword: nhan_su | Context: toolSummary: "Git log search nhan_su"
+File: step_details_extracted.txt | Line: 327 | Keyword: nhan_su | Context: CodeContent: "# -*- coding: utf-8 -*-\nimport os\n\nbase_path = r\"c:\\Users\\lap4all\\Desktop\\New folder\\scratch\\ind
+File: step_details_extracted.txt | Line: 339 | Keyword: nhan_su | Context: ArtifactMetadata: {"ArtifactType":"other","RequestFeedback":false,"Summary":"Python script to search scratch files for n
+File: step_details_extracted.txt | Line: 340 | Keyword: nhan_su | Context: CodeContent: "# -*- coding: utf-8 -*-\nimport os\n\nscratch_dir = r\"c:\\Users\\lap4all\\Desktop\\New folder\\scratch\"\
+File: step_details_extracted.txt | Line: 341 | Keyword: nhan_su | Context: Description: "Write script to search all scratch files for nhan_su/nhan-su to find logic references"
+File: step_details_extracted.txt | Line: 388 | Keyword: nhan_su | Context: ArtifactMetadata: {"ArtifactType":"other","RequestFeedback":false,"Summary":"Python script to view search results for nh
+File: step_details_extracted.txt | Line: 389 | Keyword: nhan_su | Context: CodeContent: "# -*- coding: utf-8 -*-\nimport os\n\np = r\"c:\\Users\\lap4all\\Desktop\\New folder\\scratch\\search_all_
+File: step_details_extracted.txt | Line: 411 | Keyword: nhan_su | Context: ArtifactMetadata: {"ArtifactType":"other","RequestFeedback":false,"Summary":"Python script to scan transcript.jsonl for 
+File: step_details_extracted.txt | Line: 412 | Keyword: nhan_su | Context: CodeContent: "# -*- coding: utf-8 -*-\nimport os\nimport json\n\ntranscript_path = r\"C:\\Users\\lap4all\\.gemini\\antig
+File: step_details_extracted.txt | Line: 413 | Keyword: nhan_su | Context: Description: "Write script to scan transcript.jsonl for exact step records where nhan_su was introduced"
+File: step_details_extracted.txt | Line: 427 | Keyword: nhan_su | Context: Description: "Write script to extract code arguments for nhan_su steps from the transcript"
+File: step_details_extracted.txt | Line: 439 | Keyword: nhan_su | Context: CodeContent: "# -*- coding: utf-8 -*-\nimport os\nimport json\n\ntranscript_path = r\"C:\\Users\\lap4all\\.gemini\\antig
+File: step_details_extracted.txt | Line: 452 | Keyword: nhan_su | Context: ArtifactMetadata: {"ArtifactType":"other","RequestFeedback":false,"Summary":"Python script to scan transcript for all st
+File: step_details_extracted.txt | Line: 453 | Keyword: nhan_su | Context: CodeContent: "# -*- coding: utf-8 -*-\nimport os\nimport json\n\ntranscript_path = r\"C:\\Users\\lap4all\\.gemini\\antig
+File: step_details_extracted.txt | Line: 455 | Keyword: nhan_su | Context: Description: "Update view_step_multi.py to scan all steps containing nhan_su and output details without arbitrary step r
+File: switch_tab_code.txt | Line: 50 | Keyword: tab-nhan-su | Context: if (tabId === 'tab-nhan-su') {
+File: switch_tab_search.txt | Line: 3 | Keyword: tab-ntb-summary | Context: Line 1765: <li class="menu-item" id="nav-tab-ntb-summary" onclick="switchTab('tab-ntb-summary', this)">
+File: switch_tab_search.txt | Line: 9 | Keyword: tab-volume-creation | Context: Line 1783: <li class="menu-item" id="nav-tab-volume-creation" onclick="switchTab('tab-volume-creation', this)">
+File: switch_tab_search.txt | Line: 13 | Keyword: tab-volume-creation | Context: Line 2117: <div class="kpi-card info" id="kpi-volume-creation-card" style="cursor: pointer;" onclick="switchTab('tab-vol
+File: sync_route_def.txt | Line: 89 | Keyword: Volume tạo đơn | Context: L2529:                 ("tao_don_url", 'vols_tao_don.xlsx', "Volume tạo đơn")
+File: sync_task_logic.txt | Line: 15 | Keyword: Volume tạo đơn | Context: -                ("tao_don_url", 'vols_tao_don.xlsx', "Volume tạo đơn")
+File: sync_task_logic.txt | Line: 61 | Keyword: nhan_su | Context: +def api_nhan_su():
+File: templates_index_backup_before_reset.html | Line: 1699 | Keyword: tab-ntb-summary | Context: <li class="menu-item" id="nav-tab-ntb-summary" onclick="switchTab('tab-ntb-summary', this)">
+File: templates_index_backup_before_reset.html | Line: 2163 | Keyword: tab-ntb-summary | Context: <div id="tab-ntb-summary" class="content-panel">
+File: templates_index_backup_before_reset.html | Line: 3289 | Keyword: tab-ntb-summary | Context: <label class="permission-item"><input type="checkbox" value="tab-ntb-summary" checked> Chỉ số NTB</label>
+File: templates_index_backup_before_reset.html | Line: 3555 | Keyword: tab-ntb-summary | Context: 'tab-ntb-summary',
+File: templates_index_backup_before_reset.html | Line: 3679 | Keyword: tab-ntb-summary | Context: 'tab-ntb-summary': 'Chỉ số',
+File: templates_index_backup_before_reset.html | Line: 1700 | Keyword: Chỉ số NTB | Context: <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
+File: templates_index_backup_before_reset.html | Line: 3289 | Keyword: Chỉ số NTB | Context: <label class="permission-item"><input type="checkbox" value="tab-ntb-summary" checked> Chỉ số NTB</label>
+File: templates_index_backup_before_reset.html | Line: 1717 | Keyword: tab-volume-creation | Context: <li class="menu-item" id="nav-tab-volume-creation" onclick="switchTab('tab-volume-creation', this)">
+File: templates_index_backup_before_reset.html | Line: 2057 | Keyword: tab-volume-creation | Context: <div class="kpi-card info" id="kpi-volume-creation-card" style="cursor: pointer;" onclick="switchTab('tab-volume-creatio
+File: templates_index_backup_before_reset.html | Line: 2943 | Keyword: tab-volume-creation | Context: <div id="tab-volume-creation" class="content-panel">
+File: templates_index_backup_before_reset.html | Line: 3295 | Keyword: tab-volume-creation | Context: <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tạo đơn</label>
+File: templates_index_backup_before_reset.html | Line: 3561 | Keyword: tab-volume-creation | Context: 'tab-volume-creation',
+File: templates_index_backup_before_reset.html | Line: 3685 | Keyword: tab-volume-creation | Context: 'tab-volume-creation': 'Sản lượng',
+File: templates_index_backup_before_reset.html | Line: 1718 | Keyword: Volume tạo đơn | Context: <i class="fa-solid fa-file-invoice"></i> Volume tạo đơn
+File: templates_index_backup_before_reset.html | Line: 2059 | Keyword: Volume tạo đơn | Context: <span>Volume tạo đơn</span>
+File: templates_index_backup_before_reset.html | Line: 2996 | Keyword: Volume tạo đơn | Context: <i class="fa-solid fa-file-invoice"></i> Báo cáo So sánh Volume tạo đơn
+File: templates_index_backup_before_reset.html | Line: 3216 | Keyword: Volume tạo đơn | Context: <i class="fa-solid fa-file-invoice" style="color: var(--color-indigo);"></i> Volume tạo đơn (shopee_tiktok)
+File: templates_index_backup_before_reset.html | Line: 3295 | Keyword: Volume tạo đơn | Context: <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tạo đơn</label>
+File: templates_index_backup_before_reset.html | Line: 1720 | Keyword: tab-nhan-su | Context: <li class="menu-item" id="nav-tab-nhan-su" onclick="switchTab('tab-nhan-su', this)">
+File: templates_index_backup_before_reset.html | Line: 3086 | Keyword: tab-nhan-su | Context: <div id="tab-nhan-su" class="content-panel">
+File: templates_index_backup_before_reset.html | Line: 3296 | Keyword: tab-nhan-su | Context: <label class="permission-item"><input type="checkbox" value="tab-nhan-su"> Quản lý Nhân sự</label>
+File: templates_index_backup_before_reset.html | Line: 3475 | Keyword: tab-nhan-su | Context: if (tabId === 'tab-nhan-su') {
+File: templates_index_backup_before_reset.html | Line: 3562 | Keyword: tab-nhan-su | Context: 'tab-nhan-su',
+File: temp_index_diff.txt | Line: 92 | Keyword: tab-ntb-summary | Context: <li class="menu-item" id="nav-tab-ntb-summary" onclick="switchTab('tab-ntb-summary', this)">
+File: temp_index_diff.txt | Line: 93 | Keyword: Chỉ số NTB | Context: <i class="fa-solid fa-chart-line"></i> Chỉ số NTB
+File: temp_index_diff.txt | Line: 96 | Keyword: tab-volume-creation | Context: <li class="menu-item" id="nav-tab-volume-creation" onclick="switchTab('tab-volume-creation', this)">
+File: temp_index_diff.txt | Line: 739 | Keyword: tab-volume-creation | Context: <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tạo đơn</label>
+File: temp_index_diff.txt | Line: 758 | Keyword: tab-volume-creation | Context: 'tab-volume-creation',
+File: temp_index_diff.txt | Line: 97 | Keyword: Volume tạo đơn | Context: <i class="fa-solid fa-file-invoice"></i> Volume tạo đơn
+File: temp_index_diff.txt | Line: 730 | Keyword: Volume tạo đơn | Context: +                                <i class="fa-solid fa-file-invoice" style="color: var(--color-indigo);"></i> Volume tạo
+File: temp_index_diff.txt | Line: 739 | Keyword: Volume tạo đơn | Context: <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tạo đơn</label>
+File: temp_index_diff.txt | Line: 99 | Keyword: tab-nhan-su | Context: +                <li class="menu-item" id="nav-tab-nhan-su" onclick="switchTab('tab-nhan-su', this)">
+File: temp_index_diff.txt | Line: 608 | Keyword: tab-nhan-su | Context: +            <div id="tab-nhan-su" class="content-panel">
+File: temp_index_diff.txt | Line: 740 | Keyword: tab-nhan-su | Context: +                                    <label class="permission-item"><input type="checkbox" value="tab-nhan-su"> Quản lý 
+File: temp_index_diff.txt | Line: 749 | Keyword: tab-nhan-su | Context: +            if (tabId === 'tab-nhan-su') {
+File: temp_index_diff.txt | Line: 759 | Keyword: tab-nhan-su | Context: +                'tab-nhan-su',
+File: test_nhan_su_api.py | Line: 4 | Keyword: nhan_su | Context: def test_nhan_su():
+File: test_nhan_su_api.py | Line: 37 | Keyword: nhan_su | Context: test_nhan_su()
+File: view_nhan_su_api.py | Line: 12 | Keyword: nhan_su | Context: with open("c:/Users/lap4all/Desktop/New folder/scratch/nhan_su_api_decor.txt", "w", encoding="utf-8") as f:
+File: view_nhan_su_api.py | Line: 15 | Keyword: nhan_su | Context: print("Saved nhan su decorator to scratch/nhan_su_api_decor.txt")
+File: view_search_results.py | Line: 13 | Keyword: nhan_su | Context: if any(kw in line.lower() for kw in ["nhân sự", "nhan_su", "nhan-su"]):
+File: view_step_multi.py | Line: 23 | Keyword: nhan_su | Context: keywords = ["nhân sự", "nhan_su", "nhan-su", "quản lý nhân sự"]
+File: volume_calls_results.txt | Line: 33 | Keyword: tab-volume-creation | Context: L1791: <li class="menu-item" id="nav-tab-volume-creation" onclick="switchTab('tab-volume-creation', this)">
+File: volume_calls_results.txt | Line: 34 | Keyword: tab-volume-creation | Context: L2128: <div class="kpi-card info" id="kpi-volume-creation-card" style="cursor: pointer;" onclick="switchTab('tab-volume-
+File: volume_context_comparison.txt | Line: 11 | Keyword: tab-volume-creation | Context: 'tab-volume-creation',
+File: volume_context_comparison.txt | Line: 40 | Keyword: tab-volume-creation | Context: 'tab-volume-creation': 'Sản lượng',
+File: volume_context_comparison.txt | Line: 241 | Keyword: tab-volume-creation | Context: 'tab-volume-creation',
+File: volume_context_comparison.txt | Line: 270 | Keyword: tab-volume-creation | Context: 'tab-volume-creation': 'Sản lượng',
+File: volume_context_comparison.txt | Line: 12 | Keyword: tab-nhan-su | Context: 'tab-nhan-su',
+File: volume_context_comparison.txt | Line: 242 | Keyword: tab-nhan-su | Context: 'tab-nhan-su',
+File: xlsx_occurrences.txt | Line: 70 | Keyword: Volume tạo đơn | Context: L2529: ("tao_don_url", 'vols_tao_don.xlsx', "Volume tạo đơn")

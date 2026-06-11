@@ -1,0 +1,51 @@
+"        let oprSlotsChart = null;
+        let oprAmChart = null;
+        let amOprSortDir = 'asc'; // 'asc' or 'desc'
+
+        async function loadOprData() {
+            const am = document.getElementById('filter-am').value;
+            const prov = document.getElementById('filter-province').value;
+            const po = document.getElementById('filter-po').value;
+
+            const params = new URLSearchParams();
+            if (am) params.append('am', am);
+            if (prov) params.append('province', prov);
+            if (po) params.append('post_office', po);
+
+            try {
+                const res = await fetch(getApiUrl(`/api/opr?${params.toString()}`), getFetchOptions());
+                if (res.ok) {
+                    const data = await res.json();
+                    globalData.opr = data;
+                    renderOprDashboard();
+                }
+            } catch (err) {
+                console.error("Lá»i load dá»¯ liá»u OPR: ", err);
+            }
+        }
+
+        function setAmOprSort(dir) {
+            amOprSortDir = dir;
+            document.getElementById('sort-am-asc').classList.toggle('active', dir === 'asc');
+            document.getElementById('sort-am-desc').classList.toggle('active', dir === 'desc');
+            renderOprAmChartOnly();
+        }
+
+        function renderOprAmChartOnly() {
+            const opr = globalData.opr;
+            if (!opr || !opr.am_performance) return;
+
+            let amPerformance = [...opr.am_performance];
+            if (amOprSortDir === 'asc') {
+                amPerformance.sort((a, b) => (a['% OPR'] || 0) - (b['% OPR'] || 0));
+            } else {
+                amPerformance.sort((a, b) => (b['% OPR'] || 0) - (a['% OPR'] || 0));
+            }
+
+            const ams = amPerformance.map(r => r.AM);
+            const amOpr = amPerformance.map(r => roundNum(r['% OPR']));
+            const chartHeight = Math.max(250, ams.length * 30);
+
+            const amOptions = {
+                chart: { t
+<truncated 3430 bytes>

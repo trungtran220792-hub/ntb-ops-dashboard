@@ -1,0 +1,45 @@
+
+=== Sheet 'Data' ===
+Columns: ['Cấp Quản Lý', 'Chi tiết', 'Loại Hàng', 'Time', 'Volume', '% Gán', '% GTC', '% Chuyển trả', 'Leadtime', 'Sản Lượng Giao Thành Công', 'Sản Lượng Chuyển Trả', 'Sản Lượng Gán', 'Sản Lượng Trả', 'Sản Lượng Tồn', 'Sản Lượng Chưa Gán', '% Chưa Gán', '%Tồn', 'Hàng Mới Về Trong Ngày', 'Tỉnh', 'Vùng', 'AM']
+Found 84 matching rows
+                                     Chi tiết              AM                   Time  Volume
+0  Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Trần Văn Phước     2026-05-26 - Thứ 3     153
+1  Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Trần Văn Phước     2026-05-30 - Thứ 7     147
+2  Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Trần Văn Phước     2026-05-21 - Thứ 5     156
+3  Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Trần Văn Phước  2026-05-24 - Chủ Nhật     112
+4  Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Trần Văn Phước     2026-05-23 - Thứ 7     190
+5  Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Trần Văn Phước     2026-06-08 - Thứ 2     137
+6  Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Trần Văn Phước     2026-06-05 - Thứ 6     156
+7  Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Trần Văn Phước     2026-05-18 - Thứ 2     166
+8  Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Trần Văn Phước     2026-05-25 - Thứ 2      98
+9  Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Trần Văn Phước     2026-06-01 - Thứ 2     125
+
+=== Sheet 'DataLTC' ===
+Columns: ['Cấp quản lý', 'Chi tiết', 'Ca', 'Time', 'Volume', '%Gán', '%LTC', '%Đóng kiện', '%LC', 'Leadtime', 'Sản Lượng Lấy Thành Công', 'Sản Lượng Gán', 'Sản Lượng Chưa Gán', '% Chưa Gán', 'Hàng Mới Về Trong Ngày', 'Tỉnh', 'Vùng', 'AM']
+Found 167 matching rows
+                                                      Chi tiết             AM                   Time  Volume
+4427  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng  Trần Công Hậu     2026-05-22 - Thứ 6      16
+4428  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng  Trần Công Hậu     2026-05-20 - Thứ 4      17
+4429  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng  Trần Công Hậu     2026-05-19 - Thứ 3      18
+4430  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng  Trần Công Hậu     2026-05-21 - Thứ 5      19
+4431  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng  Trần Công Hậu     2026-05-23 - Thứ 7      25
+4432  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng  Trần Công Hậu     2026-06-02 - Thứ 3      34
+4433  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng  Trần Công Hậu     2026-05-18 - Thứ 2      35
+4434  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng  Trần Công Hậu     2026-06-01 - Thứ 2      36
+4435  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng  Trần Công Hậu  2026-05-31 - Chủ Nhật      46
+4436  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng  Trần Công Hậu     2026-05-16 - Thứ 7      84
+
+=== Sheet 'rawltc' ===
+Columns: ['Cấp quản lý', 'Chi tiết', 'Ca', 'Time', 'Volume', '%Gán', '%LTC', '%LC', 'Leadtime']
+Found 167 matching rows
+                                                      Chi tiết                   Time  Volume
+4454  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng     2026-05-22 - Thứ 6      16
+4455  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng     2026-05-20 - Thứ 4      17
+4456  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng     2026-05-19 - Thứ 3      18
+4457  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng     2026-05-21 - Thứ 5      19
+4458  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng     2026-05-23 - Thứ 7      25
+4459  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng  2026-05-10 - Chủ Nhật      30
+4460  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng     2026-06-02 - Thứ 3      34
+4461  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng     2026-05-11 - Thứ 2      35
+4462  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng     2026-05-18 - Thứ 2      35
+4463  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng     2026-06-01 - Thứ 2      36

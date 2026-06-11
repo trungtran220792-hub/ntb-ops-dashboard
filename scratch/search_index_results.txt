@@ -1,0 +1,20 @@
+
+=== checking Current index.html (templates/index.html) with encoding utf-8 ===
+Length: 349687
+Contains 'Gán tất cả': False
+Contains 'Gán TTS': False
+Contains 'ODR TTS': False
+Contains 'Giao lần đầu': False
+Contains 'Giao thành công': True
+Contains 'Quản lý Nhân sự': False
+Contains 'Giao hàng nhanh': True
+
+=== checking Backup index.html.base (scratch/index.html.base) with encoding utf-16 ===
+Length: 344557
+Contains 'Gán tất cả': False
+Contains 'Gán TTS': False
+Contains 'ODR TTS': False
+Contains 'Giao lần đầu': False
+Contains 'Giao thành công': False
+Contains 'Quản lý Nhân sự': False
+Contains 'Giao hàng nhanh': False

@@ -1,0 +1,15 @@
+=== Target: 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông' ===
+Matches in BC column: 1
+  Row 5: {'Mã bưu cục': 20269003, 'Bưu cục': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'BC': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'Tỉnh': 'Đắk Nông', 'Am': 'Trần Văn Phước', 'ID - Họ Tên Am': 'Trần Văn Phước'}
+Matches in Bưu cục column: 1
+  Row 5: {'Mã bưu cục': 20269003, 'Bưu cục': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'BC': 'Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông', 'Tỉnh': 'Đắk Nông', 'Am': 'Trần Văn Phước', 'ID - Họ Tên Am': 'Trần Văn Phước'}
+=== Target: 'Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng' ===
+Matches in BC column: 1
+  Row 6: {'Mã bưu cục': 22048001, 'Bưu cục': 'Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng', 'BC': 'Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng', 'Tỉnh': 'Đắk Nông', 'Am': 'Trần Công Hậu', 'ID - Họ Tên Am': 'Trần Công Hậu'}
+Matches in Bưu cục column: 1
+  Row 6: {'Mã bưu cục': 22048001, 'Bưu cục': 'Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng', 'BC': 'Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng', 'Tỉnh': 'Đắk Nông', 'Am': 'Trần Công Hậu', 'ID - Họ Tên Am': 'Trần Công Hậu'}
+=== Target: 'Điểm lấy hàng Nguyễn Đình Chiểu-Nghĩa Tân-Gia Nghĩa-Đăk Nông' ===
+Matches in BC column: 1
+  Row 17: {'Mã bưu cục': 21659000, 'Bưu cục': 'Điểm lấy hàng Nguyễn Đình Chiểu-Nghĩa Tân-Gia Nghĩa-Đăk Nông', 'BC': 'Điểm lấy hàng Nguyễn Đình Chiểu-Nghĩa Tân-Gia Nghĩa-Đăk Nông', 'Tỉnh': 'Đắk Nông', 'Am': 'Trần Thị Nhung', 'ID - Họ Tên Am': 'Trần Thị Nhung'}
+Matches in Bưu cục column: 1
+  Row 17: {'Mã bưu cục': 21659000, 'Bưu cục': 'Điểm lấy hàng Nguyễn Đình Chiểu-Nghĩa Tân-Gia Nghĩa-Đăk Nông', 'BC': 'Điểm lấy hàng Nguyễn Đình Chiểu-Nghĩa Tân-Gia Nghĩa-Đăk Nông', 'Tỉnh': 'Đắk Nông', 'Am': 'Trần Thị Nhung', 'ID - Họ Tên Am': 'Trần Thị Nhung'}

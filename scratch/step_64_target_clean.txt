@@ -1,0 +1,42 @@
+"            <!-- TAB 3: OPR TTS -->
+            <div id="tab-opr" class="content-panel">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-header"><span>Tá»ng ÄÆ¡n OPR</span></div>
+                        <div class="kpi-value" id="opr-total-vol">0</div>
+                    </div>
+                    <div class="kpi-card success">
+                        <div class="kpi-header"><span>ÄÆ¡n ÄÃºng háº¡n</span></div>
+                        <div class="kpi-value" id="opr-total-ot">0</div>
+                    </div>
+                    <div class="kpi-card danger">
+                        <div class="kpi-header"><span>ÄÆ¡n trá» háº¡n</span></div>
+                        <div class="kpi-value" id="opr-total-late">0</div>
+                    </div>
+                </div>
+
+                <div class="columns-layout">
+                    <!-- OPR by Time slots -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>% OPR theo khung giá» táº¡o ÄÆ¡n</h3>
+                        </div>
+                        <div id="chart-opr-slots" style="min-height: 250px;"></div>
+                    </div>
+                    <!-- OPR by AM -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Biá»u Äá» OPR xáº¿p háº¡ng lá»i trá» cá»§a AM</h3>
+                        </div>
+                        <div id="chart-opr-am" style="min-height: 250px;"></div>
+                    </div>
+                </div>
+
+                <div class="columns-layout">
+                    <!-- Error Reasons weight -->
+                    <div class="card" style="flex-grow: 1.5;">
+                        <div class="card-header">
+                            <h3>Tá»· trá»ng vÃ  lÃ½ do trá» háº¡n OPR</h3>
+                        </div>
+       
+<truncated 2174 bytes>

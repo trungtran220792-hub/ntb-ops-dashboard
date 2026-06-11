@@ -1,0 +1,6 @@
+Row 1 (Header):
+['Cấp Quản Lý', 'Chi tiết', 'Loại Hàng', 'Time', 'Volume', '% Gán', None, '% LTC', 'Leadtime', 'Sản Lượng Lấy Thành Công', 'Sản Lượng Gán', 'Sản Lượng Chưa Gán', '% Chưa Gán', 'Hàng Mới Về Trong Ngày', 'Tỉnh', 'Vùng', 'AM', None, None, None, None, None]
+
+Row 2:
+['NTB - Bình Thuận', 'BC 158 Quốc lộ 55-Tánh Linh-Bình Thuận', '2026-05-17 - Chủ Nhật', 281.0, 0.9964412811, 0.8896797153, 0.8861209964, 0.8896797153, 9.171521036, 0.8865135953, 0.8865135953, 0.1099276858, 0.1103202847, 0.9964412811, 'Bình Thuận', 'NTB', 'Huỳnh Tấn Hiền', None, None, None, None, None]
+

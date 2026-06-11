@@ -1,0 +1,8 @@
+                    <div class="card" style="margin-bottom: 0;">
+                        <div class="card-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+                            <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin: 0;">
+                                <i class="fa-solid fa-chart-bar" style="color: var(--color-ghn-orange); margin-right: 6px;"></i> Xếp hạng hiệu suất OPR của AM
+                            </h3>
+                        </div>
+                        <div id="chart-opr-am" style="min-height: 250px;"></div>
+                    </div>

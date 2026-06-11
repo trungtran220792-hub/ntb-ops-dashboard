@@ -1,0 +1,80 @@
+3341: 
+3342:         // Tab switching
+3343:         function switchTab(tabId, el) {
+3344:             document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+3345:             document.querySelectorAll('.content-panel').forEach(panel => panel.classList.remove('active'));
+3346: 
+3347:             el.classList.add('active');
+3348:             document.getElementById(tabId).classList.add('active');
+3349: 
+3350:             // Set header title
+3351:             const tabName = el.innerText.trim();
+3352:             if (tabId === 'tab-introduction') {
+3353:                 document.getElementById('page-title').innerText = "GIỚI THIỆU VÙNG NAM TRUNG BỘ";
+3354:             } else {
+3355:                 document.getElementById('page-title').innerText = tabName + " Dashboard";
+3356:             }
+3357: 
+3358:             // Show/Hide baseline comparison selector based on tab
+3359:             const isBacklogTab = tabId === 'tab-backlog';
+3360:             document.getElementById('baseline-selector-container').style.display = isBacklogTab ? 'flex' : 'none';
+3361: 
+3362:             // Show/Hide global filters panel based on tab (xóa cái này - hifnh3)
+3363:             const isOpsTab = tabId === 'tab-operational' || tabId === 'tab-opr' || tabId === 'tab-backlog';
+3364:             const globalFilters = document.getElementById('global-filters');
+3365:             if (globalFilters) {
+3366:                 globalFilters.style.display = isOpsTab ? 'flex' : 'none';
+3367:             }
+3368: 
+3369:             // Update header subtitle
+3370:             updateHeaderSubtitle(tabId);
+3371: 
+3372:             // Handle Leaflet map resizing and positioning on tab switch
+3373:             if (tabId === 'tab-introduction' && typeof _ntbMap !== 'undefined' && _ntbMap) {
+3374:                 setTimeout(() => {
+3375:                     _ntbMap.invalidateSize();
+3376:                     _ntbMap.setView([12.2, 108.2], 7);
+3377:                 }, 100);
+3378:             }
+3379: 
+3380:             // Force donut chart update when switching to backlog tab
+3381:             if (tabId === 'tab-backlog') {
+3382:                 setTimeout(() => {
+3383:                     const bl = globalData.backlog;
+3384:                     if (bl && backlogPieChart) {
+3385:                         const blAging = bl.aging ? bl.aging.total_backlog : 0;
+3386:                         const blTreoGiao = bl.treo ? bl.treo.total_giao : 0;
+3387:                         const blTreoTra = bl.treo ? bl.treo.total_tra : 0;
+3388:                         backlogPieChart.updateSeries([blAging, blTreoGiao, blTreoTra]);
+3389:                     }
+3390:                 }, 100);
+3391:             }
+3392:         }
+3393: 
+3394:         let userRole = 'staff';
+3395:         let userPermissions = [];
+3396:         let loggedInUsername = '';
+3397: 
+3398:         async function checkUserRole() {
+3399:             try {
+3400:                 const res = await fetch(getApiUrl('/api/user-role'), getFetchOptions());
+3401:                 if (res.status === 401) {
+3402:                     // Show login overlay
+3403:                     document.querySelector('.app-layout').style.display = 'none';
+3404:                     document.getElementById('login-container').style.display = 'flex';
+3405:                     hideLoading();
+3406:                     return false;
+3407:                 }
+3408:                 
+3409:                 if (res.ok) {
+3410:                     const data = await res.json();
+3411:                     userRole = data.role;
+3412:                     userPermissions = data.permissions || [];
+3413:                     loggedInUsername = data.username;
+3414: 
+3415:                     // Hide login overlay, show app layout
+3416:                     document.getElementById('login-container').style.display = 'none';
+3417:                     document.querySelector('.app-layout').style.display = 'flex';
+3418: 
+3419:                     // Update UI elements based on role & permissions
+3420:                     gateMenuTabs();

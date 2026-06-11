@@ -1,0 +1,122 @@
+=== File: current (c:\Users\lap4all\Desktop\New folder\templates\index.html) ===
+Line 3441: function escapeHTML(str) {
+Line 3807: ${escapeHTML(u.username)} ${isSelf ? ' <span style="color: var(--text-muted); font-weight: normal; font-size: 11px;">(Bạn)</span>' : ''}
+Line 3812: <button class="btn btn-secondary btn-sm" onclick="editUser('${escapeHTML(u.username)}', '${escapeHTML(u.role)}', '${escapeHTML(JSON.stringify(u.permis
+Line 3815: <button class="btn btn-secondary btn-sm" onclick="deleteUser('${escapeHTML(u.username)}')" ${isSelf ? 'disabled style="opacity: 0.5; cursor: not-allow
+Line 4828: <td>${escapeHTML(r[keys[0]])}</td>
+Line 5099: <td><strong>${escapeHTML(r.final_am)}</strong></td>
+Line 5120: <td>${escapeHTML(r.BC)}</td>
+Line 5121: <td>${escapeHTML(r.final_province)}</td>
+Line 5122: <td>${escapeHTML(r.final_am)}</td>
+Line 5160: <td><strong>${escapeHTML(r['Mã đơn'])}</strong></td>
+Line 5161: <td>${escapeHTML(r.final_province || '')}</td>
+Line 5162: <td>${escapeHTML(r.BC || '')}</td>
+Line 5163: <td>${escapeHTML(r['Tệp khách'] || '')}</td>
+Line 5164: <td>${escapeHTML(r.final_am || '')}</td>
+Line 5167: <td><span class="badge badge-secondary">${escapeHTML(r['Trạng thái'] || '')}</span></td>
+Line 5212: <td><strong>${escapeHTML(r.final_am)}</strong></td>
+Line 5234: <td><strong>${escapeHTML(r.final_am)}</strong></td>
+Line 5275: <td><strong>${escapeHTML(r['Mã đơn hàng'])}</strong></td>
+Line 5276: <td>${escapeHTML(r.final_province || '')}</td>
+Line 5277: <td>${escapeHTML(r.warehouse_name || '')}</td>
+Line 5278: <td><span class="badge ${typeClass}">${escapeHTML(r['Loại đơn'] || '')}</span></td>
+Line 5279: <td>${escapeHTML(r.final_am || '')}</td>
+Line 5282: <td><span class="badge badge-secondary">${escapeHTML(r['Trạng thái'] || '')}</span></td>
+Line 5361: <td style="font-weight: 600; color: var(--text-primary); text-align: left; vertical-align: middle;">${escapeHTML(row.name)}</td>
+Line 5362: <td style="text-align: left; vertical-align: middle;">${escapeHTML(row.am)}</td>
+Line 5363: <td style="text-align: left; vertical-align: middle;">${escapeHTML(row.province)}</td>
+Line 5369: <span class="badge ${statusClass}">${escapeHTML(row.status)}</span>
+Line 5370: ${row.reason ? `<div style="font-size: 11px; color: var(--text-secondary); margin-top: 4px; line-height: 1.2;">${escapeHTML(row.reason)}</div>` : ''}
+Line 5412: <span style="font-size: 14.5px; color: var(--text-primary); font-family: 'Outfit', sans-serif;"><i class="fa-solid fa-user-shield" style="margin-right
+Line 5416: ${item.pos.map(po => `<span style="display:inline-block; background:rgba(239,68,68,0.08); color:#ef4444; border: 1px solid rgba(239,68,68,0.15); paddi
+Line 5533: selectEl.innerHTML += `<option value="${escapeHTML(opt)}" ${selectedAttr}>${escapeHTML(opt)}</option>`;
+Line 5607: tbody.innerHTML = `<tr><td colspan="12" style="text-align: center; color: var(--text-danger); font-weight: 600; padding: 24px;"><i class="fa-solid fa-
+Line 5657: <td style="text-align: left; font-weight: 600;">${escapeHTML(row.province)}</td>
+Line 5677: <td style="text-align: left;">${escapeHTML(r.province)}</td>
+Line 5736: <i class="fa-solid fa-chevron-right toggle-icon" id="chevron-${provClass}"></i> ${escapeHTML(row.province)}
+Line 5756: <td style="text-align: left; padding-left: 28px; color: var(--text-secondary);">${escapeHTML(po.bc)}</td>
+Line 5936: <div style="font-weight: 700; margin-bottom: 6px; font-family: 'Outfit'; font-size: 13px;">${escapeHTML(item.name)}</div>
+Line 5937: <div style="font-size: 11px; margin-bottom: 4px; color: var(--text-secondary);">Tỉnh: <b style="color: var(--text-primary);">${escapeHTML(item.provinc
+Line 6003: <div style="font-weight: 700; margin-bottom: 6px; font-family: 'Outfit'; font-size: 13px;">${escapeHTML(item.name)}</div>
+Line 6004: <div style="font-size: 11px; margin-bottom: 4px; color: var(--text-secondary);">Tỉnh: <b style="color: var(--text-primary);">${escapeHTML(item.provinc
+Line 6065: tbody.innerHTML = `<tr><td colspan="10" style="text-align: center; color: var(--text-danger); font-weight: 600; padding: 24px;"><i class="fa-solid fa-
+Line 6104: <td style="font-weight: 600; color: var(--text-primary);">${escapeHTML(row.province || '')}</td>
+Line 6105: <td>${escapeHTML(row.district || '')}</td>
+Line 6106: <td>${escapeHTML(row.ward || '')}</td>
+Line 6107: <td>${escapeHTML(row.post_office || '')}</td>
+Line 6109: <td style="text-align: center; font-weight: 700; color: var(--text-secondary);">${escapeHTML(row.pct_cap_down || '')}</td>
+Line 6110: <td style="text-align: center; font-family: monospace;">${escapeHTML(row.off_time || '')}</td>
+Line 6111: <td style="text-align: center; font-family: monospace;">${escapeHTML(row.on_time || '')}</td>
+Line 6112: <td style="color: var(--text-muted); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${escapeHTML(row.note |
+Line 6593: <td style="text-align: left; font-weight: 600; color: var(--text-primary);">${escapeHTML(item.name)}</td>
+Line 6594: ${displayAm ? `<td style="text-align: left; color: var(--text-secondary);">${escapeHTML(item.am)}</td>` : ''}
+Line 6905: <i class="fa-solid fa-triangle-exclamation" style="margin-right: 8px;"></i> ${escapeHTML(structure.error)}
+Line 7023: ${escapeHTML(prov)}
+Line 7043: <span style="font-size:12px; color: var(--text-primary); font-weight:500; flex:1;">${escapeHTML(wh.name)} <span style="font-size:11px; color: var(--te
+Line 7067: <span style="font-size:12px; color: var(--text-primary); font-weight:500; flex:1;">${escapeHTML(wh.name)} <span style="font-size:11px; color: var(--te
+Line 7089: ${escapeHTML(am)} <span style="font-size:11px; color:var(--text-muted); font-weight:400;">(${pos.length} bưu cục)</span>
+Line 7097: <div class="po-leaf" data-po-name="${escapeHTML(po.trim())}">
+Line 7098: <span>${escapeHTML(po.trim())}</span>
+=== File: backup (c:\Users\lap4all\Desktop\New folder\scratch\templates\index.html) ===
+Line 3192: function escapeHTML(str) {
+Line 3553: ${escapeHTML(u.username)} ${isSelf ? ' <span style="color: var(--text-muted); font-weight: normal; font-size: 11px;">(Bạn)</span>' : ''}
+Line 3558: <button class="btn btn-secondary btn-sm" onclick="editUser('${escapeHTML(u.username)}', '${escapeHTML(u.role)}', '${escapeHTML(JSON.stringify(u.permis
+Line 3561: <button class="btn btn-secondary btn-sm" onclick="deleteUser('${escapeHTML(u.username)}')" ${isSelf ? 'disabled style="opacity: 0.5; cursor: not-allow
+Line 4431: <td>${escapeHTML(r[keys[0]])}</td>
+Line 4540: <td><strong>${escapeHTML(r.madh)}</strong></td>
+Line 4541: <td>${escapeHTML(r.tutinh || '')}</td>
+Line 4542: <td>${escapeHTML(r.kholay || '')}</td>
+Line 4543: <td>${escapeHTML(r.sellername || '')}</td>
+Line 4544: <td>${escapeHTML(r.AM || '')}</td>
+Line 4583: <td><strong>${escapeHTML(r.final_am)}</strong></td>
+Line 4604: <td>${escapeHTML(r.BC)}</td>
+Line 4605: <td>${escapeHTML(r.final_province)}</td>
+Line 4606: <td>${escapeHTML(r.final_am)}</td>
+Line 4644: <td><strong>${escapeHTML(r['Mã đơn'])}</strong></td>
+Line 4645: <td>${escapeHTML(r.final_province || '')}</td>
+Line 4646: <td>${escapeHTML(r.BC || '')}</td>
+Line 4647: <td>${escapeHTML(r['Tệp khách'] || '')}</td>
+Line 4648: <td>${escapeHTML(r.final_am || '')}</td>
+Line 4651: <td><span class="badge badge-secondary">${escapeHTML(r['Trạng thái'] || '')}</span></td>
+Line 4696: <td><strong>${escapeHTML(r.final_am)}</strong></td>
+Line 4718: <td><strong>${escapeHTML(r.final_am)}</strong></td>
+Line 4759: <td><strong>${escapeHTML(r['Mã đơn hàng'])}</strong></td>
+Line 4760: <td>${escapeHTML(r.final_province || '')}</td>
+Line 4761: <td>${escapeHTML(r.warehouse_name || '')}</td>
+Line 4762: <td><span class="badge ${typeClass}">${escapeHTML(r['Loại đơn'] || '')}</span></td>
+Line 4763: <td>${escapeHTML(r.final_am || '')}</td>
+Line 4766: <td><span class="badge badge-secondary">${escapeHTML(r['Trạng thái'] || '')}</span></td>
+Line 4845: <td style="font-weight: 600; color: var(--text-primary); text-align: left; vertical-align: middle;">${escapeHTML(row.name)}</td>
+Line 4846: <td style="text-align: left; vertical-align: middle;">${escapeHTML(row.am)}</td>
+Line 4847: <td style="text-align: left; vertical-align: middle;">${escapeHTML(row.province)}</td>
+Line 4853: <span class="badge ${statusClass}">${escapeHTML(row.status)}</span>
+Line 4854: ${row.reason ? `<div style="font-size: 11px; color: var(--text-secondary); margin-top: 4px; line-height: 1.2;">${escapeHTML(row.reason)}</div>` : ''}
+Line 4896: <span style="font-size: 14.5px; color: var(--text-primary); font-family: 'Outfit', sans-serif;"><i class="fa-solid fa-user-shield" style="margin-right
+Line 4900: ${item.pos.map(po => `<span style="display:inline-block; background:rgba(239,68,68,0.08); color:#ef4444; border: 1px solid rgba(239,68,68,0.15); paddi
+Line 5016: selectEl.innerHTML += `<option value="${escapeHTML(opt)}" ${selectedAttr}>${escapeHTML(opt)}</option>`;
+Line 5090: tbody.innerHTML = `<tr><td colspan="12" style="text-align: center; color: var(--text-danger); font-weight: 600; padding: 24px;"><i class="fa-solid fa-
+Line 5140: <td style="text-align: left; font-weight: 600;">${escapeHTML(row.province)}</td>
+Line 5160: <td style="text-align: left;">${escapeHTML(r.province)}</td>
+Line 5219: <i class="fa-solid fa-chevron-right toggle-icon" id="chevron-${provClass}"></i> ${escapeHTML(row.province)}
+Line 5239: <td style="text-align: left; padding-left: 28px; color: var(--text-secondary);">${escapeHTML(po.bc)}</td>
+Line 5388: <div style="font-weight: 700; margin-bottom: 6px; font-family: 'Outfit'; font-size: 14px;">${escapeHTML(item.name)}</div>
+Line 5389: <div style="font-size: 12px; margin-bottom: 4px; color: var(--text-secondary);">Tỉnh: <b style="color: var(--text-primary);">${escapeHTML(item.provinc
+Line 5449: tbody.innerHTML = `<tr><td colspan="10" style="text-align: center; color: var(--text-danger); font-weight: 600; padding: 24px;"><i class="fa-solid fa-
+Line 5488: <td style="font-weight: 600; color: var(--text-primary);">${escapeHTML(row.province || '')}</td>
+Line 5489: <td>${escapeHTML(row.district || '')}</td>
+Line 5490: <td>${escapeHTML(row.ward || '')}</td>
+Line 5491: <td>${escapeHTML(row.post_office || '')}</td>
+Line 5493: <td style="text-align: center; font-weight: 700; color: var(--text-secondary);">${escapeHTML(row.pct_cap_down || '')}</td>
+Line 5494: <td style="text-align: center; font-family: monospace;">${escapeHTML(row.off_time || '')}</td>
+Line 5495: <td style="text-align: center; font-family: monospace;">${escapeHTML(row.on_time || '')}</td>
+Line 5496: <td style="color: var(--text-muted); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${escapeHTML(row.note |
+Line 5666: <td style="text-align: left; font-weight: 600;">${escapeHTML(provData.province)}</td>
+Line 5918: <strong>Totals for ${escapeHTML(row.am)}</strong>
+Line 5938: <td style="text-align: left; padding-left: 28px; color: var(--text-secondary);">${escapeHTML(po.bc)}</td>
+Line 6079: <i class="fa-solid fa-triangle-exclamation" style="margin-right: 8px;"></i> ${escapeHTML(structure.error)}
+Line 6197: ${escapeHTML(prov)}
+Line 6217: <span style="font-size:12px; color: var(--text-primary); font-weight:500; flex:1;">${escapeHTML(wh.name)} <span style="font-size:11px; color: var(--te
+Line 6241: <span style="font-size:12px; color: var(--text-primary); font-weight:500; flex:1;">${escapeHTML(wh.name)} <span style="font-size:11px; color: var(--te
+Line 6263: ${escapeHTML(am)} <span style="font-size:11px; color:var(--text-muted); font-weight:400;">(${pos.length} bưu cục)</span>
+Line 6271: <div class="po-leaf" data-po-name="${escapeHTML(po.trim())}">
+Line 6272: <span>${escapeHTML(po.trim())}</span>

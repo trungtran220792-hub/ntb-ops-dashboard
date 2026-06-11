@@ -1,0 +1,200 @@
+File scratch\download_and_list_sheets.py: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ
+  Context: t urllib.request
+import pandas as pd
+import openpyxl
+
+url = "https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/export?format=xlsx"
+req = urllib.request.Request(url)
+req.add_header('User-Agent', 'Mozilla/5.0 (Windows 
+File scratch\extract_gids_for_new_sheet.py: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ
+  Context: import sys
+
+sys.stdout.reconfigure(encoding='utf-8')
+
+url = "https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/edit"
+req = urllib.request.Request(url)
+req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64
+File scratch\inspect_current_sheets.py: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ
+  Context: import urllib.request
+import pandas as pd
+import re
+
+url = "https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/edit?gid=218211549#gid=218211549"
+match = re.search(r'/spreadsheets/d/([a-zA-Z0-9-_]+)', url)
+if match:
+ 
+File scratch\inspect_current_sheets_v2.py: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ
+  Context: TF-8 output
+sys.stdout.reconfigure(encoding='utf-8')
+
+url = "https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/edit?gid=218211549#gid=218211549"
+match = re.search(r'/spreadsheets/d/([a-zA-Z0-9-_]+)', url)
+if match:
+ 
+File scratch\inspect_datalct_sheet.py: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ
+  Context: 
+import pandas as pd
+import re
+import urllib.request
+
+url = "https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/edit?gid=1469954076#gid=1469954076"
+match = re.search(r'/spreadsheets/d/([a-zA-Z0-9-_]+)', url)
+spreadshe
+File scratch\past_conversations_search.txt: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ
+  Context:  mình còn tổng hợp tất cả các link thành 1 link này duy nhất
+https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/edit?gid=887739629#gid=887739629
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-0
+File scratch\past_conversations_search.txt: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ
+  Context:  mình còn tổng hợp tất cả các link thành 1 link này duy nhất
+https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/edit?gid=887739629#gid=887739629
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-0
+File scratch\past_conversations_search.txt: found non-default sheet ID: 1B-QCbEnPpILFFEWPYHeGdmkgYV9gSf41AyQMlhzw
+  Context: ge C1339C368F578B9989A460A43712BAAB (Không tìm thấy trang) - https://docs.google.com/spreadsheets/d/1B-QCbEnPpILFFEWPYHeGdmkgYV9gSf41AyQMlhzw.
+========================================
+
+========================================
+CONV: 4336314d-71dd-4e55
+File scratch\past_conversations_search.txt: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ
+  Context:  mình còn tổng hợp tất cả các link thành 1 link này duy nhất
+https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/edit?gid=887739629#gid=887739629
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-0
+File scratch\past_conversations_search_recent.txt: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ
+  Context:  mình còn tổng hợp tất cả các link thành 1 link này duy nhất
+https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/edit?gid=887739629#gid=887739629
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-0
+File scratch\past_conversations_search_recent.txt: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ
+  Context:  mình còn tổng hợp tất cả các link thành 1 link này duy nhất
+https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/edit?gid=887739629#gid=887739629
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-0
+File scratch\past_conversations_search_recent.txt: found non-default sheet ID: 1B-QCbEnPpILFFEWPYHeGdmkgYV9gSf41AyQMlhzw
+  Context: ge C1339C368F578B9989A460A43712BAAB (Không tìm thấy trang) - https://docs.google.com/spreadsheets/d/1B-QCbEnPpILFFEWPYHeGdmkgYV9gSf41AyQMlhzw.
+========================================
+
+========================================
+CONV: 4336314d-71dd-4e55
+File scratch\past_conversations_search_recent.txt: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ
+  Context:  mình còn tổng hợp tất cả các link thành 1 link này duy nhất
+https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/edit?gid=887739629#gid=887739629
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-0
+File scratch\pre_checkout_steps.txt: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ
+  Context: quest\\nimport pandas as pd\\nimport openpyxl\\n\\nurl = \\\"https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/export?format=xlsx\\\"\\nreq = urllib.request.Request(url)\\nreq.add_header('User-Agent', 'Mozilla/5.0 (W
+File scratch\scan_transcript_res.txt: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ
+  Context: 13,7 @@
+ OFF_SPE_URL=""
+
+ TAO_DON_URL=""
+
+ CONSOLIDATED_URL="https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/edit?gid=352488066#gid=352488066"
+
+-TEL
+
+=========================================
+Step 1788 | Type: PLAN
+File scratch\sheet_html.txt: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ
+  Context: name" content="Google Docs"><meta property="og:url" content="https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/edit?usp=embed_facebook"><meta property="og:image" content="https://lh7-us.googleusercontent.com/docs/AHk
+File scratch\sheet_html.txt: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ
+  Context: name" content="Google Docs"><meta property="og:url" content="https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/edit?usp=embed_facebook"><meta property="og:image" content="https://lh7-us.googleusercontent.com/docs/AHk
+File scratch\user_messages_recent.txt: found non-default sheet ID: 1d3Yeu-5mBE8w5i89_dyJ0ICl1GNP7WgZrH1oQfc5j0s
+  Context: ưa vô nữa -> bạn để kiểu chi tiết đơn lỗi cho link này nhé 
+vhttps://docs.google.com/spreadsheets/d/1d3Yeu-5mBE8w5i89_dyJ0ICl1GNP7WgZrH1oQfc5j0s/edit?gid=0#gid=0
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-06-10T18:08:22+07:
+File scratch\user_messages_recent.txt: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ
+  Context:  mình còn tổng hợp tất cả các link thành 1 link này duy nhất
+https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/edit?gid=887739629#gid=887739629
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-0
+File scratch\user_messages_recent.txt: found non-default sheet ID: 1B-QCbEnPpILFFEWPYHeGdmkgYV9gSf41AyQMlhzw
+  Context: ge C1339C368F578B9989A460A43712BAAB (Không tìm thấy trang) - https://docs.google.com/spreadsheets/d/1B-QCbEnPpILFFEWPYHeGdmkgYV9gSf41AyQMlhzw...
+    Viewport: 1536x826, Page Height: 825
+  Page 88FC07F8A7EB5972EF989F1DDB6FE2FD (Dash Board - Google Tra
+File scratch\user_messages_recent.txt: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJ
+  Context:  mình còn tổng hợp tất cả các link thành 1 link này duy nhất
+https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/edit?gid=887739629#gid=887739629
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-0
+File scratch\user_messages_recent.txt: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ
+  Context:  mình còn tổng hợp tất cả các link thành 1 link này duy nhất
+https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/edit?gid=887739629#gid=887739629
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-0
+File scratch\user_messages_recent.txt: found non-default sheet ID: 1B-QCbEnPpILFFEWPYHeGdmkgYV9gSf41AyQMlhzw
+  Context: ge C1339C368F578B9989A460A43712BAAB (Không tìm thấy trang) - https://docs.google.com/spreadsheets/d/1B-QCbEnPpILFFEWPYHeGdmkgYV9gSf41AyQMlhzw...
+    Viewport: 1536x826, Page Height: 825
+  Page 88FC07F8A7EB5972EF989F1DDB6FE2FD (Dash Board - Google Tra
+File scratch\user_messages_recent.txt: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJ
+  Context:  mình còn tổng hợp tất cả các link thành 1 link này duy nhất
+https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/edit?gid=887739629#gid=887739629
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-0
+File scratch\user_messages_recent.txt: found non-default sheet ID: 1B-QCbEnPpILFFEWPYHeGdmkgYV9gSf41AyQMlhzw
+  Context: ge C1339C368F578B9989A460A43712BAAB (Không tìm thấy trang) - https://docs.google.com/spreadsheets/d/1B-QCbEnPpILFFEWPYHeGdmkgYV9gSf41AyQMlhzw...
+    Viewport: 1536x826, Page Height: 825
+  Page 88FC07F8A7EB5972EF989F1DDB6FE2FD (Dash Board - Google Tra
+File scratch\user_messages_recent.txt: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJ
+  Context:  mình còn tổng hợp tất cả các link thành 1 link này duy nhất
+https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/edit?gid=887739629#gid=887739629
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-0
+File scratch\user_messages_recent.txt: found non-default sheet ID: 1B-QCbEnPpILFFEWPYHeGdmkgYV9gSf41AyQMlhzw
+  Context: ge C1339C368F578B9989A460A43712BAAB (Không tìm thấy trang) - https://docs.google.com/spreadsheets/d/1B-QCbEnPpILFFEWPYHeGdmkgYV9gSf41AyQMlhzw...
+    Viewport: 1536x826, Page Height: 825
+  Page 88FC07F8A7EB5972EF989F1DDB6FE2FD (Dash Board - Google Tra
+File scratch\user_messages_recent.txt: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJ
+  Context:  mình còn tổng hợp tất cả các link thành 1 link này duy nhất
+https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/edit?gid=887739629#gid=887739629
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-0
+File scratch\user_messages_recent.txt: found non-default sheet ID: 1B-QCbEnPpILFFEWPYHeGdmkgYV9gSf41AyQMlhzw
+  Context: ge C1339C368F578B9989A460A43712BAAB (Không tìm thấy trang) - https://docs.google.com/spreadsheets/d/1B-QCbEnPpILFFEWPYHeGdmkgYV9gSf41AyQMlhzw...
+    Viewport: 1536x826, Page Height: 825
+  Page 88FC07F8A7EB5972EF989F1DDB6FE2FD (Dash Board - Google Tra
+File scratch\user_messages_recent.txt: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJ
+  Context:  mình còn tổng hợp tất cả các link thành 1 link này duy nhất
+https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/edit?gid=887739629#gid=887739629
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-0
+File scratch\user_messages_recent.txt: found non-default sheet ID: 1B-QCbEnPpILFFEWPYHeGdmkgYV9gSf41AyQMlhzw
+  Context: ge C1339C368F578B9989A460A43712BAAB (Không tìm thấy trang) - https://docs.google.com/spreadsheets/d/1B-QCbEnPpILFFEWPYHeGdmkgYV9gSf41AyQMlhzw...
+    Viewport: 1536x826, Page Height: 825
+  Page 88FC07F8A7EB5972EF989F1DDB6FE2FD (Dash Board - Google Tra
+File scratch\user_messages_recent.txt: found non-default sheet ID: 1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJ
+  Context:  mình còn tổng hợp tất cả các link thành 1 link này duy nhất
+https://docs.google.com/spreadsheets/d/1JZ1eRerRqrpwjZ4HBevQunjd8VquM_cvPFz12TaJfMQ/edit?gid=887739629#gid=887739629
+
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-0

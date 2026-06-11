@@ -1,0 +1,62 @@
+def split_excel_to_csvs(xlsx_path):
++    print(f"Splitting {xlsx_path} to CSV files using optimized openpyxl...")
++    import openpyxl
++    import csv
++    try:
++        wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
++        sheet_names = wb.sheetnames
++        sheet_names_lower = [s.strip().lower() for s in sheet_names]
++        
++        sheet_mappings = [
++            (["data"], "ops_gtc.csv"),
++            (["dataltc", "rawltc", "data ltc"], "ops_ltc.csv"),
++            (["cocauvung", "cơ cấu", "co_cau", "co cau"], "ops_co_cau.csv"),
++            (["cocauvung", "cơ cấu", "co_cau", "co cau"], "co_cau_ntb.csv"),
++            (["tts"], "ops_tts.csv"),
++            (["opr"], "opr_opr.csv"),
++            (["raw n-1", "oe_madh", "raw_n-1", "raw n - 1", "oe madh"], "opr_oe.csv"),
++            (["rawopr"], "opr_raw.csv"),
++            (["aging trên 5 ngày", "aging tren 5 ngay", "đơn giao aging trên 5 ngày", "don giao aging tren 5 ngay"], "aging_raw.csv"),
++            (["treo lc", "stuck", "treo luân chuyển", "treo luan chuyen"], "treo_stuck.csv"),
++            (["ntb", "bất ổn", "bat_on", "cảnh báo"], "buu_cuc_bat_on.csv"),
++            (["đang off", "dang off", "off", "off_tuyen", "off tuyến"], "off_tuyen_spe.csv"),
++            (["shopee_tiktok", "tao_don", "tạo đơn"], "vols_tao_don.csv"),
++            (["odr tts", "odr_tts"], "ODR TTS.csv"),
++            (["nhân sự", "nhan su"], "ops_nhan_su.csv")
++        ]
++        
++        for candidates, target_csv in sheet_mappings:
++            matched_sheet = None
++            for c in candidates:
++                if c in sheet_names_lower:
++                    idx = sheet_names_lower.index(c)
++                    matched_sheet = sheet_names[idx]
++                    break
++            
++            if matched_sheet:
++                safe_name = matched_sheet.encode('ascii', 'backslashreplace').decode('ascii')
++                print(f"Extracting '{safe_name}' -> {target_csv}...")
++                sheet = wb[matched_sheet]
++                csv_path = resolve_path(target_csv, write=True)
++                with open(csv_path, 'w', encoding='utf-8-sig', newline='') as f:
++                    writer = csv.writer(f)
++                    for row in sheet.iter_rows(values_only=True):
++                        # Filter out completely empty rows
++                        if not any(x is not None for x in row):
++                            continue
++                        writer.writerow(row)
++            else:
++                print(f"Warning: sheet for {target_csv} not found in Excel workbook.")
++        wb.close()
++        return True
++    except Exception as e:
++        print(f"Error splitting Excel to CSVs: {e}")
++        import traceback
++        traceback.print_exc()
++        return False
++
+ def async_sync_task(is_admin_flag):
+     global OPERATIONAL_CACHE, OPR_CACHE, BACKLOG_CACHE_RAW, UNSTABLE_PO_CACHE, OFF_SPE_CACHE, SYNC_STATUS
+     try:
+         if is_admin_flag:
+             confi

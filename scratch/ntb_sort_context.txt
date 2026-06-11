@@ -1,0 +1,195 @@
+Matches found at positions: [99904, 100053, 100189, 100341, 100513, 100688, 100847, 103808, 103957, 104093, 104245, 104417, 104592, 104751]
+
+--- Position 99904 ---
+  <tr style="cursor: pointer; user-select: none;">
+                                    <th onclick="handleNtbSort('ltc', 'rank')" style="width: 70px;">Hạng <span id="sort-icon-ltc-rank">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'name')">Bưu cục / AM <span id="sort-icon-ltc-name">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'am')" id="th-ltc-am-header">AM Quản lý <span id="sort-icon-ltc-am">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'pick_vol')" style="text-align: right;">Sản lượng LTC <span id="sort-icon-ltc-pick_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'total_vol')" style="text-align: right;">Tổng sản lượng <span id="sort-icon-ltc-total_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('l
+--------------------------------------------------
+
+--- Position 100053 ---
+">Hạng <span id="sort-icon-ltc-rank">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'name')">Bưu cục / AM <span id="sort-icon-ltc-name">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'am')" id="th-ltc-am-header">AM Quản lý <span id="sort-icon-ltc-am">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'pick_vol')" style="text-align: right;">Sản lượng LTC <span id="sort-icon-ltc-pick_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'total_vol')" style="text-align: right;">Tổng sản lượng <span id="sort-icon-ltc-total_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'prop')" style="text-align: right;">Tỷ trọng <span id="sort-icon-ltc-prop">↕</span></th>
+                                    <th onclick="handle
+--------------------------------------------------
+
+--- Position 100189 ---
+c / AM <span id="sort-icon-ltc-name">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'am')" id="th-ltc-am-header">AM Quản lý <span id="sort-icon-ltc-am">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'pick_vol')" style="text-align: right;">Sản lượng LTC <span id="sort-icon-ltc-pick_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'total_vol')" style="text-align: right;">Tổng sản lượng <span id="sort-icon-ltc-total_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'prop')" style="text-align: right;">Tỷ trọng <span id="sort-icon-ltc-prop">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'pct')" style="text-align: right;">LTC % <span id="sort-icon-ltc-pct">↕</span></th>
+                                </tr>
+--------------------------------------------------
+
+--- Position 100341 ---
+ Quản lý <span id="sort-icon-ltc-am">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'pick_vol')" style="text-align: right;">Sản lượng LTC <span id="sort-icon-ltc-pick_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'total_vol')" style="text-align: right;">Tổng sản lượng <span id="sort-icon-ltc-total_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'prop')" style="text-align: right;">Tỷ trọng <span id="sort-icon-ltc-prop">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'pct')" style="text-align: right;">LTC % <span id="sort-icon-ltc-pct">↕</span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-ntb-ltc-analysis">
+                                <tr>
+             
+--------------------------------------------------
+
+--- Position 100513 ---
+TC <span id="sort-icon-ltc-pick_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'total_vol')" style="text-align: right;">Tổng sản lượng <span id="sort-icon-ltc-total_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'prop')" style="text-align: right;">Tỷ trọng <span id="sort-icon-ltc-prop">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'pct')" style="text-align: right;">LTC % <span id="sort-icon-ltc-pct">↕</span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-ntb-ltc-analysis">
+                                <tr>
+                                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Đang tải dữ liệu...</td>
+                                </tr>
+ 
+--------------------------------------------------
+
+--- Position 100688 ---
+g <span id="sort-icon-ltc-total_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'prop')" style="text-align: right;">Tỷ trọng <span id="sort-icon-ltc-prop">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'pct')" style="text-align: right;">LTC % <span id="sort-icon-ltc-pct">↕</span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-ntb-ltc-analysis">
+                                <tr>
+                                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Đang tải dữ liệu...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section 3: GTC Analysis -->
+      
+--------------------------------------------------
+
+--- Position 100847 ---
+ trọng <span id="sort-icon-ltc-prop">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'pct')" style="text-align: right;">LTC % <span id="sort-icon-ltc-pct">↕</span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-ntb-ltc-analysis">
+                                <tr>
+                                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Đang tải dữ liệu...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section 3: GTC Analysis -->
+                <div class="ntb-section-title">3. Snapshot GTC</div>
+                <div class="card" style="margin-bottom: 24px;">
+                    <div class="
+--------------------------------------------------
+
+--- Position 103808 ---
+  <tr style="cursor: pointer; user-select: none;">
+                                    <th onclick="handleNtbSort('gtc', 'rank')" style="width: 70px;">Hạng <span id="sort-icon-gtc-rank">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'name')">Bưu cục / AM <span id="sort-icon-gtc-name">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'am')" id="th-gtc-am-header">AM Quản lý <span id="sort-icon-gtc-am">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'pick_vol')" style="text-align: right;">Sản lượng GTC <span id="sort-icon-gtc-pick_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'total_vol')" style="text-align: right;">Tổng sản lượng <span id="sort-icon-gtc-total_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('g
+--------------------------------------------------
+
+--- Position 103957 ---
+">Hạng <span id="sort-icon-gtc-rank">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'name')">Bưu cục / AM <span id="sort-icon-gtc-name">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'am')" id="th-gtc-am-header">AM Quản lý <span id="sort-icon-gtc-am">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'pick_vol')" style="text-align: right;">Sản lượng GTC <span id="sort-icon-gtc-pick_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'total_vol')" style="text-align: right;">Tổng sản lượng <span id="sort-icon-gtc-total_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'prop')" style="text-align: right;">Tỷ trọng <span id="sort-icon-gtc-prop">↕</span></th>
+                                    <th onclick="handle
+--------------------------------------------------
+
+--- Position 104093 ---
+c / AM <span id="sort-icon-gtc-name">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'am')" id="th-gtc-am-header">AM Quản lý <span id="sort-icon-gtc-am">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'pick_vol')" style="text-align: right;">Sản lượng GTC <span id="sort-icon-gtc-pick_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'total_vol')" style="text-align: right;">Tổng sản lượng <span id="sort-icon-gtc-total_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'prop')" style="text-align: right;">Tỷ trọng <span id="sort-icon-gtc-prop">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'pct')" style="text-align: right;">GTC % <span id="sort-icon-gtc-pct">↕</span></th>
+                                </tr>
+--------------------------------------------------
+
+--- Position 104245 ---
+ Quản lý <span id="sort-icon-gtc-am">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'pick_vol')" style="text-align: right;">Sản lượng GTC <span id="sort-icon-gtc-pick_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'total_vol')" style="text-align: right;">Tổng sản lượng <span id="sort-icon-gtc-total_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'prop')" style="text-align: right;">Tỷ trọng <span id="sort-icon-gtc-prop">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'pct')" style="text-align: right;">GTC % <span id="sort-icon-gtc-pct">↕</span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-ntb-gtc-analysis">
+                                <tr>
+             
+--------------------------------------------------
+
+--- Position 104417 ---
+TC <span id="sort-icon-gtc-pick_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'total_vol')" style="text-align: right;">Tổng sản lượng <span id="sort-icon-gtc-total_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'prop')" style="text-align: right;">Tỷ trọng <span id="sort-icon-gtc-prop">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'pct')" style="text-align: right;">GTC % <span id="sort-icon-gtc-pct">↕</span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-ntb-gtc-analysis">
+                                <tr>
+                                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Đang tải dữ liệu...</td>
+                                </tr>
+ 
+--------------------------------------------------
+
+--- Position 104592 ---
+g <span id="sort-icon-gtc-total_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'prop')" style="text-align: right;">Tỷ trọng <span id="sort-icon-gtc-prop">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'pct')" style="text-align: right;">GTC % <span id="sort-icon-gtc-pct">↕</span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-ntb-gtc-analysis">
+                                <tr>
+                                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Đang tải dữ liệu...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: OPERATIONAL 
+--------------------------------------------------
+
+--- Position 104751 ---
+ trọng <span id="sort-icon-gtc-prop">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'pct')" style="text-align: right;">GTC % <span id="sort-icon-gtc-pct">↕</span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-ntb-gtc-analysis">
+                                <tr>
+                                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Đang tải dữ liệu...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: OPERATIONAL REPORT -->
+            <div id="tab-operational" class="content-panel">
+                <div class="card">
+                    <div class="card-header">
+      
+--------------------------------------------------

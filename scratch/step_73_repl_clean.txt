@@ -1,0 +1,36 @@
+"        function renderOprDashboard() {
+            const opr = globalData.opr;
+
+            document.getElementById('opr-total-vol').innerText = (opr.total_volume || 0).toLocaleString();
+            document.getElementById('opr-total-ot').innerText = (opr.total_ontime || 0).toLocaleString();
+            document.getElementById('opr-total-late').innerText = (opr.total_late || 0).toLocaleString();
+
+            // Render Overall OPR card
+            const overallRate = opr.overall_opr !== undefined ? roundNum(opr.overall_opr) : null;
+            document.getElementById('opr-overall-rate').innerText = overallRate !== null ? overallRate + " %" : "- %";
+
+            const diffN1El = document.getElementById('opr-kpi-diff-n1');
+            const diffWkEl = document.getElementById('opr-kpi-diff-wk');
+            if (diffN1El) {
+                const deltaN1 = opr.delta_n1;
+                diffN1El.innerHTML = `<span class="${getDeltaClass(deltaN1)}">${formatDelta(deltaN1)}</span>`;
+            }
+            if (diffWkEl) {
+                const deltaWk = opr.delta_wk;
+                diffWkEl.innerHTML = `<span class="${getDeltaClass(deltaWk)}">${formatDelta(deltaWk)}</span>`;
+            }
+
+            // Render OPR Time slots bar chart
+            const slots = opr.time_slots ? opr.time_slots.map(r => r['Khung giá» táº¡o'] || r['khung_gio_tao_don']) : [];
+            const slotOpr = opr.time_slots ? opr.time_slots.map(r => roundNum(r['% OPR'])) : [];
+
+            const slotsOptions = {
+                chart: { type: 'bar', height: 250, toolbar: { show: false }, background: 'transparent' },
+                series: [{ name: '% OPR', data: slotOpr }],
+                xaxis: { categories: slots, labels: { style: { colors: '#64748b' } } },
+                yaxis: { max: 100, labels: { style: { colors: '#64748b' } } },
+                colors: ['#007bc3'],
+                plotOptions: { bar: { borderRadius: 4, columnWidth: '40%' } },
+                theme: { mode: 'light' },
+        
+<truncated 3355 bytes>

@@ -1,0 +1,146 @@
+Sheet names: ['OPR', 'rawopr', 'CoCauVung', 'Data', 'TTS', 'DataLTC', 'ODR TTS', 'NTB', 'shopee_tiktok', 'Aging trên 5 ngày', 'PIVOT aging ', 'Treo LC', 'PV treo LC', 'Nhân Sự', 'Đang off', 'Sheet47', 'RAW n-1']
+
+=== Sheet: OPR ===
+Columns: ['tutinh', 'kholay', 'NgayLTC', 'khung_gio_tao_don', 'ly_do_tre_12h', 'sellername', 'vol_ltc', 'tuan', 'vung', 'ot', 'Tuần', 'AM', 'Khung giờ tạo', 'Đơn trễ']
+Empty DataFrame
+Columns: [tutinh, kholay, NgayLTC, khung_gio_tao_don, ly_do_tre_12h, sellername, vol_ltc, tuan, vung, ot, Tuần, AM, Khung giờ tạo, Đơn trễ]
+Index: []
+
+=== Sheet: rawopr ===
+Columns: ['tutinh', 'kholay', 'NgayLTC', 'khung_gio_tao_don', 'ly_do_tre_12h', 'sellername', 'vol_ltc', 'tuan', 'vung', 'ot', 'Tuần', 'AM', 'Khung giờ tạo', 'Đơn trễ']
+Empty DataFrame
+Columns: [tutinh, kholay, NgayLTC, khung_gio_tao_don, ly_do_tre_12h, sellername, vol_ltc, tuan, vung, ot, Tuần, AM, Khung giờ tạo, Đơn trễ]
+Index: []
+
+=== Sheet: CoCauVung ===
+Columns: ['warehouse_id', 'Bưu cục', 'Tỉnh', 'AM']
+   warehouse_id                             Bưu cục        Tỉnh                 AM
+0          1909          Kho Trung Chuyển Khánh Hòa   Khánh Hòa    Nguyễn Tiến Lực
+1      20336000  Kho Chuyển Tiếp Đức Trọng-Lâm Đồng    Lâm Đồng         Võ Tấn Lợi
+2      20797000            Kho Chuyển Tiếp Đắk Nông    Đắk Nông      Trần Công Hậu
+3      20745000          Kho Chuyển Tiếp Bình Thuận  Bình Thuận  Nguyễn Ngọc Khánh
+4      22915000    Kho Chuyển Tiếp Bảo Lộc-Lâm Đồng    Lâm Đồng    Nguyễn Tiến Lực
+
+=== Sheet: Data ===
+Columns: ['Cấp Quản Lý', 'Chi tiết', 'Loại Hàng', 'Time', 'Volume', '% Gán', '% GTC', '% Chuyển trả', 'Leadtime', 'Sản Lượng Giao Thành Công', 'Sản Lượng Chuyển Trả', 'Sản Lượng Gán', 'Sản Lượng Trả', 'Sản Lượng Tồn', 'Sản Lượng Chưa Gán', '% Chưa Gán', '%Tồn', 'Hàng Mới Về Trong Ngày', 'Tỉnh', 'Vùng', 'AM']
+      Cấp Quản Lý                                    Chi tiết      Loại Hàng                   Time  Volume   % Gán   % GTC  % Chuyển trả  Leadtime  Sản Lượng Giao Thành Công  Sản Lượng Chuyển Trả  Sản Lượng Gán  Sản Lượng Trả  Sản Lượng Tồn  Sản Lượng Chưa Gán  % Chưa Gán    %Tồn  Hàng Mới Về Trong Ngày      Tỉnh Vùng              AM
+0  NTB - Đắk Nông  Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Hàng Mới Ca 1  2026-05-24 - Chủ Nhật     112  0.8571  0.7232        0.0000      6.69                    80.9984                0.0000        95.9952         0.0000        31.0016             16.0048      0.1429  0.2768                     112  Đắk Nông  NTB  Trần Văn Phước
+1  NTB - Đắk Nông  Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Hàng Mới Ca 1     2026-05-18 - Thứ 2     166  0.9157  0.7530        0.0060      7.09                   124.9980                0.9960       152.0062         0.9960        40.0060             13.9938      0.0843  0.2410                     166  Đắk Nông  NTB  Trần Văn Phước
+2  NTB - Đắk Nông  Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Hàng Mới Ca 1     2026-06-08 - Thứ 2     137  0.9708  0.7956        0.0365      8.22                   108.9972                5.0005       132.9996         5.0005        23.0023              4.0004      0.0292  0.1679                     137  Đắk Nông  NTB  Trần Văn Phước
+3  NTB - Đắk Nông  Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Hàng Mới Ca 1     2026-05-30 - Thứ 7     147  0.9932  0.8027        0.0204      6.34                   117.9969                2.9988       146.0004         2.9988        26.0043              0.9996      0.0068  0.1769                     147  Đắk Nông  NTB  Trần Văn Phước
+4  NTB - Đắk Nông  Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Hàng Mới Ca 1     2026-06-03 - Thứ 4     151  0.9934  0.7550        0.0000      6.03                   114.0050                0.0000       150.0034         0.0000        36.9950              0.9966      0.0066  0.2450                     151  Đắk Nông  NTB  Trần Văn Phước
+
+=== Sheet: TTS ===
+Columns: ['Cấp Quản Lý', 'Chi tiết', 'Loại Hàng', 'Time', 'Volume', '% Gán', '% GTC', '% Chuyển trả', 'Leadtime', 'Sản Lượng Giao Thành Công', 'Sản Lượng Chuyển Trả', 'Sản Lượng Gán', 'Sản Lượng Trả', 'Sản Lượng Tồn', 'Sản Lượng Chưa Gán', '% Chưa Gán', '%Tồn', 'Hàng Mới Về Trong Ngày', 'Tỉnh', 'Vùng', 'AM']
+      Cấp Quản Lý                                    Chi tiết      Loại Hàng                   Time  Volume   % Gán   % GTC  % Chuyển trả  Leadtime  Sản Lượng Giao Thành Công  Sản Lượng Chuyển Trả  Sản Lượng Gán  Sản Lượng Trả  Sản Lượng Tồn  Sản Lượng Chưa Gán  % Chưa Gán    %Tồn  Hàng Mới Về Trong Ngày      Tỉnh Vùng              AM
+0  NTB - Đắk Nông  Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Hàng Mới Ca 1  2026-06-07 - Chủ Nhật      20  0.6000  0.5500             0      7.55                    11.0000                     0        12.0000              0         9.0000              8.0000      0.4000  0.4500                      20  Đắk Nông  NTB  Trần Văn Phước
+1  NTB - Đắk Nông  Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Hàng Mới Ca 1     2026-05-13 - Thứ 4      18  0.9444  0.7778             0      6.93                    14.0004                     0        16.9992              0         3.9996              1.0008      0.0556  0.2222                      18  Đắk Nông  NTB  Trần Văn Phước
+2  NTB - Đắk Nông  Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Hàng Mới Ca 1     2026-05-15 - Thứ 6      25  0.7600  0.6400             0      6.69                    16.0000                     0        19.0000              0         9.0000              6.0000      0.2400  0.3600                      25  Đắk Nông  NTB  Trần Văn Phước
+3  NTB - Đắk Nông  Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Hàng Mới Ca 1     2026-05-25 - Thứ 2      27  1.0000  0.8148             0      6.77                    21.9996                     0        27.0000              0         5.0004              0.0000      0.0000  0.1852                      27  Đắk Nông  NTB  Trần Văn Phước
+4  NTB - Đắk Nông  Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Hàng Mới Ca 1     2026-05-27 - Thứ 4      24  0.9167  0.9167             0      5.32                    22.0008                     0        22.0008              0         1.9992              1.9992      0.0833  0.0833                      24  Đắk Nông  NTB  Trần Văn Phước
+
+=== Sheet: DataLTC ===
+Columns: ['Cấp quản lý', 'Chi tiết', 'Ca', 'Time', 'Volume', '%Gán', '%LTC', '%Đóng kiện', '%LC', 'Leadtime', 'Sản Lượng Lấy Thành Công', 'Sản Lượng Gán', 'Sản Lượng Chưa Gán', '% Chưa Gán', 'Hàng Mới Về Trong Ngày', 'Tỉnh', 'Vùng', 'AM']
+        Cấp quản lý                                Chi tiết        Ca                   Time  Volume  %Gán    %LTC  %Đóng kiện     %LC  Leadtime  Sản Lượng Lấy Thành Công  Sản Lượng Gán  Sản Lượng Chưa Gán  % Chưa Gán  Hàng Mới Về Trong Ngày        Tỉnh Vùng              AM
+0  NTB - Bình Thuận  BC 158 Quốc lộ 55-Tánh Linh-Bình Thuận  Hàng Tồn     2026-06-06 - Thứ 7       7     1  0.7143      0.7143  0.4286     41.00                    3.0002              7                   0           0                       0  Bình Thuận  NTB  Huỳnh Tấn Hiền
+1  NTB - Bình Thuận  BC 158 Quốc lộ 55-Tánh Linh-Bình Thuận  Hàng Tồn     2026-05-19 - Thứ 3      13     1  0.3846      0.3846  0.3846     38.00                    4.9998             13                   0           0                       0  Bình Thuận  NTB  Huỳnh Tấn Hiền
+2  NTB - Bình Thuận  BC 158 Quốc lộ 55-Tánh Linh-Bình Thuận  Hàng Tồn     2026-05-21 - Thứ 5      13     1  1.0000      1.0000  0.9231     28.69                   12.0003             13                   0           0                       0  Bình Thuận  NTB  Huỳnh Tấn Hiền
+3  NTB - Bình Thuận  BC 158 Quốc lộ 55-Tánh Linh-Bình Thuận  Hàng Tồn     2026-06-09 - Thứ 3      13     1  0.6923      0.6154  0.6154     36.13                    8.0002             13                   0           0                       0  Bình Thuận  NTB  Huỳnh Tấn Hiền
+4  NTB - Bình Thuận  BC 158 Quốc lộ 55-Tánh Linh-Bình Thuận  Hàng Tồn  2026-06-07 - Chủ Nhật      13     1  0.5385      0.5385  0.3846     35.86                    4.9998             13                   0           0                       0  Bình Thuận  NTB  Huỳnh Tấn Hiền
+
+=== Sheet: ODR TTS ===
+Columns: ['Quản lý', 'Chi tiết', 'Time', 'GTC', '%Ontime']
+          Quản lý                                                  Chi tiết                   Time  GTC  %Ontime
+0  NTB - Đắk Nông  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng     2026-05-30 - Thứ 7    1        1
+1  NTB - Đắk Nông  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng     2026-06-08 - Thứ 2    1        0
+2  NTB - Đắk Nông  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng  2026-05-31 - Chủ Nhật    1        1
+3  NTB - Đắk Nông  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng     2026-06-05 - Thứ 6    2        1
+4  NTB - Đắk Nông  Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng     2026-06-02 - Thứ 3    2        1
+
+=== Sheet: NTB ===
+Columns: ['Thời gian cập nhật', 'Unnamed: 1', datetime.datetime(2026, 6, 11, 0, 0), 'Unnamed: 3', 'Logic thuộc 1 trong 4 trường hợp sau:\n\nTồn LM: Lượng đơn Backlogs LastMile trên tổng đơn GTC trung bình 7 ngày gần nhất (L7D) lớn hơn 2 (ngày).\nTồn KTC: Lượng đơn Backlogs KTC cùng tỉnh trên tổng đơn GTC trung bình 7 ngày gần nhất (L7D) lớn hơn 2 (ngày).\nTồn LM + Tồn KTC: Các bưu cục đồng thời thuộc cả 2 nhóm: Tồn LM và Tồn KTC\nTồn Aging >5 ngày: tỷ lệ đơn tồn trên 5 ngày chiếm từ 10% trở lên trên tổng lượng Backlogs LastMile.', 'Unnamed: 5', 'Unnamed: 6', 'Unnamed: 7', 'Unnamed: 8', 'Unnamed: 9', 'Unnamed: 10', 'Unnamed: 11', 'Unnamed: 12', 'Unnamed: 13', 'Unnamed: 14', 'Unnamed: 15', 'Unnamed: 16', 'Unnamed: 17', 'Unnamed: 18', 'Unnamed: 19', 'Unnamed: 20']
+                Thời gian cập nhật Unnamed: 1 2026-06-11 00:00:00   Unnamed: 3 Logic thuộc 1 trong 4 trường hợp sau:\n\nTồn LM: Lượng đơn Backlogs LastMile trên tổng đơn GTC trung bình 7 ngày gần nhất (L7D) lớn hơn 2 (ngày).\nTồn KTC: Lượng đơn Backlogs KTC cùng tỉnh trên tổng đơn GTC trung bình 7 ngày gần nhất (L7D) lớn hơn 2 (ngày).\nTồn LM + Tồn KTC: Các bưu cục đồng thời thuộc cả 2 nhóm: Tồn LM và Tồn KTC\nTồn Aging >5 ngày: tỷ lệ đơn tồn trên 5 ngày chiếm từ 10% trở lên trên tổng lượng Backlogs LastMile.      Unnamed: 5 Unnamed: 6     Unnamed: 7      Unnamed: 8 Unnamed: 9       Unnamed: 10        Unnamed: 11 Unnamed: 12    Unnamed: 13 Unnamed: 14    Unnamed: 15    Unnamed: 16        Unnamed: 17 Unnamed: 18                       Unnamed: 19 Unnamed: 20
+0  Tổng số lượng bưu cục cảnh báo:        NaN                   9          NaN                                                                                                                                                                                                                                                                                                                                                                                                                                                 NaN             NaN        NaN            NaN             NaN        NaN               NaN                NaN         NaN            NaN         NaN            NaN            NaN                NaN         NaN                               NaN         NaN
+1                              NaN        NaN                 NaN          NaN                                                                                                                                                                                                                                                                                                                                                                                                                                                 NaN             NaN        NaN            NaN             NaN        NaN               NaN                NaN         NaN            NaN         NaN            NaN            NaN                NaN         NaN                               NaN         NaN
+2                             ngay  vung_giao           tinh_giao  kho_giao_id                                                                                                                                                                                                                                                                                                                                                                                                                                       kho_giao_name  warehouse_type      BL LM  BL LM >5 ngay  %BL LM >5 ngay     BL KTC  BL KTC cung tinh  %BL KTC cung tinh      tao_n1  tao_avg_7ngay      gtc_n1  gtc_avg_7ngay  gtc_max_7ngay  du_kien_clear_ton   tinh_hinh                      ly_do_bat_on  Trạng thái
+3       2026-06-10 07:30:56.160000        NTB            Lâm Đồng     22425000                                                                                                                                                                                                                                                                                                                                                                                                    Bưu Cục Thôn Phúc Hưng-Xã Tân Hà Lâm Hà-Lâm Đồng              BC       1685            412           0.245        449                17              0.038         334     400.285714         407     359.142857            487           4.691726      Bất ổn  2. Tồn LM | 4. Tồn Aging >5 ngày      Bất ổn
+4       2026-06-10 07:30:56.160000        NTB           Khánh Hòa     22830000                                                                                                                                                                                                                                                                                                                                                                                                       Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa              BC       1719             50           0.029        777                80              0.103         768     858.428571         627            629            781           2.732909      Bất ổn                         2. Tồn LM      Bất ổn
+
+=== Sheet: shopee_tiktok ===
+Columns: ['Date', 'Vùng', 'Tỉnh', 'Quận/Huyện', 'Phường/Xã', 'Bưu cục', 'Khách hàng', 'Volume', 'Khối lượng', 'warehouse_id', 'bat_on', 'province_name']
+        Date Vùng        Tỉnh           Quận/Huyện      Phường/Xã                                             Bưu cục Khách hàng  Volume  Khối lượng  warehouse_id       bat_on province_name
+0 2026-06-09  NTB  Bình Thuận      Huyện Tánh Linh    Xã Đức Bình         Bưu Cục 158 Quốc lộ 55-Tánh Linh-Bình Thuận       Khác       2       1.300          2357  Bình thường    Bình Thuận
+1 2026-06-09  NTB  Bình Thuận      Huyện Tánh Linh     Xã Đức Phú         Bưu Cục 158 Quốc lộ 55-Tánh Linh-Bình Thuận        SME      24     217.150          2357  Bình thường    Bình Thuận
+2 2026-06-09  NTB   Khánh Hòa     Huyện Diên Khánh  Xã Diên Phước      Bưu Cục Đường Tỉnh Lộ 10-Xã Diên Thọ-Khánh Hòa        SME      48      74.309      22793000  Bình thường     Khánh Hòa
+3 2026-06-09  NTB   Khánh Hòa     Huyện Khánh Vĩnh  Xã Khánh Bình  Bưu Cục Tổ 5 Đường Ngô Gia Tự-Khánh Vĩnh-Khánh Hòa    TTS-nhỏ      15      17.448      20558000  Bình thường     Khánh Hòa
+4 2026-06-09  NTB  Bình Thuận  Huyện Hàm Thuận Nam    Xã Mỹ Thạnh              Bưu cục DT707-Hàm Thuận Nam-Bình Thuận       Khác       4       3.366      21290000  Bình thường    Bình Thuận
+
+=== Sheet: Aging trên 5 ngày ===
+Columns: ['Vùng', 'Tỉnh', 'BC', 'Mã đơn', 'Tệp khách', 'Ngày nhập BC Giao', 'Số ngày đã nhập BC', 'Giờ câp nhật', 'Số lần giao', 'Nhóm BL', 'COD']
+  Vùng      Tỉnh                                                       BC    Mã đơn Tệp khách                 Ngày nhập BC Giao  Số ngày đã nhập BC                      Giờ câp nhật  Số lần giao        Nhóm BL              COD
+0  NTB  Đắk Nông  Bưu Cục 53 Tôn Đức Thắng-Nghĩa Thành-Gia Nghĩa-Đắk Nông  GYW8REL3       SME  2026-05-10 05:02:12.676000+00:00           31.113449  2026-06-10 07:45:34.277000+00:00            0  (k) > 15 ngày              cod
+1  NTB  Lâm Đồng                        Bưu Cục Đạ Rsal-Đam Rông-Lâm Đồng  GYTLUC9G       SME  2026-05-12 09:01:38.353000+00:00           28.947176  2026-06-10 07:45:34.277000+00:00            0  (k) > 15 ngày              cod
+2  NTB  Lâm Đồng         Bưu Cục Thôn Phúc Hưng-Xã Tân Hà Lâm Hà-Lâm Đồng  GYTCVUVD       SME  2026-05-17 14:00:46.332000+00:00           23.739444  2026-06-10 07:45:34.277000+00:00            2  (k) > 15 ngày              cod
+3  NTB  Lâm Đồng                        Bưu Cục Đạ Rsal-Đam Rông-Lâm Đồng  GYTUYNRL       SME  2026-05-18 10:53:37.470000+00:00           22.869410  2026-06-10 07:45:34.277000+00:00            0  (k) > 15 ngày  non - không phí
+4  NTB  Lâm Đồng       Bưu Cục 337 Hùng Vương-Lộc Thắng-Bảo Lâm-Lâm Đồng   GYT6VTNQ       SME  2026-05-18 12:29:48.454000+00:00           22.802616  2026-06-10 07:45:34.277000+00:00            1  (k) > 15 ngày              cod
+
+=== Sheet: PIVOT aging  ===
+Columns: ['Đơn aging >5 ngày', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4', 'Cập nhật 13:18', 'Unnamed: 6']
+    Đơn aging >5 ngày  Unnamed: 1   Unnamed: 2    Unnamed: 3 Unnamed: 4 Cập nhật 13:18        Unnamed: 6
+0                  AM  5 - 8 ngày  8 - 15 ngày  Trên 15 ngày       Tổng           Tổng  +/- so với trước
+1   Huỳnh Thị Kim Chi         237          155            25        455            417               -38
+2  Thái Thị Thanh Thư         173           19             3        218            195               -23
+3       Trầm Hữu Tiến         115           28             0        150            143                -7
+4       Hồng Bích Nga         100           39             2        147            141                -6
+
+=== Sheet: Treo LC ===
+Columns: ['Mã bưu cục', 'Mã đơn hàng', 'Loại đơn', 'Khách hàng', 'Trạng thái', 'Thời gian tồn đọng', 'warehouse_name']
+   Mã bưu cục      Mã đơn hàng          Loại đơn Khách hàng           Trạng thái Thời gian tồn đọng                                    warehouse_name
+0    20633000         GYHDF7YP  Luân chuyển giao      OTHER  Không cần đóng kiện                0_6  Bưu Cục 237 Nguyễn Tất Thành-Bắc Bình-Bình Thuận
+1    20633000  VNGH80621466708  Luân chuyển giao        TTS       Chưa đóng kiện                0_6  Bưu Cục 237 Nguyễn Tất Thành-Bắc Bình-Bình Thuận
+2    20633000         GYHG7VK9   Luân chuyển trả      OTHER       Chưa đóng kiện                0_6  Bưu Cục 237 Nguyễn Tất Thành-Bắc Bình-Bình Thuận
+3    20633000      GYHV9R36_PR  Luân chuyển giao      OTHER       Chưa đóng kiện                0_6  Bưu Cục 237 Nguyễn Tất Thành-Bắc Bình-Bình Thuận
+4    20633000      GYH6LE3Q_PR  Luân chuyển giao      OTHER       Chưa đóng kiện                0_6  Bưu Cục 237 Nguyễn Tất Thành-Bắc Bình-Bình Thuận
+
+=== Sheet: PV treo LC ===
+Columns: ['Đơn treo LUÂN CHUYỂN giao/trả trên 36h (Chưa/Không cần đóng kiện)', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4', 'Unnamed: 5', 'Cập nhật 13:21', 'Unnamed: 7']
+  Đơn treo LUÂN CHUYỂN giao/trả trên 36h (Chưa/Không cần đóng kiện) Unnamed: 1 Unnamed: 2  Unnamed: 3 Unnamed: 4 Unnamed: 5 Cập nhật 13:21        Unnamed: 7
+0                                                                AM   36 - 72h  72 - 120h  120 - 192h      192h+       Tổng           Tổng  +/- so với trước
+1                                                 Huỳnh Thị Kim Chi         20          2           0          0         25             22                -3
+2                                                     Phan Đình Duy          8          1           2          0          6             11               + 5
+3                                                       Lê Minh Đại          5          3           3          0         35             11               -24
+4                                                   Nguyễn Duy Long          8          0           1          0         16              9                -7
+
+=== Sheet: Nhân Sự ===
+Columns: ['ID', 'Tên nhân viên', 'Chức vụ', 'Ngày vào làm', 'Ngày nghỉ việc', 'Trạng thái', 'Bưu cục', 'Zone', 'AM', 'Loại HĐ', 'Tỉnh', 'Vùng', 'Thâm niên', 'SP Team?']
+        ID          Tên nhân viên                               Chức vụ    Ngày vào làm  Ngày nghỉ việc     Trạng thái                                                      Bưu cục            Zone                  AM Loại HĐ        Tỉnh Vùng          Thâm niên  SP Team?
+0  3173887  Nguyễn Tuấn Duy Khanh  Business Development Field Executive  10 thg 6, 2026             NaN  Đang làm việc    22746000 - Bưu Cục 229 Phước Long-Nam Nha Trang-Khánh Hòa  Zone Khanh Hoa  Thái Thị Thanh Thư    HĐDV   Khánh Hòa  NTB  G01: Dưới 1 tháng     False
+1  3173884         Võ Minh Phương  Business Development Field Executive  10 thg 6, 2026             NaN  Đang làm việc    22746000 - Bưu Cục 229 Phước Long-Nam Nha Trang-Khánh Hòa  Zone Khanh Hoa  Thái Thị Thanh Thư    HĐDV   Khánh Hòa  NTB  G01: Dưới 1 tháng     False
+2  3173815        Phạm Văn Thương  Business Development Field Executive  10 thg 6, 2026             NaN  Đang làm việc          21456000 - Bưu Cục Xã Nam Chính-Đức Linh-Bình Thuận   Zone Lam Dong      Huỳnh Tấn Hiền    HĐDV  Bình Thuận  NTB  G01: Dưới 1 tháng     False
+3  3173666        Bùi Thị Hồng Hà  Business Development Field Executive   9 thg 6, 2026             NaN  Đang làm việc  22425000 - Bưu Cục Thôn Phúc Hưng-Xã Tân Hà Lâm Hà-Lâm Đồng   Zone Lam Dong   Huỳnh Thị Kim Chi    HĐDV    Lâm Đồng  NTB  G01: Dưới 1 tháng     False
+4  3173616           Nguyễn Thắng  Business Development Field Executive   8 thg 6, 2026             NaN  Đang làm việc       20320000 - Bưu Cục 466 Đường 23/10-Nha Trang-Khánh Hòa  Zone Khanh Hoa       Phan Đình Duy    HĐDV   Khánh Hòa  NTB  G01: Dưới 1 tháng     False
+
+=== Sheet: Đang off ===
+Columns: ['Tỉnh', 'Quận/ huyện', 'Phường/xã cần tắt', 'Bưu Cục\nVùng để trống cột bất kỳ từ cột B-> R \nNhập sai format\n=> KHÔNG REVIEW', 'Kết quả (KA) update', '% Cap Down (KA)', 'Thời gian tắt (KA)', 'Thời gian mở (KA)', 'Note']
+        Tỉnh          Quận/ huyện  Phường/xã cần tắt Bưu Cục\nVùng để trống cột bất kỳ từ cột B-> R \nNhập sai format\n=> KHÔNG REVIEW Kết quả (KA) update  % Cap Down (KA) Thời gian tắt (KA) Thời gian mở (KA)                                      Note
+0   Đắk Nông      Huyện Đắk R lấp  Thị trấn Kiến Đức                                    Bưu Cục 01 Nguyễn Tất Thành-Đắk R lấp-Đắk Nông               DUYỆT                1         2026-06-01        2026-06-15  Tuyến Đang OFF - Mở lại ngày: 15/06/2026
+1   Đắk Nông      Huyện Đắk R lấp       Xã Đạo Nghĩa                                    Bưu Cục 01 Nguyễn Tất Thành-Đắk R lấp-Đắk Nông               DUYỆT                1         2026-06-01        2026-06-15  Tuyến Đang OFF - Mở lại ngày: 15/06/2026
+2   Đắk Nông      Huyện Đắk R lấp      Xã Kiến Thành                                    Bưu Cục 01 Nguyễn Tất Thành-Đắk R lấp-Đắk Nông               DUYỆT                1         2026-06-01        2026-06-15  Tuyến Đang OFF - Mở lại ngày: 15/06/2026
+3   Đắk Nông      Huyện Đắk R lấp     Xã Nghĩa Thắng                                    Bưu Cục 01 Nguyễn Tất Thành-Đắk R lấp-Đắk Nông               DUYỆT                1         2026-06-01        2026-06-15  Tuyến Đang OFF - Mở lại ngày: 15/06/2026
+4  Khánh Hòa  Thành phố Nha Trang   Phường Phước Tân                                   Bưu Cục 06 Lê Hồng Phong-TP.Nha Trang-Khánh Hòa               DUYỆT                1         2026-06-09        2026-06-20  Tuyến Đang OFF - Mở lại ngày: 20/06/2026
+
+=== Sheet: Sheet47 ===
+Columns: []
+Empty DataFrame
+Columns: []
+Index: []
+
+=== Sheet: RAW n-1 ===
+Columns: ['vung', 'madh', 'BC lấy', 'Thời gian tạo', 'Thời gian LTC', 'sellername', 'ly_do_tre_12h', 'AM']
+      vung             madh                                                   BC lấy       Thời gian tạo       Thời gian LTC                            sellername ly_do_tre_12h  AM
+0  HCM-HCM  VNGH80429696305  Bưu Cục Số 17 Đường Hoàng Văn Hợp-An Lạc A-Bình Tân-HCM 2026-05-25 20:51:09 2026-05-26 16:11:46  đồ chơi trẻ em thời đại mới        4.Khác NaN
+1  HCM-HCM  VNGH80510746306  Bưu Cục Số 17 Đường Hoàng Văn Hợp-An Lạc A-Bình Tân-HCM 2026-05-25 20:51:08 2026-05-26 16:11:46  đồ chơi trẻ em thời đại mới        4.Khác NaN
+2      TNT  VNGH80167106307             Bưu Cục 38 Lê Quý Đôn-Phường Duy Tiên-Hà Nam 2026-05-26 08:09:51 2026-05-26 15:39:13           đồ chơi thông minh 2025        4.Khác NaN
+3      XBG  VNGH80777456306            Bưu Cục Thôn Bất Lự-Hoàn Sơn-Tiên Du-Bắc Ninh 2026-05-26 08:05:24 2026-05-26 18:09:12               điện máy đức anh 2        4.Khác NaN
+4      TNT  VNGH80931226306            Bưu Cục Đường Lạc Long Quân-Xã Hạ Hòa-Phú Thọ 2026-05-26 06:46:34 2026-05-26 17:41:59                     Đũa Tách Nhật        4.Khác NaN
+

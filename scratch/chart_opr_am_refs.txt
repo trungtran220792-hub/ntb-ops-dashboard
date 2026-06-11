@@ -1,0 +1,2 @@
+L2695: <div id="chart-opr-am" style="min-height: 250px;"></div>
+L4850: oprAmChart = new ApexCharts(document.querySelector("#chart-opr-am"), amOptions);

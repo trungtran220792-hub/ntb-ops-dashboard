@@ -1,0 +1,24 @@
+
+=== File: Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx (Sheet: Cơ cấu) ===
+Columns: ['Mã bưu cục', 'Bưu cục', 'BC', 'Tỉnh', 'Am', 'ID - Họ Tên Am']
+Matches found: 3
+    Mã bưu cục                                                       Bưu cục                                                            BC      Tỉnh              Am  ID - Họ Tên Am
+5     20269003                    Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông                    Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Đắk Nông  Trần Văn Phước  Trần Văn Phước
+6     22048001      Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng      Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng  Đắk Nông   Trần Công Hậu   Trần Công Hậu
+17    21659000  Điểm lấy hàng Nguyễn Đình Chiểu-Nghĩa Tân-Gia Nghĩa-Đăk Nông  Điểm lấy hàng Nguyễn Đình Chiểu-Nghĩa Tân-Gia Nghĩa-Đăk Nông  Đắk Nông  Trần Thị Nhung  Trần Thị Nhung
+
+=== File: Aging _5 ngày.xlsx (Sheet: Cơ cấu) ===
+Columns: ['warehouse_id', 'Bưu cục', 'Tỉnh', 'AM', 'Unnamed: 4', 'Unnamed: 5', 'Unnamed: 6', 'Unnamed: 7', 'Unnamed: 8', '0_6', '(1) 00-06h', '(0) Dưới 1 ngày', '(0) 00-24h']
+Matches found: 3
+    warehouse_id                                                       Bưu cục      Tỉnh              AM  Unnamed: 4  Unnamed: 5  Unnamed: 6  Unnamed: 7  Unnamed: 8  0_6 (1) 00-06h (0) Dưới 1 ngày (0) 00-24h
+24      22048001      Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng  Đắk Nông   Trần Công Hậu         NaN         NaN         NaN         NaN         NaN  NaN        NaN             NaN        NaN
+31      21659000  Điểm lấy hàng Nguyễn Đình Chiểu-Nghĩa Tân-Gia Nghĩa-Đăk Nông  Đắk Nông  Trần Thị Nhung         NaN         NaN         NaN         NaN         NaN  NaN        NaN             NaN        NaN
+32      20269003                    Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Đắk Nông  Trần Văn Phước         NaN         NaN         NaN         NaN         NaN  NaN        NaN             NaN        NaN
+
+=== File: Treo luân chuyển GIAO_TRẢ by IMTHIR.xlsx (Sheet: Cơ cấu) ===
+Columns: ['warehouse_id', 'Bưu cục', 'Tỉnh', 'AM', 'Unnamed: 4', 'Unnamed: 5', 'Unnamed: 6', 'Unnamed: 7', 'Unnamed: 8', 'Unnamed: 9', '0_6', '(1) 00-06h', '(0) Dưới 1 ngày', '(0) 00-24h', 'Unnamed: 14', 'Unnamed: 15', '0_6.1', 'A. 0-6']
+Matches found: 3
+    warehouse_id                                                       Bưu cục      Tỉnh              AM  Unnamed: 4  Unnamed: 5  Unnamed: 6  Unnamed: 7  Unnamed: 8  Unnamed: 9  0_6 (1) 00-06h (0) Dưới 1 ngày (0) 00-24h  Unnamed: 14  Unnamed: 15 0_6.1 A. 0-6
+24      22048001      Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng  Đắk Nông   Trần Công Hậu         NaN         NaN         NaN         NaN         NaN         NaN  NaN        NaN             NaN        NaN          NaN          NaN   NaN    NaN
+31      21659000  Điểm lấy hàng Nguyễn Đình Chiểu-Nghĩa Tân-Gia Nghĩa-Đăk Nông  Đắk Nông  Trần Thị Nhung         NaN         NaN         NaN         NaN         NaN         NaN  NaN        NaN             NaN        NaN          NaN          NaN   NaN    NaN
+32      20269003                    Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông  Đắk Nông  Trần Văn Phước         NaN         NaN         NaN         NaN         NaN         NaN  NaN        NaN             NaN        NaN          NaN          NaN   NaN    NaN

@@ -1,0 +1,241 @@
+5560:         // UTILS
+5561:         // ==========================================
+5562:         function roundNum(num) {
+5563:             if (num === null || num === undefined) return 0;
+5564:             return Math.round(Number(num) * 100) / 100;
+5565:         }
+5566: 
+5567:         // ==========================================
+5568:         // NTB SUMMARY DASHBOARD TAB LOGIC
+5569:         // ==========================================
+5570:         let ntbCompletedChart = null;
+5571:         let ntbBacklogChart = null;
+5572:         let ntbLtcTrendChart = null;
+5573:         let ntbGtcTrendChart = null;
+5574: 
+5575:         async function loadNtbSummaryData() {
+5576:             const am = document.getElementById('filter-am').value;
+5577:             const prov = document.getElementById('filter-province').value;
+5578:             const po = document.getElementById('filter-po').value;
+5579:             const dateSelect = document.getElementById('ntb-date-select');
+5580:             const selectedDate = dateSelect ? dateSelect.value : '';
+5581: 
+5582:             const params = new URLSearchParams();
+5583:             if (am) params.append('am', am);
+5584:             if (prov) params.append('province', prov);
+5585:             if (po) params.append('post_office', po);
+5586:             if (selectedDate) params.append('date', selectedDate);
+5587: 
+5588:             try {
+5589:                 // Fetch summary dashboard data
+5590:                 const summaryRes = await fetch(getApiUrl(`/api/summary-dashboard?${params.toString()}`), getFetchOptions());
+5591:                 const summaryData = await summaryRes.json();
+5592: 
+5593:                 if (summaryData.error) {
+5594:                     console.error("Summary error:", summaryData.error);
+5595:                     return;
+5596:                 }
+5597: 
+5598:                 // Populate date dropdown
+5599:                 if (dateSelect) {
+5600:                     const activeDate = summaryData.latest_date;
+5601:                     const currentOptions = Array.from(dateSelect.options).map(o => o.value);
+5602:                     const newOptions = summaryData.all_dates || [];
+5603:                     
+5604:                     const isDifferent = currentOptions.length !== newOptions.length || 
+5605:                                       !currentOptions.every((val, index) => val === newOptions[index]);
+5606:                     
+5607:                     if (isDifferent || dateSelect.children.length === 0) {
+5608:                         dateSelect.innerHTML = '';
+5609:                         newOptions.forEach(d => {
+5610:                             const opt = document.createElement('option');
+5611:                             opt.value = d;
+5612:                             opt.innerText = d;
+5613:                             dateSelect.appendChild(opt);
+5614:                         });
+5615:                     }
+5616:                     dateSelect.value = activeDate;
+5617:                 }
+5618: 
+5619:                 // Update 9 KPI Grid
+5620:                 const kpis = summaryData.kpis;
+5621:                 if (kpis) {
+5622:                     const updateKpiCard = (metric, provKey, kpiData) => {
+5623:                         const valEl = document.getElementById(`ntb-kpi-${metric}-${provKey}`);
+5624:                         const trendEl = document.getElementById(`ntb-kpi-${metric}-${provKey}-trend`);
+5625:                         if (!valEl || !trendEl) return;
+5626:                         
+5627:                         if (kpiData) {
+5628:                             valEl.innerText = kpiData[metric] + "%";
+5629:                             
+5630:                             let trendHtml = '';
+5631:                             if (kpiData.dod) {
+5632:                                 const diff = kpiData.dod[metric];
+5633:                                 if (diff > 0) {
+5634:                                     trendHtml += `<span style="color: var(--color-success); font-weight:600;"><i class="fa-solid fa-caret-up"></i> +${diff}%</span>`;
+5635:                                 } else if (diff < 0) {
+5636:                                     trendHtml += `<span style="color: var(--color-danger); font-weight:600;"><i class="fa-solid fa-caret-down"></i> ${diff}%</span>`;
+5637:                                 } else {
+5638:                                     trendHtml += `<span style="color: var(--text-muted);">-</span>`;
+5639:                                 }
+5640:                             }
+5641:                             if (kpiData.wow) {
+5642:                                 const diff = kpiData.wow[metric];
+5643:                                 if (diff > 0) {
+5644:                                     trendHtml += ` <span style="color: #007bc3; font-weight:600;" title="So với cùng kỳ tuần trước"><i class="fa-solid fa-clock"></i> ↑ +${diff}%</span>`;
+5645:                                 } else if (diff < 0) {
+5646:                                     trendHtml += ` <span style="color: #ef4444; font-weight:600;" title="So với cùng kỳ tuần trước"><i class="fa-solid fa-clock"></i> ↓ ${diff}%</span>`;
+5647:                                 } else {
+5648:                                     trendHtml += ` <span style="color: var(--text-muted);" title="So với cùng kỳ tuần trước"><i class="fa-solid fa-clock"></i> -</span>`;
+5649:                                 }
+5650:                             }
+5651:                             trendEl.innerHTML = trendHtml;
+5652:                         } else {
+5653:                             valEl.innerText = "0%";
+5654:                             trendEl.innerHTML = "";
+5655:                         }
+5656:                     };
+5657: 
+5658:                     updateKpiCard('ltc', 'overall', kpis.overall);
+5659:                     updateKpiCard('gtc', 'overall', kpis.overall);
+5660:                     updateKpiCard('ttc', 'overall', kpis.overall);
+5661: 
+5662:                     updateKpiCard('ltc', 'lamdong', kpis.lam_dong);
+5663:                     updateKpiCard('gtc', 'lamdong', kpis.lam_dong);
+5664:                     updateKpiCard('ttc', 'lamdong', kpis.lam_dong);
+5665: 
+5666:                     updateKpiCard('ltc', 'binhthuan', kpis.binh_thuan);
+5667:                     updateKpiCard('gtc', 'binhthuan', kpis.binh_thuan);
+5668:                     updateKpiCard('ttc', 'binhthuan', kpis.binh_thuan);
+5669:                 }
+5670: 
+5671:                 // Update new overview report date label
+5672:                 const ovReportDateEl = document.getElementById('overview-report-date');
+5673:                 if (ovReportDateEl) {
+5674:                     ovReportDateEl.innerText = "Ngày báo cáo: " + summaryData.latest_date;
+5675:                 }
+5676: 
+5677:                 // Populate new overview provinces table
+5678:                 const ovTableBody = document.querySelector('#table-overview-provinces tbody');
+5679:                 if (ovTableBody) {
+5680:                     ovTableBody.innerHTML = '';
+5681:                     
+5682:                     const compVols = summaryData.completed_vols || [];
+5683:                     
+5684:                     // Sort provinces alphabetically so they are neat
+5685:                     const sortedVols = [...compVols].sort((a, b) => a.province.localeCompare(b.province));
+5686:                     
+5687:                     sortedVols.forEach(provData => {
+5688:                         if (provData.province === "Không xác định") return;
+5689:                         
+5690:                         const tr = document.createElement('tr');
+5691:                         
+5692:                         const gtcVol = provData.Volume_gtc || 0;
+5693:                         const ltcVol = provData.Volume_ltc || 0;
+5694:                         
+5695:                         tr.innerHTML = `
+5696:                             <td style="text-align: left; font-weight: 600;">${escapeHTML(provData.province)}</td>
+5697:                             <td style="text-align: center;">${gtcVol.toLocaleString()}</td>
+5698:                             <td style="text-align: center;"><span class="badge ${provData.GTC_pct >= 60 ? 'badge-success' : 'badge-danger'}">${provData.GTC_pct}%</span></td>
+5699:                             <td style="text-align: center;">${ltcVol.toLocaleString()}</td>
+5700:                             <td style="text-align: center;"><span class="badge ${provData.LTC_pct >= 80 ? 'badge-success' : 'badge-danger'}">${provData.LTC_pct}%</span></td>
+5701:                             <td style="text-align: center;"><span class="badge badge-secondary">${provData.TTC_pct}%</span></td>
+5702:                         `;
+5703:                         ovTableBody.appendChild(tr);
+5704:                     });
+5705:                     
+5706:                     // Add region total row (Toàn vùng NTB)
+5707:                     const overall = summaryData.kpis ? summaryData.kpis.overall : null;
+5708:                     if (overall) {
+5709:                         const tr = document.createElement('tr');
+5710:                         tr.style.backgroundColor = 'rgba(255, 95, 0, 0.05)';
+5711:                         tr.style.borderTop = '2px solid var(--color-ghn-orange)';
+5712:                         
+5713:                         const gtcVol = overall.vol_gtc || 0;
+5714:                         const ltcVol = overall.vol_ltc || 0;
+5715:                         
+5716:                         tr.innerHTML = `
+5717:                             <td style="text-align: left; font-weight: 800; color: var(--color-ghn-orange);">Toàn vùng NTB</td>
+5718:                             <td style="text-align: center; font-weight: 700;">${gtcVol.toLocaleString()}</td>
+5719:                             <td style="text-align: center;"><span class="badge ${overall.gtc >= 60 ? 'badge-success' : 'badge-danger'}" style="font-weight: 700;">${overall.gtc}%</span></td>
+5720:                             <td style="text-align: center; font-weight: 700;">${ltcVol.toLocaleString()}</td>
+5721:                             <td style="text-align: center;"><span class="badge ${overall.ltc >= 80 ? 'badge-success' : 'badge-danger'}" style="font-weight: 700;">${overall.ltc}%</span></td>
+5722:                             <td style="text-align: center;"><span class="badge badge-secondary" style="font-weight: 700; background-color: var(--color-warning); color: white;">${overall.ttc}%</span></td>
+5723:                         `;
+5724:                         ovTableBody.appendChild(tr);
+5725:                     }
+5726:                 }
+5727: 
+5728:                 // Render Completed Volume Chart (Grouped bars by province)
+5729:                 const compVols = summaryData.completed_vols || [];
+5730:                 const compCategories = compVols.map(v => v.province);
+5731:                 const ltcSeries = compVols.map(v => v.LTC);
+5732:                 const gtcSeries = compVols.map(v => v.GTC);
+5733:                 const ttcSeries = compVols.map(v => v.TTC);
+5734: 
+5735:                 const compOptions = {
+5736:                     chart: { type: 'bar', height: 280, toolbar: { show: false }, background: 'transparent' },
+5737:                     series: [
+5738:                         { name: 'LTC', data: ltcSeries },
+5739:                         { name: 'GTC', data: gtcSeries },
+5740:                         { name: 'TTC', data: ttcSeries }
+5741:                     ],
+5742:                     xaxis: { categories: compCategories, labels: { style: { colors: '#64748b' } } },
+5743:                     yaxis: { title: { text: 'Sản lượng' }, labels: { style: { colors: '#64748b' } } },
+5744:                     colors: ['#007bc3', '#ff5f00', '#10b981'],
+5745:                     plotOptions: { bar: { horizontal: false, columnWidth: '55%', borderRadius: 4 } },
+5746:                     theme: { mode: 'light' },
+5747:                     dataLabels: { enabled: false },
+5748:                     legend: { position: 'bottom', labels: { colors: '#64748b' } }
+5749:                 };
+5750: 
+5751:                 if (ntbCompletedChart) ntbCompletedChart.destroy();
+5752:                 ntbCompletedChart = new ApexCharts(document.querySelector("#chart-ntb-completed"), compOptions);
+5753:                 ntbCompletedChart.render();
+5754: 
+5755:                 // Render Backlog Chart by AM
+5756:                 const blAM = summaryData.backlog_by_am || [];
+5757:                 const blCategories = blAM.map(b => b.am);
+5758:                 const clSeries = blAM.map(b => b.chua_lay);
+5759:                 const cgSeries = blAM.map(b => b.chua_giao);
+5760:                 const ctSeries = blAM.map(b => b.chua_tra);
+5761: 
+5762:                 const blOptions = {
+5763:                     chart: { type: 'bar', height: 280, toolbar: { show: false }, background: 'transparent', stacked: true },
+5764:                     series: [
+5765:                         { name: 'Đơn chưa lấy', data: clSeries },
+5766:                         { name: 'Đơn chưa giao', data: cgSeries },
+5767:                         { name: 'Đơn chưa trả', data: ctSeries }
+5768:                     ],
+5769:                     xaxis: { categories: blCategories, labels: { style: { colors: '#64748b' } } },
+5770:                     yaxis: { title: { text: 'Sản lượng backlog' }, labels: { style: { colors: '#64748b' } } },
+5771:                     colors: ['#ef4444', '#ff5f00', '#007bc3'],
+5772:                     plotOptions: { bar: { horizontal: false, columnWidth: '55%' } },
+5773:                     theme: { mode: 'light' },
+5774:                     dataLabels: { enabled: false },
+5775:                     legend: { position: 'bottom', labels: { colors: '#64748b' } }
+5776:                 };
+5777: 
+5778:                 if (ntbBacklogChart) ntbBacklogChart.destroy();
+5779:                 ntbBacklogChart = new ApexCharts(document.querySelector("#chart-ntb-backlog-am"), blOptions);
+5780:                 ntbBacklogChart.render();
+5781: 
+5782:                 // Fetch trends data
+5783:                 const trendsRes = await fetch(getApiUrl(`/api/trends-dashboard?${params.toString()}`), getFetchOptions());
+5784:                 const trendsData = await trendsRes.json();
+5785: 
+5786:                 const trendDates = trendsData.dates || [];
+5787:                 const trends = trendsData.trends || {};
+5788: 
+5789:                 const ltcLines = [];
+5790:                 if (trends.overall) ltcLines.push({ name: 'Toàn vùng', data: trends.overall.ltc });
+5791:                 if (trends['lâm_đồng']) ltcLines.push({ name: 'Lâm Đồng', data: trends['lâm_đồng'].ltc });
+5792:                 if (trends['bình_thuận']) ltcLines.push({ name: 'Bình Thuận', data: trends['bình_thuận'].ltc });
+5793: 
+5794:                 const ltcTrendOptions = {
+5795:                     chart: { type: 'line', height: 280, toolbar: { show: false }, background: 'transparent' },
+5796:                     series: ltcLines,
+5797:                     xaxis: { categories: trendDates.map(d => d.split(" - ")[0]), labels: { style: { colors: '#64748b' } } },
+5798:                     yaxis: { title: { text: 'Tỷ lệ %' }, min: 40, max: 100, labels: { style: { colors: '#64748b' } } },
+5799:                     colors: ['#ff5f00', '#007bc3', '#10b981'],
+5800:                     stroke: { width: 3, curve: 'smooth' },

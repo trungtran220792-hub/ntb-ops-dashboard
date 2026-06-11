@@ -1,0 +1,10 @@
+--- STEP 1111 | Tool: replace_file_content ---
+Description: "Clean up trailing divs and formatting leftover comparison items from CARD 3 in templates/index.html"
+Instruction: "Replace the redundant/duplicate comparison elements and improperly closed divs with the correct closing tags for CARD 3, the grid container, and the main card container"
+--- TARGET CONTENT ---
+"                            </div>\n                        </div>\n\n                    </div>    <div class=\"avg-comparison-row\">\n                                <div class=\"avg-item\">\n                                    <span class=\"avg-item-label w1-avg-label\">7 ngày gần nhất:</span>\n                                    <span class=\"avg-item-val\" id=\"ttc-w1-avg\">0%</span>\n                                </div>\n                                <div class=\"avg-item\">\n                                    <span class=\"avg-item-label w2-avg-label\">7 ngày trước đó:</span>\n                                    <span class=\"avg-item-val\" id=\"ttc-w2-avg\">0%</span>\n                                </div>\n                                <div class=\"avg-item\" style=\"margin-top: 4px; font-weight: 600; font-size: 11px;\">\n                                    <span>Chênh lệch tuần:</span>\n                                    <span id=\"ttc-wow-diff\">-</span>\n                                </div>\n                            </div>\n                        </div>\n\n                    </div>\n                </div>"
+--- REPLACEMENT CONTENT ---
+"                            </div>\n                        </div>\n                    </div>\n                </div>"
+
+================================================================================
+

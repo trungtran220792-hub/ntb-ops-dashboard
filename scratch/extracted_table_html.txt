@@ -1,0 +1,395 @@
+=== STEP 1127 CONTENT ===
+STEP 1127 | Tool: replace_file_content ---
+Description: "Replace old LTC matrix table with interactive rank & analysis layout supporting toggles, search, and sorting"
+Instruction: "Replace old matrix card with premium analysis report container containing capsules toggle, search box, and interactive table headers"
+--- TARGET CONTENT ---
+"                <!-- Matrix Table: %LTC theo bưu cục -->
+                <div class="card" style="margin-bottom: 24px;">
+                    <div class="card-header"
+                        style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3>%LTC theo bưu cục</h3>
+                        <span style="font-size: 12px; color: var(--text-muted); font-style: italic;">Nhấp vào dòng AM để
+                            xem chi tiết bưu cục</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="custom-table ntb-matrix-table" id="table-ntb-ltc-matrix">
+                            <!-- We will build the thead and tbody dynamically -->
+                        </table>
+                    </div>
+                </div>"
+--- REPLACEMENT CONTENT ---
+"                <!-- Analysis & Ranking Table: %LTC -->
+                <div class="card" style="margin-bottom: 24px; padding: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                            <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: var(--text-primary);">Báo cáo phân tích & Xếp hạng % LTC</h3>
+                            <div class="ntb-toggle-capsules">
+                                <div class="ntb-capsule active" id="capsule-ltc-po" onclick="setNtbGroupType('ltc', 'po')">Bưu cục</div>
+                                <div class="ntb-capsule" id="capsule-ltc-am" onclick="setNtbGroupType('ltc', 'am')">AM</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <input type="text" id="search-ntb-ltc" placeholder="Tìm kiếm tên bưu cục/AM..." oninput="handleNtbSearch('ltc')" style="padding: 8px 14px; font-size: 13px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-primary); outline: none; width: 220px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: border-color 0.2s;" />
+                        </div>
+                    </div>
+                    <div class="table-responsive" style="max-height: 480px; overflow-y: auto;">
+                        <table class="custom-table" id="table-ntb-ltc-analysis" style="border-collapse: separate; border-spacing: 0;">
+                            <thead style="position: sticky; top: 0; background: var(--card-bg); z-index: 10;">
+                                <tr style="cursor: pointer; user-select: none;">
+                                    <th onclick="handleNtbS
+<truncated 1814 bytes>
+
+================================================================================
+
+
+
+=========================================
+FILE: 92726133-7314-4954-9f94-c885d0c26df2_1131.txt
+=========================================
+--- STEP 1131 | Tool: replace_file_content ---
+Description: "Replace old GTC matrix table with interactive rank & analysis layout supporting toggles, search, and sorting"
+Instruction: "Replace old GTC matrix card with premium analysis report container containing capsules toggle, search box, and interactive table headers"
+--- TARGET CONTENT ---
+"                <!-- Matrix Table: %GTC theo bưu cục -->
+                <div class="card" style="margin-bottom: 24px;">
+                    <div class="card-header"
+                        style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3>%GTC theo bưu cục</h3>
+                        <span style="font-size: 12px; color: var(--text-muted); font-style: italic;">Nhấp vào dòng AM để
+                            xem chi tiết bưu cục</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="custom-table ntb-matrix-table" id="table-ntb-gtc-matrix">
+                            <!-- We will build the thead and tbody dynamically -->
+                        </table>
+                    </div>
+                </div>"
+--- REPLACEMENT CONTENT ---
+"                <!-- Analysis & Ranking Table: %GTC -->
+                <div class="card" style="margin-bottom: 24px; padding: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                            <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: var(--text-primary);">Báo cáo phân tích & Xếp hạng % GTC</h3>
+                            <div class="ntb-toggle-capsules">
+                                <div class="ntb-capsule active" id="capsule-gtc-po" onclick="setNtbGroupType('gtc', 'po')">Bưu cục</div>
+                                <div class="ntb-capsule" id="capsule-gtc-am" onclick="setNtbGroupType('gtc', 'am')">AM</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <input type="text" id="search-ntb-gtc" placeholder="Tìm kiếm tên bưu cục/AM..." oninput="handleNtbSearch('gtc')" style="padding: 8px 14px; font-size: 13px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-primary); outline: none; width: 220px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: border-color 0.2s;" />
+                        </div>
+                    </div>
+                    <div class="table-responsive" style="max-height: 480px; overflow-y: auto;">
+                        <table class="custom-table" id="table-ntb-gtc-analysis" style="border-collapse: separate; border-spacing: 0;">
+                            <thead style="position: sticky; top: 0; background: var(--card-bg); z-index: 10;">
+                                <tr style="cursor: pointer; user-select: none;">
+                                    <th onclick="handleNtbS
+<truncated 1814 bytes>
+
+================================================================================
+
+
+
+=========================================
+FILE: 92726133-7314-4954-9f94-c885d0c26df2_1155.txt
+=========================================
+--- STEP 1155 | Tool: replace_file_content ---
+Description: "Define cachedNtbMatrixData and table filter/sorting states as global JS variables"
+Instruction: "Insert cachedNtbMatrixData, ntbGroupType, ntbSearchText, ntbSortCol, and ntbSortAsc global variables"
+--- TARGET CONTENT ---
+"        // Caching fetched data
+        let cachedNtbSummaryData = null;
+        let cachedNtbTrendsData = null;
+        let activeNtbRegion = 'overall';"
+--- REPLACEMENT CONTENT ---
+"        // Caching fetched data
+        let cachedNtbSummaryData = null;
+        let cachedNtbTrendsData = null;
+        let cachedNtbMatrixData = null;
+        let activeNtbRegion = 'overall';
+
+        let ntbGroupType = { ltc: 'po', gtc: 'po' };
+        let ntbSearchText = { ltc: '', gtc: '' };
+        let ntbSortCol = { ltc: 'pick_vol', gtc: 'pick_vol' };
+        let ntbSortAsc = { ltc: false, gtc: false };"
+
+================================================================================
+
+
+
+================================================================================
+
+=== STEP 1131 CONTENT ===
+STEP 1131 | Tool: replace_file_content ---
+Description: "Replace old GTC matrix table with interactive rank & analysis layout supporting toggles, search, and sorting"
+Instruction: "Replace old GTC matrix card with premium analysis report container containing capsules toggle, search box, and interactive table headers"
+--- TARGET CONTENT ---
+"                <!-- Matrix Table: %GTC theo bưu cục -->
+                <div class="card" style="margin-bottom: 24px;">
+                    <div class="card-header"
+                        style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3>%GTC theo bưu cục</h3>
+                        <span style="font-size: 12px; color: var(--text-muted); font-style: italic;">Nhấp vào dòng AM để
+                            xem chi tiết bưu cục</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="custom-table ntb-matrix-table" id="table-ntb-gtc-matrix">
+                            <!-- We will build the thead and tbody dynamically -->
+                        </table>
+                    </div>
+                </div>"
+--- REPLACEMENT CONTENT ---
+"                <!-- Analysis & Ranking Table: %GTC -->
+                <div class="card" style="margin-bottom: 24px; padding: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                            <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: var(--text-primary);">Báo cáo phân tích & Xếp hạng % GTC</h3>
+                            <div class="ntb-toggle-capsules">
+                                <div class="ntb-capsule active" id="capsule-gtc-po" onclick="setNtbGroupType('gtc', 'po')">Bưu cục</div>
+                                <div class="ntb-capsule" id="capsule-gtc-am" onclick="setNtbGroupType('gtc', 'am')">AM</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <input type="text" id="search-ntb-gtc" placeholder="Tìm kiếm tên bưu cục/AM..." oninput="handleNtbSearch('gtc')" style="padding: 8px 14px; font-size: 13px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-primary); outline: none; width: 220px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: border-color 0.2s;" />
+                        </div>
+                    </div>
+                    <div class="table-responsive" style="max-height: 480px; overflow-y: auto;">
+                        <table class="custom-table" id="table-ntb-gtc-analysis" style="border-collapse: separate; border-spacing: 0;">
+                            <thead style="position: sticky; top: 0; background: var(--card-bg); z-index: 10;">
+                                <tr style="cursor: pointer; user-select: none;">
+                                    <th onclick="handleNtbS
+<truncated 1814 bytes>
+
+================================================================================
+
+
+
+=========================================
+FILE: 92726133-7314-4954-9f94-c885d0c26df2_1155.txt
+=========================================
+--- STEP 1155 | Tool: replace_file_content ---
+Description: "Define cachedNtbMatrixData and table filter/sorting states as global JS variables"
+Instruction: "Insert cachedNtbMatrixData, ntbGroupType, ntbSearchText, ntbSortCol, and ntbSortAsc global variables"
+--- TARGET CONTENT ---
+"        // Caching fetched data
+        let cachedNtbSummaryData = null;
+        let cachedNtbTrendsData = null;
+        let activeNtbRegion = 'overall';"
+--- REPLACEMENT CONTENT ---
+"        // Caching fetched data
+        let cachedNtbSummaryData = null;
+        let cachedNtbTrendsData = null;
+        let cachedNtbMatrixData = null;
+        let activeNtbRegion = 'overall';
+
+        let ntbGroupType = { ltc: 'po', gtc: 'po' };
+        let ntbSearchText = { ltc: '', gtc: '' };
+        let ntbSortCol = { ltc: 'pick_vol', gtc: 'pick_vol' };
+        let ntbSortAsc = { ltc: false, gtc: false };"
+
+================================================================================
+
+
+
+=========================================
+FILE: 92726133-7314-4954-9f94-c885d0c26df2_1157.txt
+=========================================
+--- STEP 1157 | Tool: replace_file_content ---
+Description: "Update renderNtbKpiCards to map day comparisons (n-1, n-3, cùng kỳ) and week comparisons (selected, prev, 2-weeks-ago) to new card elements"
+Instruction: "Replace metric card UI update functions to match the revised HTML structure of the comparison rows"
+--- TARGET CONTENT ---
+"        function renderNtbKpiCards() {
+            if (!cachedNtbSummaryData) return;
+            
+            const timeGroupEl = document.getElementById('ntb-time-group');
+            const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';
+            
+            const regionConfig = {
+                'overall': { label: 'Toàn vùng', kpiKey: 'overall' },
+                'lam_dong': { label: 'Lâm Đồng', kpiKey: 'lam_dong' },
+                'binh_thuan': { label: 'Bình Thuận', kpiKey: 'binh_thuan' },
+                'khanh_hoa': { label: 'Khánh Hòa', kpiKey: 'khanh_hoa' },
+                'dak_nong': { label: 'Đắk Nông', kpiKey: 'dak_nong' },
+                'ninh_thuan': { label: 'Ninh Thuận', kpiKey: 'ninh_thuan' }
+            };
+            
+            const cfg = regionConfig[activeNtbRegion] || regionConfig['overall'];
+            
+            // Update active region labels in cards
+            document.getElementById('ltc-active-region').innerText = `(${cfg.label})`;
+            document.getElementById('gtc-active-region').innerText = `(${cfg.label})`;
+            document.getElementById('ttc-active-region').innerText = `(${cfg.label})`;
+            
+            const kpis = cachedNtbSummaryData.kpis || {};
+            const kpiData = kpis[cfg.kpiKey];
+            
+            const updateMetricCardUI = (metric, cardIdPrefix) => {
+                const valEl = document.getElementById(`kpi-${cardIdPrefix}-value`);
+                const badgeEl = document.getElementById(`kpi-${cardIdPrefix}-badge`);
+                const subtextEl = document.getElementById(`kpi-${cardIdPrefix}-subtext`);
+                const w1El = document.getElementById(`${cardIdPrefix}-w1-avg`);
+                const w2El = document.getElementById(`${cardIdPrefix}-w2-avg`);
+                const diffEl = document.getElementById(`${cardIdPrefix}-wow-diff`);
+                
+                if (!valEl) return;
+                
+                if (kpiData) {
+                    val
+<truncated 4527 bytes>
+--- REPLACEMENT CONTENT ---
+"        function renderNtbKpiCards() {
+            if (!cachedNtbSummaryData) return;
+            
+            const timeGroupEl = document.getElementById('ntb-time-group');
+            const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';
+            
+            const regionConfig = {
+                'overall': { label: 'Toàn vùng', kpiKey: 'overall' },
+                'lam_dong': { label: 'Lâm Đồng', kpiKey: 'lam_dong' },
+                'binh_thuan': { label: 'Bình Thuận', kpiKey: 'binh_thuan' },
+                'khanh_hoa': { label: 'Khánh Hòa', kpiKey: 'khanh_hoa' },
+                'dak_nong': { label: 'Đắk Nông', kpiKey: 'dak_nong' },
+                'ninh_thuan': { label: 'Ninh Thuận', kpiKey: 'ninh_thuan' }
+            };
+            
+            const cfg = regionConfig[activeNtbRegion] || regionConfig['overall'];
+            
+            // Update active region labels in cards
+            document.get
+
+================================================================================
+
+=== STEP 1449 CONTENT ===
+STEP 1449 | Tool: replace_file_content ---
+Description: "Remove status evaluation column and formatting in ranking table generator in templates/index.html"
+Instruction: "Remove status column, update colspans, remove statusBadge, and set PCT text color to default in renderNtbAnalysisTable function"
+--- TARGET CONTENT ---
+"            tableBody.innerHTML = '';
+            if (items.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="${groupType === 'po' ? 8 : 7}" style="text-align: center; color: var(--text-muted); padding: 20px;">Không tìm thấy kết quả phù hợp</td></tr>`;
+                return;
+            }
+            
+            items.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                if (index % 2 === 0) {
+                    tr.style.background = 'rgba(0, 0, 0, 0.01)';
+                }
+                
+                const rank = index + 1;
+                const statusBadge = item.pass 
+                    ? `<span class="badge badge-success" style="font-weight: 600;">Đạt</span>` 
+                    : `<span class="badge badge-danger" style="font-weight: 600;">Chưa đạt</span>`;
+                
+                let rowHtml = `
+                    <td style="text-align: center; font-weight: 600;">${rank}</td>
+                    <td style="text-align: left; font-weight: 600; color: var(--text-primary);">${escapeHTML(item.name)}</td>
+                `;
+                
+                if (groupType === 'po') {
+                    rowHtml += `<td style="text-align: left; color: var(--text-secondary);">${escapeHTML(item.am)}</td>`;
+                }
+                
+                rowHtml += `
+                    <td style="text-align: right;">${item.pickVol.toLocaleString()}</td>
+                    <td style="text-align: right; color: var(--text-secondary);">${item.totalVol.toLocaleString()}</td>
+                    <td style="text-align: right; font-weight: 500; color: var(--text-secondary);">${item.prop.toFixed(2)}%</td>
+                    <td style="text-align: right; font-weight: 700; color: ${item.pass ? 'var(--color-success)' : 'var(--color-danger)'};">${item.pct.toFixed(2)}%</td>
+                    <td style="text-align: center;">${statusBadge}</td>
+                `;\
+<truncated 234 bytes>
+--- REPLACEMENT CONTENT ---
+"            tableBody.innerHTML = '';
+            if (items.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="${groupType === 'po' ? 7 : 6}" style="text-align: center; color: var(--text-muted); padding: 20px;">Không tìm thấy kết quả phù hợp</td></tr>`;
+                return;
+            }
+            
+            items.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                if (index % 2 === 0) {
+                    tr.style.background = 'rgba(0, 0, 0, 0.01)';
+                }
+                
+                const rank = index + 1;
+                
+                let rowHtml = `
+                    <td style="text-align: center; font-weight: 600;">${rank}</td>
+                    <td style="text-align: left; font-weight: 600; color: var(--text-primary);">${escapeHTML(item.name)}</td>
+                `;
+                
+                if (groupType === 'po') {
+                    rowHtml += `<td style="text-align: left; color: var(--text-secondary);">${escapeHTML(item.am)}</td>`;
+                }
+                
+                rowHtml += `
+                    <td style="text-align: right;">${item.pickVol.toLocaleString()}</td>
+                    <td style="text-align: right; color: var(--text-secondary);">${item.totalVol.toLocaleString()}</td>
+                    <td style="text-align: right; font-weight: 500; color: var(--text-secondary);">${item.prop.toFixed(2)}%</td>
+                    <td style="text-align: right; font-weight: 700; color: var(--text-primary);">${item.pct.toFixed(2)}%</td>
+                `;
+                
+                tr.innerHTML = rowHtml;
+                tableBody.appendChild(tr);
+            });
+            
+            const cols = ['rank', 'name', 'am', 'pick_vol', 'total_vol', 'prop', 'pct'];"
+
+================================================================================
+
+
+
+=========================================
+FILE: 92726133-7314-4954-9f94-c885d0c26df2_1453.txt
+=========================================
+--- STEP 1453 | Tool: replace_file_content ---
+Description: "Remove target metrics for LTC and GTC cards, set to - in templates/index.html"
+Instruction: "Change target values for LTC and GTC cards to - in templates/index.html"
+--- TARGET CONTENT ---
+"                        <!-- CARD 1: LTC -->
+                        <div class="quality-metric-card" style="border-top: 4px solid var(--color-indigo);">
+                            <div>
+                                <div class="metric-header">
+                                    <span class="metric-title">% LTC <span style="font-size: 11px; text-transform: none; font-weight: normal; color: var(--text-muted);" id="ltc-active-region">(Toàn vùng)</span></span>
+                                    <span style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Target: &ge; 90%</span>
+                                </div>
+                                <div class="metric-value-row">
+                                    <div class="metric-value" id="kpi-ltc-value">0%</div>
+                                    <div id="kpi-ltc-badge" class="metric-badge neutral">
+                                        <span>-</span>
+                                    </div>
+                                </div>
+                                <div class="metric-subtext" id="kpi-ltc-subtext">So với ngày trước: -</div>
+                            </div>
+                            
+                            <!-- Sparkline Chart -->
+                            <div class="sparkline-container" id="sparkline-ltc"></div>
+                            
+                            <div class="comparison-divider"></div>
+                            
+                            <!-- Comparison Row -->
+                            <div class="avg-comparison-row">
+                                <div class="avg-item">
+                                    <span class="avg-item-label" id="ltc-comp-1-label">So với n-3:</span>
+                                    <span style="display: flex; gap: 8px; align-items: center;">
+                                        <span class="avg-item-val" id="ltc-comp-1-val">- %</span>
+                                    
+<truncated 1449 bytes>
+--- REPLACEMENT CONTENT ---
+"                        <!-- CARD 1: LTC -->
+                        <div class="quality-metric-card" style="border-top: 4px solid var(--color-indigo);">
+                            <div>
+                                <div class="metric-header">
+                                    <span class="metric-title">% LTC <span style="font-size: 11px; text-transform: none; font-weight: normal; color: var(--text-muted);" id="ltc-active-region">(Toàn vùng)</span></span>
+                                    <span style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Target: -</span>
+                                </div>
+                                <div class="metric-value-row">
+                                    <div class="metric-value" id="kpi-ltc-value">0%</div>
+                                    <div id="kpi-ltc-badge" class="metric-badge neutral">
+                                        <span>-</span>
+                                    </div>
+                                </div>
+                                <div class="metric-subtext" id="kpi-ltc-subtext">So với ngày trướ
+
+================================================================================
+

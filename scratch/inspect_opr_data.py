@@ -1,24 +1,22 @@
 import openpyxl
-import os
+import pandas as pd
+import sys
 
-workspace_dir = r"c:\Users\lap4all\Desktop\New folder"
-file_path = os.path.join(workspace_dir, "OPR TTS.xlsx")
-output_path = os.path.join(workspace_dir, "scratch", "inspect_opr_data_res.txt")
+wb_path = "scratch/downloaded_consolidated_sheet.xlsx"
+wb = openpyxl.load_workbook(wb_path, read_only=True)
 
-with open(output_path, "w", encoding="utf-8") as f:
-    try:
-        wb = openpyxl.load_workbook(file_path, read_only=True, data_only=True)
-        if 'data' in wb.sheetnames:
-            ws = wb['data']
-            f.write("data sheet exists. Reading first 50 rows...\n")
-            for row in ws.iter_rows(max_row=50, max_col=15, values_only=True):
-                if any(v is not None for v in row):
-                    row_str = [str(v) if v is not None else "" for v in row]
-                    f.write(f"{row_str}\n")
+with open("scratch/opr_sheets_info.txt", "w", encoding="utf-8") as f:
+    for name in ["OPR", "rawopr", "CoCauVung", "Data", "TTS", "DataLTC"]:
+        if name in wb.sheetnames:
+            f.write(f"\n=================== Sheet: {name} ===================\n")
+            try:
+                df = pd.read_excel(wb_path, sheet_name=name, nrows=5)
+                f.write(f"Shape: {df.shape}\n")
+                f.write(f"Columns: {list(df.columns)}\n")
+                if not df.empty:
+                    f.write(f"First row: {df.iloc[0].to_dict()}\n")
+            except Exception as e:
+                f.write(f"Error: {e}\n")
         else:
-            f.write("data sheet does not exist.\n")
-        wb.close()
-    except Exception as e:
-        f.write(f"Error: {e}\n")
-
-print("Done inspecting data sheet.")
+            f.write(f"Sheet {name} NOT found in workbook\n")
+print("Done")

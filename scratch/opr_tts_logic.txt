@@ -1,0 +1,92 @@
+Line 1705: <li class="menu-item" id="nav-tab-opr" onclick="switchTab('tab-opr', this)">
+Line 1706: <i class="fa-solid fa-user-clock"></i> OPR TTS
+Line 1998: <span>Hiệu suất OPR TTS</span>
+Line 2001: <div class="kpi-value" id="kpi-opr">- %</div>
+Line 2002: <div class="kpi-comparison" id="kpi-opr-comparison"></div>
+Line 2003: <div class="kpi-trend trend-neutral">Target OPR: 80%</div>
+Line 2570: <!-- TAB 3: OPR TTS -->
+Line 2571: <div id="tab-opr" class="content-panel">
+Line 2574: <div class="kpi-header"><span>Tổng đơn OPR</span></div>
+Line 2575: <div class="kpi-value" id="opr-total-vol">0</div>
+Line 2579: <div class="kpi-value" id="opr-total-ot">0</div>
+Line 2583: <div class="kpi-value" id="opr-total-late">0</div>
+Line 2588: <!-- OPR by Time slots -->
+Line 2591: <h3>% OPR theo khung giờ tạo đơn</h3>
+Line 2593: <div id="chart-opr-slots" style="min-height: 250px;"></div>
+Line 2595: <!-- OPR by AM -->
+Line 2598: <h3>Biểu đồ OPR xếp hạng lỗi trễ của AM</h3>
+Line 2600: <div id="chart-opr-am" style="min-height: 250px;"></div>
+Line 2608: <h3>Tỷ trọng và lý do trễ hạn OPR</h3>
+Line 2611: <table class="custom-table" id="table-opr-errors">
+Line 2631: <table class="custom-table" id="table-opr-details">
+Line 2646: <div class="pagination" id="opr-details-pagination">
+Line 2647: <button class="btn btn-secondary" onclick="prevPage('opr')">Trước</button>
+Line 2648: <span id="opr-page-num">1 / 1</span>
+Line 2649: <button class="btn btn-secondary" onclick="nextPage('opr')">Sau</button>
+Line 3211: <i class="fa-solid fa-user-clock" style="color: var(--color-indigo);"></i> OPR TTS (OPR + OE_madh)
+Line 3213: <input type="text" id="sheet-opr-url" class="text-input" style="width: 100%;" placeholder="https://docs.google.com/spreadsheets/d/...">
+Line 3316: <label class="permission-item"><input type="checkbox" value="tab-opr" checked> OPR TTS</label>
+Line 3383: opr: {},
+Line 3395: opr: { current: 1, perPage: 15 },
+Line 3469: const isOpsTab = tabId === 'tab-operational' || tabId === 'tab-opr' || tabId === 'tab-backlog';
+Line 3577: 'tab-opr',
+Line 3700: 'tab-opr': 'OPR',
+Line 3906: document.getElementById('sheet-opr-url').value = config.opr_url || '';
+Line 3921: opr_url: document.getElementById('sheet-opr-url').value.trim(),
+Line 3965: const oprPromise = fetch(getApiUrl('/api/opr'), getFetchOptions()).then(r => r.json());
+Line 3971: const [opsData, oprData, blData, unstableData, offSpeData, volCreationData] = await Promise.all([
+Line 3973: oprPromise,
+Line 3981: globalData.opr = oprData;
+Line 3998: renderOprDashboard();
+Line 4228: // OPR AMs
+Line 4229: if (globalData.opr.am_performance) {
+Line 4230: globalData.opr.am_performance.forEach(r => r.AM && amSet.add(r.AM));
+Line 4303: // Filter OPR
+Line 4304: if (globalData.opr.oe_details) {
+Line 4305: filteredData.oe_details = globalData.opr.oe_details.filter(r =>
+Line 4325: paginationState.opr.current = 1;
+Line 4330: renderOprDetailsTable();
+Line 4405: const opr = globalData.opr;
+Line 4411: document.getElementById('kpi-opr').innerText = opr.overall_opr ? opr.overall_opr + " %" : "- %";
+Line 4462: const oprCompEl = document.getElementById('kpi-opr-comparison');
+Line 4463: if (oprCompEl) {
+Line 4464: const deltaN1 = opr.delta_n1;
+Line 4465: const deltaWk = opr.delta_wk;
+Line 4466: oprCompEl.innerHTML = `
+Line 4626: // RENDER: OPR TTS DASHBOARD (TAB 3)
+Line 4628: let oprSlotsChart = null;
+Line 4629: let oprAmChart = null;
+Line 4631: function renderOprDashboard() {
+Line 4632: const opr = globalData.opr;
+Line 4634: document.getElementById('opr-total-vol').innerText = (opr.total_volume || 0).toLocaleString();
+Line 4635: document.getElementById('opr-total-ot').innerText = (opr.total_ontime || 0).toLocaleString();
+Line 4636: document.getElementById('opr-total-late').innerText = (opr.total_late || 0).toLocaleString();
+Line 4638: // Render OPR Time slots bar chart
+Line 4639: const slots = opr.time_slots ? opr.time_slots.map(r => r['Khung giờ tạo'] || r['khung_gio_tao_don']) : [];
+Line 4640: const slotOpr = opr.time_slots ? opr.time_slots.map(r => roundNum(r['% OPR'])) : [];
+Line 4644: series: [{ name: '% OPR', data: slotOpr }],
+Line 4655: if (oprSlotsChart) oprSlotsChart.destroy();
+Line 4656: oprSlotsChart = new ApexCharts(document.querySelector("#chart-opr-slots"), slotsOptions);
+Line 4657: oprSlotsChart.render();
+Line 4659: // Render OPR by AM rankings
+Line 4660: const ams = opr.am_performance ? opr.am_performance.map(r => r.AM) : [];
+Line 4661: const amOpr = opr.am_performance ? opr.am_performance.map(r => roundNum(r['% OPR'])) : [];
+Line 4665: series: [{ name: '% OPR', data: amOpr }],
+Line 4676: if (oprAmChart) oprAmChart.destroy();
+Line 4677: oprAmChart = new ApexCharts(document.querySelector("#chart-opr-am"), amOptions);
+Line 4678: oprAmChart.render();
+Line 4681: const tbodyErrors = document.querySelector('#table-opr-errors tbody');
+Line 4683: if (opr.error_reasons) {
+Line 4684: opr.error_reasons.forEach(r => {
+Line 4696: filteredData.oe_details = opr.oe_details || [];
+Line 4700: function renderOprDetailsTable() {
+Line 4701: const tbody = document.querySelector('#table-opr-details tbody');
+Line 4704: const page = paginationState.opr.current;
+Line 4705: const perPage = paginationState.opr.perPage;
+Line 4712: document.getElementById('opr-page-num').innerText = '1 / 1';
+Line 4731: document.getElementById('opr-page-num').innerText = `${page} / ${totalPages}`;
+Line 5687: if (type === 'opr') renderOprDetailsTable();
+Line 5695: if (type === 'opr') total = filteredData.oe_details.length;
+Line 5702: if (type === 'opr') renderOprDetailsTable();
+Line 7189: Xin chào! Mình là <strong>Trợ lý NTB</strong>. Mình hỗ trợ trả lời nhanh các câu hỏi vận hành khu vực NTB. Bạn có thể hỏi về OPR, ODR, Bưu cục tệ nhất, Backlog, GTC/LTC.
+Line 7194: <button class="suggestion-btn" onclick="sendQuickPrompt('Tỷ lệ OPR')">📊 Tỷ lệ OPR</button>

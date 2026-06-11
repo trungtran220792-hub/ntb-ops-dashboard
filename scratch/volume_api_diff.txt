@@ -1,0 +1,20 @@
+--- Current API
++++ Backup API
+@@ -8,7 +8,7 @@
+             DF_BUU_CUC_TYPE_MAP = load_buu_cuc_type_map()
+             
+     if DF_TAO_DON_CACHE is None:
+-        return jsonify({"error": "Không tìm thấy file vols_tao_don.csv. Vui lòng cấu hình Google Sheet và đồng bộ!"}), 404
++        return jsonify({"error": "Không tìm thấy file vols_tao_don.xlsx. Vui lòng cấu hình Google Sheet và đồng bộ!"}), 404
+         
+     try:
+         df = DF_TAO_DON_CACHE.copy()
+@@ -254,7 +254,7 @@
+             
+             merged_growth = pd.merge(vol_d, vol_d7, on='Bưu cục', suffixes=('_d', '_d7'), how='left').fillna(0)
+             merged_growth['growth_abs'] = merged_growth['Volume_d'] - merged_growth['Volume_d7']
+-            merged_growth['growth_pct'] = (merged_growth['growth_abs'] / merged_growth['Volume_d7'] * 100).replace(np.inf, 100.0).replace(-np.inf, -100.0).fillna(0)
++            merged_growth['growth_pct'] = (merged_growth['growth_abs'] / merged_growth['Volume_d7'] * 100).replace([np.inf, -np.inf], 0).fillna(0)
+             
+             # Sort by absolute growth descending
+             merged_growth = merged_growth.sort_values(by='growth_abs', ascending=False)

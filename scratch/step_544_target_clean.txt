@@ -1,0 +1,39 @@
+        function setAmOprSort(dir) {
+            amOprSortDir = dir;
+            document.getElementById('sort-am-asc').classList.toggle('active', dir === 'asc');
+            document.getElementById('sort-am-desc').classList.toggle('active', dir === 'desc');
+            renderOprAmChartOnly();
+        }
+
+        function renderOprAmChartOnly() {
+            const opr = globalData.opr;
+            if (!opr || !opr.am_performance) return;
+
+            let amPerformance = [...opr.am_performance];
+            if (amOprSortDir === 'asc') {
+                amPerformance.sort((a, b) => (a['% OPR'] || 0) - (b['% OPR'] || 0));
+            } else {
+                amPerformance.sort((a, b) => (b['% OPR'] || 0) - (a['% OPR'] || 0));
+            }
+
+            const ams = amPerformance.map(r => r.AM);
+            const amOpr = amPerformance.map(r => roundNum(r['% OPR']));
+            const chartHeight = Math.max(250, ams.length * 30);
+
+            const amOptions = {
+                chart: { type: 'bar', height: chartHeight, toolbar: { show: false }, background: 'transparent' },
+                series: [{ name: '% OPR', data: amOpr }],
+                xaxis: { categories: ams, labels: { style: { colors: '#64748b' } } },
+                yaxis: { max: 100, labels: { style: { colors: '#64748b' } } },
+                colors: ['#ff5f00'],
+                plotOptions: { bar: { borderRadius: 4, horizontal: true, barHeight: '60%' } },
+                theme: { mode: 'light' },
+                annotations: {
+                    xaxis: [{ x: 80, borderColor: '#ef4444', label: { text: 'KPI 80%', style: { color: '#ffffff', background: '#ef4444' } } }]
+                }
+            };
+
+            if (oprAmChart) oprAmChart.destroy();
+            oprAmChart = new ApexCharts(document.querySelector("#chart-opr-am"), amOptions);
+            oprAmChart.render();
+        }

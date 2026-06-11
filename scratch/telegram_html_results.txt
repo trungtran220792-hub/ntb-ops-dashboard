@@ -1,0 +1,89 @@
+Telegram tags found: 6
+  <div class="card" id="card-telegram-ai-config" style="margin-top: 24px; margin-bottom: 24px;">
+  <i class="fa-brands fa-telegram" style="color: #229ED9;">
+  <input type="password" id="telegram-bot-token" class="text-input" style="width: 100%;" placeholder="Nhập Token của Bot Telegram...">
+  <input type="text" id="telegram-chat-id" class="text-input" style="width: 100%;" placeholder="Ví dụ: -100xxxxxxxxxx hoặc Chat ID...">
+  <button class="btn" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; padding: 10px 20px; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2); border: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;" onclick="sendTelegramAiBriefing()">
+  <button class="btn" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 10px 20px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2); border: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;" onclick="sendTelegramWarning()">
+Text nodes with Telegram: 13
+  !-- Telegram & AI Config Card --
+  div class="card" id="card-telegram-ai-config" style="margin-top: 24px; margin-bottom: 24px;"
+  Cấu hình Telegram & Trợ lý AI Cảnh báo
+  Hướng dẫn cấu hình AI Bot Telegram:
+  Telegram Bot Token
+  để AI tạo báo cáo chi tiết gửi Telegram, hoặc
+  i class="fa-brands fa-telegram" style="color: #229ED9;"
+  Telegram Bot Token
+  input type="password" id="telegram-bot-token" class="text-input" style="width: 100%;" placeholder="Nhập Token của Bot Telegram..."
+  input type="text" id="telegram-chat-id" class="text-input" style="width: 100%;" placeholder="Ví dụ: -100xxxxxxxxxx hoặc Chat ID..."
+  button class="btn" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; padding: 10px 20px; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2); border: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;" onclick="sendTelegramAiBriefing()"
+  button class="btn" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 10px 20px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2); border: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;" onclick="sendTelegramWarning()"
+  {
+            const isLoggedIn = await checkUserRole();
+            if (isLoggedIn) {
+                loadAllData();
+                loadFilesStatus();
+                loadHistoryDropdown();
+                loadNtbSummaryData();
+                loadGoogleSheetsConfig();
+                loadNtbStructure();
+            }
+        });
+
+        async function loadGoogleSheetsConfig() {
+            try {
+                const res = await fetch(getApiUrl('/api/config'), getFetchOptions());
+                if (res.ok) {
+                    const config = await res.json();
+                    document.getElementById('sheet-consolidated-url').value = config.consolidated_url || '';
+                }
+            } catch (err) {
+                console.error("Lỗi load cấu hình Google Sheets: ", err);
+            }
+        }
+
+        async function saveGoogleSheetsConfig() {
+            const config = {
+                consolidated_url: document.getElementById('sheet-consolidated-url').value.trim(),
+                telegram_bot_token: document.getElementById('telegram-bot-token') ? document.getElementById('telegram-bot-token').value.trim() : '',
+                telegram_chat_id: document.getElementById('telegram-chat-id') ? document.getElementById('telegram-chat-id').value.trim() : '',
+                gemini_api_key: document.getElementById('gemini-api-key') ? document.getElementById('gemini-api-key').value.trim() : ''
+            };
+
+            showLoading("Đang lưu cấu hình...");
+            try {
+                const res = await fetch(getApiUrl('/api/config'), getFetchOptions({
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(config)
+                }));
+                if (res.ok) {
+                    alert("Lưu cấu hình thành công!");
+                    loadGoogleSheetsConfig(); // reload to get masked keys
+                } else {
+                    const err = await res.json();
+                    alert("Lưu cấu hình thất bại: " + err.error);
+                }
+            } catch (err) {
+                alert("Lỗi kết nối khi lưu cấu hình: " + err.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function showLoading(text = "Đang tải dữ liệu...") {
+            document.getElementById('loading-text').innerText = text;
+            document.getElementById('loading-overlay').classList.add('active');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-overlay').classList.remove('active');
+        }
+
+        async function loadAllData(baseline = "") {
+            showLoading("Đang tải dữ liệu báo cáo...");
+            try {
+                // Fetch in parallel
+                const opsPromise = fetch(getApiUrl('/api/operational'), getFetchOptions()).then(r =

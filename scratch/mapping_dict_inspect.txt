@@ -1,0 +1,9 @@
+df_co_cau columns: ['Mã bưu cục', 'Bưu cục', 'BC', 'Tỉnh', 'Am', 'ID - Họ Tên Am']
+Row 5: bc='điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', buucuc='điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông', am='Trần Văn Phước', prov='Đắk Nông'
+Row 6: bc='điểm xử lý hàng tdp 8 quốc lộ 14-đông gia nghĩa-lâm đồng', buucuc='điểm xử lý hàng tdp 8 quốc lộ 14-đông gia nghĩa-lâm đồng', am='Trần Công Hậu', prov='Đắk Nông'
+Row 17: bc='điểm lấy hàng nguyễn đình chiểu-nghĩa tân-gia nghĩa-đăk nông', buucuc='điểm lấy hàng nguyễn đình chiểu-nghĩa tân-gia nghĩa-đăk nông', am='Trần Thị Nhung', prov='Đắk Nông'
+
+--- bc_to_am query ---
+'điểm xử lý hàng thôn 2-xã nhân cơ-đắk nông': am='Trần Văn Phước', prov='Đắk Nông'
+'điểm xử lý hàng tdp 8 quốc lộ 14-đông gia nghĩa-lâm đồng': am='Trần Công Hậu', prov='Đắk Nông'
+'điểm lấy hàng nguyễn đình chiểu-nghĩa tân-gia nghĩa-đăk nông': am='Trần Thị Nhung', prov='Đắk Nông'

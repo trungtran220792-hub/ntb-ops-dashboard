@@ -1,0 +1,351 @@
+{
+  "all_dates": [
+    "W25 (08/06 - 14/06)",
+    "W24 (01/06 - 07/06)",
+    "W23 (25/05 - 31/05)",
+    "W22 (18/05 - 24/05)",
+    "W21 (11/05 - 17/05)"
+  ],
+  "backlog_by_am": [
+    {
+      "am": "",
+      "chua_giao": 1361,
+      "chua_lay": 58,
+      "chua_tra": 203
+    },
+    {
+      "am": "Không xác định",
+      "chua_giao": 19,
+      "chua_lay": 0,
+      "chua_tra": 0
+    }
+  ],
+  "completed_vols": [
+    {
+      "GTC": 14596,
+      "GTC_pct": 74.4,
+      "LTC": 2960,
+      "LTC_pct": 95.09,
+      "TTC": 14978,
+      "TTC_pct": 76.35,
+      "Volume_gtc": 19619,
+      "Volume_ltc": 3114,
+      "province": "Bình Thuận"
+    },
+    {
+      "GTC": 14266,
+      "GTC_pct": 62.45,
+      "LTC": 4142,
+      "LTC_pct": 88.87,
+      "TTC": 14874,
+      "TTC_pct": 65.11,
+      "Volume_gtc": 22845,
+      "Volume_ltc": 4662,
+      "province": "Khánh Hòa"
+    },
+    {
+      "GTC": 121,
+      "GTC_pct": 75.78,
+      "LTC": 32,
+      "LTC_pct": 86.49,
+      "TTC": 123,
+      "TTC_pct": 77.02,
+      "Volume_gtc": 161,
+      "Volume_ltc": 37,
+      "province": "Không xác định"
+    },
+    {
+      "GTC": 15155,
+      "GTC_pct": 58.4,
+      "LTC": 4474,
+      "LTC_pct": 92.29,
+      "TTC": 15695,
+      "TTC_pct": 60.48,
+      "Volume_gtc": 25951,
+      "Volume_ltc": 4848,
+      "province": "Lâm Đồng"
+    },
+    {
+      "GTC": 5434,
+      "GTC_pct": 69.47,
+      "LTC": 2655,
+      "LTC_pct": 96.86,
+      "TTC": 5653,
+      "TTC_pct": 72.27,
+      "Volume_gtc": 7823,
+      "Volume_ltc": 2742,
+      "province": "Ninh Thuận"
+    },
+    {
+      "GTC": 5282,
+      "GTC_pct": 57.15,
+      "LTC": 3522,
+      "LTC_pct": 86.86,
+      "TTC": 5526,
+      "TTC_pct": 59.79,
+      "Volume_gtc": 9242,
+      "Volume_ltc": 4055,
+      "province": "Đắk Nông"
+    }
+  ],
+  "kpis": {
+    "binh_thuan": {
+      "dod": {
+        "gtc": 5.63,
+        "ltc": 0.66,
+        "prev_date_str": "W24",
+        "prev_gtc": 68.77,
+        "prev_ltc": 94.43,
+        "prev_ttc": 70.7,
+        "ttc": 5.65
+      },
+      "gtc": 74.4,
+      "ltc": 95.09,
+      "n3": null,
+      "name": "Bình Thuận",
+      "ttc": 76.35,
+      "vol_gtc": 19619,
+      "vol_ltc": 3114,
+      "w1_avg": {
+        "days_count": 2,
+        "gtc": 69.56,
+        "ltc": 94.52,
+        "ttc": 71.49
+      },
+      "w2_avg": {
+        "days_count": 2,
+        "gtc": 69.02,
+        "ltc": 91.81,
+        "ttc": 70.95
+      },
+      "wow": {
+        "gtc": 6.94,
+        "ltc": 2.93,
+        "lw_gtc": 67.46,
+        "lw_ltc": 92.16,
+        "lw_ttc": 69.38,
+        "ttc": 6.97
+      },
+      "wow_avg": {
+        "gtc": 0.54,
+        "ltc": 2.71,
+        "ttc": 0.54
+      }
+    },
+    "dak_nong": {
+      "dod": {
+        "gtc": -0.91,
+        "ltc": -0.1,
+        "prev_date_str": "W24",
+        "prev_gtc": 58.06,
+        "prev_ltc": 86.96,
+        "prev_ttc": 60.46,
+        "ttc": -0.67
+      },
+      "gtc": 57.15,
+      "ltc": 86.86,
+      "n3": null,
+      "name": "Đắk Nông",
+      "ttc": 59.79,
+      "vol_gtc": 9242,
+      "vol_ltc": 4055,
+      "w1_avg": {
+        "days_count": 2,
+        "gtc": 57.94,
+        "ltc": 86.94,
+        "ttc": 60.37
+      },
+      "w2_avg": {
+        "days_count": 2,
+        "gtc": 58.43,
+        "ltc": 83.89,
+        "ttc": 60.93
+      },
+      "wow": {
+        "gtc": -0.23,
+        "ltc": 4.14,
+        "lw_gtc": 57.38,
+        "lw_ltc": 82.72,
+        "lw_ttc": 59.94,
+        "ttc": -0.15
+      },
+      "wow_avg": {
+        "gtc": -0.49,
+        "ltc": 3.05,
+        "ttc": -0.56
+      }
+    },
+    "khanh_hoa": {
+      "dod": {
+        "gtc": 0.69,
+        "ltc": -1.73,
+        "prev_date_str": "W24",
+        "prev_gtc": 61.76,
+        "prev_ltc": 90.6,
+        "prev_ttc": 64.55,
+        "ttc": 0.56
+      },
+      "gtc": 62.45,
+      "ltc": 88.87,
+      "n3": null,
+      "name": "Khánh Hòa",
+      "ttc": 65.11,
+      "vol_gtc": 22845,
+      "vol_ltc": 4662,
+      "w1_avg": {
+        "days_count": 2,
+        "gtc": 61.86,
+        "ltc": 90.35,
+        "ttc": 64.63
+      },
+      "w2_avg": {
+        "days_count": 2,
+        "gtc": 55.2,
+        "ltc": 89.92,
+        "ttc": 57.69
+      },
+      "wow": {
+        "gtc": 4.73,
+        "ltc": -1.89,
+        "lw_gtc": 57.72,
+        "lw_ltc": 90.76,
+        "lw_ttc": 60.57,
+        "ttc": 4.54
+      },
+      "wow_avg": {
+        "gtc": 6.66,
+        "ltc": 0.43,
+        "ttc": 6.94
+      }
+    },
+    "lam_dong": {
+      "dod": {
+        "gtc": 5.63,
+        "ltc": -0.15,
+        "prev_date_str": "W24",
+        "prev_gtc": 52.77,
+        "prev_ltc": 92.44,
+        "prev_ttc": 54.86,
+        "ttc": 5.62
+      },
+      "gtc": 58.4,
+      "ltc": 92.29,
+      "n3": null,
+      "name": "Lâm Đồng",
+      "ttc": 60.48,
+      "vol_gtc": 25951,
+      "vol_ltc": 4848,
+      "w1_avg": {
+        "days_count": 2,
+        "gtc": 53.51,
+        "ltc": 92.42,
+        "ttc": 55.6
+      },
+      "w2_avg": {
+        "days_count": 2,
+        "gtc": 50.83,
+        "ltc": 91.65,
+        "ttc": 52.94
+      },
+      "wow": {
+        "gtc": 8.65,
+        "ltc": 0.51,
+        "lw_gtc": 49.75,
+        "lw_ltc": 91.78,
+        "lw_ttc": 51.94,
+        "ttc": 8.54
+      },
+      "wow_avg": {
+        "gtc": 2.68,
+        "ltc": 0.77,
+        "ttc": 2.66
+      }
+    },
+    "ninh_thuan": {
+      "dod": {
+        "gtc": 1.57,
+        "ltc": 0.08,
+        "prev_date_str": "W24",
+        "prev_gtc": 67.9,
+        "prev_ltc": 96.78,
+        "prev_ttc": 70.69,
+        "ttc": 1.58
+      },
+      "gtc": 69.47,
+      "ltc": 96.86,
+      "n3": null,
+      "name": "Ninh Thuận",
+      "ttc": 72.27,
+      "vol_gtc": 7823,
+      "vol_ltc": 2742,
+      "w1_avg": {
+        "days_count": 2,
+        "gtc": 68.12,
+        "ltc": 96.8,
+        "ttc": 70.91
+      },
+      "w2_avg": {
+        "days_count": 2,
+        "gtc": 67.29,
+        "ltc": 95.71,
+        "ttc": 70.05
+      },
+      "wow": {
+        "gtc": 3.29,
+        "ltc": 0.49,
+        "lw_gtc": 66.18,
+        "lw_ltc": 96.37,
+        "lw_ttc": 69.05,
+        "ttc": 3.22
+      },
+      "wow_avg": {
+        "gtc": 0.83,
+        "ltc": 1.09,
+        "ttc": 0.86
+      }
+    },
+    "overall": {
+      "dod": {
+        "gtc": 3.46,
+        "ltc": -0.03,
+        "prev_date_str": "W24",
+        "prev_gtc": 60.6,
+        "prev_ltc": 91.45,
+        "prev_ttc": 62.93,
+        "ttc": 3.46
+      },
+      "gtc": 64.06,
+      "ltc": 91.42,
+      "n3": null,
+      "ttc": 66.39,
+      "vol_gtc": 85641,
+      "vol_ltc": 19458,
+      "w1_avg": {
+        "days_count": 2,
+        "gtc": 61.07,
+        "ltc": 91.44,
+        "ttc": 63.4
+      },
+      "w2_avg": {
+        "days_count": 2,
+        "gtc": 58.03,
+        "ltc": 89.75,
+        "ttc": 60.31
+      },
+      "wow": {
+        "gtc": 6.18,
+        "ltc": 1.6,
+        "lw_gtc": 57.88,
+        "lw_ltc": 89.82,
+        "lw_ttc": 60.28,
+        "ttc": 6.11
+      },
+      "wow_avg": {
+        "gtc": 3.04,
+        "ltc": 1.69,
+        "ttc": 3.09
+      }
+    }
+  },
+  "latest_date": "W25 (08/06 - 14/06)"
+}

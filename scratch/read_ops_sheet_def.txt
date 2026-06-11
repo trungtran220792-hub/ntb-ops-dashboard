@@ -1,0 +1,40 @@
+L463: def read_ops_sheet(xls, sheet_type):
+L464:     sheet_names_lower = [s.strip().lower() for s in xls.sheet_names]
+L465:     
+L466:     if sheet_type == "gtc":
+L467:         for candidate in ["datagtc", "data"]:
+L468:             if candidate in sheet_names_lower:
+L469:                 idx = sheet_names_lower.index(candidate)
+L470:                 df = pd.read_excel(xls, sheet_name=xls.sheet_names[idx])
+L471:                 
+L472:                 # Normalize column names in df to standard GTC ones
+L473:                 cols_lower = {c.strip().lower(): c for c in df.columns}
+L474:                 rename_map = {}
+L475:                 core_gtc_cols = {
+L476:                     'cấp quản lý': 'Cấp Quản Lý',
+L477:                     'chi tiết': 'Chi tiết',
+L478:                     'loại hàng': 'Loại Hàng',
+L479:                     'time': 'Time',
+L480:                     'volume': 'Volume',
+L481:                     '% gán': '% Gán',
+L482:                     '% gtc': '% GTC',
+L483:                     '% chuyển trả': '% Chuyển trả',
+L484:                     'leadtime': 'Leadtime',
+L485:                     'am': 'AM',
+L486:                     'tỉnh': 'Tỉnh'
+L487:                 }
+L488:                 for k, standard_name in core_gtc_cols.items():
+L489:                     if k in cols_lower and cols_lower[k] != standard_name:
+L490:                         rename_map[cols_lower[k]] = standard_name
+L491:                 if rename_map:
+L492:                     df = df.rename(columns=rename_map)
+L493:                 return df
+L494:         raise ValueError(f"Không tìm thấy sheet GTC (cần Datagtc hoặc Data) trong file. Các sheet hiện có: {xls.sheet_names}")
+L495:         
+L496:     elif sheet_type == "ltc":
+L497:         # First priority: look for dataltc, rawltc, datalts, ltc
+L498:         for candidate in ["dataltc", "rawltc", "datalts", "ltc"]:
+L499:             if candidate in sheet_names_lower:
+L500:                 idx = sheet_names_lower.index(candidate)
+L501:                 df = pd.read_excel(xls, sheet_name=xls.sheet_names[idx])
+L502:                 

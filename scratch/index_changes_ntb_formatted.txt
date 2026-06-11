@@ -1,0 +1,536 @@
+function renderNtbAnalysisTable(type) {
+            const tableBody = document.getElementById(`tbody-ntb-${type}-analysis`);
+            if (!tableBody) return;
+            
+            if (!cachedNtbMatrixData || !cachedNtbMatrixData[type]) {
+                tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có dữ liệu</td></tr>`;
+                return;
+            }
+            
+            const matrix = cachedNtbMatrixData[type];
+            const timeGroupEl = document.getElementById('ntb-time-group');
+            const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';
+            
+            let targetDate = cachedNtbSummaryData ? cachedNtbSummaryData.latest_date : null;
+            let targetDateKey = targetDate;
+            if (targetDateKey && timeGroup === 'tuan') {
+                targetDateKey = targetDateKey.split(' ')[0];
+            }
+            
+            if (!matrix.dates || matrix.dates.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có cấu hình ngày</td></tr>`;
+                return;
+            }
+            
+            let dateKey = targetDateKey;
+            if (!matrix.dates.includes(dateKey)) {
+                dateKey = matrix.dates[0];
+            }
+            
+            const groupType = ntbGroupType[type];
+        
+<truncated 8647 bytes>
+
+================================================================================
+
+--- STEP 1171 | Tool: replace_file_content ---
+Description: "Modify switchNtbRegion to trigger re-rendering of LTC and GTC analysis tables on region capsule change"
+Instruction: "Call renderNtbAnalysisTable for both ltc and gtc inside switchNtbRegion"
+--- TARGET CONTENT ---
+"        function switchNtbRegion(regionKey, btnEl) {
+            activeNtbRegion = regionKey;
+            
+            // Toggle active state in UI
+            document.querySelectorAll('#ntb-region-capsules .capsule-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            if (btnEl) {
+                btnEl.classList.add('active');
+            }
+            
+            // Re-render KPI cards instantly from cache
+            renderNtbKpiCards();
+        }"
+--- REPLACEMENT CONTENT ---
+"        function switchNtbRegion(regionKey, btnEl) {
+            activeNtbRegion = regionKey;
+            
+            // Toggle active state in UI
+            document.querySelectorAll('#ntb-region-capsules .capsule-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            if (btnEl) {
+                btnEl.classList.add('active');
+            }
+            
+            // Re-render KPI cards instantly from cache
+            renderNtbKpiCards();
+            
+            // Re-render analysis tables instantly from cache
+            renderNtbAnalysisTable('ltc');
+            renderNtbAnalysisTable('gtc');
+        }"
+
+================================================================================
+
+--- STEP 1177 | Tool: replace_file_content ---
+Description: "Add matchNtbRegion helper and filter rows by activeNtbRegion capsule in renderNtbAnalysisTable"
+Instruction: "Define matchNtbRegion function and insert filter checks in both po and am groups in renderNtbAnalysisTable"
+--- TARGET CONTENT ---
+"        function renderNtbAnalysisTable(type) {
+            const tableBody = document.getElementById(`tbody-ntb-${type}-analysis`);
+            if (!tableBody) return;
+            
+            if (!cachedNtbMatrixData || !cachedNtbMatrixData[type]) {
+                tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có dữ liệu</td></tr>`;
+                return;
+            }
+            
+            const matrix = cachedNtbMatrixData[type];
+            const timeGroupEl = document.getElementById('ntb-time-group');
+            const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';
+            
+            let targetDate = cachedNtbSummaryData ? cachedNtbSummaryData.latest_date : null;
+            let targetDateKey = targetDate;
+            if (targetDateKey && timeGroup === 'tuan') {
+                targetDateKey = targetDateKey.split(' ')[0];
+            }
+            
+            if (!matrix.dates || matrix.dates.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có cấu hình ngày</td></tr>`;
+                return;
+            }
+            
+            let dateKey = targetDateKey;
+            if (!matrix.dates.includes(dateKey)) {
+                dateKey = matrix.dates[0];
+            }
+            
+            const groupType = ntbGroupType[type];
+            const searchText = (ntbSearchText[type] || '').toLowerCase().trim();
+            const sortCol = ntbSortCol[type];
+            const sortAsc = ntbSortAsc[type];
+            
+            let items = [];
+            const target = type === 'ltc' ? 80 : 60;
+            
+            if (groupType === 'po') {
+                const amTh = document.getElementById(`th-${type}-am-header`);
+                if (amTh) amTh.style.display = '';
+                
+                matrix.rows.forEach(row => {
+                    row.pos.forE
+<truncated 2097 bytes>
+--- REPLACEMENT CONTENT ---
+"        function matchNtbRegion(amName, regionKey) {
+            if (regionKey === 'overall') return true;
+            const mapping = {
+                'lam_dong': ['lâm đồng', 'lam dong'],
+                'binh_thuan': ['bình thuận', 'binh thuan'],
+                'khanh_hoa': ['khánh hòa', 'khanh hoa'],
+                'dak_nong': ['đắk nông', 'dak nong'],
+                'ninh_thuan': ['ninh thuận', 'ninh thuan']
+            };
+            const targets = mapping[regionKey];
+            if (!targets) return true;
+            const nameLower = amName.toLowerCase();
+            return targets.some(target => nameLower.includes(target));
+        }
+
+        function renderNtbAnalysisTable(type) {
+            const tableBody = document.getElementById(`tbody-ntb-${type}-analysis`);
+            if (!tableBody) return;
+            
+            if (!cachedNtbMatrixData || !cachedNtbMatrixData[type]) {
+                tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có dữ liệu</td></tr>`;
+                return;
+            }
+            
+            const matrix = cachedNtbMatrixData[type];
+            const timeGroupEl = document.getElementById('ntb-time-group');
+            const timeGroup = timeGroupEl ? timeGroupEl.value : 'ngay';
+            
+            let targetDate = cachedNtbSummaryData ? cachedNtbSummaryData.latest_date : null;
+            let targetDateKey = targetDate;
+            if (targetDateKey && timeGroup === 'tuan') {
+                targetDateKey = targetDateKey.split(' ')[0];
+            }
+            
+            if (!matrix.dates || matrix.dates.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">Không có cấu hình ngày</td></tr>`;
+                return;
+            }
+            
+            let dateKey = targetDateKey;
+            if (!matrix.dates.includes(dat
+<truncated 2978 bytes>
+
+================================================================================
+
+--- STEP 1405 | Tool: replace_file_content ---
+Description: "Modify targets in quality cards and rename % TTC to % ODR TTS in templates/index.html"
+Instruction: "Update target labels for LTC, GTC, and rename/retarget TTC to ODR TTS in quality-metric-cards"
+--- TARGET CONTENT ---
+"                        <!-- CARD 1: LTC -->
+                        <div class="quality-metric-card" style="border-top: 4px solid var(--color-indigo);">
+                            <div>
+                                <div class="metric-header">
+                                    <span class="metric-title">% LTC <span style="font-size: 11px; text-transform: none; font-weight: normal; color: var(--text-muted);" id="ltc-active-region">(Toàn vùng)</span></span>
+                                    <span style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Target: &ge; 80%</span>
+                                </div>
+                                <div class="metric-value-row">
+                                    <div class="metric-value" id="kpi-ltc-value">0%</div>
+                                    <div id="kpi-ltc-badge" class="metric-badge neutral">
+                                        <span>-</span>
+                                    </div>
+                                </div>
+                                <div class="metric-subtext" id="kpi-ltc-subtext">So với ngày trước: -</div>
+                            </div>
+                            
+                            <!-- Sparkline Chart -->
+                            <div class="sparkline-container" id="sparkline-ltc"></div>
+                            
+                            <div class="comparison-divider"></div>
+                            
+                            <!-- Comparison Row -->
+                            <div class="avg-comparison-row">
+                                <div class="avg-item">
+                                    <span class="avg-item-label" id="ltc-comp-1-label">So với n-3:</span>
+                                    <span style="display: flex; gap: 8px; align-items: center;">
+                                        <span class="avg-item-val" id="ltc-comp-1-val">- %</span>
+                                    
+<truncated 6438 bytes>
+--- REPLACEMENT CONTENT ---
+"                        <!-- CARD 1: LTC -->
+                        <div class="quality-metric-card" style="border-top: 4px solid var(--color-indigo);">
+                            <div>
+                                <div class="metric-header">
+                                    <span class="metric-title">% LTC <span style="font-size: 11px; text-transform: none; font-weight: normal; color: var(--text-muted);" id="ltc-active-region">(Toàn vùng)</span></span>
+                                    <span style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Target: &ge; 90%</span>
+                                </div>
+                                <div class="metric-value-row">
+                                    <div class="metric-value" id="kpi-ltc-value">0%</div>
+                                    <div id="kpi-ltc-badge" class="metric-badge neutral">
+                                        <span>-</span>
+                                    </div>
+                                </div>
+                                <div class="metric-subtext" id="kpi-ltc-subtext">So với ngày trước: -</div>
+                            </div>
+                            
+                            <!-- Sparkline Chart -->
+                            <div class="sparkline-container" id="sparkline-ltc"></div>
+                            
+                            <div class="comparison-divider"></div>
+                            
+                            <!-- Comparison Row -->
+                            <div class="avg-comparison-row">
+                                <div class="avg-item">
+                                    <span class="avg-item-label" id="ltc-comp-1-label">So với n-3:</span>
+                                    <span style="display: flex; gap: 8px; align-items: center;">
+                                        <span class="avg-item-val" id="ltc-comp-1-val">- %</span>
+                                    
+<truncated 6449 bytes>
+
+================================================================================
+
+--- STEP 1407 | Tool: replace_file_content ---
+Description: "Rename % TTC header to % ODR TTS in overview table in templates/index.html"
+Instruction: "Change column header % TTC to % ODR TTS in table-overview-provinces"
+--- TARGET CONTENT ---
+"                                    <th style="text-align: left;">Tỉnh / Khu vực</th>
+                                    <th style="text-align: center;">Sản lượng (GTC)</th>
+                                    <th style="text-align: center;">% GTC</th>
+                                    <th style="text-align: center;">Sản lượng (LTC)</th>
+                                    <th style="text-align: center;">% LTC</th>
+                                    <th style="text-align: center;">% TTC</th>"
+--- REPLACEMENT CONTENT ---
+"                                    <th style="text-align: left;">Tỉnh / Khu vực</th>
+                                    <th style="text-align: center;">Sản lượng (GTC)</th>
+                                    <th style="text-align: center;">% GTC</th>
+                                    <th style="text-align: center;">Sản lượng (LTC)</th>
+                                    <th style="text-align: center;">% LTC</th>
+                                    <th style="text-align: center;">% ODR TTS</th>"
+
+================================================================================
+
+--- STEP 1411 | Tool: replace_file_content ---
+Description: "Update GTC, LTC, and ODR TTS targets and badge styling in overview table JS in templates/index.html"
+Instruction: "Update targets for GTC, LTC, and ODR TTS (TTC) in overview table row generator JS"
+--- TARGET CONTENT ---
+"                        
+                        tr.innerHTML = `
+                            <td style="text-align: left; font-weight: 600;">${escapeHTML(provData.province)}</td>
+                            <td style="text-align: center;">${gtcVol.toLocaleString()}</td>
+                            <td style="text-align: center;"><span class="badge ${provData.GTC_pct >= 60 ? 'badge-success' : 'badge-danger'}">${provData.GTC_pct}%</span></td>
+                            <td style="text-align: center;">${ltcVol.toLocaleString()}</td>
+                            <td style="text-align: center;"><span class="badge ${provData.LTC_pct >= 80 ? 'badge-success' : 'badge-danger'}">${provData.LTC_pct}%</span></td>
+                            <td style="text-align: center;"><span class="badge badge-secondary">${provData.TTC_pct}%</span></td>
+                        `;
+                        ovTableBody.appendChild(tr);
+                    });
+                    
+                    // Add region total row (Toàn vùng NTB)
+                    const overall = summaryData.kpis ? summaryData.kpis.overall : null;
+                    if (overall) {
+                        const tr = document.createElement('tr');
+                        tr.style.backgroundColor = 'rgba(255, 95, 0, 0.05)';
+                        tr.style.borderTop = '2px solid var(--color-ghn-orange)';
+                        
+                        const gtcVol = overall.vol_gtc || 0;
+                        const ltcVol = overall.vol_ltc || 0;
+                        
+                        tr.innerHTML = `
+                            <td style="text-align: left; font-weight: 800; color: var(--color-ghn-orange);">Toàn vùng NTB</td>
+                            <td style="text-align: center; font-weight: 700;">${gtcVol.toLocaleString()}</td>
+                            <td style="text-align: center;"><span class="badge ${overall.gtc >= 60 ? 'badge-success' : 'badge-danger'}" style="font-weight: 700;">${ove
+<truncated 649 bytes>
+--- REPLACEMENT CONTENT ---
+"                        tr.innerHTML = `
+                            <td style="text-align: left; font-weight: 600;">${escapeHTML(provData.province)}</td>
+                            <td style="text-align: center;">${gtcVol.toLocaleString()}</td>
+                            <td style="text-align: center;"><span class="badge ${provData.GTC_pct >= 65 ? 'badge-success' : 'badge-danger'}">${provData.GTC_pct}%</span></td>
+                            <td style="text-align: center;">${ltcVol.toLocaleString()}</td>
+                            <td style="text-align: center;"><span class="badge ${provData.LTC_pct >= 90 ? 'badge-success' : 'badge-danger'}">${provData.LTC_pct}%</span></td>
+                            <td style="text-align: center;"><span class="badge ${provData.TTC_pct >= 94 ? 'badge-success' : 'badge-danger'}">${provData.TTC_pct}%</span></td>
+                        `;
+                        ovTableBody.appendChild(tr);
+                    });
+                    
+                    // Add region total row (Toàn vùng NTB)
+                    const overall = summaryData.kpis ? summaryData.kpis.overall : null;
+                    if (overall) {
+                        const tr = document.createElement('tr');
+                        tr.style.backgroundColor = 'rgba(255, 95, 0, 0.05)';
+                        tr.style.borderTop = '2px solid var(--color-ghn-orange)';
+                        
+                        const gtcVol = overall.vol_gtc || 0;
+                        const ltcVol = overall.vol_ltc || 0;
+                        
+                        tr.innerHTML = `
+                            <td style="text-align: left; font-weight: 800; color: var(--color-ghn-orange);">Toàn vùng NTB</td>
+                            <td style="text-align: center; font-weight: 700;">${gtcVol.toLocaleString()}</td>
+                            <td style="text-align: center;"><span class="badge ${overall.gtc >= 65 ? 'badge-success' : 'badge-danger'}" style="font-w
+<truncated 654 bytes>
+
+================================================================================
+
+--- STEP 1415 | Tool: replace_file_content ---
+Description: "Update target rates for ranking tables in templates/index.html"
+Instruction: "Change target variables for LTC and GTC ranking tables to 90% and 65%"
+--- TARGET CONTENT ---
+"            let items = [];
+            const target = type === 'ltc' ? 80 : 60;"
+--- REPLACEMENT CONTENT ---
+"            let items = [];
+            const target = type === 'ltc' ? 90 : 65;"
+
+================================================================================
+
+--- STEP 1419 | Tool: replace_file_content ---
+Description: "Add Khánh Hòa, Đắk Nông, and Ninh Thuận to trend line charts and update color palette in templates/index.html"
+Instruction: "Add missing provinces to ApexCharts trends arrays and update colors palette to have 6 items"
+--- TARGET CONTENT ---
+"                const ltcLines = [];
+                if (trends.overall) ltcLines.push({ name: 'Toàn vùng', data: trends.overall.ltc });
+                const ldTrendLtc = getProvinceTrendData('lam_dong', trends);
+                if (ldTrendLtc) ltcLines.push({ name: 'Lâm Đồng', data: ldTrendLtc.ltc });
+                const btTrendLtc = getProvinceTrendData('binh_thuan', trends);
+                if (btTrendLtc) ltcLines.push({ name: 'Bình Thuận', data: btTrendLtc.ltc });
+
+                const ltcTrendOptions = {
+                    chart: { type: 'line', height: 280, toolbar: { show: false }, background: 'transparent' },
+                    series: ltcLines,
+                    xaxis: { categories: trendDates.map(d => d.split(" - ")[0]), labels: { style: { colors: '#64748b' } } },
+                    yaxis: { title: { text: 'Tỷ lệ %' }, min: 40, max: 100, labels: { style: { colors: '#64748b' } } },
+                    colors: ['#ff5f00', '#007bc3', '#10b981'],
+                    stroke: { width: 3, curve: 'smooth' },
+                    theme: { mode: 'light' },
+                    legend: { position: 'bottom', labels: { colors: '#64748b' } },
+                    dataLabels: { enabled: true, formatter: val => val + "%", style: { fontSize: '9px' } }
+                };
+
+                if (ntbLtcTrendChart) ntbLtcTrendChart.destroy();
+                ntbLtcTrendChart = new ApexCharts(document.querySelector("#chart-ntb-ltc-trend"), ltcTrendOptions);
+                ntbLtcTrendChart.render();
+
+                const gtcLines = [];
+                if (trends.overall) gtcLines.push({ name: 'Toàn vùng', data: trends.overall.gtc });
+                const ldTrendGtc = getProvinceTrendData('lam_dong', trends);
+                if (ldTrendGtc) gtcLines.push({ name: 'Lâm Đồng', data: ldTrendGtc.gtc });
+                const btTrendGtc = getProvinceTrendData('binh_thuan', trends);
+                if (btTrendGtc) gtcLines.push({ name: 'Bình Thuận', data: btTrendGtc.gtc 
+<truncated 1070 bytes>
+--- REPLACEMENT CONTENT ---
+"                const ltcLines = [];
+                if (trends.overall) ltcLines.push({ name: 'Toàn vùng', data: trends.overall.ltc });
+                const ldTrendLtc = getProvinceTrendData('lam_dong', trends);
+                if (ldTrendLtc) ltcLines.push({ name: 'Lâm Đồng', data: ldTrendLtc.ltc });
+                const btTrendLtc = getProvinceTrendData('binh_thuan', trends);
+                if (btTrendLtc) ltcLines.push({ name: 'Bình Thuận', data: btTrendLtc.ltc });
+                const khTrendLtc = getProvinceTrendData('khanh_hoa', trends);
+                if (khTrendLtc) ltcLines.push({ name: 'Khánh Hòa', data: khTrendLtc.ltc });
+                const dnTrendLtc = getProvinceTrendData('dak_nong', trends);
+                if (dnTrendLtc) ltcLines.push({ name: 'Đắk Nông', data: dnTrendLtc.ltc });
+                const ntTrendLtc = getProvinceTrendData('ninh_thuan', trends);
+                if (ntTrendLtc) ltcLines.push({ name: 'Ninh Thuận', data: ntTrendLtc.ltc });
+
+                const ltcTrendOptions = {
+                    chart: { type: 'line', height: 280, toolbar: { show: false }, background: 'transparent' },
+                    series: ltcLines,
+                    xaxis: { categories: trendDates.map(d => d.split(" - ")[0]), labels: { style: { colors: '#64748b' } } },
+                    yaxis: { title: { text: 'Tỷ lệ %' }, min: 40, max: 100, labels: { style: { colors: '#64748b' } } },
+                    colors: ['#ff5f00', '#007bc3', '#10b981', '#8b5cf6', '#f59e0b', '#ec4899'],
+                    stroke: { width: 3, curve: 'smooth' },
+                    theme: { mode: 'light' },
+                    legend: { position: 'bottom', labels: { colors: '#64748b' } },
+                    dataLabels: { enabled: true, formatter: val => val + "%", style: { fontSize: '9px' } }
+                };
+
+                if (ntbLtcTrendChart) ntbLtcTrendChart.destroy();
+                ntbLtcTrendChart = new ApexCharts(document.querySelector("#chart-ntb-ltc-trend
+<truncated 2184 bytes>
+
+================================================================================
+
+--- STEP 1441 | Tool: replace_file_content ---
+Description: "Remove target evaluation status column from LTC table in templates/index.html"
+Instruction: "Remove Đánh giá header column and change colspan from 8 to 7 in table-ntb-ltc-analysis"
+--- TARGET CONTENT ---
+"                        <table class="custom-table" id="table-ntb-ltc-analysis" style="border-collapse: separate; border-spacing: 0;">
+                            <thead style="position: sticky; top: 0; background: var(--card-bg); z-index: 10;">
+                                <tr style="cursor: pointer; user-select: none;">
+                                    <th onclick="handleNtbSort('ltc', 'rank')" style="width: 70px;">Hạng <span id="sort-icon-ltc-rank">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'name')">Bưu cục / AM <span id="sort-icon-ltc-name">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'am')" id="th-ltc-am-header">AM Quản lý <span id="sort-icon-ltc-am">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'pick_vol')" style="text-align: right;">Sản lượng LTC <span id="sort-icon-ltc-pick_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'total_vol')" style="text-align: right;">Tổng sản lượng <span id="sort-icon-ltc-total_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'prop')" style="text-align: right;">Tỷ trọng <span id="sort-icon-ltc-prop">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'pct')" style="text-align: right;">LTC % <span id="sort-icon-ltc-pct">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'status')" style="width: 110px; text-align: center;">Đánh giá <span id="sort-icon-ltc-status">↕</span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-ntb-ltc-analysis">
+                                <tr>
+                                    <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">Đang tải dữ liệu...</
+<truncated 115 bytes>
+--- REPLACEMENT CONTENT ---
+"                        <table class="custom-table" id="table-ntb-ltc-analysis" style="border-collapse: separate; border-spacing: 0;">
+                            <thead style="position: sticky; top: 0; background: var(--card-bg); z-index: 10;">
+                                <tr style="cursor: pointer; user-select: none;">
+                                    <th onclick="handleNtbSort('ltc', 'rank')" style="width: 70px;">Hạng <span id="sort-icon-ltc-rank">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'name')">Bưu cục / AM <span id="sort-icon-ltc-name">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'am')" id="th-ltc-am-header">AM Quản lý <span id="sort-icon-ltc-am">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'pick_vol')" style="text-align: right;">Sản lượng LTC <span id="sort-icon-ltc-pick_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'total_vol')" style="text-align: right;">Tổng sản lượng <span id="sort-icon-ltc-total_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'prop')" style="text-align: right;">Tỷ trọng <span id="sort-icon-ltc-prop">↕</span></th>
+                                    <th onclick="handleNtbSort('ltc', 'pct')" style="text-align: right;">LTC % <span id="sort-icon-ltc-pct">↕</span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-ntb-ltc-analysis">
+                                <tr>
+                                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Đang tải dữ liệu...</td>
+                                </tr>
+                            </tbody>
+                        </table>"
+
+================================================================================
+
+--- STEP 1445 | Tool: replace_file_content ---
+Description: "Remove target evaluation status column from GTC table in templates/index.html"
+Instruction: "Remove Đánh giá header column and change colspan from 8 to 7 in table-ntb-gtc-analysis"
+--- TARGET CONTENT ---
+"                        <table class="custom-table" id="table-ntb-gtc-analysis" style="border-collapse: separate; border-spacing: 0;">
+                            <thead style="position: sticky; top: 0; background: var(--card-bg); z-index: 10;">
+                                <tr style="cursor: pointer; user-select: none;">
+                                    <th onclick="handleNtbSort('gtc', 'rank')" style="width: 70px;">Hạng <span id="sort-icon-gtc-rank">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'name')">Bưu cục / AM <span id="sort-icon-gtc-name">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'am')" id="th-gtc-am-header">AM Quản lý <span id="sort-icon-gtc-am">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'pick_vol')" style="text-align: right;">Sản lượng GTC <span id="sort-icon-gtc-pick_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'total_vol')" style="text-align: right;">Tổng sản lượng <span id="sort-icon-gtc-total_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'prop')" style="text-align: right;">Tỷ trọng <span id="sort-icon-gtc-prop">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'pct')" style="text-align: right;">GTC % <span id="sort-icon-gtc-pct">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'status')" style="width: 110px; text-align: center;">Đánh giá <span id="sort-icon-gtc-status">↕</span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-ntb-gtc-analysis">
+                                <tr>
+                                    <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">Đang tải dữ liệu...</
+<truncated 115 bytes>
+--- REPLACEMENT CONTENT ---
+"                        <table class="custom-table" id="table-ntb-gtc-analysis" style="border-collapse: separate; border-spacing: 0;">
+                            <thead style="position: sticky; top: 0; background: var(--card-bg); z-index: 10;">
+                                <tr style="cursor: pointer; user-select: none;">
+                                    <th onclick="handleNtbSort('gtc', 'rank')" style="width: 70px;">Hạng <span id="sort-icon-gtc-rank">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'name')">Bưu cục / AM <span id="sort-icon-gtc-name">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'am')" id="th-gtc-am-header">AM Quản lý <span id="sort-icon-gtc-am">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'pick_vol')" style="text-align: right;">Sản lượng GTC <span id="sort-icon-gtc-pick_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'total_vol')" style="text-align: right;">Tổng sản lượng <span id="sort-icon-gtc-total_vol">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'prop')" style="text-align: right;">Tỷ trọng <span id="sort-icon-gtc-prop">↕</span></th>
+                                    <th onclick="handleNtbSort('gtc', 'pct')" style="text-align: right;">GTC % <span id="sort-icon-gtc-pct">↕</span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-ntb-gtc-analysis">
+                                <tr>
+                                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 20px;">Đang tải dữ liệu...</td>
+                                </tr>
+                            </tbody>
+                        </table>"
+
+================================================================================
+
+--- STEP 1449 | Tool: replace_file_content ---
+Description: "Remove status evaluation column and formatting in ranking table generator in templates/index.html"
+Instruction: "Remove status column, update colspans, remove statusBadge, and set PCT text color to default in renderNtbAnalysisTable function"
+--- TARGET CONTENT ---
+"            tableBody.innerHTML = '';
+            if (items.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="${groupType === 'po' ? 8 : 7}" style="text-align: center; color: var(--text-muted); padding: 20px;">Không tìm thấy kết quả phù hợp</td></tr>`;
+                return;
+            }
+            
+            items.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                if (index % 2 === 0) {
+                    tr.style.background = 'rgba(0, 0, 0, 0.01)';
+                }
+                
+                const rank = index + 1;
+                const statusBadge = item.pass 
+                    ? `<span class="badge badge-success" style="font-weight: 600;">Đạt</span>` 
+                    : `<span class="badge badge-danger" style="font-weight: 600;">Chưa đạt</span>`;
+                
+                let rowHtml = `
+                    <td style="text-align: center; font-weight: 600;">${rank}</td>
+                    <td style="text-align: left; font-weight: 600; color: var(--text-primary);">${escapeHTML(item.name)}</td>
+                `;
+                
+                if (groupType === 'po') {
+                    rowHtml += `<td style="text-align: left; color: var(--text-secondary);">${escapeHTML(item.am)}</td>`;
+                }
+                
+                rowHtml += `
+                    <td style="text-align: right;">${item.pickVol.toLocaleString()}</td>
+                    <td style="text-align: right; color: var(--text-secondary);">${item.totalVol.toLocaleString()}</td>
+                    <td style="text-align: right; font-weight: 500; color: var(--text-secondary);">${item.prop.toFixed(2)}%</td>
+                    <td style="text-align: right; font-weight: 700; color: ${item.pass ? 'var(--color-success)' : 'var(--color-danger)'};">${item.pct.toFixed(2)}%</td>
+                    <td style="text-align: center;">${statusBadge}</td>
+                `;\
+<truncated 234 bytes>
+--- REPLACEMENT CONTENT ---
+"            tableBody.innerHTML = '';
+            if (items.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="${groupType === 'po' ? 7 : 6}" style="text-align: center; color: var(--text-muted); padding: 20px;">Không tìm thấy kết quả phù hợp</td></tr>`;
+                return;
+            }
+            
+            items.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                if (index % 2 === 0) {
+                    tr.style.background = 'rgba(0, 0, 0, 0.01)';
+                }
+                
+                const rank = index + 1;
+                
+                let rowHtml = `
+                    <td style="text-align: center; font-weight: 600;">${rank}</td>
+                    <
