@@ -1352,8 +1352,17 @@ def process_aging_backlog(df_raw=None, df_co_cau=None):
         df_raw['mapped_province'] = df_raw['bc_clean'].map(bc_to_province)
         
         # Fallback to existing columns if map fails
-        df_raw['final_am'] = df_raw['mapped_am'].fillna(df_raw['am_name']).fillna("Không xác định")
-        df_raw['final_province'] = df_raw['mapped_province'].fillna(df_raw['Tỉnh']).fillna("Không xác định")
+        fallback_am = df_raw['am_name'] if 'am_name' in df_raw.columns else pd.Series("Không xác định", index=df_raw.index)
+        df_raw['final_am'] = df_raw['mapped_am'].fillna(fallback_am).fillna("Không xác định")
+        
+        fallback_prov = df_raw['Tỉnh'] if 'Tỉnh' in df_raw.columns else pd.Series("Không xác định", index=df_raw.index)
+        df_raw['final_province'] = df_raw['mapped_province'].fillna(fallback_prov).fillna("Không xác định")
+        
+        if 'Trạng thái' not in df_raw.columns:
+            if 'Nhóm BL' in df_raw.columns:
+                df_raw['Trạng thái'] = df_raw['Nhóm BL']
+            else:
+                df_raw['Trạng thái'] = "Chưa giao"
         
         # Categorize into aging brackets
         def get_aging_bracket(days):
