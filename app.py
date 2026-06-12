@@ -597,6 +597,22 @@ def safe_read_csv(filepath, **kwargs):
     # Check if running on Vercel or in a read-only environment
     is_vercel = os.environ.get("VERCEL") or not os.access(os.getcwd(), os.W_OK)
     
+    def apply_kwargs_to_df(db_df, filename):
+        if db_df is None:
+            return None
+        if not kwargs:
+            return db_df
+        import io
+        try:
+            csv_buffer = io.StringIO()
+            db_df.to_csv(csv_buffer, index=False)
+            csv_buffer.seek(0)
+            df = pd.read_csv(csv_buffer, **kwargs)
+            return df
+        except Exception as e:
+            print(f"Error applying CSV kwargs to DB df for {filename}: {e}")
+            return db_df
+
     if not is_vercel:
         # 1. Local run: prioritize local file to ensure latest synced data is read instantly
         if os.path.exists(filepath):
@@ -612,15 +628,17 @@ def safe_read_csv(filepath, **kwargs):
             
         # 2. Fall back to database if local file does not exist
         db_df = load_df_from_db(filename)
-        if db_df is not None:
-            standardize_am_names(db_df)
-            return db_df
+        df = apply_kwargs_to_df(db_df, filename)
+        if df is not None:
+            standardize_am_names(df)
+            return df
     else:
         # 1. Vercel/Read-only: load from database first
         db_df = load_df_from_db(filename)
-        if db_df is not None:
-            standardize_am_names(db_df)
-            return db_df
+        df = apply_kwargs_to_df(db_df, filename)
+        if df is not None:
+            standardize_am_names(df)
+            return df
             
         # 2. Fall back to local file
         if os.path.exists(filepath):
@@ -634,6 +652,7 @@ def safe_read_csv(filepath, **kwargs):
                     continue
             print(f"Error reading CSV {filepath} from DB fallback local: {last_err}")
     return None
+
 
 def safe_to_numeric(series, fillna_val=0.0):
     if series is None:
@@ -1017,30 +1036,29 @@ def process_operational_report(df_gtc=None, df_ltc=None, df_tts=None, am=None, p
         overall_odr_tts = None
         trend_odr_list = []
         odr_path = resolve_path('ODR TTS.csv', write=False)
-        if os.path.exists(odr_path):
-            try:
-                df_odr = safe_read_csv(odr_path)
-                if df_odr is not None:
-                    df_odr.columns = [str(c).strip() for c in df_odr.columns]
-                    df_odr['GTC'] = pd.to_numeric(df_odr['GTC'], errors='coerce')
-                    ontime_col = next((c for c in df_odr.columns if c.lower() in ['%ontime', '% ontime', '%on time', '% on time']), '%Ontime')
-                    df_odr['%Ontime'] = normalize_pct_col(df_odr[ontime_col])
-                    df_odr['ontime_vol'] = df_odr['GTC'] * df_odr['%Ontime']
-                    
-                    # Trend
-                    trend_odr = df_odr.groupby('Time').agg({'GTC': 'sum', 'ontime_vol': 'sum'}).reset_index()
-                    trend_odr['% ODR'] = (trend_odr['ontime_vol'] / trend_odr['GTC']) * 100
-                    trend_odr_list = trend_odr.sort_values('Time').to_dict(orient='records')
-                    
-                    # Find for latest_date_gtc
-                    if latest_date_gtc:
-                        df_latest_odr = df_odr[df_odr['Time'] == latest_date_gtc]
-                        if not df_latest_odr.empty:
-                            gtc_sum_odr = df_latest_odr['GTC'].sum()
-                            ontime_sum_odr = df_latest_odr['ontime_vol'].sum()
-                            overall_odr_tts = round(ontime_sum_odr / gtc_sum_odr * 100, 2) if gtc_sum_odr > 0 else 0.0
-            except Exception as e:
-                print(f"Error processing ODR TTS.csv: {e}")
+        try:
+            df_odr = safe_read_csv(odr_path)
+            if df_odr is not None and not df_odr.empty:
+                df_odr.columns = [str(c).strip() for c in df_odr.columns]
+                df_odr['GTC'] = pd.to_numeric(df_odr['GTC'], errors='coerce')
+                ontime_col = next((c for c in df_odr.columns if c.lower() in ['%ontime', '% ontime', '%on time', '% on time']), '%Ontime')
+                df_odr['%Ontime'] = normalize_pct_col(df_odr[ontime_col])
+                df_odr['ontime_vol'] = df_odr['GTC'] * df_odr['%Ontime']
+                
+                # Trend
+                trend_odr = df_odr.groupby('Time').agg({'GTC': 'sum', 'ontime_vol': 'sum'}).reset_index()
+                trend_odr['% ODR'] = (trend_odr['ontime_vol'] / trend_odr['GTC']) * 100
+                trend_odr_list = trend_odr.sort_values('Time').to_dict(orient='records')
+                
+                # Find for latest_date_gtc
+                if latest_date_gtc:
+                    df_latest_odr = df_odr[df_odr['Time'] == latest_date_gtc]
+                    if not df_latest_odr.empty:
+                        gtc_sum_odr = df_latest_odr['GTC'].sum()
+                        ontime_sum_odr = df_latest_odr['ontime_vol'].sum()
+                        overall_odr_tts = round(ontime_sum_odr / gtc_sum_odr * 100, 2) if gtc_sum_odr > 0 else 0.0
+        except Exception as e:
+            print(f"Error processing ODR TTS.csv: {e}")
                 
         # Calculate TTS overall assign rate and daily trend
         overall_gan_tts = None
@@ -1619,13 +1637,10 @@ def map_po_to_am_prov(po_id, po_name, id_to_am, id_to_prov, name_to_am, name_to_
 
 def process_unstable_po():
     file_path = resolve_path('buu_cuc_bat_on.csv', write=False)
-    if not os.path.exists(file_path):
-        return {"error": "Không tìm thấy dữ liệu bưu cục bất ổn (buu_cuc_bat_on.csv)."}
-    
     try:
         df_raw = safe_read_csv(file_path, header=None)
-        if df_raw is None:
-            return {"error": "Lỗi đọc file buu_cuc_bat_on.csv."}
+        if df_raw is None or df_raw.empty:
+            return {"error": "Không tìm thấy dữ liệu bưu cục bất ổn (buu_cuc_bat_on.csv)."}
             
         update_time = None
         total_warning = None
@@ -1812,13 +1827,10 @@ def process_unstable_po():
 
 def process_off_spe():
     file_path = resolve_path('off_tuyen_spe.csv', write=False)
-    if not os.path.exists(file_path):
-        return {"error": "Không tìm thấy dữ liệu OFF tuyến SPE (off_tuyen_spe.csv)."}
-    
     try:
         df_raw = safe_read_csv(file_path)
-        if df_raw is None:
-            return {"error": "Lỗi đọc file off_tuyen_spe.csv."}
+        if df_raw is None or df_raw.empty:
+            return {"error": "Không tìm thấy dữ liệu OFF tuyến SPE (off_tuyen_spe.csv)."}
         
         # Remove empty rows or rows that have all NaN
         df_raw = df_raw.dropna(how='all')
@@ -1913,8 +1925,11 @@ def process_off_spe():
                 "note": note_val
             })
             
-        mtime = os.path.getmtime(file_path)
-        update_time = datetime.datetime.fromtimestamp(mtime).strftime("%d-%m-%Y %H:%M:%S")
+        if os.path.exists(file_path):
+            mtime = os.path.getmtime(file_path)
+            update_time = datetime.datetime.fromtimestamp(mtime).strftime("%d-%m-%Y %H:%M:%S")
+        else:
+            update_time = datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S")
         
         return {
             "update_time": update_time,
@@ -2074,11 +2089,9 @@ DF_BUU_CUC_TYPE_MAP = None
 
 def load_buu_cuc_type_map():
     file_path = resolve_path('buu_cuc_bat_on.csv', write=False)
-    if not os.path.exists(file_path):
-        return {}
     try:
         df_raw = safe_read_csv(file_path, header=None)
-        if df_raw is None:
+        if df_raw is None or df_raw.empty:
             return {}
         header_row_idx = None
         for r_idx in range(len(df_raw)):
@@ -2091,7 +2104,7 @@ def load_buu_cuc_type_map():
         if header_row_idx is None:
             header_row_idx = 4 if len(df_raw) > 4 else 0
         df_table = safe_read_csv(file_path, skiprows=header_row_idx)
-        if df_table is None:
+        if df_table is None or df_table.empty:
             return {}
         df_table.columns = [str(c).strip() for c in df_table.columns]
         
@@ -2115,11 +2128,9 @@ def load_buu_cuc_type_map():
 
 def load_vols_tao_don_df():
     file_path = resolve_path('vols_tao_don.csv', write=False)
-    if not os.path.exists(file_path):
-        return None
     try:
         df = safe_read_csv(file_path)
-        if df is None:
+        if df is None or df.empty:
             return None
         df.columns = [str(c).strip() for c in df.columns]
         df['Date'] = pd.to_datetime(df['Date'])
@@ -3221,12 +3232,9 @@ def get_sync_status():
 def api_nhan_su():
     try:
         ns_path = resolve_path('ops_nhan_su.csv', write=False)
-        if not os.path.exists(ns_path):
-            return jsonify({"error": "Không tìm thấy file ops_nhan_su.csv. Vui lòng thực hiện Đồng bộ dữ liệu."}), 404
-            
         df_ns = safe_read_csv(ns_path)
         if df_ns is None or df_ns.empty:
-            return jsonify({"error": "Dữ liệu nhân sự trống."}), 400
+            return jsonify({"error": "Không tìm thấy dữ liệu nhân sự (ops_nhan_su.csv). Vui lòng thực hiện Đồng bộ dữ liệu."}), 404
             
         df_ns.columns = [c.strip() for c in df_ns.columns]
         
@@ -3262,10 +3270,10 @@ def api_nhan_su():
         active_df['warehouse_id'] = active_df['Bưu cục'].apply(parse_warehouse_id)
         
         cc_path = resolve_path('ops_co_cau.csv', write=False)
-        if not os.path.exists(cc_path):
-            return jsonify({"error": "Không tìm thấy file ops_co_cau.csv"}), 404
-            
         df_cc = safe_read_csv(cc_path)
+        if df_cc is None or df_cc.empty:
+            return jsonify({"error": "Không tìm thấy dữ liệu cơ cấu (ops_co_cau.csv)."}), 404
+            
         df_cc.columns = [c.strip() for c in df_cc.columns]
         
         def clean_id(x):
@@ -3279,18 +3287,17 @@ def api_nhan_su():
         vol_path = resolve_path('vols_tao_don.csv', write=False)
         po_vols = {}
         unique_dates_count = 1
-        if os.path.exists(vol_path):
-            df_vol = safe_read_csv(vol_path)
-            if df_vol is not None and not df_vol.empty:
-                df_vol.columns = [c.strip() for c in df_vol.columns]
-                df_vol_ntb = df_vol[df_vol['Vùng'].astype(str).str.strip() == 'NTB'].copy()
-                unique_dates_count = len(df_vol_ntb['Date'].unique()) if 'Date' in df_vol_ntb.columns else 1
-                if unique_dates_count == 0:
-                    unique_dates_count = 1
-                df_vol_ntb['warehouse_id_clean'] = df_vol_ntb['warehouse_id'].apply(clean_id)
-                vol_sums = df_vol_ntb.groupby('warehouse_id_clean')['Volume'].sum()
-                for wh_id, v_sum in vol_sums.items():
-                    po_vols[wh_id] = round(v_sum / unique_dates_count)
+        df_vol = safe_read_csv(vol_path)
+        if df_vol is not None and not df_vol.empty:
+            df_vol.columns = [c.strip() for c in df_vol.columns]
+            df_vol_ntb = df_vol[df_vol['Vùng'].astype(str).str.strip() == 'NTB'].copy()
+            unique_dates_count = len(df_vol_ntb['Date'].unique()) if 'Date' in df_vol_ntb.columns else 1
+            if unique_dates_count == 0:
+                unique_dates_count = 1
+            df_vol_ntb['warehouse_id_clean'] = df_vol_ntb['warehouse_id'].apply(clean_id)
+            vol_sums = df_vol_ntb.groupby('warehouse_id_clean')['Volume'].sum()
+            for wh_id, v_sum in vol_sums.items():
+                po_vols[wh_id] = round(v_sum / unique_dates_count)
                     
         hc_counts = active_df.groupby('warehouse_id_clean').size().to_dict()
         
@@ -3878,12 +3885,9 @@ def api_chat():
 def get_ntb_structure():
     try:
         path = resolve_path('co_cau_ntb.csv', write=False)
-        if not os.path.exists(path):
-            return jsonify({"error": "Không tìm thấy file co_cau_ntb.csv"})
-        
         df = safe_read_csv(path)
-        if df is None:
-            return jsonify({"error": "Lỗi đọc file co_cau_ntb.csv"})
+        if df is None or df.empty:
+            return jsonify({"error": "Không tìm thấy dữ liệu cơ cấu vùng (co_cau_ntb.csv)."}), 404
             
         df['Tỉnh'] = df['Tỉnh'].replace({'Khánh Hoà': 'Khánh Hòa', 'Bình Phước': 'Lâm Đồng'}).fillna("Chưa xác định").str.strip()
         df['AM'] = df['AM'].fillna("Chưa có AM").str.strip()
