@@ -5830,17 +5830,26 @@
                         type: 'bar',
                         height: 350,
                         fontFamily: 'Inter, sans-serif',
-                        toolbar: { show: false }
+                        toolbar: { show: false },
+                        stacked: true
                     },
                     plotOptions: {
                         bar: {
                             horizontal: false,
-                            columnWidth: '70%',
+                            columnWidth: '60%',
                             borderRadius: 4,
                             dataLabels: {
-                                orientation: 'vertical',
-                                position: 'top',
-                                hideOverflowingLabels: false
+                                total: {
+                                    enabled: true,
+                                    style: {
+                                        fontSize: '11px',
+                                        fontWeight: '800',
+                                        colors: ['var(--text-primary)']
+                                    },
+                                    formatter: function(val) {
+                                        return Number(val).toLocaleString();
+                                    }
+                                }
                             }
                         }
                     },
@@ -5850,12 +5859,12 @@
                             fontFamily: 'Inter, sans-serif',
                             fontSize: '11px',
                             fontWeight: '700',
-                            colors: ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff']
+                            colors: ['#ffffff']
                         },
                         formatter: function(val) {
-                            if (val === null || val === undefined) return '';
+                            if (!val) return '';
                             const num = Number(val);
-                            return num >= 1000 ? num.toLocaleString() : '';
+                            return num >= 2500 ? (num >= 1000 ? Math.round(num/1000) + 'k' : num.toLocaleString()) : '';
                         }
                     },
                     series: data.charts.bar.series,
@@ -5924,7 +5933,7 @@
                                 borderRadius: 4,
                                 distributed: true,
                                 dataLabels: {
-                                    position: 'top',
+                                    position: 'center',
                                     hideOverflowingLabels: false
                                 }
                             }
@@ -5951,14 +5960,14 @@
                         dataLabels: {
                             enabled: true,
                             formatter: function(val) { return (val > 0 ? '+' : '') + Math.round(val).toLocaleString(); },
-                            style: { colors: ['#ffffff'], fontSize: '12px', fontWeight: 'bold' },
+                            style: { colors: ['#ffffff'], fontSize: '13px', fontWeight: 'bold' },
                             background: {
                                 enabled: true,
                                 foreColor: '#ffffff',
-                                padding: 4,
+                                padding: 5,
                                 borderRadius: 4,
                                 borderWidth: 0,
-                                opacity: 0.85
+                                opacity: 0.9
                             },
                             offsetX: 0
                         },
@@ -6011,7 +6020,7 @@
                                 borderRadius: 4,
                                 distributed: true,
                                 dataLabels: {
-                                    position: 'top',
+                                    position: 'center',
                                     hideOverflowingLabels: false
                                 }
                             }
@@ -6038,14 +6047,14 @@
                         dataLabels: {
                             enabled: true,
                             formatter: function(val) { return Math.round(val).toLocaleString(); },
-                            style: { colors: ['#ffffff'], fontSize: '12px', fontWeight: 'bold' },
+                            style: { colors: ['#ffffff'], fontSize: '13px', fontWeight: 'bold' },
                             background: {
                                 enabled: true,
                                 foreColor: '#ffffff',
-                                padding: 4,
+                                padding: 5,
                                 borderRadius: 4,
                                 borderWidth: 0,
-                                opacity: 0.85
+                                opacity: 0.9
                             },
                             offsetX: 0
                         },
