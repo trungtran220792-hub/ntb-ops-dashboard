@@ -2972,17 +2972,6 @@
 
             <!-- TAB: OFF TUYÊN SPE -->
             <div id="tab-off-spe" class="content-panel">
-                <!-- Tomorrow opening warning banner -->
-                <div id="off-spe-tomorrow-banner" style="display: none; background: #fff5f5; border: 1px solid #fecaca; border-left: 5px solid #ef4444; border-radius: 8px; margin-bottom: 24px; padding: 16px 20px;">
-                    <div style="font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 15px; color: #ef4444; display: flex; align-items: center; gap: 8px; margin-bottom: 12px; text-transform: uppercase;">
-                        <i class="fa-solid fa-triangle-exclamation" style="animation: pulse 1.5s infinite;"></i>
-                        <span id="off-spe-tomorrow-banner-title">CẢNH BÁO: CÓ 0 TUYẾN SẼ MỞ LẠI VÀO NGÀY MAI</span>
-                    </div>
-                    <div id="off-spe-tomorrow-banner-list" style="display: flex; flex-wrap: wrap; gap: 10px;">
-                        <!-- Badges rendered here -->
-                    </div>
-                </div>
-
                 <div class="card" style="margin-bottom: 24px;">
                     <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 20px;">
                         <h3 style="font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 20px; color: var(--color-ghn-blue); text-transform: uppercase; margin: 0; display: flex; align-items: center; gap: 8px;">
@@ -3001,7 +2990,13 @@
                                 <option value="">-- Tất cả Trạng thái --</option>
                                 <option value="Đang OFF">Đang OFF</option>
                                 <option value="Đang chờ duyệt">Đang chờ duyệt</option>
-                                <option value="Mở ngày mai">Sẽ mở ngày mai</option>
+                            </select>
+                        </div>
+                        <div class="filter-group" style="min-width: 150px;">
+                            <label>Mở lại ngày mai</label>
+                            <select id="filter-off-spe-tomorrow" class="select-input" onchange="filterOffSpeTable()">
+                                <option value="">-- Tất cả --</option>
+                                <option value="tomorrow">Sẽ mở ngày mai</option>
                             </select>
                         </div>
                         <div class="filter-group" style="min-width: 150px;">
@@ -6455,37 +6450,7 @@
                 }
             }
 
-            // Update Tomorrow Banner on tab-off-spe
-            const tomorrowBannerEl = document.getElementById('off-spe-tomorrow-banner');
-            const tomorrowBannerTitleEl = document.getElementById('off-spe-tomorrow-banner-title');
-            const tomorrowBannerListEl = document.getElementById('off-spe-tomorrow-banner-list');
-            
-            if (tomorrowBannerEl && tomorrowBannerTitleEl && tomorrowBannerListEl) {
-                if (!data.error && tomorrowCount > 0) {
-                    tomorrowBannerEl.style.display = 'block';
-                    tomorrowBannerTitleEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="animation: pulse 1.5s infinite; margin-right: 4px;"></i> CẢNH BÁO: CÓ ${tomorrowCount} TUYẾN SẼ MỞ LẠI VÀO NGÀY MAI (${tomorrowStr})`;
-                    
-                    const tomorrowRecords = data.records.filter(r => {
-                        if (!r.on_time || r.status !== "Đang OFF") return false;
-                        const normOnTime = r.on_time.trim().replace(/\//g, '-');
-                        return normOnTime === tomorrowStr;
-                    });
-                    
-                    tomorrowBannerListEl.innerHTML = '';
-                    tomorrowRecords.forEach(r => {
-                        const badge = document.createElement('div');
-                        badge.className = 'tomorrow-po-badge';
-                        badge.style.cssText = 'display: flex; align-items: center; gap: 8px; background: #fff5f5; border: 1px solid #fecaca; border-radius: 6px; padding: 6px 12px; font-size: 13px; font-weight: 600; color: #e11d48; transition: all 0.2s;';
-                        badge.innerHTML = `
-                            <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: #10b981; flex-shrink: 0; box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);"></span>
-                            <span>Bưu cục ${escapeHTML(r.post_office)} - P/X: ${escapeHTML(r.ward)} (${escapeHTML(r.province)})</span>
-                        `;
-                        tomorrowBannerListEl.appendChild(badge);
-                    });
-                } else {
-                    tomorrowBannerEl.style.display = 'none';
-                }
-            }
+
 
             // Populate Province Dropdown Filter in OFF SPE Tab
             const provSelect = document.getElementById('filter-off-spe-province');
@@ -6534,6 +6499,7 @@
             const statusFilter = document.getElementById('filter-off-spe-status').value;
             const provFilter = document.getElementById('filter-off-spe-province').value;
             const poFilter = document.getElementById('filter-off-spe-po').value;
+            const tomorrowFilter = document.getElementById('filter-off-spe-tomorrow').value;
 
             const today = new Date();
             const tomorrow = new Date(today);
@@ -6549,18 +6515,18 @@
                     (row.ward && row.ward.toLowerCase().includes(searchVal)) ||
                     (row.post_office && row.post_office.toLowerCase().includes(searchVal));
 
-                let matchesStatus = true;
-                if (statusFilter === "Mở ngày mai") {
+                const matchesStatus = !statusFilter || row.status === statusFilter;
+
+                let matchesTomorrow = true;
+                if (tomorrowFilter === "tomorrow") {
                     const normOnTime = row.on_time ? row.on_time.trim().replace(/\//g, '-') : '';
-                    matchesStatus = (row.status === "Đang OFF" && normOnTime === tomorrowStr);
-                } else if (statusFilter) {
-                    matchesStatus = row.status === statusFilter;
+                    matchesTomorrow = (row.status === "Đang OFF" && normOnTime === tomorrowStr);
                 }
 
                 const matchesProv = !provFilter || row.province === provFilter;
                 const matchesPo = !poFilter || row.post_office === poFilter;
 
-                return matchesSearch && matchesStatus && matchesProv && matchesPo;
+                return matchesSearch && matchesStatus && matchesTomorrow && matchesProv && matchesPo;
             });
 
             if (filtered.length === 0) {
