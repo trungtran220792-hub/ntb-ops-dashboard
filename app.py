@@ -75,6 +75,7 @@ DEFAULT_USERS = {
             "tab-unstable-po",
             "tab-off-spe",
             "tab-volume-creation",
+            "tab-fd",
             "tab-sync"
         ]
     },
@@ -91,7 +92,8 @@ DEFAULT_USERS = {
             "tab-backlog",
             "tab-unstable-po",
             "tab-off-spe",
-            "tab-volume-creation"
+            "tab-volume-creation",
+            "tab-fd"
         ]
     }
 }
@@ -1098,6 +1100,65 @@ def process_operational_report(df_gtc=None, df_ltc=None, df_tts=None, am=None, p
             except Exception as e:
                 print(f"Error processing TTS sheet: {e}")
         
+        # Get FD statistics based on filters (AM, Province, PO)
+        fd_n = 0.0
+        fd_n1 = 0.0
+        vs_n1 = 0.0
+        fd_n7 = 0.0
+        vs_n7 = 0.0
+        
+        global FD_CACHE
+        fd_data = FD_CACHE
+        if fd_data is None or "error" in fd_data:
+            fd_data = process_fd_report()
+            
+        if fd_data and "error" not in fd_data:
+            found = False
+            # Check po filter
+            if po:
+                po_clean = str(po).strip().lower()
+                for r in fd_data.get('po', []):
+                    if r.get('post_office', '').strip().lower() == po_clean:
+                        fd_n = r.get('fd_n', 0.0)
+                        fd_n1 = r.get('fd_n1', 0.0)
+                        vs_n1 = r.get('vs_n1', 0.0)
+                        fd_n7 = r.get('fd_n7', 0.0)
+                        vs_n7 = r.get('vs_n7', 0.0)
+                        found = True
+                        break
+            # Check am filter
+            if not found and am:
+                am_clean = str(am).strip().lower()
+                for r in fd_data.get('am', []):
+                    if r.get('am', '').strip().lower() == am_clean:
+                        fd_n = r.get('fd_n', 0.0)
+                        fd_n1 = r.get('fd_n1', 0.0)
+                        vs_n1 = r.get('vs_n1', 0.0)
+                        fd_n7 = r.get('fd_n7', 0.0)
+                        vs_n7 = r.get('vs_n7', 0.0)
+                        found = True
+                        break
+            # Check province filter
+            if not found and province:
+                prov_clean = str(province).strip().lower()
+                for r in fd_data.get('province', []):
+                    if r.get('province', '').strip().lower() == prov_clean:
+                        fd_n = r.get('fd_n', 0.0)
+                        fd_n1 = r.get('fd_n1', 0.0)
+                        vs_n1 = r.get('vs_n1', 0.0)
+                        fd_n7 = r.get('fd_n7', 0.0)
+                        vs_n7 = r.get('vs_n7', 0.0)
+                        found = True
+                        break
+            # Fallback to kpi / Tổng NTB
+            if not found:
+                kpi = fd_data.get('kpi', {})
+                fd_n = kpi.get('fd_n', 0.0)
+                fd_n1 = kpi.get('fd_n1', 0.0)
+                vs_n1 = kpi.get('vs_n1', 0.0)
+                fd_n7 = kpi.get('fd_n7', 0.0)
+                vs_n7 = kpi.get('vs_n7', 0.0)
+
         return {
             "total_volume": int(total_vol),
             "overall_gtc": overall_gtc,
@@ -1117,7 +1178,12 @@ def process_operational_report(df_gtc=None, df_ltc=None, df_tts=None, am=None, p
             "trend_gtc": trend_gtc_list,
             "trend_ltc": trend_ltc_list,
             "trend_odr": trend_odr_list,
-            "trend_tts": trend_tts_list
+            "trend_tts": trend_tts_list,
+            "overall_fd": fd_n,
+            "fd_n1": fd_n1,
+            "fd_vs_n1": vs_n1,
+            "fd_n7": fd_n7,
+            "fd_vs_n7": vs_n7
         }
     except Exception as e:
         return {"error": f"Lỗi xử lý file báo cáo vận hành: {str(e)}"}
@@ -1828,6 +1894,19 @@ def process_unstable_po():
 def process_off_spe():
     file_path = resolve_path('off_tuyen_spe.csv', write=False)
     try:
+        # Load co_cau mapping for AM lookup
+        am_mapping = {}
+        try:
+            df_cc = safe_read_csv(resolve_path('co_cau_ntb.csv', write=False))
+            if df_cc is not None and not df_cc.empty:
+                for _, row_cc in df_cc.iterrows():
+                    po_name = str(row_cc.get('Bưu cục', '')).strip()
+                    am_name = str(row_cc.get('AM', '')).strip()
+                    if po_name and am_name:
+                        am_mapping[po_name.lower()] = am_name
+        except Exception as ecc:
+            print(f"Error loading co_cau_ntb.csv in process_off_spe: {ecc}")
+
         df_raw = safe_read_csv(file_path)
         if df_raw is None or df_raw.empty:
             return {"error": "Không tìm thấy dữ liệu OFF tuyến SPE (off_tuyen_spe.csv)."}
@@ -1913,11 +1992,23 @@ def process_off_spe():
             time_on_val = clean_date_str(r[col_time_on]) if col_time_on else ""
             note_val = str(r[col_note]).strip() if col_note and pd.notna(r[col_note]) else ""
             
+            # Lookup AM name for bc_val
+            bc_clean = bc_val.lower().strip()
+            am_val = am_mapping.get(bc_clean, "")
+            if not am_val:
+                for cc_po, cc_am in am_mapping.items():
+                    if cc_po in bc_clean or bc_clean in cc_po:
+                        am_val = cc_am
+                        break
+            if not am_val:
+                am_val = "Không xác định"
+            
             processed_records.append({
                 "province": tinh_val,
                 "district": quan_val,
                 "ward": phuong_val,
                 "post_office": bc_val,
+                "am": am_val,
                 "status": status_val,
                 "pct_cap_down": capdown_val,
                 "off_time": time_off_val,
@@ -2068,6 +2159,145 @@ def calculate_trend(current_data, baseline_entry):
     
     return current_data
 
+def process_fd_report():
+    import csv
+    import re
+    import os
+    
+    file_path = resolve_path('ops_fd.csv', write=False)
+    if not os.path.exists(file_path):
+        return {"error": "Không tìm thấy file ops_fd.csv"}
+        
+    def clean_pct(val):
+        if not val:
+            return 0.0
+        val_str = str(val).strip()
+        val_str = val_str.replace('%', '').replace(',', '.')
+        val_str = val_str.replace('▲', '').replace('▼', '').strip()
+        try:
+            return float(val_str)
+        except:
+            return 0.0
+
+    def clean_num(val):
+        if not val:
+            return 0.0
+        val_str = str(val).strip().replace(',', '')
+        try:
+            return float(val_str)
+        except:
+            return 0.0
+
+    try:
+        with open(file_path, mode='r', encoding='utf-8') as f:
+            reader = csv.reader(f)
+            lines = list(reader)
+            
+        if len(lines) == 0:
+            return {"error": "File ops_fd.csv trống"}
+            
+        date_str = ""
+        line0 = lines[0]
+        if len(line0) > 1 and "N =" in line0[1]:
+            match = re.search(r'N\s*=\s*(\d{2}/\d{2}/\d{4})', line0[1])
+            if match:
+                date_str = match.group(1)
+                
+        sec_po_rows = []
+        sec_am_rows = []
+        sec_prov_rows = []
+        
+        current_section = None
+        
+        for idx, line in enumerate(lines):
+            if len(line) == 0 or not line[0].strip():
+                continue
+                
+            first_cell = line[0].strip()
+            
+            if '🏪 TẤT CẢ BƯU CỤC' in first_cell:
+                current_section = 'po'
+                continue
+            elif '👤 THEO AM' in first_cell:
+                current_section = 'am'
+                continue
+            elif '🗺️ THEO TỈNH' in first_cell:
+                current_section = 'prov'
+                continue
+                
+            if first_cell in ['Bưu Cục', 'AM', 'Tỉnh'] and line[1].strip() in ['AM', '%FD (N)', '']:
+                continue
+                
+            if current_section == 'po':
+                if len(line) >= 10:
+                    sec_po_rows.append({
+                        'post_office': line[0].strip(),
+                        'am': line[1].strip(),
+                        'fd_n': clean_pct(line[2]),
+                        'fd_n1': clean_pct(line[3]),
+                        'vs_n1': clean_pct(line[4]) * (-1 if '▼' in line[4] else 1),
+                        'fd_n7': clean_pct(line[5]),
+                        'vs_n7': clean_pct(line[6]) * (-1 if '▼' in line[6] else 1),
+                        'vol_giao': clean_num(line[7]),
+                        'vol_tra': clean_num(line[8]),
+                        'ty_trong_tra': clean_pct(line[9])
+                    })
+            elif current_section == 'am':
+                if len(line) >= 8:
+                    sec_am_rows.append({
+                        'am': line[0].strip(),
+                        'fd_n': clean_pct(line[1]),
+                        'fd_n1': clean_pct(line[2]),
+                        'vs_n1': clean_pct(line[3]) * (-1 if '▼' in line[3] else 1),
+                        'fd_n7': clean_pct(line[4]),
+                        'vs_n7': clean_pct(line[5]) * (-1 if '▼' in line[5] else 1),
+                        'vol_tra': clean_num(line[6]),
+                        'ty_trong_tra': clean_pct(line[7])
+                    })
+            elif current_section == 'prov':
+                if len(line) >= 6:
+                    sec_prov_rows.append({
+                        'province': line[0].strip(),
+                        'fd_n': clean_pct(line[1]),
+                        'fd_n1': clean_pct(line[2]),
+                        'vs_n1': clean_pct(line[3]) * (-1 if '▼' in line[3] else 1),
+                        'fd_n7': clean_pct(line[4]),
+                        'vs_n7': clean_pct(line[5]) * (-1 if '▼' in line[5] else 1)
+                    })
+                    
+        kpi_fd = {
+            'fd_n': 0.0,
+            'fd_n1': 0.0,
+            'vs_n1': 0.0,
+            'fd_n7': 0.0,
+            'vs_n7': 0.0
+        }
+        
+        provinces_clean = []
+        for r in sec_prov_rows:
+            if r['province'] == 'Tổng NTB':
+                kpi_fd = {
+                    'fd_n': r['fd_n'],
+                    'fd_n1': r['fd_n1'],
+                    'vs_n1': r['vs_n1'],
+                    'fd_n7': r['fd_n7'],
+                    'vs_n7': r['vs_n7']
+                }
+            else:
+                provinces_clean.append(r)
+                
+        return {
+            'date': date_str,
+            'kpi': kpi_fd,
+            'po': sec_po_rows,
+            'am': sec_am_rows,
+            'province': provinces_clean
+        }
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return {"error": f"Lỗi xử lý FD report: {str(e)}"}
+
 # ==========================================
 # 6. IN-MEMORY CACHE DECLARATION & INITIALIZATION
 # ==========================================
@@ -2076,6 +2306,7 @@ OPR_CACHE = None
 BACKLOG_CACHE_RAW = None
 UNSTABLE_PO_CACHE = None
 OFF_SPE_CACHE = None
+FD_CACHE = None
 
 # Dataframe caches for NTB Summary Dashboard
 DF_GTC_CACHE = None
@@ -2399,7 +2630,7 @@ def apply_filters(df, am=None, province=None, post_office=None):
     return df_filtered
 
 def update_all_caches():
-    global OPERATIONAL_CACHE, OPR_CACHE, BACKLOG_CACHE_RAW, UNSTABLE_PO_CACHE, OFF_SPE_CACHE, DF_TAO_DON_CACHE, DF_BUU_CUC_TYPE_MAP
+    global OPERATIONAL_CACHE, OPR_CACHE, BACKLOG_CACHE_RAW, UNSTABLE_PO_CACHE, OFF_SPE_CACHE, DF_TAO_DON_CACHE, DF_BUU_CUC_TYPE_MAP, FD_CACHE
     import gc
     
     print("--------------------------------------------------")
@@ -2419,7 +2650,16 @@ def update_all_caches():
         BACKLOG_CACHE_RAW = {"aging": {"error": err_msg}, "treo": {"error": err_msg}}
         UNSTABLE_PO_CACHE = {"error": err_msg}
         OFF_SPE_CACHE = {"error": err_msg}
+        FD_CACHE = {"error": err_msg}
         return
+
+    # 1.5. Process FD report
+    try:
+        print("Parsing FD report...")
+        FD_CACHE = process_fd_report()
+        print("-> FD report processed and cached.")
+    except Exception as e:
+        FD_CACHE = {"error": f"Lỗi xử lý FD report: {e}"}
 
     # 2. Now process operational report using cached DataFrames
     try:
@@ -2638,6 +2878,15 @@ def get_off_spe():
             if OFF_SPE_CACHE is None:
                 OFF_SPE_CACHE = process_off_spe()
     return jsonify(OFF_SPE_CACHE)
+
+@app.route('/api/fd')
+@requires_permission('tab-fd')
+def get_fd():
+    global FD_CACHE
+    with CACHE_LOCK:
+        if FD_CACHE is None:
+            FD_CACHE = process_fd_report()
+    return jsonify(clean_nan(FD_CACHE))
 
 @app.route('/api/operational')
 @requires_permission('tab-operational')
@@ -2913,6 +3162,7 @@ def upload_file():
         'ops_gtc.csv',
         'ops_ltc.csv',
         'ops_co_cau.csv',
+        'ops_tts.csv',
         'opr_opr.csv',
         'opr_oe.csv',
         'opr_raw.csv',
@@ -2921,7 +3171,10 @@ def upload_file():
         'buu_cuc_bat_on.csv',
         'off_tuyen_spe.csv',
         'vols_tao_don.csv',
-        'co_cau_ntb.csv'
+        'co_cau_ntb.csv',
+        'ODR TTS.csv',
+        'ops_fd.csv',
+        'ops_nhan_su.csv'
     ]
     
     if filename not in allowed_files:
@@ -3064,6 +3317,7 @@ def sync_sheets_directly_as_csv(url):
         (["đang off", "dang off", "off", "off_tuyen", "off tuyến"], "off_tuyen_spe.csv"),
         (["shopee_tiktok", "tao_don", "tạo đơn"], "vols_tao_don.csv"),
         (["odr tts", "odr_tts"], "ODR TTS.csv"),
+        (["fd"], "ops_fd.csv"),
         (["nhân sự", "nhan su"], "ops_nhan_su.csv")
     ]
     
@@ -3910,6 +4164,7 @@ def get_files_status():
         'ops_gtc.csv',
         'ops_ltc.csv',
         'ops_co_cau.csv',
+        'ops_tts.csv',
         'opr_opr.csv',
         'opr_oe.csv',
         'opr_raw.csv',
@@ -3918,7 +4173,10 @@ def get_files_status():
         'buu_cuc_bat_on.csv',
         'off_tuyen_spe.csv',
         'vols_tao_don.csv',
-        'co_cau_ntb.csv'
+        'co_cau_ntb.csv',
+        'ODR TTS.csv',
+        'ops_fd.csv',
+        'ops_nhan_su.csv'
     ]
     status = []
     for f in files:

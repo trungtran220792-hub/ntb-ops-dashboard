@@ -13,6 +13,7 @@
             "tab-unstable-po",
             "tab-off-spe",
             "tab-volume-creation",
+            "tab-fd",
             "tab-nhan-su",
             "tab-sync"
         ]
@@ -30,7 +31,22 @@
             "tab-backlog",
             "tab-unstable-po",
             "tab-off-spe",
-            "tab-volume-creation"
+            "tab-volume-creation",
+            "tab-fd"
+        ]
+    },
+    "testuser": {
+        "username": "testuser",
+        "password": "pbkdf2:sha256:1000000$5dWzUfoamVLuWBKj$cbcc8014a2ff7d119c6cfd681572eec966ec379175b46e7683c030048501167c",
+        "role": "staff",
+        "permissions": [
+            "tab-operational",
+            "tab-opr",
+            "tab-backlog",
+            "tab-unstable-po",
+            "tab-off-spe",
+            "tab-volume-creation",
+            "tab-fd"
         ]
     }
 }
