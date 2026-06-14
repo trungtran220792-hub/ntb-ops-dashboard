@@ -6,12 +6,6 @@ warehouse_id,Bưu cục,Tỉnh,AM
 22915000,Kho Chuyển Tiếp Bảo Lộc-Lâm Đồng,Lâm Đồng,Nguyễn Tiến Lực
 20269003,Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông,Đắk Nông,Trần Văn Phước
 22048001,Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng,Đắk Nông,Trần Công Hậu
-22153000,Điểm nhận hàng Xã Trạm Hành-Xuân Trường-Đà Lạt-Lâm Đồng,Lâm Đồng,Võ Tấn Lợi
-22154000,Điểm nhận hàng Xã Lát-Đưng K'Nớ-Lạc Dương-Lâm Đồng,Lâm Đồng,Võ Tấn Lợi
-22155000,Điểm nhận hàng Xã Đạ Nhim-Lạc Dương-Lâm Đồng,Lâm Đồng,Võ Tấn Lợi
-21377001,Điểm Nhận Hàng Quốc Lộ 27-Xã D'Ran-Lâm Đồng,Lâm Đồng,Võ Tấn Lợi
-20591001,Điểm nhận hàng DT684 Buôn Krue-Xã Quảng Phú-Đắk Nông,Đắk Nông,Trần Thị Nhung
-22375000,Điểm nhận hàng Đắk Sắk-Đắk Mil-Lâm Đồng,Đắk Nông,Trần Thị Nhung
 22263000,Điểm Lấy Hàng Shop Thuốc Nam-Ninh Hải-Ninh Thuận,Ninh Thuận,Nguyễn Duy Long
 22329000,Điểm Lấy Hàng Shop Đại Lý Bang Phương,Bình Thuận,Huỳnh Tấn Hiền
 22356000,Điểm lấy hàng Shop 4872154-Gốm Chăm Bầu Trúc,Ninh Thuận,Nguyễn Duy Long
@@ -31,7 +25,7 @@ warehouse_id,Bưu cục,Tỉnh,AM
 21298000,Bưu cục Thị Trấn Liên Hương-Tuy Phong-Bình Thuận,Bình Thuận,Nguyễn Duy Long
 21377000,Bưu Cục TDP Nghĩa Đức-Thạnh Mỹ-Đơn Dương-Lâm Đồng,Lâm Đồng,Lê Minh Đại
 21458000,Bưu Cục TDP Ba Đình-Lâm Hà-Lâm Đồng,Lâm Đồng,Huỳnh Thị Kim Chi
-21067000,Bưu Cục Số 7 Lê Thánh Tôn-LaGi-Bình Thuận,Bình Thuận,Cao Thị Thanh Thủy
+21067000,Bưu Cục Số 7 Lê Thánh Tôn-LaGi-Bình Thuận,Bình Thuận,Huỳnh Tấn Hiền
 22312000,Bưu Cục Số 6 Trương Văn Hoàn-Phường 9-Đà Lạt-Lâm Đồng,Lâm Đồng,Lê Văn Trường
 20499000,Bưu Cục Quốc Lộ 1A-Ninh Phước-Ninh Thuận,Ninh Thuận,Nguyễn Duy Long
 21477000,Bưu Cục Quốc Lộ 14-Đức An-Đắk Song-Đăk Nông,Đắk Nông,Trần Thị Nhung
@@ -64,17 +58,17 @@ warehouse_id,Bưu cục,Tỉnh,AM
 21569000,Bưu Cục 70 Lê Hồng Phong-Ninh Diêm-Ninh Hoà-Khánh Hoà,Khánh Hòa,Phạm Bá Thành Công
 22934000,Bưu Cục 585 Nguyễn Tất Thành-Xã Lương Sơn-Bình Thuận,Bình Thuận,Nguyễn Ngọc Khánh
 22483000,Bưu Cục 575 Quốc Lộ 28-Xã Hàm Thuận-Bình Thuận,Bình Thuận,Nguyễn Ngọc Khánh
-21479000,Bưu Cục 571 Hùng Vương-Cam Nghĩa-TP.Cam Ranh-Khánh Hoà,Khánh Hòa,Phan Đình Duy
+21479000,Bưu Cục 571 Hùng Vương-Cam Nghĩa-TP.Cam Ranh-Khánh Hoà,Khánh Hòa,Phạm Bá Thành Công
 22830000,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,Khánh Hòa,Thái Thị Thanh Thư
 22242000,Bưu Cục 53 Tôn Đức Thắng-Nghĩa Thành-Gia Nghĩa-Đắk Nông,Đắk Nông,Trần Văn Phước
 20648000,Bưu Cục 51 Phạm Ngọc Thạch-Ninh Hải-Ninh Thuận,Ninh Thuận,Nguyễn Duy Long
-21065000,Bưu cục 47 Trần Hưng Đạo-Hàm Thuận Nam-Bình Thuận,Bình Thuận,Cao Thị Thanh Thủy
+21065000,Bưu cục 47 Trần Hưng Đạo-Hàm Thuận Nam-Bình Thuận,Bình Thuận,Lê Thanh Nhựt
 21516000,Bưu Cục 468 Quốc Lộ 20-Liên Nghĩa-Đức Trọng-Lâm Đồng,Lâm Đồng,Trầm Hữu Tiến
 20320000,Bưu Cục 466 Đường 23/10-Nha Trang-Khánh Hòa,Khánh Hòa,Phan Đình Duy
-20687000,Bưu Cục 46 Hùng Vương-Hàm Tân-Bình Thuận,Bình Thuận,Cao Thị Thanh Thủy
+20687000,Bưu Cục 46 Hùng Vương-Hàm Tân-Bình Thuận,Bình Thuận,Lê Thanh Nhựt
 22452000,Bưu Cục 454 Võ Văn Kiệt-Đặc Khu Đảo Phú Quý-Bình Thuận,Bình Thuận,Nguyễn Ngọc Khánh
 20663000,Bưu Cục 44B Nguyễn Đình Chiểu-Đạ Teh-Lâm Đồng,Lâm Đồng,Huỳnh Tấn Hiền
-21594000,Bưu Cục 430 Tôn Đức Thắng-Tân Phước-Thị xã La Gi-Bình Thuận,Bình Thuận,Cao Thị Thanh Thủy
+21594000,Bưu Cục 430 Tôn Đức Thắng-Tân Phước-Thị xã La Gi-Bình Thuận,Bình Thuận,Huỳnh Tấn Hiền
 20588000,Bưu Cục 42 Nguyễn Du-Cam Lâm-Khánh Hoà,Khánh Hòa,Nguyễn Thanh Long
 21688000,Bưu Cục 412 Nguyễn Văn Cừ-Lộc Phát-Bảo Lộc-Lâm Đồng,Lâm Đồng,Hồng Bích Nga
 20495000,Bưu Cục 40A Yết Kiêu-Nha Trang-Khánh Hòa,Khánh Hòa,Phan Đình Duy
