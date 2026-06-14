@@ -1,56 +1,94 @@
-import os
 import pandas as pd
+import os
 import sys
 
-# Reconfigure stdout to use UTF-8 to avoid encoding errors on Windows console
-sys.stdout.reconfigure(encoding='utf-8')
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
 
-print("=== CHECKING ODR TTS DATA ===")
+# Helper to normalize %
+def normalize_pct_col(series):
+    def convert(val):
+        if pd.isna(val):
+            return 0.0
+        s = str(val).strip().replace('%', '').replace(',', '.')
+        try:
+            return float(s) / 100.0
+        except:
+            return 0.0
+    return series.apply(convert)
 
-odr_path = 'ODR TTS.csv'
-if os.path.exists(odr_path):
-    print("ODR TTS.csv exists.")
-    df_odr = pd.read_csv(odr_path)
-    print("ODR CSV columns:", df_odr.columns.tolist())
-    print("ODR CSV size:", len(df_odr))
-    print("ODR CSV unique dates (Time):", df_odr['Time'].dropna().unique().tolist()[:10])
+def get_compare_deltas(trend, val_key):
+    if not trend or len(trend) < 2:
+        return {'n1': 0.0, 'wk': 0.0}
     
-    # Try parsing ODR TTS.csv like app.py does
+    # Sort trend by date
+    # Format of Time: 'YYYY-MM-DD - Thứ X'
     try:
-        df_odr['GTC'] = pd.to_numeric(df_odr['GTC'], errors='coerce')
-        df_odr['%Ontime'] = pd.to_numeric(df_odr['%Ontime'].astype(str).str.replace(',', '.').str.rstrip('%'), errors='coerce') / 100
-        df_odr['ontime_vol'] = df_odr['GTC'] * df_odr['%Ontime']
-        print("Successfully parsed ODR values.")
-        print("Total GTC in ODR:", df_odr['GTC'].sum())
-        print("Total ontime volume:", df_odr['ontime_vol'].sum())
+        trend = sorted(trend, key=lambda x: pd.to_datetime(str(x['Time']).split(' - ')[0]))
     except Exception as e:
-        print("Error parsing ODR CSV:", e)
-else:
-    print("ODR TTS.csv does not exist!")
-
-print("\n=== CHECKING OPERATIONAL CACHE/DF ===")
-# Let's inspect the cached pickle file for Báo cáo vận hành (specifically tts or gtc) to see the dates
-gtc_cache = '.cache_Copy o NTB - BÁO CÁO VẬN HÀNH.xlsx_gtc.pkl'
-if os.path.exists(gtc_cache):
-    df_gtc = pd.read_pickle(gtc_cache)
-    print("GTC cache columns:", df_gtc.columns.tolist())
-    print("GTC cache unique dates (Time):", df_gtc['Time'].dropna().unique().tolist()[:10])
+        print("Error sorting trend:", e)
+        
+    latest = trend[-1]
+    latest_val = latest.get(val_key, 0.0)
     
-    # Check max date
-    times = df_gtc['Time'].dropna().unique()
-    try:
-        dates_sorted = sorted(times, key=lambda x: pd.to_datetime(str(x).split(' - ')[0]))
-        latest_date_gtc = dates_sorted[-1] if dates_sorted else None
-        print("Latest date GTC (sorted):", latest_date_gtc)
-        if latest_date_gtc:
-            # Check if this latest date is in ODR
-            if os.path.exists(odr_path):
-                df_latest_odr = df_odr[df_odr['Time'] == latest_date_gtc]
-                print(f"ODR rows matching latest date ({latest_date_gtc}):", len(df_latest_odr))
-                if not df_latest_odr.empty:
-                    print("Sample rows:")
-                    print(df_latest_odr.head(2))
-    except Exception as e:
-        print("Error sorting GTC dates:", e)
-else:
-    print("GTC cache file not found!")
+    n1_val = 0.0
+    if len(trend) >= 2:
+        n1_val = trend[-2].get(val_key, 0.0)
+        
+    wk_val = 0.0
+    # Match same day of week (split splitting 'Thứ X')
+    latest_dow = str(latest['Time']).split(' - ')[-1] if ' - ' in str(latest['Time']) else None
+    if latest_dow:
+        for item in reversed(trend[:-1]):
+            dow = str(item['Time']).split(' - ')[-1] if ' - ' in str(item['Time']) else None
+            if dow == latest_dow:
+                wk_val = item.get(val_key, 0.0)
+                break
+                
+    return {
+        'n1': latest_val - n1_val if latest_val is not None and n1_val is not None else 0.0,
+        'wk': latest_val - wk_val if latest_val is not None and wk_val is not None else 0.0
+    }
+
+# Read data
+df_gtc = pd.read_csv('ops_gtc.csv')
+df_odr = pd.read_csv('ODR TTS.csv')
+
+df_gtc['Volume'] = pd.to_numeric(df_gtc['Volume'], errors='coerce')
+df_gtc['% GTC'] = normalize_pct_col(df_gtc['% GTC'])
+df_gtc['delivered_vol'] = df_gtc['Volume'] * df_gtc['% GTC']
+
+df_odr.columns = [str(c).strip() for c in df_odr.columns]
+df_odr['GTC'] = pd.to_numeric(df_odr['GTC'], errors='coerce')
+ontime_col = next((c for c in df_odr.columns if c.lower() in ['%ontime', '% ontime', '%on time', '% on time']), '%Ontime')
+df_odr['%Ontime'] = normalize_pct_col(df_odr[ontime_col])
+df_odr['ontime_vol'] = df_odr['GTC'] * df_odr['%Ontime']
+
+# Calculate trends
+trend_odr = df_odr.groupby('Time').agg({'GTC': 'sum', 'ontime_vol': 'sum'}).reset_index()
+trend_odr['% ODR'] = (trend_odr['ontime_vol'] / trend_odr['GTC']) * 100
+trend_odr_list = trend_odr.sort_values('Time').to_dict(orient='records')
+
+for test_date in ['2026-06-12 - Thứ 6', '2026-06-13 - Thứ 7']:
+    print(f"\n=== Testing Date: {test_date} ===")
+    
+    # overall_odr_tts
+    df_latest_odr = df_odr[df_odr['Time'] == test_date]
+    overall_odr_tts = None
+    if not df_latest_odr.empty:
+        gtc_sum_odr = df_latest_odr['GTC'].sum()
+        ontime_sum_odr = df_latest_odr['ontime_vol'].sum()
+        overall_odr_tts = round(ontime_sum_odr / gtc_sum_odr * 100, 2) if gtc_sum_odr > 0 else 0.0
+    
+    print("overall_odr_tts:", overall_odr_tts)
+    
+    # Trend up to selected date
+    # (If frontend filter is applied, trend is filtered up to selected date)
+    test_dt = pd.to_datetime(test_date.split(' - ')[0])
+    filtered_trend = [
+        item for item in trend_odr_list
+        if pd.to_datetime(str(item['Time']).split(' - ')[0]) <= test_dt
+    ]
+    
+    deltas = get_compare_deltas(filtered_trend, '% ODR')
+    print("Compare Deltas:", deltas)

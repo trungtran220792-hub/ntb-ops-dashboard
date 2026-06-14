@@ -2,27 +2,30 @@ import requests
 import json
 import sys
 
+# Configure stdout/stderr to use UTF-8
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
 
-url = "http://127.0.0.1:5000/api/operational"
 try:
-    res = requests.get(url, auth=('admin', 'admin123'))
-    print("Status:", res.status_code)
-    if res.status_code == 200:
-        data = res.json()
-        print("\n--- Operational API response ---")
-        # Print top-level keys and values except the trends and top/worst lists which could be long
-        for k in data.keys():
-            if not isinstance(data[k], list):
-                print(f"{k}: {data[k]}")
-                
-        print("\ntrend_ltc (last 3):")
-        print(json.dumps(data.get('trend_ltc', [])[-3:], indent=2))
-        
-        print("\ntop_10_ltc (first 2):")
-        print(json.dumps(data.get('top_10_ltc', [])[:2], indent=2))
-    else:
-        print("Error response:", res.text)
+    # Query with default (latest date)
+    r = requests.get('http://127.0.0.1:5000/api/operational')
+    data = r.json()
+    print("=== Operational API (default) ===")
+    print("overall_odr_tts:", data.get("overall_odr_tts"))
+    
+    trend_odr = data.get("trend_odr", [])
+    print("trend_odr length:", len(trend_odr))
+    if len(trend_odr) > 0:
+        print("Last 3 trend entries:")
+        for entry in trend_odr[-3:]:
+            print("  ", entry)
+            
+    # Query with specific dates
+    for date in ["2026-06-12 - Thứ 6", "2026-06-13 - Thứ 7"]:
+        r2 = requests.get(f'http://127.0.0.1:5000/api/operational?date={date}')
+        data2 = r2.json()
+        print(f"\n=== Operational API for {date} ===")
+        print("overall_odr_tts:", data2.get("overall_odr_tts"))
+
 except Exception as e:
-    print("Request failed:", e)
+    print("Error querying API:", e)

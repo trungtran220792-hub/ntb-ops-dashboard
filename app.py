@@ -664,12 +664,12 @@ def normalize_pct_col(series):
     def convert_val(val):
         if pd.isna(val):
             return 0.0
-        val_str = str(val).strip()
+        val_str = str(val).strip().replace(',', '.')
         if not val_str:
             return 0.0
         is_pct = False
         if val_str.endswith('%'):
-            val_str = val_str[:-1]
+            val_str = val_str[:-1].strip()
             is_pct = True
         try:
             f_val = float(val_str)
