@@ -19,7 +19,9 @@ def compare():
         'aging_raw.csv',
         'treo_stuck.csv',
         'buu_cuc_bat_on.csv',
-        'vols_tao_don.csv'
+        'vols_tao_don.csv',
+        'ops_nhan_su.csv',
+        'ops_co_cau.csv'
     ]
     
     for f in files:
