@@ -1,0 +1,344 @@
+{
+    "admin": {
+        "name": "Quản trị viên",
+        "description": "Quyền cao nhất, quản lý toàn bộ hệ thống",
+        "permissions": {
+            "tab-dashboard": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-introduction": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-ntb-summary": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-operational": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-opr": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-backlog": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-unstable-po": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-off-spe": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-volume-creation": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-fd": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-nhan-su": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-sync": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            }
+        }
+    },
+    "manager": {
+        "name": "Quản lý",
+        "description": "Quản lý hoạt động, đơn hàng, báo cáo",
+        "permissions": {
+            "tab-dashboard": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-introduction": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-ntb-summary": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-operational": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-opr": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-backlog": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-unstable-po": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-off-spe": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-volume-creation": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-fd": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            }
+        }
+    },
+    "coordinator": {
+        "name": "Coordinator",
+        "description": "Điều hành - quản lý chuyến đi",
+        "permissions": {
+            "tab-operational": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": false
+            },
+            "tab-opr": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": false
+            },
+            "tab-backlog": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": false
+            },
+            "tab-unstable-po": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": false
+            },
+            "tab-off-spe": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": false
+            },
+            "tab-volume-creation": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": false
+            },
+            "tab-fd": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": false
+            }
+        }
+    },
+    "accountant": {
+        "name": "Accountant",
+        "description": "Kế toán - quản lý tài chính",
+        "permissions": {
+            "tab-ntb-summary": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-fd": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            }
+        }
+    },
+    "viewer": {
+        "name": "Xem",
+        "description": "Chỉ xem, không thêm/sửa/xóa",
+        "permissions": {
+            "tab-dashboard": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-introduction": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-ntb-summary": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-operational": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-opr": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-backlog": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-unstable-po": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-off-spe": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-volume-creation": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-fd": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            }
+        }
+    },
+    "driver": {
+        "name": "Tài xế",
+        "description": "Xem chuyến đi, chi tiết chuyến",
+        "permissions": {
+            "tab-operational": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-opr": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            }
+        }
+    },
+    "vendor": {
+        "name": "Nhà cung cấp",
+        "description": "Xem chuyến đi thuộc vendor của mình",
+        "permissions": {
+            "tab-operational": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-opr": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            }
+        }
+    },
+    "am": {
+        "name": "Area Manager",
+        "description": "Quản lý khu vực (AM)",
+        "permissions": {
+            "tab-nhan-su": {
+                "view": true,
+                "add": false,
+                "edit": true,
+                "delete": false
+            }
+        }
+    },
+    "staff": {
+        "name": "Nhân viên",
+        "description": "Quyền nhân viên cơ bản",
+        "permissions": {
+            "tab-dashboard": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-introduction": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            }
+        }
+    }
+}

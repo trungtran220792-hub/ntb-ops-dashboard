@@ -48,5 +48,90 @@
             "tab-volume-creation",
             "tab-fd"
         ]
+    },
+    "dev_user": {
+        "username": "dev_user",
+        "password": "pbkdf2:sha256:600000$dbZULD2yN0Xh8odz$873dd365ff49e4427d6cf7c387e05e0ce9334cdfa8931753a3859ceb3812d152",
+        "role": "staff",
+        "permissions": {
+            "tab-dashboard": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-introduction": {
+                "view": false,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-ntb-summary": {
+                "view": false,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-operational": {
+                "view": true,
+                "add": true,
+                "edit": false,
+                "delete": false
+            },
+            "tab-opr": {
+                "view": false,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-backlog": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-unstable-po": {
+                "view": false,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-off-spe": {
+                "view": false,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-volume-creation": {
+                "view": false,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-fd": {
+                "view": false,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-nhan-su": {
+                "view": true,
+                "add": true,
+                "edit": false,
+                "delete": true
+            },
+            "tab-sync": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            }
+        }
+    },
+    "3173458": {
+        "username": "3173458",
+        "password": "pbkdf2:sha256:600000$e7oDJKpNNIbwxrLk$a58b63f3f94315a23349f6cf1a88bbe152ecb5329d7a59fbdca358cfb7060ef1",
+        "role": "accountant",
+        "permissions": {}
     }
 }

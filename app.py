@@ -120,9 +120,158 @@ def save_users(users):
         print(f"Error saving users.json: {e}")
         return False
 
+DEFAULT_ROLES = {
+    "admin": {
+        "name": "Quản trị viên",
+        "description": "Quyền cao nhất, quản lý toàn bộ hệ thống",
+        "permissions": {
+            p: {"view": True, "add": True, "edit": True, "delete": True}
+            for p in [
+                "tab-dashboard", "tab-introduction", "tab-ntb-summary", "tab-operational",
+                "tab-opr", "tab-backlog", "tab-unstable-po", "tab-off-spe",
+                "tab-volume-creation", "tab-fd", "tab-nhan-su", "tab-sync"
+            ]
+        }
+    },
+    "manager": {
+        "name": "Quản lý",
+        "description": "Quản lý hoạt động, đơn hàng, báo cáo",
+        "permissions": {
+            p: {"view": True, "add": True, "edit": True, "delete": True}
+            for p in [
+                "tab-dashboard", "tab-introduction", "tab-ntb-summary", "tab-operational",
+                "tab-opr", "tab-backlog", "tab-unstable-po", "tab-off-spe",
+                "tab-volume-creation", "tab-fd"
+            ]
+        }
+    },
+    "coordinator": {
+        "name": "Coordinator",
+        "description": "Điều hành - quản lý chuyến đi",
+        "permissions": {
+            "tab-operational": {"view": True, "add": True, "edit": True, "delete": False},
+            "tab-opr": {"view": True, "add": True, "edit": True, "delete": False},
+            "tab-backlog": {"view": True, "add": True, "edit": True, "delete": False},
+            "tab-unstable-po": {"view": True, "add": True, "edit": True, "delete": False},
+            "tab-off-spe": {"view": True, "add": True, "edit": True, "delete": False},
+            "tab-volume-creation": {"view": True, "add": True, "edit": True, "delete": False},
+            "tab-fd": {"view": True, "add": True, "edit": True, "delete": False}
+        }
+    },
+    "accountant": {
+        "name": "Accountant",
+        "description": "Kế toán - quản lý tài chính",
+        "permissions": {
+            "tab-ntb-summary": {"view": True, "add": False, "edit": False, "delete": False},
+            "tab-fd": {"view": True, "add": False, "edit": False, "delete": False}
+        }
+    },
+    "viewer": {
+        "name": "Xem",
+        "description": "Chỉ xem, không thêm/sửa/xóa",
+        "permissions": {
+            p: {"view": True, "add": False, "edit": False, "delete": False}
+            for p in [
+                "tab-dashboard", "tab-introduction", "tab-ntb-summary", "tab-operational",
+                "tab-opr", "tab-backlog", "tab-unstable-po", "tab-off-spe",
+                "tab-volume-creation", "tab-fd"
+            ]
+        }
+    },
+    "driver": {
+        "name": "Tài xế",
+        "description": "Xem chuyến đi, chi tiết chuyến",
+        "permissions": {
+            "tab-operational": {"view": True, "add": False, "edit": False, "delete": False},
+            "tab-opr": {"view": True, "add": False, "edit": False, "delete": False}
+        }
+    },
+    "vendor": {
+        "name": "Nhà cung cấp",
+        "description": "Xem chuyến đi thuộc vendor của mình",
+        "permissions": {
+            "tab-operational": {"view": True, "add": False, "edit": False, "delete": False},
+            "tab-opr": {"view": True, "add": False, "edit": False, "delete": False}
+        }
+    },
+    "am": {
+        "name": "Area Manager",
+        "description": "Quản lý khu vực (AM)",
+        "permissions": {
+            "tab-nhan-su": {"view": True, "add": False, "edit": True, "delete": False}
+        }
+    },
+    "staff": {
+        "name": "Nhân viên",
+        "description": "Quyền nhân viên cơ bản",
+        "permissions": {
+            "tab-dashboard": {"view": True, "add": False, "edit": False, "delete": False},
+            "tab-introduction": {"view": True, "add": False, "edit": False, "delete": False}
+        }
+    }
+}
+
+def load_roles():
+    roles_file = resolve_path('roles.json', write=False)
+    if not os.path.exists(roles_file):
+        save_roles(DEFAULT_ROLES)
+        return DEFAULT_ROLES
+    try:
+        with open(roles_file, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Error loading roles.json: {e}")
+        return DEFAULT_ROLES
+
+def save_roles(roles):
+    try:
+        roles_file = resolve_path('roles.json', write=True)
+        with open(roles_file, 'w', encoding='utf-8') as f:
+            json.dump(roles, f, indent=4, ensure_ascii=False)
+        return True
+    except Exception as e:
+        print(f"Error saving roles.json: {e}")
+        return False
+
+def get_user_permissions(username):
+    users = load_users()
+    user = users.get(username, {})
+    
+    role = user.get("role")
+    if not role:
+        if get_am_name_by_id(username) is not None:
+            role = "am"
+        else:
+            role = "staff"
+            
+    roles = load_roles()
+    role_config = roles.get(role, {})
+    role_perms = role_config.get("permissions", {})
+    
+    all_pages = [
+        "tab-dashboard", "tab-introduction", "tab-ntb-summary", "tab-operational",
+        "tab-opr", "tab-backlog", "tab-unstable-po", "tab-off-spe",
+        "tab-volume-creation", "tab-fd", "tab-nhan-su", "tab-sync"
+    ]
+    
+    perms_dict = {}
+    for page in all_pages:
+        page_perms = role_perms.get(page, {})
+        perms_dict[page] = {
+            "view": bool(page_perms.get("view", False)),
+            "add": bool(page_perms.get("add", False)),
+            "edit": bool(page_perms.get("edit", False)),
+            "delete": bool(page_perms.get("delete", False))
+        }
+        
+    return perms_dict
+
 def check_auth(username, password):
     users = load_users()
     if username in users and check_password_hash(users[username]["password"], password):
+        return username
+    am_name = get_am_name_by_id(username)
+    if am_name and password == "123456":
         return username
     return None
 
@@ -132,17 +281,16 @@ def is_admin():
     auth = request.authorization
     if auth:
         users = load_users()
-        return auth.username in users and users[auth.username].get("role") == "admin"
+        user = users.get(auth.username, {})
+        return user.get("role") == "admin"
     return False
 
 def requires_auth(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        # 1. Try session authentication first
         if 'username' in session:
             return f(*args, **kwargs)
             
-        # 2. Try Basic Auth (backward compatibility for automated scripts)
         auth = request.authorization
         if auth and check_auth(auth.username, auth.password):
             session['username'] = auth.username
@@ -152,8 +300,6 @@ def requires_auth(f):
             session['permissions'] = user.get("permissions", [])
             return f(*args, **kwargs)
             
-        # 3. If neither succeeds, return 401. 
-        # Add WWW-Authenticate header only if basic auth headers were provided to avoid browser dialogs in standard usage.
         headers = {}
         if request.headers.get('Authorization'):
             headers['WWW-Authenticate'] = 'Basic realm="Dashboard Login Required"'
@@ -165,11 +311,10 @@ def requires_auth(f):
         )
     return decorated
 
-def requires_permission(permission):
+def requires_permission(permission, action='view'):
     def decorator(f):
         @wraps(f)
         def decorated(*args, **kwargs):
-            # 1. Check/Authenticate session
             if 'username' not in session:
                 auth = request.authorization
                 if auth and check_auth(auth.username, auth.password):
@@ -190,9 +335,22 @@ def requires_permission(permission):
                     mimetype='application/json'
                 )
                 
-            # 2. Verify role & permission
-            user_permissions = session.get('permissions', [])
-            if session.get('role') == 'admin' or permission in user_permissions:
+            role = session.get('role')
+            username = session.get('username')
+            
+            if role == 'admin':
+                return f(*args, **kwargs)
+                
+            am_name = get_am_name_by_id(username)
+            if am_name:
+                if permission == 'tab-nhan-su' and action in ['view', 'edit']:
+                    return f(*args, **kwargs)
+                return jsonify({"error": "Quyền truy cập bị từ chối. Bạn không có quyền sử dụng chức năng này."}), 403
+                
+            user_perms = get_user_permissions(username)
+            page_perms = user_perms.get(permission, {"view": False, "add": False, "edit": False, "delete": False})
+            
+            if page_perms.get(action, False):
                 return f(*args, **kwargs)
                 
             return jsonify({"error": "Quyền truy cập bị từ chối. Bạn không có quyền sử dụng chức năng này."}), 403
@@ -575,6 +733,103 @@ def download_google_sheet(url, output_path):
     except Exception as e:
         return False, mask_url(f"Lỗi kết nối khi tải: {str(e)}")
 
+def get_am_name_by_id(employee_id):
+    try:
+        ns_path = resolve_path('ops_nhan_su.csv', write=False)
+        if not os.path.exists(ns_path):
+            return None
+        df_ns = safe_read_csv(ns_path, filter_by_am=False)
+        if df_ns is not None and not df_ns.empty:
+            df_ns.columns = [c.strip() for c in df_ns.columns]
+            df_ns['ID_str'] = df_ns['ID'].astype(str).str.strip()
+            target_id = str(employee_id).strip()
+            row = df_ns[df_ns['ID_str'] == target_id]
+            if not row.empty:
+                emp_name = row.iloc[0]['Tên nhân viên'].strip()
+                chuc_vu = str(row.iloc[0]['Chức vụ']).strip().lower()
+                is_am = "manager" in chuc_vu or "am" in chuc_vu or emp_name in df_ns['AM'].dropna().unique()
+                if is_am:
+                    return emp_name
+    except Exception as e:
+        print(f"Error in get_am_name_by_id: {e}")
+    return None
+
+def get_am_warehouses(am_name):
+    try:
+        cc_path = resolve_path('ops_co_cau.csv', write=False)
+        if not os.path.exists(cc_path):
+            return set()
+        df_cc = safe_read_csv(cc_path, filter_by_am=False)
+        if df_cc is not None and not df_cc.empty:
+            df_cc.columns = [c.strip() for c in df_cc.columns]
+            def match_am(x):
+                return clean_str(x) == clean_str(am_name)
+            df_am = df_cc[df_cc['AM'].apply(match_am)]
+            return set(df_am['warehouse_id'].dropna().astype(str).str.strip().unique())
+    except Exception as e:
+        print(f"Error in get_am_warehouses: {e}")
+    return set()
+
+def filter_df_by_logged_in_am(df):
+    if df is None or df.empty:
+        return df
+    
+    from flask import has_request_context, session
+    if not has_request_context():
+        return df
+        
+    am_name = session.get('am_name')
+    if not am_name:
+        return df
+        
+    df = df.copy()
+    
+    # 1. Filter by AM name column if exists
+    am_cols = [c for c in df.columns if str(c).strip() in ['AM', 'am_name', 'final_am', 'mapped_am', 'am']]
+    if am_cols:
+        col = am_cols[0]
+        def match_am(x):
+            return clean_str(x) == clean_str(am_name)
+        return df[df[col].apply(match_am)]
+        
+    # 2. Filter by warehouse_id if exists
+    wh_cols = [c for c in df.columns if str(c).strip() in ['warehouse_id', 'WarehouseID', 'mã bưu cục', 'ma_buu_cuc', 'ma_bc']]
+    if wh_cols:
+        wh_col = wh_cols[0]
+        am_whs = get_am_warehouses(am_name)
+        def match_wh(x):
+            try:
+                val = str(int(float(x))).strip()
+            except:
+                val = str(x).strip()
+            return val in am_whs
+        return df[df[wh_col].apply(match_wh)]
+        
+    # 3. Filter by Bưu cục column if exists
+    bc_cols = [c for c in df.columns if str(c).strip() in ['Bưu cục', 'buu_cuc', 'PostOffice', 'buucuc']]
+    if bc_cols:
+        bc_col = bc_cols[0]
+        am_whs = get_am_warehouses(am_name)
+        def match_bc(x):
+            if pd.isna(x):
+                return False
+            val_str = str(x).strip()
+            parts = val_str.split(" - ", 1)
+            if len(parts) == 2:
+                try:
+                    wh_id = str(int(float(parts[0].strip()))).strip()
+                    if wh_id in am_whs:
+                        return True
+                except:
+                    pass
+            for wh_id in am_whs:
+                if wh_id in val_str:
+                    return True
+            return False
+        return df[df[bc_col].apply(match_bc)]
+        
+    return df
+
 # Safe AM Name Standardization
 def standardize_am_names(df):
     if df is not None:
@@ -593,8 +848,7 @@ def standardize_am_names(df):
                 except Exception as e:
                     print(f"Error standardizing AM names in column {col}: {e}")
 
-# Safe CSV reader and percentage helpers
-def safe_read_csv(filepath, **kwargs):
+def safe_read_csv(filepath, filter_by_am=True, **kwargs):
     filename = os.path.basename(filepath)
     # Check if running on Vercel or in a read-only environment
     is_vercel = os.environ.get("VERCEL") or not os.access(os.getcwd(), os.W_OK)
@@ -615,6 +869,7 @@ def safe_read_csv(filepath, **kwargs):
             print(f"Error applying CSV kwargs to DB df for {filename}: {e}")
             return db_df
 
+    df = None
     if not is_vercel:
         # 1. Local run: prioritize local file to ensure latest synced data is read instantly
         if os.path.exists(filepath):
@@ -622,38 +877,43 @@ def safe_read_csv(filepath, **kwargs):
                 try:
                     df = pd.read_csv(filepath, encoding=encoding, **kwargs)
                     standardize_am_names(df)
-                    return df
+                    break
                 except Exception as e:
                     last_err = e
                     continue
-            print(f"Error reading local CSV {filepath}: {last_err}")
+            if df is None:
+                print(f"Error reading local CSV {filepath}: {last_err}")
             
         # 2. Fall back to database if local file does not exist
-        db_df = load_df_from_db(filename)
-        df = apply_kwargs_to_df(db_df, filename)
-        if df is not None:
-            standardize_am_names(df)
-            return df
+        if df is None:
+            db_df = load_df_from_db(filename)
+            df = apply_kwargs_to_df(db_df, filename)
+            if df is not None:
+                standardize_am_names(df)
     else:
         # 1. Vercel/Read-only: load from database first
         db_df = load_df_from_db(filename)
         df = apply_kwargs_to_df(db_df, filename)
         if df is not None:
             standardize_am_names(df)
-            return df
             
         # 2. Fall back to local file
-        if os.path.exists(filepath):
+        if df is None and os.path.exists(filepath):
             for encoding in ['utf-8', 'utf-8-sig', 'latin-1', 'cp1252']:
                 try:
                     df = pd.read_csv(filepath, encoding=encoding, **kwargs)
                     standardize_am_names(df)
-                    return df
+                    break
                 except Exception as e:
                     last_err = e
                     continue
-            print(f"Error reading CSV {filepath} from DB fallback local: {last_err}")
-    return None
+            if df is None:
+                print(f"Error reading CSV {filepath} from DB fallback local: {last_err}")
+                
+    if df is not None and filter_by_am:
+        df = filter_df_by_logged_in_am(df)
+        
+    return df
 
 
 def safe_to_numeric(series, fillna_val=0.0):
@@ -2764,17 +3024,34 @@ def api_login():
             return jsonify({"error": "Vui lòng nhập đầy đủ mã nhân viên và mật khẩu."}), 400
             
         users = load_users()
+        am_name = get_am_name_by_id(username)
+        
+        authenticated = False
+        user_role = "staff"
+        
         if username in users and check_password_hash(users[username]["password"], password):
+            authenticated = True
+            user_role = users[username].get("role", "staff")
+        elif am_name and password == "123456":
+            authenticated = True
+            user_role = "am"
+            
+        if authenticated:
             session.clear()
             session['username'] = username
-            session['role'] = users[username].get("role", "staff")
-            session['permissions'] = users[username].get("permissions", [])
+            session['role'] = user_role
+            if am_name:
+                session['am_name'] = am_name
+                session['role'] = 'am'
+            
+            perms = get_user_permissions(username)
+            session['permissions'] = perms
             session.permanent = True
             return jsonify({
                 "success": True,
                 "username": username,
                 "role": session['role'],
-                "permissions": session['permissions']
+                "permissions": perms
             })
         return jsonify({"error": "Sai mã nhân viên hoặc mật khẩu."}), 401
     except Exception as e:
@@ -2786,7 +3063,7 @@ def api_logout():
     return jsonify({"success": True, "message": "Đăng xuất thành công."})
 
 @app.route('/api/users', methods=['GET', 'POST'])
-@requires_permission('tab-sync')
+@requires_permission('tab-sync', 'edit')
 def api_users():
     if not is_admin():
         return jsonify({"error": "Quyền truy cập bị từ chối."}), 403
@@ -2799,7 +3076,7 @@ def api_users():
             users_list.append({
                 "username": udata["username"],
                 "role": udata.get("role", "staff"),
-                "permissions": udata.get("permissions", [])
+                "permissions": get_user_permissions(uname)
             })
         return jsonify(users_list)
         
@@ -2808,7 +3085,7 @@ def api_users():
         username = data.get("username", "").strip()
         password = data.get("password", "").strip()
         role = data.get("role", "staff").strip()
-        permissions = data.get("permissions", [])
+        permissions = data.get("permissions", {})
         
         if not username:
             return jsonify({"error": "Username không được để trống."}), 400
@@ -2833,7 +3110,7 @@ def api_users():
         return jsonify({"success": True, "message": f"User {username} đã được lưu thành công."})
 
 @app.route('/api/users/<username>', methods=['DELETE'])
-@requires_permission('tab-sync')
+@requires_permission('tab-sync', 'delete')
 def api_delete_user(username):
     if not is_admin():
         return jsonify({"error": "Quyền truy cập bị từ chối."}), 403
@@ -2858,6 +3135,174 @@ def api_delete_user(username):
     del users[username]
     save_users(users)
     return jsonify({"success": True, "message": f"User {username} đã được xóa."})
+
+@app.route('/api/roles', methods=['GET'])
+@requires_permission('tab-sync', 'view')
+def api_get_roles():
+    if not is_admin():
+        return jsonify({"error": "Quyền truy cập bị từ chối."}), 403
+    roles = load_roles()
+    return jsonify(roles)
+
+@app.route('/api/roles', methods=['POST'])
+@requires_permission('tab-sync', 'edit')
+def api_save_role():
+    if not is_admin():
+        return jsonify({"error": "Quyền truy cập bị từ chối."}), 403
+    data = request.json or {}
+    role_id = data.get("role_id", "").strip().lower()
+    role_name = data.get("name", "").strip()
+    role_desc = data.get("description", "").strip()
+    permissions = data.get("permissions", {})
+    
+    if not role_id:
+        return jsonify({"error": "Mã vai trò không được để trống."}), 400
+    if not role_name:
+        return jsonify({"error": "Tên vai trò không được để trống."}), 400
+        
+    roles = load_roles()
+    roles[role_id] = {
+        "name": role_name,
+        "description": role_desc,
+        "permissions": permissions
+    }
+    save_roles(roles)
+    return jsonify({"success": True, "message": f"Vai trò '{role_name}' đã được lưu."})
+
+@app.route('/api/roles/<role_id>', methods=['DELETE'])
+@requires_permission('tab-sync', 'delete')
+def api_delete_role(role_id):
+    if not is_admin():
+        return jsonify({"error": "Quyền truy cập bị từ chối."}), 403
+    
+    role_id = role_id.strip().lower()
+    if role_id in ['admin', 'staff', 'am']:
+        return jsonify({"error": "Không thể xóa vai trò hệ thống mặc định."}), 400
+        
+    roles = load_roles()
+    if role_id not in roles:
+        return jsonify({"error": "Vai trò không tồn tại."}), 404
+        
+    del roles[role_id]
+    save_roles(roles)
+    
+    users = load_users()
+    changed = False
+    for uname, udata in users.items():
+        if udata.get("role") == role_id:
+            udata["role"] = "staff"
+            changed = True
+    if changed:
+        save_users(users)
+        
+    return jsonify({"success": True, "message": f"Vai trò '{role_id}' đã được xóa."})
+
+@app.route('/api/staff-list', methods=['GET'])
+@requires_permission('tab-sync', 'view')
+def api_get_staff_list():
+    if not is_admin():
+        return jsonify({"error": "Quyền truy cập bị từ chối."}), 403
+    try:
+        ns_path = resolve_path('ops_nhan_su.csv', write=False)
+        df_ns = safe_read_csv(ns_path)
+        if df_ns is None or df_ns.empty:
+            return jsonify([])
+            
+        df_ns.columns = [c.strip() for c in df_ns.columns]
+        
+        active_mask = (df_ns['Trạng thái'].astype(str).str.strip() == "Đang làm việc")
+        if 'Vùng' in df_ns.columns:
+            active_mask &= (df_ns['Vùng'].astype(str).str.strip() == "NTB")
+            
+        active_df = df_ns[active_mask].copy()
+        
+        users = load_users()
+        staff_list = []
+        for _, row in active_df.iterrows():
+            eid = str(row['ID']).strip()
+            name = str(row['Tên nhân viên']).strip()
+            chuc_vu = str(row['Chức vụ']).strip()
+            
+            user_info = users.get(eid, {})
+            current_role = user_info.get("role", "")
+            if not current_role:
+                if get_am_name_by_id(eid) is not None:
+                    current_role = "am"
+                    
+            staff_list.append({
+                "id": eid,
+                "name": name,
+                "chuc_vu": chuc_vu,
+                "role": current_role
+            })
+            
+        staff_list.sort(key=lambda x: x["name"])
+        return jsonify(staff_list)
+    except Exception as e:
+        print(f"Error reading staff list: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/assign-role', methods=['POST'])
+@requires_permission('tab-sync', 'edit')
+def api_assign_role():
+    if not is_admin():
+        return jsonify({"error": "Quyền truy cập bị từ chối."}), 403
+        
+    data = request.json or {}
+    employee_id = str(data.get("employee_id", "")).strip()
+    role = str(data.get("role", "")).strip().lower()
+    
+    if not employee_id:
+        return jsonify({"error": "Mã nhân viên không được để trống."}), 400
+        
+    users = load_users()
+    
+    if not role or role == "none":
+        if employee_id in users:
+            if users[employee_id].get("role") == "admin":
+                admin_count = sum(1 for u in users.values() if u.get("role") == "admin")
+                if admin_count <= 1:
+                    return jsonify({"error": "Không thể gỡ vai trò của admin duy nhất."}), 400
+            del users[employee_id]
+            save_users(users)
+        return jsonify({"success": True, "message": "Đã gỡ vai trò của nhân viên thành công."})
+        
+    roles = load_roles()
+    if role not in roles:
+        return jsonify({"error": "Vai trò không hợp lệ hoặc không tồn tại."}), 400
+        
+    if employee_id in users:
+        users[employee_id]["role"] = role
+    else:
+        users[employee_id] = {
+            "username": employee_id,
+            "password": generate_password_hash("123456", method="pbkdf2:sha256"),
+            "role": role,
+            "permissions": {}
+        }
+        
+    save_users(users)
+    return jsonify({"success": True, "message": f"Đã gán vai trò '{roles[role]['name']}' cho nhân viên {employee_id}."})
+
+@app.route('/api/reset-password', methods=['POST'])
+@requires_permission('tab-sync', 'edit')
+def api_reset_password():
+    if not is_admin():
+        return jsonify({"error": "Quyền truy cập bị từ chối."}), 403
+        
+    data = request.json or {}
+    employee_id = str(data.get("employee_id", "")).strip()
+    
+    if not employee_id:
+        return jsonify({"error": "Mã nhân viên không được để trống."}), 400
+        
+    users = load_users()
+    if employee_id not in users:
+        return jsonify({"error": "Nhân viên chưa được khởi tạo tài khoản (chưa gán vai trò)."}), 404
+        
+    users[employee_id]["password"] = generate_password_hash("123456", method="pbkdf2:sha256")
+    save_users(users)
+    return jsonify({"success": True, "message": f"Đã đặt lại mật khẩu cho nhân viên {employee_id} về mặc định '123456'."})
 
 @app.route('/api/unstable-po')
 @requires_permission('tab-unstable-po')
@@ -2990,10 +3435,10 @@ def get_user_role():
     username = session.get('username')
     if not username and request.authorization:
         username = request.authorization.username
-    role = 'admin' if is_admin() else 'staff'
-    users = load_users()
-    user = users.get(username, {})
-    permissions = user.get("permissions", [])
+    role = session.get('role', 'staff')
+    if get_am_name_by_id(username):
+        role = 'am'
+    permissions = get_user_permissions(username)
     return jsonify({"username": username, "role": role, "permissions": permissions})
 
 def mask_url(url):
@@ -4925,5 +5370,7 @@ def send_telegram_ai_briefing():
         return jsonify({"error": f"Lỗi gửi bản tin AI: {str(e)}"}), 500
 
 if __name__ == '__main__':
-    print("Dashboard server starts on http://0.0.0.0:5000/")
-    app.run(debug=False, host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5001))
+    print(f"Dashboard server starts on http://0.0.0.0:{port}/")
+    app.run(debug=True, host='0.0.0.0', port=port)
+
