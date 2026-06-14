@@ -28,6 +28,8 @@ backlog_history.json
 !vols_tao_don.csv
 !ODR TTS.csv
 !ops_nhan_su.csv
+!ops_fd.csv
+
 
 # Intermediate inspection and log files
 *_res.txt
