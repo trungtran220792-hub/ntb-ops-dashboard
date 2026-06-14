@@ -5828,7 +5828,28 @@
                         toolbar: { show: false }
                     },
                     plotOptions: {
-                        bar: { horizontal: false, columnWidth: '55%', borderRadius: 4 }
+                        bar: {
+                            horizontal: false,
+                            columnWidth: '70%',
+                            borderRadius: 4,
+                            dataLabels: {
+                                orientation: 'vertical',
+                                position: 'top'
+                            }
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        style: {
+                            fontFamily: 'Inter, sans-serif',
+                            fontSize: '11px',
+                            fontWeight: '700',
+                            colors: ['#ffffff']
+                        },
+                        offsetY: 6,
+                        formatter: function(val) {
+                            return val >= 1000 ? val.toLocaleString() : '';
+                        }
                     },
                     series: data.charts.bar.series,
                     xaxis: {
@@ -5895,7 +5916,10 @@
                                 barHeight: '70%',
                                 borderRadius: 4,
                                 distributed: true,
-                                dataLabels: { position: 'top' }
+                                dataLabels: {
+                                    position: 'top',
+                                    hideOverflowingLabels: false
+                                }
                             }
                         },
                         colors: topColors,
@@ -5920,11 +5944,28 @@
                         dataLabels: {
                             enabled: true,
                             formatter: function(val) { return (val > 0 ? '+' : '') + Math.round(val).toLocaleString(); },
-                            style: { colors: ['#ffffff'], fontSize: '10px', fontWeight: 'bold' },
-                            offsetX: -6
+                            style: { colors: ['#ffffff'], fontSize: '12px', fontWeight: 'bold' },
+                            background: {
+                                enabled: true,
+                                foreColor: '#ffffff',
+                                padding: 4,
+                                borderRadius: 4,
+                                borderWidth: 0,
+                                opacity: 0.85
+                            },
+                            offsetX: 0
                         },
                         legend: { show: false },
-                        grid: { borderColor: 'var(--border-color)', strokeDashArray: 4 },
+                        grid: {
+                            borderColor: 'var(--border-color)',
+                            strokeDashArray: 4,
+                            padding: {
+                                left: 25,
+                                right: 25,
+                                top: 0,
+                                bottom: 0
+                            }
+                        },
                         tooltip: {
                             custom: function({ series, seriesIndex, dataPointIndex, w }) {
                                 const item = top10[dataPointIndex];
@@ -5962,7 +6003,10 @@
                                 barHeight: '70%',
                                 borderRadius: 4,
                                 distributed: true,
-                                dataLabels: { position: 'top' }
+                                dataLabels: {
+                                    position: 'top',
+                                    hideOverflowingLabels: false
+                                }
                             }
                         },
                         colors: worstColors,
@@ -5987,11 +6031,28 @@
                         dataLabels: {
                             enabled: true,
                             formatter: function(val) { return Math.round(val).toLocaleString(); },
-                            style: { colors: ['#ffffff'], fontSize: '10px', fontWeight: 'bold' },
-                            offsetX: 6
+                            style: { colors: ['#ffffff'], fontSize: '12px', fontWeight: 'bold' },
+                            background: {
+                                enabled: true,
+                                foreColor: '#ffffff',
+                                padding: 4,
+                                borderRadius: 4,
+                                borderWidth: 0,
+                                opacity: 0.85
+                            },
+                            offsetX: 0
                         },
                         legend: { show: false },
-                        grid: { borderColor: 'var(--border-color)', strokeDashArray: 4 },
+                        grid: {
+                            borderColor: 'var(--border-color)',
+                            strokeDashArray: 4,
+                            padding: {
+                                left: 25,
+                                right: 25,
+                                top: 0,
+                                bottom: 0
+                            }
+                        },
                         tooltip: {
                             custom: function({ series, seriesIndex, dataPointIndex, w }) {
                                 const item = worst10[dataPointIndex];
