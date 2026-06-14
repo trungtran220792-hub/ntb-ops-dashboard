@@ -5850,11 +5850,13 @@
                             fontFamily: 'Inter, sans-serif',
                             fontSize: '11px',
                             fontWeight: '700',
-                            colors: ['#ffffff']
+                            colors: ['#ffffff', '#ffffff', '#ffffff', '#ffffff', '#ffffff']
                         },
                         offsetY: 6,
                         formatter: function(val) {
-                            return val >= 1000 ? val.toLocaleString() : '';
+                            if (val === null || val === undefined) return '';
+                            const num = Number(val);
+                            return num >= 1000 ? num.toLocaleString() : '';
                         }
                     },
                     series: data.charts.bar.series,
@@ -5959,7 +5961,8 @@
                                 borderWidth: 0,
                                 opacity: 0.85
                             },
-                            offsetX: 0
+                            textAnchor: 'end',
+                            offsetX: -10
                         },
                         legend: { show: false },
                         grid: {
@@ -6046,7 +6049,8 @@
                                 borderWidth: 0,
                                 opacity: 0.85
                             },
-                            offsetX: 0
+                            textAnchor: 'start',
+                            offsetX: 10
                         },
                         legend: { show: false },
                         grid: {
