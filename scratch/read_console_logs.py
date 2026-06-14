@@ -6,12 +6,11 @@ try:
     with open(transcript_path, 'r', encoding='utf-8') as f:
         for line in f:
             obj = json.loads(line)
-            if "capture_browser_console_logs" in str(obj):
-                print(f"Step {obj.get('step_index')}: {obj.get('type')} / {obj.get('status')}")
-                # Print keys
-                # print("Keys:", obj.keys())
+            # Find if this step is capture_browser_console_logs
+            if "capture_browser_console_logs" in str(obj) or "Console logs" in str(obj):
+                print(f"Step {obj.get('step_index')}: {obj.get('type')}")
                 if "content" in obj:
-                    print("Content:", obj["content"][:1000])
+                    print("Content:", obj["content"][:2000])
                 print("="*80)
 except Exception as e:
     print("Error:", str(e))
