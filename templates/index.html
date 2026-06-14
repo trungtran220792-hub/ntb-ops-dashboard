@@ -2159,7 +2159,7 @@
                         </div>
                         <div class="kpi-value" id="kpi-fd-rate">-</div>
                         <div class="kpi-comparison" id="kpi-fd-comparison"></div>
-                        <div class="kpi-trend trend-neutral">So với N-1 &amp; N-7</div>
+                        <div class="kpi-trend trend-neutral" id="kpi-fd-trend">So với N-1 &amp; N-7</div>
                     </div>
                 </div>
 
@@ -2202,6 +2202,80 @@
                             <h3>Phân bổ sản lượng hàng hóa</h3>
                         </div>
                         <div id="chart-shifts" style="min-height: 250px;"></div>
+                    </div>
+                </div>
+
+                <!-- Top 10 rankings on Overview -->
+                <div class="card" style="margin-top: 24px;">
+                    <div class="card-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 20px;">
+                        <h3 style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 18px; color: var(--text-primary); display: flex; align-items: center; gap: 8px; margin: 0;">
+                            <i class="fa-solid fa-ranking-star" style="color: var(--color-ghn-orange);"></i>
+                            Bảng xếp hạng hiệu năng bưu cục (Top 10)
+                        </h3>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
+                        <!-- Top 10 GTC Tốt nhất -->
+                        <div style="background: rgba(16, 185, 129, 0.02); border: 1px solid rgba(16, 185, 129, 0.1); border-radius: 8px; padding: 16px;">
+                            <h4 style="font-size: 14px; font-weight: 700; color: var(--color-success); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; margin-top: 0;">
+                                <i class="fa-solid fa-square-check"></i> Top 10 Bưu cục GTC Tốt nhất
+                            </h4>
+                            <div class="table-responsive">
+                                <table class="custom-table" id="table-overview-best-gtc" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>Bưu cục</th>
+                                            <th style="text-align: center;">Sản lượng</th>
+                                            <th style="text-align: center;">% GTC</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td colspan="3" style="text-align: center; color: var(--text-muted); padding: 12px;">Đang tải...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Top 10 GTC Tệ nhất -->
+                        <div style="background: rgba(239, 68, 68, 0.02); border: 1px solid rgba(239, 68, 68, 0.1); border-radius: 8px; padding: 16px;">
+                            <h4 style="font-size: 14px; font-weight: 700; color: var(--color-danger); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; margin-top: 0;">
+                                <i class="fa-solid fa-triangle-exclamation"></i> Top 10 Bưu cục GTC Tệ nhất
+                            </h4>
+                            <div class="table-responsive">
+                                <table class="custom-table" id="table-overview-worst-gtc" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>Bưu cục</th>
+                                            <th style="text-align: center;">Sản lượng</th>
+                                            <th style="text-align: center;">% GTC</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td colspan="3" style="text-align: center; color: var(--text-muted); padding: 12px;">Đang tải...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Top 10 %FD Tệ nhất -->
+                        <div style="background: rgba(239, 68, 68, 0.02); border: 1px solid rgba(239, 68, 68, 0.1); border-radius: 8px; padding: 16px;">
+                            <h4 style="font-size: 14px; font-weight: 700; color: var(--color-danger); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; margin-top: 0;">
+                                <i class="fa-solid fa-circle-xmark"></i> Top 10 Bưu cục %FD Tệ nhất (Target &lt; 4.5%)
+                            </h4>
+                            <div class="table-responsive">
+                                <table class="custom-table" id="table-overview-worst-fd" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>Bưu cục</th>
+                                            <th style="text-align: center;">% FD</th>
+                                            <th style="text-align: center;">Vol Giao</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td colspan="3" style="text-align: center; color: var(--text-muted); padding: 12px;">Đang tải...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -3234,91 +3308,88 @@
                     </div>
                 </div>
 
-                <!-- Tables Grid -->
-                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; align-items: start; width: 100%;">
-                    <!-- Left: Post Offices Table -->
+                <!-- Tables Grid: High-level summaries first, side-by-side -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; align-items: start; width: 100%;">
+                    <!-- AM Summary -->
                     <div class="card" style="display: flex; flex-direction: column;">
-                        <div class="card-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
-                            <h3 style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 16px; color: var(--text-primary); margin: 0;">
-                                <i class="fa-solid fa-store" style="color: var(--color-ghn-orange); margin-right: 8px;"></i>
-                                Chi tiết Tất cả Bưu cục (Sắp xếp theo %FD)
+                        <div class="card-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border-color);">
+                            <h3 style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 15px; color: var(--text-primary); margin: 0;">
+                                <i class="fa-solid fa-user-tie" style="color: var(--color-ghn-orange); margin-right: 6px;"></i>
+                                Theo AM (Area Manager)
                             </h3>
-                            <span class="status-badge stable" id="fd-po-count">0 bưu cục</span>
                         </div>
-                        <div class="table-responsive" style="max-height: 700px; overflow-y: auto;">
-                            <table class="custom-table" id="table-fd-po" style="width: 100%;">
+                        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                            <table class="custom-table" id="table-fd-am" style="width: 100%;">
                                 <thead style="position: sticky; top: 0; background: #f8fafc; z-index: 10;">
                                     <tr>
-                                        <th style="text-align: left;">Bưu cục</th>
                                         <th style="text-align: left;">AM</th>
-                                        <th>%FD (N)</th>
-                                        <th>%FD (N-1)</th>
-                                        <th>vs N-1</th>
-                                        <th>%FD (N-7)</th>
-                                        <th>vs N-7</th>
-                                        <th>Vol giao</th>
-                                        <th>Vol trả</th>
-                                        <th>Tỷ trọng trả</th>
+                                        <th style="text-align: center;">%FD (N)</th>
+                                        <th style="text-align: center;">vs N-1</th>
+                                        <th style="text-align: center;">vs N-7</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr><td colspan="10" style="text-align: center; padding: 20px;">Đang tải dữ liệu...</td></tr>
+                                    <tr><td colspan="4" style="text-align: center; padding: 20px;">Đang tải dữ liệu...</td></tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- Right: AM and Province Tables -->
-                    <div style="display: flex; flex-direction: column; gap: 24px;">
-                        <!-- AM Summary -->
-                        <div class="card">
-                            <div class="card-header" style="padding: 16px; border-bottom: 1px solid var(--border-color);">
-                                <h3 style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 15px; color: var(--text-primary); margin: 0;">
-                                    <i class="fa-solid fa-user-tie" style="color: var(--color-ghn-orange); margin-right: 6px;"></i>
-                                    Theo AM (Area Manager)
-                                </h3>
-                            </div>
-                            <div class="table-responsive" style="max-height: 350px; overflow-y: auto;">
-                                <table class="custom-table" id="table-fd-am" style="width: 100%;">
-                                    <thead style="position: sticky; top: 0; background: #f8fafc; z-index: 10;">
-                                        <tr>
-                                            <th style="text-align: left;">AM</th>
-                                            <th style="text-align: center;">%FD (N)</th>
-                                            <th style="text-align: center;">vs N-1</th>
-                                            <th style="text-align: center;">vs N-7</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr><td colspan="4" style="text-align: center; padding: 20px;">Đang tải dữ liệu...</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                    <!-- Province Summary -->
+                    <div class="card" style="display: flex; flex-direction: column;">
+                        <div class="card-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border-color);">
+                            <h3 style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 15px; color: var(--text-primary); margin: 0;">
+                                <i class="fa-solid fa-map-location" style="color: var(--color-ghn-orange); margin-right: 6px;"></i>
+                                Theo Tỉnh / Vùng
+                            </h3>
                         </div>
+                        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                            <table class="custom-table" id="table-fd-province" style="width: 100%;">
+                                <thead style="position: sticky; top: 0; background: #f8fafc; z-index: 10;">
+                                    <tr>
+                                        <th style="text-align: left;">Tỉnh</th>
+                                        <th style="text-align: center;">%FD (N)</th>
+                                        <th style="text-align: center;">vs N-1</th>
+                                        <th style="text-align: center;">vs N-7</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td colspan="4" style="text-align: center; padding: 20px;">Đang tải dữ liệu...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
-                        <!-- Province Summary -->
-                        <div class="card">
-                            <div class="card-header" style="padding: 16px; border-bottom: 1px solid var(--border-color);">
-                                <h3 style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 15px; color: var(--text-primary); margin: 0;">
-                                    <i class="fa-solid fa-map-location" style="color: var(--color-ghn-orange); margin-right: 6px;"></i>
-                                    Theo Tỉnh / Vùng
-                                </h3>
-                            </div>
-                            <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
-                                <table class="custom-table" id="table-fd-province" style="width: 100%;">
-                                    <thead style="position: sticky; top: 0; background: #f8fafc; z-index: 10;">
-                                        <tr>
-                                            <th style="text-align: left;">Tỉnh</th>
-                                            <th style="text-align: center;">%FD (N)</th>
-                                            <th style="text-align: center;">vs N-1</th>
-                                            <th style="text-align: center;">vs N-7</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr><td colspan="4" style="text-align: center; padding: 20px;">Đang tải dữ liệu...</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                <!-- Detailed Post Offices Table (Full Width) -->
+                <div class="card" style="display: flex; flex-direction: column; width: 100%;">
+                    <div class="card-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 16px; color: var(--text-primary); margin: 0;">
+                            <i class="fa-solid fa-store" style="color: var(--color-ghn-orange); margin-right: 8px;"></i>
+                            Chi tiết Tất cả Bưu cục (Sắp xếp theo %FD)
+                        </h3>
+                        <span class="status-badge stable" id="fd-po-count">0 bưu cục</span>
+                    </div>
+                    <div class="table-responsive" style="max-height: 700px; overflow-y: auto;">
+                        <table class="custom-table" id="table-fd-po" style="width: 100%;">
+                            <thead style="position: sticky; top: 0; background: #f8fafc; z-index: 10;">
+                                <tr>
+                                    <th style="text-align: left;">Bưu cục</th>
+                                    <th style="text-align: left;">AM</th>
+                                    <th>%FD (N)</th>
+                                    <th>%FD (N-1)</th>
+                                    <th>vs N-1</th>
+                                    <th>%FD (N-7)</th>
+                                    <th>vs N-7</th>
+                                    <th>Vol giao</th>
+                                    <th>Vol trả</th>
+                                    <th>Tỷ trọng trả</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="10" style="text-align: center; padding: 20px;">Đang tải dữ liệu...</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -4634,6 +4705,9 @@
             
             // Dynamic fetch for OPR tab
             loadOprData();
+
+            // Dynamic fetch for Operational tab
+            loadOperationalData();
         }
 
         // ==========================================
@@ -4913,8 +4987,20 @@
 
             // Populate FD card in Overview
             const fdRateEl = document.getElementById('kpi-fd-rate');
+            const fdCardEl = document.getElementById('kpi-fd-card');
+            const fdTrendEl = document.getElementById('kpi-fd-trend');
+            const overallFd = ops.overall_fd;
             if (fdRateEl) {
-                fdRateEl.innerText = ops.overall_fd !== undefined ? ops.overall_fd.toFixed(2) + "%" : "- %";
+                fdRateEl.innerText = overallFd !== undefined ? overallFd.toFixed(2) + "%" : "- %";
+            }
+            if (fdCardEl && fdTrendEl && overallFd !== undefined) {
+                if (overallFd < 4.5) {
+                    fdCardEl.className = "kpi-card success";
+                    fdTrendEl.innerHTML = `<span style="color: var(--color-success); font-weight: 600;"><i class="fa-solid fa-circle-check"></i> Đạt mục tiêu (Target < 4.5%)</span>`;
+                } else {
+                    fdCardEl.className = "kpi-card danger";
+                    fdTrendEl.innerHTML = `<span style="color: var(--color-danger); font-weight: 600;"><i class="fa-solid fa-triangle-exclamation"></i> Không đạt (Target < 4.5%)</span>`;
+                }
             }
             const fdCompEl = document.getElementById('kpi-fd-comparison');
             if (fdCompEl) {
@@ -4928,6 +5014,66 @@
                         <span class="comp-val ${getFdDeltaClass(ops.fd_vs_n7)}">${formatFdDelta(ops.fd_vs_n7)}</span>
                     </div>
                 `;
+            }
+
+            // Populate Top 10 Bưu cục GTC Tốt nhất on Overview
+            const bestGtcBody = document.querySelector('#table-overview-best-gtc tbody');
+            if (bestGtcBody) {
+                bestGtcBody.innerHTML = '';
+                const list = ops.top_10_gtc || [];
+                if (list.length === 0) {
+                    bestGtcBody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted); padding: 12px;">Không có dữ liệu</td></tr>';
+                } else {
+                    list.forEach(r => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${escapeHTML(r['Chi tiết'])}</td>
+                            <td style="text-align: center;">${r.Volume.toLocaleString()}</td>
+                            <td style="text-align: center;"><span class="badge badge-success">${roundNum(r['% GTC'])}%</span></td>
+                        `;
+                        bestGtcBody.appendChild(tr);
+                    });
+                }
+            }
+
+            // Populate Top 10 Bưu cục GTC Tệ nhất on Overview
+            const worstGtcBody = document.querySelector('#table-overview-worst-gtc tbody');
+            if (worstGtcBody) {
+                worstGtcBody.innerHTML = '';
+                const list = ops.worst_10_gtc || [];
+                if (list.length === 0) {
+                    worstGtcBody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted); padding: 12px;">Không có dữ liệu</td></tr>';
+                } else {
+                    list.forEach(r => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${escapeHTML(r['Chi tiết'])}</td>
+                            <td style="text-align: center;">${r.Volume.toLocaleString()}</td>
+                            <td style="text-align: center;"><span class="badge badge-danger">${roundNum(r['% GTC'])}%</span></td>
+                        `;
+                        worstGtcBody.appendChild(tr);
+                    });
+                }
+            }
+
+            // Populate Top 10 Bưu cục %FD Tệ nhất on Overview
+            const worstFdBody = document.querySelector('#table-overview-worst-fd tbody');
+            if (worstFdBody && globalData.fd && globalData.fd.po) {
+                worstFdBody.innerHTML = '';
+                const list = [...globalData.fd.po].sort((a, b) => (b.fd_n || 0) - (a.fd_n || 0)).slice(0, 10);
+                if (list.length === 0) {
+                    worstFdBody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted); padding: 12px;">Không có dữ liệu</td></tr>';
+                } else {
+                    list.forEach(r => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${escapeHTML(r.post_office)}</td>
+                            <td style="text-align: center;"><span class="badge badge-danger">${roundNum(r.fd_n)}%</span></td>
+                            <td style="text-align: center;">${(r.vol_giao || 0).toLocaleString()}</td>
+                        `;
+                        worstFdBody.appendChild(tr);
+                    });
+                }
             }
         }
 
@@ -5004,6 +5150,28 @@
         let oprSlotsChart = null;
         let oprAmChart = null;
         let amOprSortDir = 'asc';
+
+        async function loadOperationalData() {
+            const am = document.getElementById('filter-am').value;
+            const province = document.getElementById('filter-province').value;
+            const po = document.getElementById('filter-po').value;
+            
+            const params = new URLSearchParams();
+            if (am) params.append('am', am);
+            if (province) params.append('province', province);
+            if (po) params.append('po', po);
+            
+            try {
+                const response = await fetch(getApiUrl(`/api/operational?${params.toString()}`), getFetchOptions());
+                const data = await response.json();
+                if (data && !data.error) {
+                    globalData.operational = data;
+                    renderOperationalDashboard();
+                }
+            } catch (err) {
+                console.error("Lỗi khi tải dữ liệu Operational:", err);
+            }
+        }
 
         async function loadOprData() {
             const am = document.getElementById('filter-am').value;
@@ -5770,7 +5938,7 @@
         function formatFdBadge(val) {
             if (val === undefined || val === null) return '-';
             const pct = val.toFixed(2) + "%";
-            if (val >= 7.0) {
+            if (val >= 4.5) {
                 return `<span class="badge" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.15); padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 13px;">${pct}</span>`;
             } else {
                 return `<span class="badge" style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.15); padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 13px;">${pct}</span>`;
@@ -8161,8 +8329,12 @@
                 </div>
             </div>
             <div class="ghn-chat-suggestions">
-                <button class="suggestion-btn" onclick="sendQuickPrompt('Bưu cục tệ nhất')">📍 Bưu cục tệ nhất</button>
-                <button class="suggestion-btn" onclick="sendQuickPrompt('Tỷ lệ OPR')">📊 Tỷ lệ OPR</button>
+                <button class="suggestion-btn" onclick="sendQuickPrompt('Tỷ lệ FD đạt bao nhiêu')">📊 %FD đạt bao nhiêu?</button>
+                <button class="suggestion-btn" onclick="sendQuickPrompt('Top 10 bưu cục FD tệ nhất')">🚨 Top 10 FD tệ nhất</button>
+                <button class="suggestion-btn" onclick="sendQuickPrompt('Top 10 bưu cục GTC tốt nhất')">🏆 Top 10 GTC tốt nhất</button>
+                <button class="suggestion-btn" onclick="sendQuickPrompt('Top 10 bưu cục GTC tệ nhất')">⚠️ Top 10 GTC tệ nhất</button>
+                <button class="suggestion-btn" onclick="sendQuickPrompt('Bưu cục tệ nhất')">📍 Bưu cục tệ nhất chung</button>
+                <button class="suggestion-btn" onclick="sendQuickPrompt('Tỷ lệ OPR')">📈 Tỷ lệ OPR</button>
                 <button class="suggestion-btn" onclick="sendQuickPrompt('Tỷ lệ ODR')">🚚 Tỷ lệ ODR</button>
                 <button class="suggestion-btn" onclick="sendQuickPrompt('Số đơn backlog')">📦 Số đơn backlog</button>
             </div>

@@ -1,28 +1,23 @@
-# -*- coding: utf-8 -*-
-import codecs
+import re
 
-paths = {
-    "current": r"c:\Users\lap4all\Desktop\New folder\templates\index.html",
-    "backup": r"c:\Users\lap4all\Desktop\New folder\scratch\templates\index.html"
-}
-outpath = r"c:\Users\lap4all\Desktop\New folder\scratch\search_results.txt"
+def search_in_file(filepath, pattern):
+    safe_pattern = pattern.encode('ascii', 'replace').decode('ascii')
+    print(f"Searching for '{safe_pattern}' in {filepath}...")
+    with open(filepath, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+    
+    matches = []
+    regex = re.compile(pattern, re.IGNORECASE)
+    for i, line in enumerate(lines):
+        if regex.search(line):
+            matches.append((i+1, line.strip()))
+            
+    print(f"Found {len(matches)} matches:")
+    for num, content in matches[:150]:
+        safe_content = content.encode('ascii', 'replace').decode('ascii')
+        print(f"Line {num}: {safe_content}")
+    if len(matches) > 150:
+        print("... truncated ...")
 
-terms = ['escapeHTML', 'function escapeHTML']
-
-with codecs.open(outpath, 'w', 'utf-8') as out:
-    for name, filepath in paths.items():
-        out.write(f"=== File: {name} ({filepath}) ===\n")
-        try:
-            with codecs.open(filepath, 'r', 'utf-8') as f:
-                lines = f.readlines()
-            for i, line in enumerate(lines):
-                for term in terms:
-                    if term in line:
-                        out.write(f"Line {i+1}: {line.strip()[:150]}\n")
-                        break
-        except Exception as e:
-            out.write(f"Error reading {name}: {str(e)}\n")
-
-print("Done scanning. Saved results to scratch/search_results.txt")
-
-
+if __name__ == '__main__':
+    search_in_file('../templates/index.html', 'suggestion-btn')

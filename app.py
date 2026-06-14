@@ -4015,8 +4015,60 @@ def api_chat():
                     print(f"Error loading opr cache for chat: {e}")
                     
         # Parse queries
-        # 1. Bưu cục tệ nhất (Worst Post Office)
-        if 'tệ nhất' in message or 'te nhat' in message or 'kém nhất' in message or 'kem nhat' in message:
+        # Specific rankings and metrics queries first
+        if 'gtc tốt nhất' in message or 'gtc tot nhat' in message or 'gtc tốt' in message or 'gtc tot' in message or ('gtc' in message and 'tốt' in message) or ('gtc' in message and 'tot' in message):
+            if OPERATIONAL_CACHE and 'top_10_gtc' in OPERATIONAL_CACHE and OPERATIONAL_CACHE['top_10_gtc']:
+                reply = "🏆 **Top 10 Bưu cục GTC Tốt nhất**:<br>"
+                for idx, r in enumerate(OPERATIONAL_CACHE['top_10_gtc'][:10], 1):
+                    reply += f"{idx}. <strong>{r['Chi tiết']}</strong>: {r['% GTC']:.2f}% (Sản lượng: {int(r['Volume'])} đơn)<br>"
+            else:
+                reply = "🏆 Không tìm thấy dữ liệu bưu cục GTC tốt nhất."
+            return jsonify({"reply": reply})
+
+        elif 'gtc tệ nhất' in message or 'gtc te nhat' in message or 'gtc tệ' in message or 'gtc te' in message or ('gtc' in message and 'tệ' in message) or ('gtc' in message and 'te' in message):
+            if OPERATIONAL_CACHE and 'worst_10_gtc' in OPERATIONAL_CACHE and OPERATIONAL_CACHE['worst_10_gtc']:
+                reply = "⚠️ **Top 10 Bưu cục GTC Tệ nhất**:<br>"
+                for idx, r in enumerate(OPERATIONAL_CACHE['worst_10_gtc'][:10], 1):
+                    reply += f"{idx}. <strong>{r['Chi tiết']}</strong>: {r['% GTC']:.2f}% (Sản lượng: {int(r['Volume'])} đơn)<br>"
+            else:
+                reply = "⚠️ Không tìm thấy dữ liệu bưu cục GTC tệ nhất."
+            return jsonify({"reply": reply})
+
+        elif 'fd tệ nhất' in message or 'fd te nhat' in message or ('fd' in message and 'tệ' in message) or ('fd' in message and 'te' in message):
+            try:
+                fd_rep = process_fd_report()
+                if fd_rep and 'po' in fd_rep and fd_rep['po']:
+                    worst_fd_list = sorted(fd_rep['po'], key=lambda x: x.get('fd_n', 0), reverse=True)[:10]
+                    reply = "🚨 **Top 10 Bưu cục %FD Tệ nhất (FD cao nhất - Target < 4.5%)**:<br>"
+                    for idx, r in enumerate(worst_fd_list, 1):
+                        reply += f"{idx}. <strong>{r['post_office']}</strong>: {r['fd_n']:.2f}% (Vol Giao: {int(r['vol_giao'])})<br>"
+                else:
+                    reply = "🚨 Không tìm thấy dữ liệu %FD bưu cục."
+            except Exception as e:
+                reply = f"🚨 Lỗi tính toán %FD bưu cục: {str(e)}"
+            return jsonify({"reply": reply})
+
+        elif 'fd' in message or 'tỷ lệ fd' in message or 'ty le fd' in message:
+            try:
+                fd_rep = process_fd_report()
+                if fd_rep and 'kpi' in fd_rep and fd_rep['kpi']:
+                    kpi = fd_rep['kpi']
+                    fd_n = kpi.get('fd_n', 0)
+                    fd_n1 = kpi.get('fd_n1', 0)
+                    fd_n7 = kpi.get('fd_n7', 0)
+                    status_text = "✅ **Đạt mục tiêu**" if fd_n < 4.5 else "❌ **Không đạt mục tiêu**"
+                    reply = f"📊 **Tỷ lệ %FD hôm nay (Tổng NTB)**: đạt <strong>{fd_n:.2f}%</strong>.<br>"
+                    reply += f"- So với N-1: <strong>{fd_n1:.2f}%</strong> (Chênh lệch: {kpi.get('vs_n1', 0):+.2f}%)<br>"
+                    reply += f"- So với N-7: <strong>{fd_n7:.2f}%</strong> (Chênh lệch: {kpi.get('vs_n7', 0):+.2f}%)<br>"
+                    reply += f"- Đánh giá: {status_text} (Target yêu cầu: < 4.5%)"
+                else:
+                    reply = "📊 Hiện tại hệ thống chưa cập nhật đủ dữ liệu %FD hôm nay."
+            except Exception as e:
+                reply = f"📊 Lỗi tính toán tỷ lệ %FD: {str(e)}"
+            return jsonify({"reply": reply})
+
+        # 1. Bưu cục tệ nhất (Worst Post Office) - general check
+        elif 'tệ nhất' in message or 'te nhat' in message or 'kém nhất' in message or 'kem nhat' in message:
             reply = "Dựa trên dữ liệu vận hành mới nhất:<br>"
             # GTC Worst
             if OPERATIONAL_CACHE and 'worst_10_gtc' in OPERATIONAL_CACHE and OPERATIONAL_CACHE['worst_10_gtc']:
