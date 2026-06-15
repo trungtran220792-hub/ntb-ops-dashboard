@@ -315,10 +315,76 @@
         "name": "Area Manager",
         "description": "Quản lý khu vực (AM)",
         "permissions": {
+            "tab-dashboard": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-introduction": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-ntb-summary": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-operational": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-opr": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-backlog": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-unstable-po": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-off-spe": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-volume-creation": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-fd": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
             "tab-nhan-su": {
                 "view": true,
                 "add": false,
-                "edit": true,
+                "edit": false,
+                "delete": false
+            },
+            "tab-sync": {
+                "view": true,
+                "add": false,
+                "edit": false,
                 "delete": false
             }
         }
