@@ -11,6 +11,15 @@ import json
 import datetime
 import pandas as pd
 import openpyxl
+import unicodedata
+import ssl
+
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    pass
+else:
+    ssl._create_default_https_context = _create_unverified_https_context
 
 # Monkey patch pd.ExcelFile and pd.read_excel to use read_only=True by default for openpyxl
 # This reduces memory consumption by 90% and prevents Render out-of-memory crashes.
@@ -340,12 +349,6 @@ def requires_permission(permission, action='view'):
             
             if role == 'admin':
                 return f(*args, **kwargs)
-                
-            am_name = get_am_name_by_id(username)
-            if am_name:
-                if permission == 'tab-nhan-su' and action in ['view', 'edit']:
-                    return f(*args, **kwargs)
-                return jsonify({"error": "Quyền truy cập bị từ chối. Bạn không có quyền sử dụng chức năng này."}), 403
                 
             user_perms = get_user_permissions(username)
             page_perms = user_perms.get(permission, {"view": False, "add": False, "edit": False, "delete": False})
@@ -770,15 +773,33 @@ def get_am_warehouses(am_name):
         print(f"Error in get_am_warehouses: {e}")
     return set()
 
-def filter_df_by_logged_in_am(df):
+def get_am_provinces(am_name):
+    try:
+        cc_path = resolve_path('ops_co_cau.csv', write=False)
+        if not os.path.exists(cc_path):
+            return set()
+        df_cc = safe_read_csv(cc_path, filter_by_am=False)
+        if df_cc is not None and not df_cc.empty:
+            df_cc.columns = [c.strip() for c in df_cc.columns]
+            def match_am(x):
+                return clean_str(x) == clean_str(am_name)
+            df_am = df_cc[df_cc['AM'].apply(match_am)]
+            return set(df_am['Tỉnh'].dropna().astype(str).str.strip().unique())
+    except Exception as e:
+        print(f"Error in get_am_provinces: {e}")
+    return set()
+
+def filter_df_by_logged_in_am(df, force_am_name=None):
     if df is None or df.empty:
         return df
     
-    from flask import has_request_context, session
-    if not has_request_context():
-        return df
+    am_name = force_am_name
+    if not am_name:
+        from flask import has_request_context, session
+        if not has_request_context():
+            return df
+        am_name = session.get('am_name')
         
-    am_name = session.get('am_name')
     if not am_name:
         return df
         
@@ -848,7 +869,7 @@ def standardize_am_names(df):
                 except Exception as e:
                     print(f"Error standardizing AM names in column {col}: {e}")
 
-def safe_read_csv(filepath, filter_by_am=True, **kwargs):
+def safe_read_csv(filepath, filter_by_am=False, **kwargs):
     filename = os.path.basename(filepath)
     # Check if running on Vercel or in a read-only environment
     is_vercel = os.environ.get("VERCEL") or not os.access(os.getcwd(), os.W_OK)
@@ -968,7 +989,7 @@ def parse_unstable_pct(val):
 def clean_str(val):
     if pd.isna(val):
         return ""
-    return str(val).strip().lower()
+    return unicodedata.normalize('NFC', str(val).strip().lower())
 
 def safe_divide(a, b):
     if b == 0:
@@ -1722,7 +1743,7 @@ def process_opr_report(df_opr=None, df_oe=None, df_rawopr=None, am=None, provinc
 # ==========================================
 # 3. PROCESS BACKLOG AGING
 # ==========================================
-def process_aging_backlog(df_raw=None, df_co_cau=None):
+def process_aging_backlog(df_raw=None, df_co_cau=None, am=None, province=None, post_office=None):
     try:
         if df_raw is None:
             df_raw = safe_read_csv(resolve_path('aging_raw.csv', write=False))
@@ -1735,11 +1756,6 @@ def process_aging_backlog(df_raw=None, df_co_cau=None):
         df_raw = df_raw.dropna(subset=["Mã đơn"]).copy()
         df_co_cau = df_co_cau.dropna(subset=["Bưu cục"]).copy()
         
-        df_raw = df_raw.dropna(subset=["Mã đơn"])
-        df_co_cau = df_co_cau.dropna(subset=["Bưu cục"])
-        
-        # Map AM dynamically for rows where it is NaN
-        # Clean warehouse strings for merge
         df_raw['bc_clean'] = df_raw['BC'].astype(str).str.strip().str.lower()
         df_co_cau['bc_clean'] = df_co_cau['Bưu cục'].astype(str).str.strip().str.lower()
         
@@ -1755,6 +1771,8 @@ def process_aging_backlog(df_raw=None, df_co_cau=None):
         
         fallback_prov = df_raw['Tỉnh'] if 'Tỉnh' in df_raw.columns else pd.Series("Không xác định", index=df_raw.index)
         df_raw['final_province'] = df_raw['mapped_province'].fillna(fallback_prov).fillna("Không xác định")
+        
+        df_raw = apply_filters(df_raw, am=am, province=province, post_office=post_office)
         
         if 'Trạng thái' not in df_raw.columns:
             if 'Nhóm BL' in df_raw.columns:
@@ -1811,7 +1829,7 @@ def process_aging_backlog(df_raw=None, df_co_cau=None):
 # ==========================================
 # 4. PROCESS PENDING TRANSIT (TREO LUÂN CHUYỂN)
 # ==========================================
-def process_treo_backlog(df_raw=None, df_co_cau=None):
+def process_treo_backlog(df_raw=None, df_co_cau=None, am=None, province=None, post_office=None):
     try:
         if df_raw is None:
             df_raw = safe_read_csv(resolve_path('treo_stuck.csv', write=False))
@@ -1846,6 +1864,8 @@ def process_treo_backlog(df_raw=None, df_co_cau=None):
         fallback_prov = df_raw['province_name'] if 'province_name' in df_raw.columns else pd.Series(np.nan, index=df_raw.index)
         df_raw['final_am'] = df_raw['mapped_am'].fillna(fallback_am).fillna("Không xác định")
         df_raw['final_province'] = df_raw['mapped_province'].fillna(fallback_prov).fillna("Không xác định")
+        
+        df_raw = apply_filters(df_raw, am=am, province=province, post_office=post_office)
         
         # Define delay brackets based on 'Thời gian tồn đọng'
         def get_treo_bracket(t):
@@ -1961,7 +1981,7 @@ def map_po_to_am_prov(po_id, po_name, id_to_am, id_to_prov, name_to_am, name_to_
 
     return default_am, default_prov
 
-def process_unstable_po():
+def process_unstable_po(am=None, province=None, post_office=None):
     file_path = resolve_path('buu_cuc_bat_on.csv', write=False)
     try:
         df_raw = safe_read_csv(file_path, header=None)
@@ -2031,23 +2051,23 @@ def process_unstable_po():
                 for _, r in df_cc.iterrows():
                     bc_id = r.get('warehouse_id')
                     bc_name = str(r.get('Bưu cục', '')).strip()
-                    am = str(r.get('AM', '')).strip()
-                    prov = str(r.get('Tỉnh', '')).strip()
-                    if prov == 'Khánh Hoà':
-                        prov = 'Khánh Hòa'
-                    if prov == 'Bình Phước':
-                        prov = 'Lâm Đồng'
+                    am_val = str(r.get('AM', '')).strip()
+                    prov_val = str(r.get('Tỉnh', '')).strip()
+                    if prov_val == 'Khánh Hoà':
+                        prov_val = 'Khánh Hòa'
+                    if prov_val == 'Bình Phước':
+                        prov_val = 'Lâm Đồng'
                     
                     if pd.notna(bc_id):
                         try:
-                            id_to_am[int(bc_id)] = am
-                            id_to_prov[int(bc_id)] = prov
+                            id_to_am[int(bc_id)] = am_val
+                            id_to_prov[int(bc_id)] = prov_val
                         except:
                             pass
                     if bc_name:
                         name_clean = clean_po_name(bc_name)
-                        name_to_am[name_clean] = am
-                        name_to_prov[name_clean] = prov
+                        name_to_am[name_clean] = am_val
+                        name_to_prov[name_clean] = prov_val
             except Exception as e:
                 print(f"Error reading co_cau_ntb.csv in process_unstable_po: {e}")
 
@@ -2118,6 +2138,13 @@ def process_unstable_po():
             }
             processed_records.append(record)
             
+        if am:
+            processed_records = [r for r in processed_records if clean_str(r.get('am')) == clean_str(am)]
+        if province:
+            processed_records = [r for r in processed_records if clean_str(r.get('prov')) == clean_str(province)]
+        if post_office:
+            processed_records = [r for r in processed_records if clean_str(r.get('name')) == clean_str(post_office)]
+            
         # Group warning/unstable post offices by AM (only Bất ổn)
         unstable_by_am = {}
         for rec in processed_records:
@@ -2151,7 +2178,7 @@ def process_unstable_po():
         traceback.print_exc()
         return {"error": f"Lỗi xử lý bưu cục bất ổn: {str(e)}"}
 
-def process_off_spe():
+def process_off_spe(am=None, province=None, post_office=None):
     file_path = resolve_path('off_tuyen_spe.csv', write=False)
     try:
         # Load co_cau mapping for AM lookup
@@ -2275,6 +2302,16 @@ def process_off_spe():
                 "on_time": time_on_val,
                 "note": note_val
             })
+            
+        if am:
+            processed_records = [r for r in processed_records if clean_str(r.get('am')) == clean_str(am)]
+        if province:
+            processed_records = [r for r in processed_records if clean_str(r.get('province')) == clean_str(province)]
+        if post_office:
+            processed_records = [r for r in processed_records if clean_str(r.get('post_office')) == clean_str(post_office)]
+            
+        total_off = sum(1 for r in processed_records if r.get("status") == "Đang OFF")
+        total_pending = sum(1 for r in processed_records if r.get("status") == "Đang chờ duyệt")
             
         if os.path.exists(file_path):
             mtime = os.path.getmtime(file_path)
@@ -2419,7 +2456,7 @@ def calculate_trend(current_data, baseline_entry):
     
     return current_data
 
-def process_fd_report():
+def process_fd_report(am=None, province=None, post_office=None):
     import csv
     import re
     import os
@@ -2545,6 +2582,21 @@ def process_fd_report():
                 }
             else:
                 provinces_clean.append(r)
+                
+        if am:
+            am_provs = get_am_provinces(am)
+            provinces_clean = [r for r in provinces_clean if clean_str(r['province']) in [clean_str(p) for p in am_provs]]
+            sec_am_rows = [r for r in sec_am_rows if clean_str(r['am']) == clean_str(am)]
+            
+        if sec_po_rows:
+            df_pos = pd.DataFrame(sec_po_rows)
+            df_pos.rename(columns={'post_office': 'Bưu cục'}, inplace=True)
+            df_pos = apply_filters(df_pos, am=am, province=province, post_office=post_office)
+            df_pos.rename(columns={'Bưu cục': 'post_office'}, inplace=True)
+            sec_po_rows = df_pos.to_dict('records')
+                
+        if province:
+            provinces_clean = [r for r in provinces_clean if clean_str(r['province']) == clean_str(province)]
                 
         return {
             'date': date_str,
@@ -2880,13 +2932,41 @@ def get_dataframes(force=False, raw_gtc=None, raw_ltc=None, raw_co_cau=None, raw
     return DF_GTC_CACHE, DF_LTC_CACHE, DF_AGING_CACHE, DF_TREO_CACHE
 
 def apply_filters(df, am=None, province=None, post_office=None):
+    if df is None or df.empty:
+        return df
+        
+    from flask import has_request_context, session
+    if has_request_context():
+        am_name = session.get('am_name')
+        if am_name:
+            am = am_name
+
     df_filtered = df.copy()
     if am:
-        df_filtered = df_filtered[df_filtered['mapped_am'] == am]
+        df_filtered = filter_df_by_logged_in_am(df_filtered, force_am_name=am)
+
     if province:
-        df_filtered = df_filtered[df_filtered['mapped_prov'] == province]
+        prov_cols = [c for c in df_filtered.columns if str(c).strip() in ['mapped_prov', 'Tỉnh', 'province_name', 'province']]
+        if prov_cols:
+            col = prov_cols[0]
+            if col == 'mapped_prov':
+                df_filtered = df_filtered[df_filtered[col] == province]
+            else:
+                def match_prov(x):
+                    return clean_str(x) == clean_str(province)
+                df_filtered = df_filtered[df_filtered[col].apply(match_prov)]
+
     if post_office:
-        df_filtered = df_filtered[df_filtered['clean_bc'] == post_office.strip().lower()]
+        po_cols = [c for c in df_filtered.columns if str(c).strip() in ['clean_bc', 'BC', 'warehouse_name', 'Bưu cục', 'post_office']]
+        if po_cols:
+            col = po_cols[0]
+            if col == 'clean_bc':
+                df_filtered = df_filtered[df_filtered[col] == clean_str(post_office)]
+            else:
+                def match_po(x):
+                    return clean_str(x) == clean_str(post_office)
+                df_filtered = df_filtered[df_filtered[col].apply(match_po)]
+
     return df_filtered
 
 def update_all_caches():
@@ -3307,6 +3387,16 @@ def api_reset_password():
 @app.route('/api/unstable-po')
 @requires_permission('tab-unstable-po')
 def get_unstable_po():
+    am = request.args.get('am')
+    province = request.args.get('province')
+    post_office = request.args.get('post_office')
+    
+    if session.get('am_name'):
+        am = session.get('am_name')
+        
+    if am or province or post_office:
+        return jsonify(process_unstable_po(am=am, province=province, post_office=post_office))
+        
     global UNSTABLE_PO_CACHE
     if UNSTABLE_PO_CACHE is None:
         with CACHE_LOCK:
@@ -3317,6 +3407,16 @@ def get_unstable_po():
 @app.route('/api/off-spe')
 @requires_permission('tab-off-spe')
 def get_off_spe():
+    am = request.args.get('am')
+    province = request.args.get('province')
+    post_office = request.args.get('post_office')
+    
+    if session.get('am_name'):
+        am = session.get('am_name')
+        
+    if am or province or post_office:
+        return jsonify(process_off_spe(am=am, province=province, post_office=post_office))
+        
     global OFF_SPE_CACHE
     if OFF_SPE_CACHE is None:
         with CACHE_LOCK:
@@ -3327,6 +3427,16 @@ def get_off_spe():
 @app.route('/api/fd')
 @requires_permission('tab-fd')
 def get_fd():
+    am = request.args.get('am')
+    province = request.args.get('province')
+    post_office = request.args.get('post_office')
+    
+    if session.get('am_name'):
+        am = session.get('am_name')
+        
+    if am or province or post_office:
+        return jsonify(clean_nan(process_fd_report(am=am, province=province, post_office=post_office)))
+        
     global FD_CACHE
     with CACHE_LOCK:
         if FD_CACHE is None:
@@ -3341,6 +3451,9 @@ def get_operational():
     province = request.args.get('province')
     po = request.args.get('po')
     date = request.args.get('date')
+    
+    if session.get('am_name'):
+        am = session.get('am_name')
     
     if am or province or po or date:
         df_gtc = DF_GTC_CACHE if DF_GTC_CACHE is not None else None
@@ -3370,6 +3483,9 @@ def get_opr():
     province = request.args.get('province')
     post_office = request.args.get('post_office')
     
+    if session.get('am_name'):
+        am = session.get('am_name')
+    
     if am or province or post_office:
         # Dynamically compute OPR report with filters applied
         filtered_report = process_opr_report(am=am, province=province, post_office=post_office)
@@ -3384,20 +3500,37 @@ def get_opr():
 @app.route('/api/backlog')
 @requires_permission('tab-backlog')
 def get_backlog():
-    global BACKLOG_CACHE_RAW
-    with CACHE_LOCK:
-        if BACKLOG_CACHE_RAW is None:
-            aging = process_aging_backlog()
-            treo = process_treo_backlog()
-            BACKLOG_CACHE_RAW = {
-                "aging": aging,
-                "treo": treo
-            }
+    am = request.args.get('am')
+    province = request.args.get('province')
+    post_office = request.args.get('post_office')
+    
+    if session.get('am_name'):
+        am = session.get('am_name')
         
-    if "error" in BACKLOG_CACHE_RAW["aging"]:
-        return jsonify({"error": BACKLOG_CACHE_RAW["aging"]["error"]})
-    if "error" in BACKLOG_CACHE_RAW["treo"]:
-        return jsonify({"error": BACKLOG_CACHE_RAW["treo"]["error"]})
+    if am or province or post_office:
+        aging = process_aging_backlog(am=am, province=province, post_office=post_office)
+        treo = process_treo_backlog(am=am, province=province, post_office=post_office)
+        current_data = {
+            "aging": aging,
+            "treo": treo
+        }
+    else:
+        global BACKLOG_CACHE_RAW
+        with CACHE_LOCK:
+            if BACKLOG_CACHE_RAW is None:
+                aging = process_aging_backlog()
+                treo = process_treo_backlog()
+                BACKLOG_CACHE_RAW = {
+                    "aging": aging,
+                    "treo": treo
+                }
+        import copy
+        current_data = copy.deepcopy(BACKLOG_CACHE_RAW)
+        
+    if "error" in current_data["aging"]:
+        return jsonify({"error": current_data["aging"]["error"]})
+    if "error" in current_data["treo"]:
+        return jsonify({"error": current_data["treo"]["error"]})
         
     history = load_history()
     baseline_ts = request.args.get("baseline")
@@ -3415,8 +3548,6 @@ def get_backlog():
             else:
                 baseline_entry = history[-1]
                 
-    import copy
-    current_data = copy.deepcopy(BACKLOG_CACHE_RAW)
     current_data["baseline_timestamp"] = baseline_entry["timestamp"] if baseline_entry else None
     current_data = calculate_trend(current_data, baseline_entry)
     
@@ -3930,11 +4061,19 @@ def get_sync_status():
 @requires_permission('tab-nhan-su')
 def api_nhan_su():
     try:
+        am = request.args.get('am')
+        province = request.args.get('province')
+        post_office = request.args.get('post_office')
+        
+        if session.get('am_name'):
+            am = session.get('am_name')
+            
         ns_path = resolve_path('ops_nhan_su.csv', write=False)
         df_ns = safe_read_csv(ns_path)
         if df_ns is None or df_ns.empty:
             return jsonify({"error": "Không tìm thấy dữ liệu nhân sự (ops_nhan_su.csv). Vui lòng thực hiện Đồng bộ dữ liệu."}), 404
             
+        df_ns = apply_filters(df_ns, am=am, province=province, post_office=post_office)
         df_ns.columns = [c.strip() for c in df_ns.columns]
         
         def check_sp_team(x):
@@ -3973,6 +4112,7 @@ def api_nhan_su():
         if df_cc is None or df_cc.empty:
             return jsonify({"error": "Không tìm thấy dữ liệu cơ cấu (ops_co_cau.csv)."}), 404
             
+        df_cc = apply_filters(df_cc, am=am, province=province, post_office=post_office)
         df_cc.columns = [c.strip() for c in df_cc.columns]
         
         def clean_id(x):
@@ -4703,7 +4843,6 @@ def get_volume_creation():
     try:
         df = DF_TAO_DON_CACHE.copy()
         
-        # Get query parameters
         province = request.args.get('province')
         district = request.args.get('district')
         ward = request.args.get('ward')
@@ -4711,6 +4850,12 @@ def get_volume_creation():
         customer = request.args.get('customer')
         po_type = request.args.get('po_type')
         date_range = request.args.get('date_range', '7d')
+        am = request.args.get('am')
+        
+        if session.get('am_name'):
+            am = session.get('am_name')
+            
+        df = apply_filters(df, am=am, province=None, post_office=None)
         
         # 1. Compute dynamic dropdown options based on cascaded filtering
         provinces_opt = sorted([str(x) for x in df['Tỉnh'].dropna().unique()])

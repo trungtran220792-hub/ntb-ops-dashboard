@@ -1,104 +1,104 @@
-Thời gian cập nhật,,14/06/2026,,"Logic thuộc 1 trong 4 trường hợp sau:
+Thời gian cập nhật,,15/06/2026,,"Logic thuộc 1 trong 4 trường hợp sau:
 
 Tồn LM: Lượng đơn Backlogs LastMile trên tổng đơn GTC trung bình 7 ngày gần nhất (L7D) lớn hơn 2 (ngày).
 Tồn KTC: Lượng đơn Backlogs KTC cùng tỉnh trên tổng đơn GTC trung bình 7 ngày gần nhất (L7D) lớn hơn 2 (ngày).
 Tồn LM + Tồn KTC: Các bưu cục đồng thời thuộc cả 2 nhóm: Tồn LM và Tồn KTC
 Tồn Aging >5 ngày: tỷ lệ đơn tồn trên 5 ngày chiếm từ 10% trở lên trên tổng lượng Backlogs LastMile.",,,,,,,,,,,,,,,,
-Tổng số lượng bưu cục cảnh báo:,,8,,,,,,,,,,,,,,,,,,
+Tổng số lượng bưu cục cảnh báo:,,11,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,
-ngay,vung_giao,tinh_giao,kho_giao_id,kho_giao_name,warehouse_type,BL LM,BL LM >5 ngay,%BL LM >5 ngay,BL KTC,BL KTC cung tinh,%BL KTC cung tinh,tao_n1,tao_avg_7ngay,gtc_n1,gtc_avg_7ngay,gtc_max_7ngay,du_kien_clear_ton,tinh_hinh,ly_do_bat_on,Trạng thái
-2026-06-14 7:45:10,NTB,Lâm Đồng,20942000,Bưu Cục 1322 Hùng Vương-Di Linh-Lâm Đồng,BC,2442,111,4.50%,1823,614,0.337,867,864,473,596,697,4,Bất ổn,2. Tồn LM,Bất ổn
-2026-06-14 7:45:10,NTB,Lâm Đồng,22425000,Bưu Cục Thôn Phúc Hưng-Xã Tân Hà Lâm Hà-Lâm Đồng,BC,1578,359,22.80%,698,79,0.113,357,400,363,392,487,4,Bất ổn,2. Tồn LM | 4. Tồn Aging >5 ngày,Bất ổn
-2026-06-14 7:45:10,NTB,Khánh Hòa,22830000,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,BC,2117,105,5.00%,957,296,0.309,714,845,584,547,627,4,Bất ổn,2. Tồn LM,Bất ổn
-2026-06-14 7:45:10,NTB,Lâm Đồng,22051000,Bưu Cục Langbiang-Lạc Dương-Lâm Đồng,BC,1105,91,8.20%,907,280,0.309,426,473,380,381,428,3,Bất ổn,2. Tồn LM,Bất ổn
-2026-06-14 7:45:10,NTB,Lâm Đồng,22389000,Bưu Cục Thôn R'Chai 2-Xã Đức Trọng-Lâm Đồng,BC,956,42,4.40%,633,115,0.182,437,453,376,390,448,3,Bất ổn,2. Tồn LM,Bất ổn
-2026-06-14 7:45:10,NTB,Lâm Đồng,21377000,Bưu Cục TDP Nghĩa Đức-Thạnh Mỹ-Đơn Dương-Lâm Đồng,BC,1753,54,3.10%,1190,147,0.124,735,837,710,720,807,2,Bất ổn,2. Tồn LM,Bất ổn
-2026-06-14 7:45:10,NTB,Khánh Hòa,20588000,Bưu Cục 42 Nguyễn Du-Cam Lâm-Khánh Hoà,BC,1304,15,1.20%,874,213,0.244,677,735,600,662,765,2,Bình thường,,Chuẩn bị nhảy nhóm
-2026-06-14 7:45:10,NTB,Khánh Hòa,22704000,Bưu Cục 06 Lê Hồng Phong-TP.Nha Trang-Khánh Hòa,BC,1665,240,14.40%,664,153,0.23,549,740,740,893,1033,2,Bất ổn,4. Tồn Aging >5 ngày,Bất ổn
-2026-06-14 7:45:10,NTB,Lâm Đồng,22759000,Bưu Cục 231 Thôn 1-Xã Hòa Ninh-Lâm Đồng,BC,606,43,7.10%,617,202,0.327,315,331,251,319,354,2,Bình thường,,Chuẩn bị nhảy nhóm
-2026-06-14 7:45:10,NTB,Đắk Nông,20269000,Bưu Cục 01 Nguyễn Tất Thành-Đắk R lấp-Đắk Nông,BC,583,22,3.80%,668,142,0.213,323,374,324,324,395,2,Bình thường,,Chuẩn bị nhảy nhóm
-2026-06-14 7:45:10,NTB,Lâm Đồng,20670000,Bưu Cục Đạ Rsal-Đam Rông-Lâm Đồng,BC,678,57,8.40%,916,72,0.079,406,477,441,436,541,2,Bình thường,,Cấp cảnh báo
-2026-06-14 7:45:10,NTB,Đắk Nông,22394000,Bưu Cục Thôn 2-Xã Quảng Tín-Đắk Nông,BC,509,34,6.70%,593,142,0.239,263,330,443,314,443,2,Bình thường,,Cấp cảnh báo
-2026-06-14 7:45:10,NTB,Đắk Nông,21364000,Bưu Cục Quảng Khê-Đắk Glong-Đắk Nông,BC,376,14,3.70%,494,140,0.283,217,267,229,235,281,2,Bình thường,,Cấp cảnh báo
-2026-06-14 7:45:10,NTB,Lâm Đồng,22255000,Bưu Cục Lê Hồng Phong-Liên Hiệp-Đức Trọng-Lâm Đồng,BC,666,2,0.30%,785,56,0.071,452,500,361,456,625,2,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Lâm Đồng,20849000,Bưu Cục QL20 Ninh Hòa-Đức Trọng-Lâm Đồng,BC,610,3,0.50%,640,61,0.095,428,451,362,400,453,2,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Lâm Đồng,22312000,Bưu Cục Số 6 Trương Văn Hoàn-Phường 9-Đà Lạt-Lâm Đồng,BC,1251,10,0.80%,1195,120,0.1,771,884,765,832,1047,2,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Khánh Hòa,21094000,Kho Giao Hàng Nặng - Nha Trang - Khánh Hoà,GXT,651,4,0.60%,373,78,0.209,392,463,358,446,531,2,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Lâm Đồng,22222000,Bưu Cục 337 Hùng Vương-Lộc Thắng-Bảo Lâm-Lâm Đồng,BC,542,65,12.00%,610,192,0.315,277,319,353,361,456,2,Bất ổn,4. Tồn Aging >5 ngày,Bất ổn
-2026-06-14 7:45:10,NTB,Bình Thuận,20687000,Bưu Cục 46 Hùng Vương-Hàm Tân-Bình Thuận,BC,910,3,0.30%,849,288,0.339,662,682,670,642,762,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Bình Thuận,22483000,Bưu Cục 575 Quốc Lộ 28-Xã Hàm Thuận-Bình Thuận,BC,1276,2,0.20%,1027,360,0.351,901,957,947,926,1064,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Bình Thuận,22934000,Bưu Cục 585 Nguyễn Tất Thành-Xã Lương Sơn-Bình Thuận,BC,581,2,0.30%,546,230,0.421,411,445,430,418,485,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Đắk Nông,20269003,Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông,BC,375,4,1.10%,535,92,0.172,263,301,348,287,367,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Đắk Nông,22048000,Bưu Cục Hùng Vương-Nghĩa Trung-Gia Nghĩa-Đắk Nông,BC,369,7,1.90%,632,121,0.191,272,319,316,289,316,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Đắk Nông,20673000,Bưu Cục 40 Nguyễn Văn Linh-Cư Jút-Đắk Nông,BC,851,7,0.80%,748,181,0.242,653,682,647,656,706,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Khánh Hòa,22793000,Bưu Cục Đường Tỉnh Lộ 10-Xã Diên Thọ-Khánh Hòa,BC,565,3,0.50%,525,139,0.265,388,455,474,437,481,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Khánh Hòa,21479000,Bưu Cục 571 Hùng Vương-Cam Nghĩa-TP.Cam Ranh-Khánh Hoà,BC,595,1,0.20%,536,150,0.28,431,485,513,445,544,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Đắk Nông,20591000,Bưu Cục 73 Nguyễn Tất Thành-Krông Nô-Đắk Nông,BC,867,2,0.20%,877,295,0.336,653,701,677,654,685,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Lâm Đồng,21687000,Bưu Cục Cao Bá Quát-Phường 7-Đà Lạt-Lâm Đồng,BC,1513,3,0.20%,1831,202,0.11,1179,1280,1126,1212,1701,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Đắk Nông,21477000,Bưu Cục Quốc Lộ 14-Đức An-Đắk Song-Đăk Nông,BC,551,2,0.40%,717,173,0.241,431,487,506,458,506,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Đắk Nông,22242000,Bưu Cục 53 Tôn Đức Thắng-Nghĩa Thành-Gia Nghĩa-Đắk Nông,BC,286,5,1.70%,364,89,0.245,206,239,221,233,341,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Đắk Nông,20590000,Bưu Cục Thôn 2-Tuy Đức-Đắk Nông,BC,394,6,1.50%,632,157,0.248,314,350,312,324,416,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Đắk Nông,22086000,Bưu Cục Nâm N'Jang-Đắk Song-Đắk Nông,BC,346,1,0.30%,470,117,0.249,299,313,296,295,365,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Khánh Hòa,20558000,Bưu Cục Tổ 5 Đường Ngô Gia Tự-Khánh Vĩnh-Khánh Hòa,BC,313,0,0.00%,334,89,0.266,263,279,316,263,316,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Khánh Hòa,21569000,Bưu Cục 70 Lê Hồng Phong-Ninh Diêm-Ninh Hoà-Khánh Hoà,BC,688,3,0.40%,657,182,0.277,532,599,668,575,678,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Bình Thuận,21065000,Bưu cục 47 Trần Hưng Đạo-Hàm Thuận Nam-Bình Thuận,BC,464,1,0.20%,496,157,0.317,411,416,248,401,489,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Bình Thuận,21290000,Bưu cục DT707-Hàm Thuận Nam-Bình Thuận,BC,1183,1,0.10%,1172,452,0.386,930,1023,836,965,1161,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Lâm Đồng,21516000,Bưu Cục 468 Quốc Lộ 20-Liên Nghĩa-Đức Trọng-Lâm Đồng,BC,821,7,0.90%,1194,149,0.125,766,802,690,751,941,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Ninh Thuận,20316000,Bưu Cục 26A Lê Duẩn-Ninh Sơn-Ninh Thuận,BC,627,6,1.00%,1134,153,0.135,590,645,461,582,667,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Ninh Thuận,22357000,Bưu Cục Phước Minh-Thuận Nam-Ninh Thuận,BC,416,3,0.70%,781,153,0.196,438,432,331,396,461,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Khánh Hòa,20143000,Bưu Cục 39 Hùng Vương-Diên Khánh-Khánh Hòa,BC,826,7,0.80%,933,250,0.268,770,778,855,750,855,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Khánh Hòa,20694000,Bưu Cục Thôn Xuân Hoà 1-Ninh Hoà-Khánh Hoà,BC,414,2,0.50%,435,125,0.287,355,390,419,372,471,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Ninh Thuận,22861000,Bưu Cục 95 Thống Nhất-Phan Rang-Ninh Thuận,BC,1252,3,0.20%,1401,407,0.291,1119,1241,1318,1186,1318,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Ninh Thuận,20648000,Bưu Cục 51 Phạm Ngọc Thạch-Ninh Hải-Ninh Thuận,BC,979,2,0.20%,953,304,0.319,817,880,786,858,931,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Lâm Đồng,1896,Bưu Cục Đạ Huoai-Lâm Đồng,BC,478,1,0.20%,688,248,0.36,391,453,446,421,495,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Bình Thuận,20633000,Bưu Cục 237 Nguyễn Tất Thành-Bắc Bình-Bình Thuận,BC,651,1,0.20%,728,288,0.396,582,612,647,596,707,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Lâm Đồng,21458000,Bưu Cục TDP Ba Đình-Lâm Hà-Lâm Đồng,BC,391,0,0.00%,649,46,0.071,391,402,418,374,418,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Lâm Đồng,21130000,Kho Giao Hàng Nặng - TP Đà Lạt - Lâm Đồng,GXT,322,0,0.00%,319,33,0.103,238,342,331,334,369,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Lâm Đồng,21294000,Bưu cục Đinh Văn-Lâm Hà-Lâm Đồng,BC,673,11,1.60%,1186,153,0.129,696,746,616,700,771,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Lâm Đồng,20669000,Bưu Cục Đường Trần Lê-Cát Tiên-Lâm Đồng,BC,336,1,0.30%,794,110,0.139,374,367,392,322,392,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Ninh Thuận,20499000,Bưu Cục Quốc Lộ 1A-Ninh Phước-Ninh Thuận,BC,1026,23,2.20%,1649,316,0.192,999,1066,983,1005,1114,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Khánh Hòa,21331000,Bưu Cục Thôn Dầu Sơn-Cam Lâm-Khánh Hoà,BC,390,4,1.00%,532,131,0.246,394,439,459,382,459,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Khánh Hòa,22774000,Bưu Cục Thôn Phú An Nam 2-Xã Diên Khánh-Khánh Hòa,BC,418,2,0.50%,383,126,0.329,286,397,326,427,508,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Bình Thuận,20144000,Bưu Cục 16 Huỳnh Thúc Kháng-Phan Thiết-Bình Thuận,BC,672,0,0.00%,805,386,0.48,615,676,546,643,760,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Đắk Nông,21150000,Bưu Cục Quảng Sơn-Đắk Glong-Đắk Nông,BC,273,1,0.40%,716,158,0.221,276,352,328,318,352,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Khánh Hòa,22363000,Bưu Cục Đường 35 Hà Quang 1-Xã Nam Nha Trang-Khánh Hòa,BC,651,11,1.70%,603,156,0.259,454,617,529,737,863,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Bình Thuận,21320000,Bưu Cục Phú Thủy-Phan Thiết-Bình Thuận,BC,1067,2,0.20%,1101,286,0.26,1129,1250,1133,1224,1452,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Lâm Đồng,21468000,Bưu cục 1479 Trần Phú-Lộc Châu-Bảo Lộc-Lâm Đồng,BC,662,1,0.20%,1361,376,0.276,726,797,842,751,894,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Khánh Hòa,21498000,Kho Giao Hàng Nặng - Cam Ranh - Khánh Hoà,GXT,117,0,0.00%,117,43,0.368,93,111,122,126,145,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Bình Thuận,21403000,Bưu Cục Hàm Liêm-Hàm Thuận Bắc-Bình Thuận,BC,758,2,0.30%,931,361,0.388,703,790,767,801,963,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Bình Thuận,21067000,Bưu Cục Số 7 Lê Thánh Tôn-LaGi-Bình Thuận,BC,446,1,0.20%,694,279,0.402,536,556,450,521,637,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Bình Thuận,21396000,Bưu Cục Phú Tài-Phan Thiết-Bình Thuận,BC,978,6,0.60%,1203,522,0.434,966,1064,857,1035,1274,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Bình Thuận,2357,Bưu Cục 158 Quốc lộ 55-Tánh Linh-Bình Thuận,BC,784,3,0.40%,1135,495,0.436,868,926,843,881,1068,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Lâm Đồng,21537000,Bưu Cục 190/11 Phù Đổng Thiên Vương-Phường 8-Đà Lạt-Lâm Đồng,BC,486,2,0.40%,804,58,0.072,561,560,591,581,744,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Lâm Đồng,22116000,Bưu Cục 300 Tự Phước-Đà Lạt-Lâm Đồng,BC,361,0,0.00%,944,142,0.15,461,490,406,471,623,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Lâm Đồng,20663000,Bưu Cục 44B Nguyễn Đình Chiểu-Đạ Teh-Lâm Đồng,BC,357,0,0.00%,893,180,0.202,421,495,657,462,657,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Khánh Hòa,22746000,Bưu Cục 229 Phước Long-Nam Nha Trang-Khánh Hòa,BC,757,2,0.30%,849,195,0.23,618,872,800,996,1202,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Khánh Hòa,20320000,Bưu Cục 466 Đường 23/10-Nha Trang-Khánh Hòa,BC,750,4,0.50%,713,174,0.244,555,785,704,896,1064,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Khánh Hòa,2399,Bưu Cục 195 Đường 2/4-Nha Trang-Khánh Hòa,BC,1431,4,0.30%,1742,435,0.25,1468,1693,1797,1689,1797,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Lâm Đồng,23015000,Bưu Cục QL55-Bảo Lâm 3-Lâm Đồng,BC,269,3,1.10%,877,232,0.265,337,338,327,351,586,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Lâm Đồng,21131000,Kho Giao Hàng Nặng - TP Bảo Lộc - Lâm Đồng,GXT,152,0,0.00%,138,21,0.152,132,201,184,228,272,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Đắk Nông,2309,Bưu Cục Đắk Mil-Đắk Nông,BC,757,3,0.40%,1917,455,0.237,1025,1082,1060,1037,1245,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Khánh Hòa,2502,Bưu Cục Phước Đồng-Nha Trang-Khánh Hoà,BC,229,0,0.00%,306,87,0.284,244,300,373,344,396,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Ninh Thuận,21163000,Kho Giao Hàng Nặng - Phan Rang - Ninh Thuận,GXT,102,0,0.00%,180,51,0.283,133,157,158,165,225,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Lâm Đồng,20785000,Bưu Cục 95A Đội Cấn-Bảo Lộc-Lâm Đồng,BC,479,4,0.80%,1570,489,0.311,771,879,1003,829,1003,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Bình Thuận,21285000,Kho Giao Hàng Nặng - Phan Thiết - Bình Thuận,GXT,121,1,0.80%,152,59,0.388,169,188,191,201,222,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Lâm Đồng,21126000,Bưu cục Ngô Thỳ Sỹ-Đà Lạt-Lâm Đồng,BC,445,14,3.10%,1163,125,0.107,767,852,785,817,922,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Lâm Đồng,21605000,Kho Giao Hàng Nặng - Đức Trọng - Lâm Đồng,GXT,65,0,0.00%,146,17,0.116,109,132,95,143,169,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Khánh Hòa,21046000,Bưu Cục 36 Bà Triệu-Vạn Ninh-Khánh Hoà,BC,286,1,0.30%,1145,148,0.129,561,627,596,588,644,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Ninh Thuận,20150000,Bưu Cục 254A Đường 21 tháng 8-Phan Rang-Tháp Chàm-Ninh Thuận,BC,498,7,1.40%,1560,246,0.158,804,957,990,954,1091,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Bình Thuận,21298000,Bưu cục Thị Trấn Liên Hương-Tuy Phong-Bình Thuận,BC,410,0,0.00%,1542,360,0.233,738,816,732,786,941,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Khánh Hòa,20495000,Bưu Cục 40A Yết Kiêu-Nha Trang-Khánh Hòa,BC,341,4,1.20%,612,163,0.266,470,653,500,679,882,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Lâm Đồng,21688000,Bưu Cục 412 Nguyễn Văn Cừ-Lộc Phát-Bảo Lộc-Lâm Đồng,BC,339,0,0.00%,1467,442,0.301,713,715,691,694,786,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Bình Thuận,22057000,Kho Giao Hàng Nặng - Tuy Phong - Bình Thuận,GXT,37,0,0.00%,67,40,0.597,47,67,85,80,108,1,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Khánh Hòa,20543000,Bưu Cục Tổ Dân Phố 2-Ninh Hoà-Khánh Hoà,BC,429,4,0.90%,1774,299,0.169,940,1026,946,965,1169,0,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Khánh Hòa,21722000,Bưu Cục Thôn Long Hoà-Vạn Long-Vạn Ninh-Khánh Hoà,BC,181,0,0.00%,833,183,0.22,428,473,463,448,478,0,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Đắk Nông,21525000,Kho Giao Hàng Nặng - Gia Nghĩa - Đắk Nông,GXT,21,0,0.00%,93,28,0.301,61,67,44,59,87,0,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Bình Thuận,21456000,Bưu Cục Xã Nam Chính-Đức Linh-Bình Thuận,BC,448,1,0.20%,1416,558,0.394,1163,1215,1131,1135,1264,0,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Bình Thuận,22028000,Kho Giao Hàng Nặng - La Gi - Bình Thuận,GXT,46,0,0.00%,106,52,0.491,77,95,78,105,130,0,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Bình Thuận,22549000,Bưu Cục 21 Trần Hưng Đạo-Xã Phan Rí Cửa-Bình Thuận,BC,161,0,0.00%,657,316,0.481,533,576,612,552,612,0,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Khánh Hòa,20784000,Bưu Cục 111 Lê Duẫn-Khánh Sơn-Khánh Hoà,BC,39,0,0.00%,495,70,0.141,196,208,168,192,242,0,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Bình Thuận,21594000,Bưu Cục 430 Tôn Đức Thắng-Tân Phước-Thị xã La Gi-Bình Thuận,BC,232,1,0.40%,2123,487,0.229,1065,1116,934,1055,1159,0,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Bình Thuận,22452000,Bưu Cục 454 Võ Văn Kiệt-Đặc Khu Đảo Phú Quý-Bình Thuận,BC,39,0,0.00%,974,227,0.233,419,464,569,493,582,0,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Đắk Nông,21659000,Điểm lấy hàng Nguyễn Đình Chiểu-Nghĩa Tân-Gia Nghĩa-Đăk Nông,BC,1,0,0.00%,5,,,2,5,15,8,15,0,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Đắk Nông,22048001,Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng,BC,,,,6,1,0.167,2,3,3,3,5,,Bình thường,,Bình thường
-2026-06-14 7:45:10,NTB,Bình Thuận,20691000,Bưu Cục 371 Nguyễn Tất Thành-Bắc Bình-Bình Thuận,BC,,,,1,,,,,,,,,Bình thường,,Bình thường
+ngay,vung_giao,tinh_giao,kho_giao_id,kho_giao_name,warehouse_type,bl lm,bl lm >5 ngay,%bl lm >5 ngay,bl ktc,bl ktc cung tinh,%bl ktc cung tinh,tao_n1,tao_avg_7ngay,gtc_n1,gtc_avg_7ngay,gtc_max_7ngay,du_kien_clear_ton,tinh_hinh,ly_do_bat_on,Trạng thái
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,20942000,Bưu Cục 1322 Hùng Vương-Di Linh-Lâm Đồng,BC,2592,169,6.50%,1483,445,0.3,635,876,729,621,729,4,Bất ổn,2. Tồn LM,Bất ổn
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,22425000,Bưu Cục Thôn Phúc Hưng-Xã Tân Hà Lâm Hà-Lâm Đồng,BC,1601,308,19.20%,505,29,0.057,291,405,395,394,487,4,Bất ổn,2. Tồn LM | 4. Tồn Aging >5 ngày,Bất ổn
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,22830000,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,BC,1980,105,5.30%,780,81,0.104,622,841,720,580,720,3,Bất ổn,2. Tồn LM,Bất ổn
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,22051000,Bưu Cục Langbiang-Lạc Dương-Lâm Đồng,BC,1052,88,8.40%,725,135,0.186,352,474,532,399,532,3,Bất ổn,2. Tồn LM,Bất ổn
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,22389000,Bưu Cục Thôn R'Chai 2-Xã Đức Trọng-Lâm Đồng,BC,903,44,4.90%,655,23,0.035,367,456,365,390,448,2,Bất ổn,2. Tồn LM,Bất ổn
+2026-06-15 07:30:49.750000,NTB,Đắk Nông,20269000,Bưu Cục 01 Nguyễn Tất Thành-Đắk R lấp-Đắk Nông,BC,739,15,2.00%,380,150,0.395,299,371,278,322,395,2,Bất ổn,2. Tồn LM,Bất ổn
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,21377000,Bưu Cục TDP Nghĩa Đức-Thạnh Mỹ-Đơn Dương-Lâm Đồng,BC,1641,76,4.60%,1010,100,0.099,618,848,804,731,807,2,Bất ổn,2. Tồn LM,Bất ổn
+2026-06-15 07:30:49.750000,NTB,Đắk Nông,21364000,Bưu Cục Quảng Khê-Đắk Glong-Đắk Nông,BC,510,9,1.80%,386,133,0.345,196,272,142,235,281,2,Bất ổn,2. Tồn LM,Bất ổn
+2026-06-15 07:30:49.750000,NTB,Đắk Nông,22394000,Bưu Cục Thôn 2-Xã Quảng Tín-Đắk Nông,BC,672,49,7.30%,276,96,0.348,236,330,246,303,443,2,Bất ổn,2. Tồn LM,Bất ổn
+2026-06-15 07:30:49.750000,NTB,Đắk Nông,22048000,Bưu Cục Hùng Vương-Nghĩa Trung-Gia Nghĩa-Đắk Nông,BC,569,9,1.60%,362,113,0.312,236,317,197,274,316,2,Bất ổn,2. Tồn LM,Bất ổn
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,21331000,Bưu Cục Thôn Dầu Sơn-Cam Lâm-Khánh Hoà,BC,758,5,0.70%,522,43,0.082,300,441,286,379,459,2,Bình thường,,Chuẩn bị nhảy nhóm
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,20588000,Bưu Cục 42 Nguyễn Du-Cam Lâm-Khánh Hoà,BC,1310,24,1.80%,602,54,0.09,496,734,646,662,765,2,Bình thường,,Chuẩn bị nhảy nhóm
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,22222000,Bưu Cục 337 Hùng Vương-Lộc Thắng-Bảo Lâm-Lâm Đồng ,BC,658,63,9.60%,436,80,0.183,237,318,232,336,456,2,Bình thường,,Chuẩn bị nhảy nhóm
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,22759000,Bưu Cục 231 Thôn 1-Xã Hòa Ninh-Lâm Đồng,BC,634,45,7.10%,496,164,0.331,258,336,366,320,366,2,Bình thường,,Chuẩn bị nhảy nhóm
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,22793000,Bưu Cục Đường Tỉnh Lộ 10-Xã Diên Thọ-Khánh Hòa,BC,703,7,1.00%,425,18,0.042,332,459,253,414,481,2,Bình thường,,Cấp cảnh báo
+2026-06-15 07:30:49.750000,NTB,Đắk Nông,21525000,Kho Giao Hàng Nặng - Gia Nghĩa - Đắk Nông,GXT,105,0,0.00%,44,15,0.341,31,63,0,61,87,2,Bình thường,,Cấp cảnh báo
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,22312000,Bưu Cục Số 6 Trương Văn Hoàn-Phường 9-Đà Lạt-Lâm Đồng,BC,1330,9,0.70%,926,89,0.096,643,888,681,832,1047,2,Bình thường,,Cấp cảnh báo
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,20670000,Bưu Cục Đạ Rsal-Đam Rông-Lâm Đồng,BC,721,45,6.20%,639,71,0.111,359,480,523,451,541,2,Bình thường,,Cấp cảnh báo
+2026-06-15 07:30:49.750000,NTB,Đắk Nông,22242000,Bưu Cục 53 Tôn Đức Thắng-Nghĩa Thành-Gia Nghĩa-Đắk Nông,BC,372,5,1.30%,243,76,0.313,161,236,136,238,341,2,Bình thường,,Cấp cảnh báo
+2026-06-15 07:30:49.750000,NTB,Đắk Nông,20590000,Bưu Cục Thôn 2-Tuy Đức-Đắk Nông,BC,505,3,0.60%,377,147,0.39,275,358,236,318,416,2,Bình thường,,Cấp cảnh báo
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,20558000,Bưu Cục Tổ 5 Đường Ngô Gia Tự-Khánh Vĩnh-Khánh Hòa,BC,386,1,0.30%,245,8,0.033,207,281,191,253,316,2,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,22704000,Bưu Cục 06 Lê Hồng Phong-TP.Nha Trang-Khánh Hòa,BC,1322,165,12.50%,495,34,0.069,402,697,782,882,1033,2,Bất ổn,4. Tồn Aging >5 ngày,Bất ổn
+2026-06-15 07:30:49.750000,NTB,Bình Thuận,20687000,Bưu Cục 46 Hùng Vương-Hàm Tân-Bình Thuận,BC,944,2,0.20%,549,76,0.138,528,692,589,647,762,2,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Đắk Nông,20269003,Điểm Xử Lý Hàng Thôn 2-Xã Nhân Cơ-Đắk Nông,BC,453,3,0.70%,326,160,0.491,220,305,272,300,367,2,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Bình Thuận,22934000,Bưu Cục 585 Nguyễn Tất Thành-Xã Lương Sơn-Bình Thuận,BC,605,2,0.30%,315,62,0.197,315,444,462,437,485,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,21687000,Bưu Cục Cao Bá Quát-Phường 7-Đà Lạt-Lâm Đồng,BC,1569,7,0.40%,1390,106,0.076,948,1293,1072,1236,1701,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,20849000,Bưu Cục QL20 Ninh Hòa-Đức Trọng-Lâm Đồng,BC,542,2,0.40%,558,71,0.127,341,457,527,421,527,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Bình Thuận,22028000,Kho Giao Hàng Nặng - La Gi - Bình Thuận,GXT,126,0,0.00%,33,10,0.303,43,92,39,94,130,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,20143000,Bưu Cục 39 Hùng Vương-Diên Khánh-Khánh Hòa,BC,862,9,1.00%,660,27,0.041,561,782,673,737,855,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Bình Thuận,20633000,Bưu Cục 237 Nguyễn Tất Thành-Bắc Bình-Bình Thuận,BC,734,2,0.30%,388,29,0.075,511,622,617,594,707,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,20669000,Bưu Cục Đường Trần Lê-Cát Tiên-Lâm Đồng ,BC,384,0,0.00%,643,49,0.076,292,370,339,321,392,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Bình Thuận,21403000,Bưu Cục Hàm Liêm-Hàm Thuận Bắc-Bình Thuận,BC,921,5,0.50%,486,40,0.082,580,804,651,791,963,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,22255000,Bưu Cục Lê Hồng Phong-Liên Hiệp-Đức Trọng-Lâm Đồng,BC,519,2,0.40%,633,55,0.087,380,507,533,443,566,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Bình Thuận,2357,Bưu Cục 158 Quốc lộ 55-Tánh Linh-Bình Thuận,BC,1047,2,0.20%,655,81,0.124,703,943,935,895,1068,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,21094000,Kho Giao Hàng Nặng - Nha Trang - Khánh Hoà,GXT,569,9,1.60%,252,42,0.167,232,444,441,457,531,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Đắk Nông,20591000,Bưu Cục 73 Nguyễn Tất Thành-Krông Nô-Đắk Nông,BC,800,3,0.40%,576,164,0.285,508,704,685,671,685,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Bình Thuận,21290000,Bưu cục DT707-Hàm Thuận Nam-Bình Thuận,BC,1114,3,0.30%,753,49,0.065,792,1040,986,979,1161,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Bình Thuận,22483000,Bưu Cục 575 Quốc Lộ 28-Xã Hàm Thuận-Bình Thuận,BC,1051,2,0.20%,589,42,0.071,691,969,1108,959,1108,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,21569000,Bưu Cục 70 Lê Hồng Phong-Ninh Diêm-Ninh Hoà-Khánh Hoà,BC,608,3,0.50%,499,39,0.078,413,600,550,579,678,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,21516000,Bưu Cục 468 Quốc Lộ 20-Liên Nghĩa-Đức Trọng-Lâm Đồng,BC,835,10,1.20%,924,75,0.081,589,808,750,770,941,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Ninh Thuận,20316000,Bưu Cục 26A Lê Duẩn-Ninh Sơn-Ninh Thuận,BC,621,6,1.00%,911,75,0.082,528,665,635,586,667,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,21498000,Kho Giao Hàng Nặng - Cam Ranh - Khánh Hoà,GXT,131,0,0.00%,59,5,0.085,51,105,90,124,145,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,22116000,Bưu Cục 300 Tự Phước-Đà Lạt-Lâm Đồng,BC,531,1,0.20%,595,51,0.086,352,497,420,464,623,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Bình Thuận,20144000,Bưu Cục 16 Huỳnh Thúc Kháng-Phan Thiết-Bình Thuận,BC,675,1,0.10%,443,52,0.117,515,685,673,640,760,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,21294000,Bưu cục Đinh Văn-Lâm Hà-Lâm Đồng,BC,784,9,1.10%,913,117,0.128,606,746,590,686,771,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,21479000,Bưu Cục 571 Hùng Vương-Cam Nghĩa-TP.Cam Ranh-Khánh Hoà,BC,510,4,0.80%,458,68,0.148,361,488,453,456,544,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,1896,Bưu Cục Đạ Huoai-Lâm Đồng,BC,460,1,0.20%,596,97,0.163,341,452,362,419,495,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Đắk Nông,20673000,Bưu Cục 40 Nguyễn Văn Linh-Cư Jút-Đắk Nông,BC,760,3,0.40%,515,90,0.175,475,685,634,663,706,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Đắk Nông,22086000,Bưu Cục Nâm N'Jang-Đắk Song-Đắk Nông,BC,326,1,0.30%,327,72,0.22,239,315,274,295,365,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Đắk Nông,21477000,Bưu Cục Quốc Lộ 14-Đức An-Đắk Song-Đăk Nông,BC,481,2,0.40%,537,129,0.24,355,484,373,451,506,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Đắk Nông,2309,Bưu Cục Đắk Mil-Đắk Nông,BC,1080,1,0.10%,1306,316,0.242,794,1092,732,1020,1245,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Ninh Thuận,22861000,Bưu Cục 95 Thống Nhất-Phan Rang-Ninh Thuận,BC,1152,5,0.40%,1137,65,0.057,936,1257,1095,1199,1341,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Ninh Thuận,20150000,Bưu Cục 254A Đường 21 tháng 8-Phan Rang-Tháp Chàm-Ninh Thuận,BC,883,14,1.60%,816,55,0.067,677,955,805,924,1091,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,20543000,Bưu Cục Tổ Dân Phố 2-Ninh Hoà-Khánh Hoà,BC,948,5,0.50%,914,82,0.09,753,1012,916,972,1169,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,23015000,Bưu Cục QL55-Bảo Lâm 3-Lâm Đồng,BC,306,4,1.30%,570,109,0.191,265,339,334,315,389,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,21468000,Bưu cục 1479 Trần Phú-Lộc Châu-Bảo Lộc-Lâm Đồng,BC,724,4,0.60%,1046,224,0.214,581,805,736,756,894,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,20694000,Bưu Cục Thôn Xuân Hoà 1-Ninh Hoà-Khánh Hoà,BC,348,0,0.00%,375,13,0.035,292,394,370,377,471,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Ninh Thuận,21163000,Kho Giao Hàng Nặng - Phan Rang - Ninh Thuận,GXT,136,0,0.00%,95,4,0.042,60,149,116,160,225,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Ninh Thuận,20648000,Bưu Cục 51 Phạm Ngọc Thạch-Ninh Hải-Ninh Thuận,BC,805,1,0.10%,698,30,0.043,606,873,913,861,931,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,20495000,Bưu Cục 40A Yết Kiêu-Nha Trang-Khánh Hòa,BC,581,2,0.30%,466,23,0.049,405,619,424,651,882,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,21537000,Bưu Cục 190/11 Phù Đổng Thiên Vương-Phường 8-Đà Lạt-Lâm Đồng,BC,507,2,0.40%,613,39,0.064,453,576,540,589,744,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,22363000,Bưu Cục Đường 35 Hà Quang 1-Xã Nam Nha Trang-Khánh Hòa,BC,645,5,0.80%,478,38,0.079,364,596,529,705,863,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Bình Thuận,21065000,Bưu cục 47 Trần Hưng Đạo-Hàm Thuận Nam-Bình Thuận,BC,356,0,0.00%,313,27,0.086,331,418,482,414,489,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Bình Thuận,21298000,Bưu cục Thị Trấn Liên Hương-Tuy Phong-Bình Thuận,BC,687,1,0.10%,810,73,0.09,550,814,792,799,941,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Ninh Thuận,20499000,Bưu Cục Quốc Lộ 1A-Ninh Phước-Ninh Thuận,BC,935,7,0.70%,985,97,0.098,834,1083,1058,1049,1114,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,20663000,Bưu Cục 44B Nguyễn Đình Chiểu-Đạ Teh-Lâm Đồng ,BC,399,0,0.00%,715,102,0.143,371,502,396,451,657,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Đắk Nông,21150000,Bưu Cục Quảng Sơn-Đắk Glong-Đắk Nông,BC,284,0,0.00%,381,108,0.283,264,354,168,303,352,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Ninh Thuận,22357000,Bưu Cục Phước Minh-Thuận Nam-Ninh Thuận,BC,306,3,1.00%,676,25,0.037,346,440,476,405,476,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,22746000,Bưu Cục 229 Phước Long-Nam Nha Trang-Khánh Hòa,BC,768,3,0.40%,656,30,0.046,531,835,623,930,1202,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,22774000,Bưu Cục Thôn Phú An Nam 2-Xã Diên Khánh-Khánh Hòa,BC,316,0,0.00%,299,16,0.054,249,382,379,413,508,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,21126000,Bưu cục Ngô Thỳ Sỹ-Đà Lạt-Lâm Đồng,BC,657,17,2.60%,899,61,0.068,585,857,733,832,922,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Bình Thuận,22549000,Bưu Cục 21 Trần Hưng Đạo-Xã Phan Rí Cửa-Bình Thuận,BC,436,0,0.00%,678,49,0.072,434,579,445,535,612,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,21458000,Bưu Cục TDP Ba Đình-Lâm Hà-Lâm Đồng,BC,302,2,0.70%,550,43,0.078,314,408,462,385,462,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,2399,Bưu Cục 195 Đường 2/4-Nha Trang-Khánh Hòa,BC,1352,5,0.40%,1346,131,0.097,1202,1689,1414,1651,1797,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Bình Thuận,21396000,Bưu Cục Phú Tài-Phan Thiết-Bình Thuận,BC,813,4,0.50%,712,104,0.146,766,1073,1160,1061,1274,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Bình Thuận,21320000,Bưu Cục Phú Thủy-Phan Thiết-Bình Thuận,BC,917,1,0.10%,704,18,0.026,886,1257,1310,1263,1452,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,21605000,Kho Giao Hàng Nặng - Đức Trọng - Lâm Đồng,GXT,98,0,0.00%,88,4,0.045,66,127,103,134,165,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,21130000,Kho Giao Hàng Nặng - TP Đà Lạt - Lâm Đồng,GXT,251,0,0.00%,179,19,0.106,168,328,307,336,369,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Bình Thuận,21285000,Kho Giao Hàng Nặng - Phan Thiết - Bình Thuận,GXT,131,0,0.00%,62,7,0.113,94,180,167,199,222,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,20320000,Bưu Cục 466 Đường 23/10-Nha Trang-Khánh Hòa,BC,615,3,0.50%,554,65,0.117,472,749,665,883,1064,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,20785000,Bưu Cục 95A Đội Cấn-Bảo Lộc-Lâm Đồng,BC,557,3,0.50%,1158,273,0.236,652,894,798,851,1003,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,21046000,Bưu Cục 36 Bà Triệu-Vạn Ninh-Khánh Hoà,BC,346,0,0.00%,837,35,0.042,453,625,599,582,644,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Bình Thuận,21067000,Bưu Cục Số 7 Lê Thánh Tôn-LaGi-Bình Thuận,BC,346,0,0.00%,422,41,0.097,423,567,650,554,650,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,21688000,Bưu Cục 412 Nguyễn Văn Cừ-Lộc Phát-Bảo Lộc-Lâm Đồng,BC,397,1,0.30%,1122,224,0.2,512,727,697,697,786,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,2502,Bưu Cục Phước Đồng-Nha Trang-Khánh Hoà,BC,167,0,0.00%,257,13,0.051,196,296,235,321,394,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Bình Thuận,21456000,Bưu Cục Xã Nam Chính-Đức Linh-Bình Thuận,BC,595,0,0.00%,875,174,0.199,934,1235,1372,1182,1372,1,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Bình Thuận,21594000,Bưu Cục 430 Tôn Đức Thắng-Tân Phước-Thị xã La Gi-Bình Thuận,BC,460,2,0.40%,765,78,0.102,751,1121,1169,1072,1169,0,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Bình Thuận,22057000,Kho Giao Hàng Nặng - Tuy Phong - Bình Thuận,GXT,28,0,0.00%,61,9,0.148,32,60,56,77,108,0,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Đắk Nông,21659000,Điểm lấy hàng Nguyễn Đình Chiểu-Nghĩa Tân-Gia Nghĩa-Đăk Nông,BC,3,0,0.00%,7,2,0.286,11,6,2,7,15,0,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,21722000,Bưu Cục Thôn Long Hoà-Vạn Long-Vạn Ninh-Khánh Hoà,BC,149,0,0.00%,768,37,0.048,389,480,423,448,478,0,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Lâm Đồng,21131000,Kho Giao Hàng Nặng - TP Bảo Lộc - Lâm Đồng,GXT,79,0,0.00%,114,29,0.254,106,195,189,226,272,0,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Khánh Hòa,20784000,Bưu Cục 111 Lê Duẫn-Khánh Sơn-Khánh Hoà,BC,38,0,0.00%,373,20,0.054,146,205,265,206,265,0,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Bình Thuận,22452000,Bưu Cục 454 Võ Văn Kiệt-Đặc Khu Đảo Phú Quý-Bình Thuận,BC,28,1,3.60%,447,29,0.065,303,468,445,501,582,0,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Đắk Nông,22048001,Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng,BC,0,0,0.00%,8,0,0,9,4,2,3,3,0,Bình thường,,Bình thường
+2026-06-15 07:30:49.750000,NTB,Bình Thuận,20691000,Bưu Cục 371 Nguyễn Tất Thành-Bắc Bình-Bình Thuận,BC,0,0,0.00%,1,0,0,0,0,0,0,0,0,Bình thường,,Bình thường

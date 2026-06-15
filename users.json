@@ -131,7 +131,7 @@
     "3173458": {
         "username": "3173458",
         "password": "pbkdf2:sha256:600000$e7oDJKpNNIbwxrLk$a58b63f3f94315a23349f6cf1a88bbe152ecb5329d7a59fbdca358cfb7060ef1",
-        "role": "accountant",
+        "role": "staff",
         "permissions": {}
     }
 }
