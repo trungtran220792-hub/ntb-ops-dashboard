@@ -4794,9 +4794,185 @@ def get_ntb_structure():
     except Exception as e:
         return jsonify({"error": f"Lỗi đọc file cơ cấu: {str(e)}"}), 500
 
+@app.route('/api/batch-data')
+@requires_auth
+def get_batch_data():
+    """
+    Load all report data in a single request.
+    Critical for Vercel: avoids multiple separate API calls hitting different cold instances.
+    Each separate API call on Vercel could hit a new serverless instance with empty caches,
+    but this single call ensures all data is loaded from the same warm instance.
+    """
+    result = {}
+    username = session.get('username', '')
+    user_perms = get_user_permissions(username)
+    role = session.get('role', 'staff')
+    is_admin_user = (role == 'admin')
+    
+    def has_perm(tab):
+        if is_admin_user:
+            return True
+        p = user_perms.get(tab, {})
+        return p.get('view', False) if isinstance(p, dict) else False
+    
+    # Operational
+    if has_perm('tab-operational'):
+        try:
+            global OPERATIONAL_CACHE, DF_GTC_CACHE, DF_LTC_CACHE, DF_TTS_CACHE
+            am = None
+            if session.get('am_name'):
+                am = session.get('am_name')
+            if am:
+                ops = process_operational_report(df_gtc=DF_GTC_CACHE, df_ltc=DF_LTC_CACHE, df_tts=DF_TTS_CACHE, am=am)
+            else:
+                with CACHE_LOCK:
+                    if OPERATIONAL_CACHE is None:
+                        OPERATIONAL_CACHE = process_operational_report()
+                ops = OPERATIONAL_CACHE
+            result['operational'] = clean_nan(ops)
+        except Exception as e:
+            result['operational'] = {"error": str(e)}
+    else:
+        result['operational'] = {"error": "No permission"}
+
+    # OPR
+    if has_perm('tab-opr'):
+        try:
+            global OPR_CACHE
+            am = None
+            if session.get('am_name'):
+                am = session.get('am_name')
+            if am:
+                result['opr'] = clean_nan(process_opr_report(am=am))
+            else:
+                with CACHE_LOCK:
+                    if OPR_CACHE is None:
+                        OPR_CACHE = process_opr_report()
+                result['opr'] = clean_nan(OPR_CACHE)
+        except Exception as e:
+            result['opr'] = {"error": str(e)}
+    else:
+        result['opr'] = {"error": "No permission"}
+
+    # Backlog
+    if has_perm('tab-backlog'):
+        try:
+            global BACKLOG_CACHE_RAW
+            am = None
+            if session.get('am_name'):
+                am = session.get('am_name')
+            if am:
+                aging = process_aging_backlog(am=am)
+                treo = process_treo_backlog(am=am)
+                current_data = {"aging": aging, "treo": treo}
+            else:
+                with CACHE_LOCK:
+                    if BACKLOG_CACHE_RAW is None:
+                        aging = process_aging_backlog()
+                        treo = process_treo_backlog()
+                        BACKLOG_CACHE_RAW = {"aging": aging, "treo": treo}
+                import copy
+                current_data = copy.deepcopy(BACKLOG_CACHE_RAW)
+            
+            if "error" not in current_data.get("aging", {}) and "error" not in current_data.get("treo", {}):
+                history = load_history()
+                baseline_entry = None
+                if history:
+                    if len(history) >= 2:
+                        baseline_entry = history[-2]
+                    else:
+                        baseline_entry = history[-1]
+                current_data["baseline_timestamp"] = baseline_entry["timestamp"] if baseline_entry else None
+                current_data = calculate_trend(current_data, baseline_entry)
+            result['backlog'] = clean_nan(current_data)
+        except Exception as e:
+            result['backlog'] = {"error": str(e)}
+    else:
+        result['backlog'] = {"error": "No permission"}
+
+    # Unstable PO
+    if has_perm('tab-unstable-po'):
+        try:
+            global UNSTABLE_PO_CACHE
+            am = None
+            if session.get('am_name'):
+                am = session.get('am_name')
+            if am:
+                result['unstablePo'] = process_unstable_po(am=am)
+            else:
+                with CACHE_LOCK:
+                    if UNSTABLE_PO_CACHE is None:
+                        UNSTABLE_PO_CACHE = process_unstable_po()
+                result['unstablePo'] = UNSTABLE_PO_CACHE
+        except Exception as e:
+            result['unstablePo'] = {"error": str(e)}
+    else:
+        result['unstablePo'] = {"error": "No permission"}
+
+    # OFF SPE
+    if has_perm('tab-off-spe'):
+        try:
+            global OFF_SPE_CACHE
+            am = None
+            if session.get('am_name'):
+                am = session.get('am_name')
+            if am:
+                result['offSpe'] = process_off_spe(am=am)
+            else:
+                with CACHE_LOCK:
+                    if OFF_SPE_CACHE is None:
+                        OFF_SPE_CACHE = process_off_spe()
+                result['offSpe'] = OFF_SPE_CACHE
+        except Exception as e:
+            result['offSpe'] = {"error": str(e)}
+    else:
+        result['offSpe'] = {"error": "No permission"}
+
+    # Volume Creation
+    if has_perm('tab-volume-creation'):
+        try:
+            global DF_TAO_DON_CACHE, DF_BUU_CUC_TYPE_MAP
+            with CACHE_LOCK:
+                if DF_TAO_DON_CACHE is None:
+                    DF_TAO_DON_CACHE = load_vols_tao_don_df()
+                if DF_BUU_CUC_TYPE_MAP is None:
+                    DF_BUU_CUC_TYPE_MAP = load_buu_cuc_type_map()
+            if DF_TAO_DON_CACHE is not None:
+                # Delegate to the existing endpoint logic via internal call
+                # Use a simplified version here
+                result['volumeCreation'] = {"loaded": True}
+            else:
+                result['volumeCreation'] = {"error": "No vols_tao_don.csv"}
+        except Exception as e:
+            result['volumeCreation'] = {"error": str(e)}
+    else:
+        result['volumeCreation'] = {"error": "No permission"}
+
+    # FD
+    if has_perm('tab-fd'):
+        try:
+            global FD_CACHE
+            am = None
+            if session.get('am_name'):
+                am = session.get('am_name')
+            if am:
+                result['fd'] = clean_nan(process_fd_report(am=am))
+            else:
+                with CACHE_LOCK:
+                    if FD_CACHE is None:
+                        FD_CACHE = process_fd_report()
+                result['fd'] = clean_nan(FD_CACHE)
+        except Exception as e:
+            result['fd'] = {"error": str(e)}
+    else:
+        result['fd'] = {"error": "No permission"}
+
+    return jsonify(result)
+
 @app.route('/api/files-status')
 @requires_permission('tab-sync')
 def get_files_status():
+
     files = [
         'ops_gtc.csv',
         'ops_ltc.csv',

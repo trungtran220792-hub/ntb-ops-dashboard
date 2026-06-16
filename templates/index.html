@@ -4792,32 +4792,61 @@
         async function loadAllData(baseline = "") {
             showLoading("Đang tải dữ liệu báo cáo...");
             try {
-                // Fetch in parallel
-                const opsPromise = fetch(getApiUrl('/api/operational'), getFetchOptions()).then(r => r.json());
-                const oprPromise = fetch(getApiUrl('/api/opr'), getFetchOptions()).then(r => r.json());
-                const backlogPromise = fetch(getApiUrl(`/api/backlog?baseline=${baseline}`), getFetchOptions()).then(r => r.json());
-                const unstablePromise = fetch(getApiUrl('/api/unstable-po'), getFetchOptions()).then(r => r.json());
-                const offSpePromise = fetch(getApiUrl('/api/off-spe'), getFetchOptions()).then(r => r.json());
-                const volCreationPromise = fetch(getApiUrl('/api/volume-creation'), getFetchOptions()).then(r => r.json());
-                const fdPromise = fetch(getApiUrl('/api/fd'), getFetchOptions()).then(r => r.json());
+                // Try batch endpoint first (critical for Vercel - single request ensures same warm instance)
+                let batchSuccess = false;
+                try {
+                    const batchRes = await fetch(getApiUrl('/api/batch-data'), getFetchOptions());
+                    if (batchRes.ok) {
+                        const batchData = await batchRes.json();
+                        globalData.operational = batchData.operational || {};
+                        globalData.opr = batchData.opr || {};
+                        globalData.backlog = batchData.backlog || {};
+                        globalData.unstablePo = batchData.unstablePo || {};
+                        globalData.offSpe = batchData.offSpe || {};
+                        globalData.fd = batchData.fd || {};
+                        
+                        // Volume creation needs full data, fetch separately
+                        try {
+                            const volRes = await fetch(getApiUrl('/api/volume-creation'), getFetchOptions());
+                            globalData.volumeCreation = await volRes.json();
+                        } catch (volErr) {
+                            globalData.volumeCreation = batchData.volumeCreation || {};
+                        }
+                        
+                        batchSuccess = true;
+                    }
+                } catch (batchErr) {
+                    console.warn("Batch endpoint failed, falling back to parallel fetches:", batchErr);
+                }
+                
+                // Fallback: parallel fetch (used locally or if batch fails)
+                if (!batchSuccess) {
+                    const opsPromise = fetch(getApiUrl('/api/operational'), getFetchOptions()).then(r => r.json());
+                    const oprPromise = fetch(getApiUrl('/api/opr'), getFetchOptions()).then(r => r.json());
+                    const backlogPromise = fetch(getApiUrl(`/api/backlog?baseline=${baseline}`), getFetchOptions()).then(r => r.json());
+                    const unstablePromise = fetch(getApiUrl('/api/unstable-po'), getFetchOptions()).then(r => r.json());
+                    const offSpePromise = fetch(getApiUrl('/api/off-spe'), getFetchOptions()).then(r => r.json());
+                    const volCreationPromise = fetch(getApiUrl('/api/volume-creation'), getFetchOptions()).then(r => r.json());
+                    const fdPromise = fetch(getApiUrl('/api/fd'), getFetchOptions()).then(r => r.json());
 
-                const [opsData, oprData, blData, unstableData, offSpeData, volCreationData, fdData] = await Promise.all([
-                    opsPromise,
-                    oprPromise,
-                    backlogPromise,
-                    unstablePromise,
-                    offSpePromise,
-                    volCreationPromise,
-                    fdPromise
-                ]);
+                    const [opsData, oprData, blData, unstableData, offSpeData, volCreationData, fdData] = await Promise.all([
+                        opsPromise,
+                        oprPromise,
+                        backlogPromise,
+                        unstablePromise,
+                        offSpePromise,
+                        volCreationPromise,
+                        fdPromise
+                    ]);
 
-                globalData.operational = opsData;
-                globalData.opr = oprData;
-                globalData.backlog = blData;
-                globalData.unstablePo = unstableData;
-                globalData.offSpe = offSpeData;
-                globalData.volumeCreation = volCreationData;
-                globalData.fd = fdData;
+                    globalData.operational = opsData;
+                    globalData.opr = oprData;
+                    globalData.backlog = blData;
+                    globalData.unstablePo = unstableData;
+                    globalData.offSpe = offSpeData;
+                    globalData.volumeCreation = volCreationData;
+                    globalData.fd = fdData;
+                }
 
                 // Update timestamps
                 const activePanel = document.querySelector('.content-panel.active');
@@ -4834,10 +4863,10 @@
                 renderAgingDashboard();
                 renderTreoDashboard();
                 loadNtbSummaryData();
-                renderUnstablePo(unstableData);
-                renderOffSpe(offSpeData);
-                renderVolumeCreation(volCreationData);
-                renderFdDashboard(fdData);
+                renderUnstablePo(globalData.unstablePo);
+                renderOffSpe(globalData.offSpe);
+                renderVolumeCreation(globalData.volumeCreation);
+                renderFdDashboard(globalData.fd);
 
             } catch (err) {
                 console.error(err);
@@ -4997,6 +5026,21 @@
                     return;
                 }
                 
+                const syncResult = await res.json();
+                
+                // On Vercel, sync runs synchronously and the response already contains the final status.
+                // Handle completed sync directly without polling.
+                if (syncResult.status === "success") {
+                    showLoading("Đồng bộ hoàn tất! Đang tải lại dữ liệu...");
+                    await loadHistoryDropdown();
+                    await loadAllData();
+                    await loadFilesStatus();
+                    hideLoading();
+                    alert("Đồng bộ dữ liệu thành công!");
+                    return;
+                }
+                
+                // Local/non-Vercel: sync runs in background thread, poll for status
                 const pollInterval = setInterval(async () => {
                     try {
                         const statusRes = await fetch(getApiUrl('/api/sync/status'), getFetchOptions());
