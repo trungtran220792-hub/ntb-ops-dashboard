@@ -265,6 +265,27 @@ def csrf_referer_check():
         if not is_valid and 'username' in session:
             return jsonify({"error": "Yêu cầu bị từ chối do vi phạm quy tắc bảo mật CSRF (Origin/Referer không hợp lệ)."}), 403
 
+@app.before_request
+def check_cache_ttl():
+    global LAST_CACHE_UPDATE_TIME
+    if request.method == 'GET' and request.path.startswith('/api/'):
+        if request.path in ['/api/sync/status', '/api/history', '/api/files-status', '/api/config']:
+            return
+            
+        import time
+        now = time.time()
+        is_vercel = os.environ.get("VERCEL") or (request.host and "vercel.app" in request.host) or (request.headers.get("Host") and "vercel.app" in request.headers.get("Host"))
+        
+        if is_vercel:
+            with CACHE_LOCK:
+                if LAST_CACHE_UPDATE_TIME is None or (now - LAST_CACHE_UPDATE_TIME > 15):
+                    print(f"Cache TTL expired ({now - (LAST_CACHE_UPDATE_TIME or 0):.1f}s). Re-fetching from database...")
+                    try:
+                        update_all_caches()
+                        LAST_CACHE_UPDATE_TIME = now
+                    except Exception as e:
+                        print(f"Error auto-updating cache on request: {e}")
+
 @app.after_request
 def add_security_headers(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
@@ -454,6 +475,17 @@ def load_config():
         chat_id = config.get("telegram_chat_id", "")
     final_config["telegram_chat_id"] = chat_id.strip()
 
+    # GTalk Config
+    gtalk_token = os.environ.get("GTALK_OA_TOKEN", "")
+    if not gtalk_token.strip():
+        gtalk_token = config.get("gtalk_oa_token", "")
+    final_config["gtalk_oa_token"] = gtalk_token.strip()
+
+    gtalk_channel = os.environ.get("GTALK_CHANNEL_ID", "")
+    if not gtalk_channel.strip():
+        gtalk_channel = config.get("gtalk_channel_id", "")
+    final_config["gtalk_channel_id"] = gtalk_channel.strip()
+
     # Gemini Config
     gemini_key = os.environ.get("GEMINI_API_KEY", "")
     if not gemini_key.strip():
@@ -471,12 +503,16 @@ def save_config(new_config):
             "consolidated_url": new_config.get("consolidated_url", current_config.get("consolidated_url", "")).strip(),
             "telegram_bot_token": new_config.get("telegram_bot_token", current_config.get("telegram_bot_token", "")).strip(),
             "telegram_chat_id": new_config.get("telegram_chat_id", current_config.get("telegram_chat_id", "")).strip(),
+            "gtalk_oa_token": new_config.get("gtalk_oa_token", current_config.get("gtalk_oa_token", "")).strip(),
+            "gtalk_channel_id": new_config.get("gtalk_channel_id", current_config.get("gtalk_channel_id", "")).strip(),
             "gemini_api_key": new_config.get("gemini_api_key", current_config.get("gemini_api_key", "")).strip()
         }
         
         os.environ["CONSOLIDATED_URL"] = clean_config["consolidated_url"]
         os.environ["TELEGRAM_BOT_TOKEN"] = clean_config["telegram_bot_token"]
         os.environ["TELEGRAM_CHAT_ID"] = clean_config["telegram_chat_id"]
+        os.environ["GTALK_OA_TOKEN"] = clean_config["gtalk_oa_token"]
+        os.environ["GTALK_CHANNEL_ID"] = clean_config["gtalk_channel_id"]
         os.environ["GEMINI_API_KEY"] = clean_config["gemini_api_key"]
         
         # Save to DB first if database is available
@@ -493,6 +529,8 @@ def save_config(new_config):
                 "CONSOLIDATED_URL": clean_config["consolidated_url"],
                 "TELEGRAM_BOT_TOKEN": clean_config["telegram_bot_token"],
                 "TELEGRAM_CHAT_ID": clean_config["telegram_chat_id"],
+                "GTALK_OA_TOKEN": clean_config["gtalk_oa_token"],
+                "GTALK_CHANNEL_ID": clean_config["gtalk_channel_id"],
                 "GEMINI_API_KEY": clean_config["gemini_api_key"]
             }
             
@@ -2308,6 +2346,8 @@ UNSTABLE_PO_CACHE = None
 OFF_SPE_CACHE = None
 FD_CACHE = None
 
+LAST_CACHE_UPDATE_TIME = None
+
 # Dataframe caches for NTB Summary Dashboard
 DF_GTC_CACHE = None
 DF_LTC_CACHE = None
@@ -2739,6 +2779,10 @@ def update_all_caches():
     print("MEMORY-EFFICIENT CACHE LOAD COMPLETE.")
     print("--------------------------------------------------")
     gc.collect()
+    
+    global LAST_CACHE_UPDATE_TIME
+    import time
+    LAST_CACHE_UPDATE_TIME = time.time()
 
 
 # ==========================================
@@ -4604,6 +4648,39 @@ def get_spiking_post_offices():
         })
     return spike_list
 
+def send_to_gtalk_bot(message):
+    import time
+    config = load_config()
+    oa_token = config.get("gtalk_oa_token", "").strip()
+    channel_id = config.get("gtalk_channel_id", "").strip()
+    if not oa_token or not channel_id:
+        return False, "Chưa cấu hình GTalk OA Token hoặc Channel ID."
+        
+    url = "https://mbff.ghn.vn/api/gtalk/send-message"
+    client_msg_id = str(int(time.time() * 1000))
+    payload = {
+        "channelId": channel_id,
+        "clientMsgId": client_msg_id,
+        "content": {
+            "text": message,
+            "parseMode": "MARKDOWN"
+        },
+        "oaToken": oa_token
+    }
+    headers = {
+        "Content-Type": "application/json"
+    }
+    try:
+        res = requests.post(url, json=payload, headers=headers, timeout=15, verify=False)
+        if res.status_code == 200:
+            res_data = res.json()
+            if res_data.get("errorCode") == "success":
+                return True, "success"
+            return False, res_data.get("error", {}).get("errorMessage", "Unknown error")
+        return False, f"HTTP {res.status_code}: {res.text}"
+    except Exception as e:
+        return False, str(e)
+
 @app.route('/api/send-telegram-warning', methods=['POST'])
 @requires_permission('tab-volume-creation')
 def send_telegram_warning():
@@ -4633,9 +4710,6 @@ def send_telegram_warning():
                 "telegram_chat_id": req_chat_id
             })
             
-        if not bot_token or not chat_id:
-            return jsonify({"error": "Chưa cấu hình Telegram Bot Token hoặc Chat ID / Group ID."}), 400
-            
         spikes = get_spiking_post_offices()
         
         if spikes:
@@ -4658,18 +4732,41 @@ def send_telegram_warning():
                 f"Không phát hiện bưu cục nào có sản lượng tăng đột biến (>30% và >50 đơn) trong 7 ngày qua."
             )
             
-        url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
-        payload = {
-            "chat_id": chat_id,
-            "text": message,
-            "parse_mode": "Markdown"
-        }
-        res = requests.post(url, json=payload, timeout=10)
-        
-        if res.status_code == 200:
-            return jsonify({"success": True, "message": "Gửi cảnh báo qua Telegram thành công!"})
+        # Send to Telegram if configured
+        tele_ok = False
+        tele_err = None
+        if bot_token and chat_id:
+            url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+            payload = {
+                "chat_id": chat_id,
+                "text": message,
+                "parse_mode": "Markdown"
+            }
+            try:
+                res = requests.post(url, json=payload, timeout=10)
+                if res.status_code == 200:
+                    tele_ok = True
+                else:
+                    tele_err = f"Telegram HTTP {res.status_code}"
+            except Exception as e:
+                tele_err = str(e)
         else:
-            return jsonify({"error": f"Lỗi từ Telegram API: {res.text}"}), 500
+            tele_err = "Chưa cấu hình Telegram"
+                
+        # Send to GTalk if configured
+        gtalk_ok, gtalk_err = send_to_gtalk_bot(message)
+        
+        if tele_ok or gtalk_ok:
+            msg = "Gửi cảnh báo thành công!"
+            if tele_ok and gtalk_ok:
+                msg = "Gửi cảnh báo qua Telegram và GTalk thành công!"
+            elif tele_ok:
+                msg = f"Gửi cảnh báo qua Telegram thành công! (GTalk: {gtalk_err})"
+            else:
+                msg = f"Gửi cảnh báo qua GTalk thành công! (Telegram: {tele_err})"
+            return jsonify({"success": True, "message": msg})
+        else:
+            return jsonify({"error": f"Gửi thất bại. Telegram: {tele_err} | GTalk: {gtalk_err}"}), 500
             
     except Exception as e:
         return jsonify({"error": f"Lỗi gửi tin nhắn: {str(e)}"}), 500
@@ -4813,8 +4910,13 @@ def send_telegram_ai_briefing():
         if should_save:
             save_config(updated_config)
             
-        if not bot_token or not chat_id:
-            return jsonify({"error": "Chưa cấu hình Telegram Bot Token hoặc Chat ID / Group ID."}), 400
+        oa_token = config.get("gtalk_oa_token", "").strip()
+        channel_id = config.get("gtalk_channel_id", "").strip()
+        has_telegram = bool(bot_token and chat_id)
+        has_gtalk = bool(oa_token and channel_id)
+        
+        if not has_telegram and not has_gtalk:
+            return jsonify({"error": "Chưa cấu hình Telegram Bot Token hoặc GTalk OA Token."}), 400
             
         if not gemini_api_key:
             return jsonify({"error": "Chưa cấu hình Gemini API Key."}), 400
