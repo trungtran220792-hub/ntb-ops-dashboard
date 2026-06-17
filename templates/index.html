@@ -3546,77 +3546,144 @@
 
                 <!-- CARD: USER MANAGEMENT (ADMIN ONLY) -->
                 <div class="card" id="card-user-management" style="margin-top: 24px; display: none;">
-                    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 20px;">
-                        <h3 style="font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 20px; color: var(--color-ghn-blue); text-transform: uppercase; margin: 0; display: flex; align-items: center; gap: 8px;">
+                    <div class="card-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 20px;">
+                        <h3 style="font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 20px; color: var(--color-ghn-blue); text-transform: uppercase; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
                             <i class="fa-solid fa-users-gear"></i> Quản lý người dùng & phân quyền
                         </h3>
-                        <button class="btn btn-primary btn-sm" onclick="showAddUserModal()" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;">
-                            <i class="fa-solid fa-user-plus"></i> Thêm người dùng
-                        </button>
+                        <div style="display: flex; gap: 16px; border-bottom: 2px solid var(--border-color); padding-bottom: 0; margin-bottom: -16px;">
+                            <button class="tab-btn active" id="btn-subtab-roles" onclick="switchUserMgmtTab('roles')" style="background: none; border: none; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700; padding: 10px 16px; cursor: pointer; color: var(--color-ghn-blue); border-bottom: 3px solid var(--color-ghn-blue); margin-bottom: -2px; transition: all 0.3s; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-user-shield"></i> Vai trò & Quyền
+                            </button>
+                            <button class="tab-btn" id="btn-subtab-assign" onclick="switchUserMgmtTab('assign')" style="background: none; border: none; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700; padding: 10px 16px; cursor: pointer; color: var(--text-secondary); border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.3s; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-user-tag"></i> Gán quyền NV
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- Add/Edit User Form container (collapsible) -->
-                    <div id="user-form-container" style="display: none; background: rgba(0, 0, 0, 0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-bottom: 24px; animation: fadeIn 0.3s;">
-                        <h4 id="user-form-title" style="font-size: 15px; font-weight: 700; margin-bottom: 16px; color: var(--text-primary);">Thêm Người Dùng Mới</h4>
-                        <form id="user-mgmt-form" onsubmit="saveUser(event)" style="display: flex; flex-direction: column; gap: 16px;">
-                            <input type="hidden" id="mgmt-user-is-edit" value="false">
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                                <div class="filter-group">
-                                    <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary);">Mã Nhân Viên (Username)</label>
-                                    <input type="text" id="mgmt-username" required placeholder="Nhập mã nhân viên" class="text-input" style="width: 100%;">
-                                </div>
-                                <div class="filter-group">
-                                    <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary);">Mật Khẩu</label>
-                                    <input type="password" id="mgmt-password" placeholder="Nhập mật khẩu" class="text-input" style="width: 100%;">
-                                    <small id="mgmt-password-help" style="font-size: 10px; color: var(--text-muted); margin-top: 4px; display: none;">Để trống nếu giữ nguyên mật khẩu cũ</small>
-                                </div>
-                                <div class="filter-group">
-                                    <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary);">Vai Trò (Role)</label>
-                                    <select id="mgmt-role" class="select-input" style="width: 100%;" onchange="onMgmtRoleChange(this.value)">
-                                        <option value="staff" selected>Nhân viên (Staff)</option>
-                                        <option value="admin">Quản trị viên (Admin)</option>
-                                    </select>
-                                </div>
-                            </div>
+                    <!-- TAB 1: ROLES MANAGEMENT -->
+                    <div id="subtab-content-roles" style="display: block;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <h4 style="font-size: 15px; font-weight: 700; color: var(--text-primary); margin: 0;">Danh sách vai trò</h4>
+                            <button class="btn btn-primary btn-sm" onclick="showAddRoleModal()" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;">
+                                <i class="fa-solid fa-plus"></i> Thêm vai trò
+                            </button>
+                        </div>
 
-                            <div class="filter-group">
-                                <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; display: block;">Chức năng được phép xem (Permissions)</label>
-                                <div class="permissions-grid" id="mgmt-permissions-grid">
-                                    <label class="permission-item"><input type="checkbox" value="tab-dashboard" checked> Tổng quan</label>
-                                    <label class="permission-item"><input type="checkbox" value="tab-introduction" checked> Giới thiệu NTB</label>
-                                    <label class="permission-item"><input type="checkbox" value="tab-ntb-summary" checked> Chỉ số NTB</label>
-                                    <label class="permission-item"><input type="checkbox" value="tab-operational" checked> Báo cáo Vận hành</label>
-                                    <label class="permission-item"><input type="checkbox" value="tab-opr" checked> OPR TTS</label>
-                                    <label class="permission-item"><input type="checkbox" value="tab-backlog" checked> Giám sát Backlog</label>
-                                    <label class="permission-item"><input type="checkbox" value="tab-unstable-po" checked> Bưu cục bất ổn</label>
-                                    <label class="permission-item"><input type="checkbox" value="tab-off-spe" checked> OFF Tuyến SPE</label>
-                                    <label class="permission-item"><input type="checkbox" value="tab-volume-creation" checked> Volume tạo đơn</label>
-                                     <label class="permission-item"><input type="checkbox" value="tab-fd" checked> Chỉ số FD</label>
-                                    <label class="permission-item"><input type="checkbox" value="tab-sync"> Đồng bộ & Files</label>
-                                </div>
-                            </div>
+                        <div class="table-responsive">
+                            <table class="custom-table" id="table-roles-mgmt" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: left; width: 180px;">Tên Vai Trò</th>
+                                        <th style="text-align: left; width: 280px;">Mô Tả</th>
+                                        <th style="text-align: left;">Quyền Xem Chức Năng</th>
+                                        <th style="text-align: center; width: 150px;">Thao Tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-roles-mgmt-body">
+                                    <!-- Dynamic roles list -->
+                                </tbody>
+                            </table>
+                        </div>
 
-                            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px;">
-                                <button type="button" class="btn btn-secondary" onclick="hideUserForm()" style="padding: 8px 16px;">Hủy</button>
-                                <button type="submit" class="btn btn-primary" style="padding: 8px 16px;">Lưu thông tin</button>
-                            </div>
-                        </form>
+                        <!-- Add/Edit Role Form container (collapsible) -->
+                        <div id="role-form-container" style="display: none; background: rgba(0, 0, 0, 0.02); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-top: 24px; animation: fadeIn 0.3s;">
+                            <h4 id="role-form-title" style="font-size: 15px; font-weight: 700; margin-bottom: 16px; color: var(--text-primary);">Thêm Vai Trò Mới</h4>
+                            <form id="role-mgmt-form" onsubmit="saveRole(event)" style="display: flex; flex-direction: column; gap: 16px;">
+                                <input type="hidden" id="mgmt-role-is-edit" value="false">
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                                    <div class="filter-group">
+                                        <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary);">Mã Vai Trò (role_id)</label>
+                                        <input type="text" id="mgmt-role-id" required placeholder="Ví dụ: accountant" class="text-input" style="width: 100%;">
+                                    </div>
+                                    <div class="filter-group">
+                                        <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary);">Tên Hiển Thị</label>
+                                        <input type="text" id="mgmt-role-name" required placeholder="Ví dụ: Kế toán" class="text-input" style="width: 100%;">
+                                    </div>
+                                    <div class="filter-group">
+                                        <label style="font-size: 11px; font-weight: 600; color: var(--text-secondary);">Mô Tả</label>
+                                        <input type="text" id="mgmt-role-desc" placeholder="Mô tả vai trò này" class="text-input" style="width: 100%;">
+                                    </div>
+                                </div>
+
+                                <div class="filter-group">
+                                    <label style="font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; display: block;">Ma trận Phân quyền các Trang/Chức năng</label>
+                                    <div class="table-responsive">
+                                        <table class="custom-table" id="matrix-permission-table" style="width: 100%; border: 1px solid var(--border-color); font-size: 12px;">
+                                            <thead>
+                                                <tr style="background: var(--bg-surface);">
+                                                    <th style="text-align: left; font-weight: 700; padding: 10px;">Trang / Chức năng</th>
+                                                    <th style="text-align: center; font-weight: 700; padding: 10px; width: 80px;">Xem (View)</th>
+                                                    <th style="text-align: center; font-weight: 700; padding: 10px; width: 80px;">Thêm (Create)</th>
+                                                    <th style="text-align: center; font-weight: 700; padding: 10px; width: 80px;">Sửa (Update)</th>
+                                                    <th style="text-align: center; font-weight: 700; padding: 10px; width: 80px;">Xóa (Delete)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="matrix-permission-body">
+                                                <!-- Dynamic rows -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px;">
+                                    <button type="button" class="btn btn-secondary" onclick="hideRoleForm()" style="padding: 8px 16px;">Hủy</button>
+                                    <button type="submit" class="btn btn-primary" style="padding: 8px 16px;">Lưu Vai Trò</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
 
-                    <div class="table-responsive">
-                        <table class="custom-table" id="table-users-mgmt" style="width: 100%;">
-                            <thead>
-                                <tr>
-                                    <th style="text-align: left; width: 150px;">Mã Nhân Viên</th>
-                                    <th style="text-align: center; width: 150px;">Vai Trò</th>
-                                    <th style="text-align: left;">Quyền Xem Chức Năng</th>
-                                    <th style="text-align: center; width: 150px;">Thao Tác</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-users-mgmt-body">
-                                <!-- Users list populated dynamically via JavaScript -->
-                            </tbody>
-                        </table>
+                    <!-- TAB 2: STAFF ASSIGNMENT -->
+                    <div id="subtab-content-assign" style="display: none;">
+                        <div style="display: flex; flex-direction: row; gap: 24px; min-height: 450px; align-items: stretch;">
+                            <!-- Left: staff roster search & selection -->
+                            <div style="flex: 1; border-right: 1px solid var(--border-color); padding-right: 20px; display: flex; flex-direction: column; gap: 12px;">
+                                <div style="font-weight: 700; font-size: 13px; color: var(--text-secondary);">Danh sách nhân viên (Active)</div>
+                                <div style="position: relative;">
+                                    <input type="text" id="staff-search-input" placeholder="Tìm kiếm nhân viên..." oninput="filterStaffList(this.value)" style="width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 12px; background: var(--bg-surface); color: var(--text-primary);">
+                                    <i class="fa-solid fa-magnifying-glass" style="position: absolute; right: 12px; top: 12px; color: var(--text-muted);"></i>
+                                </div>
+                                <div id="staff-scroll-list" style="flex: 1; overflow-y: auto; max-height: 420px; display: flex; flex-direction: column; gap: 8px; padding-right: 4px;">
+                                    <!-- Populated dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- Right: detailed card and role assignment -->
+                            <div style="flex: 2; display: flex; flex-direction: column; gap: 16px; background: rgba(0,0,0,0.015); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px;">
+                                <div id="assign-details-container" style="display: none; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+                                    <div>
+                                        <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+                                            <h4 style="font-size: 16px; font-weight: 700; color: var(--color-ghn-blue); margin: 0 0 6px 0;">Gán vai trò cho nhân viên</h4>
+                                            <div style="font-size: 12px; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 16px;">
+                                                <span>Nhân viên: <strong id="assign-staff-name" style="color: var(--text-primary);">--</strong></span>
+                                                <span>Mã nhân viên: <strong id="assign-staff-id" style="color: var(--text-primary);">--</strong></span>
+                                                <span>Chức vụ: <strong id="assign-staff-title" style="color: var(--text-primary);">--</strong></span>
+                                            </div>
+                                        </div>
+
+                                        <div style="margin-bottom: 20px;">
+                                            <div style="font-weight: 700; font-size: 12px; color: var(--text-secondary); margin-bottom: 10px;">VAI TRÒ VÀ QUYỀN HẠN HỆ THỐNG:</div>
+                                            <div id="assign-roles-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto; padding-right: 4px;">
+                                                <!-- Dynamic list with select state -->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div style="display: flex; gap: 12px; justify-content: flex-start; border-top: 1px solid var(--border-color); padding-top: 16px;">
+                                        <button class="btn btn-secondary btn-sm" onclick="resetStaffPassword()" style="padding: 8px 16px; font-size: 12px; border-radius: 6px;">
+                                            <i class="fa-solid fa-key"></i> Đặt lại mật khẩu (123456)
+                                        </button>
+                                        <button class="btn btn-secondary btn-sm" id="btn-remove-role" onclick="removeStaffRole()" style="padding: 8px 16px; font-size: 12px; border-radius: 6px; color: var(--color-danger); border-color: rgba(220,53,69,0.2);">
+                                            <i class="fa-solid fa-user-minus"></i> Gỡ vai trò truy cập
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="assign-placeholder" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); font-style: italic; font-size: 13px; min-height: 250px; gap: 8px;">
+                                    <i class="fa-solid fa-user-pointer" style="font-size: 24px; color: var(--text-muted); opacity: 0.6;"></i>
+                                    Vui lòng chọn một nhân viên từ danh sách bên trái để thiết lập quyền truy cập.
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -3776,14 +3843,28 @@
         }
 
         let userRole = 'staff';
-        let userPermissions = [];
+        let userPermissions = {};
         let loggedInUsername = '';
+
+        function hasActionPermission(tabId, action) {
+            if (userRole === 'admin') return true;
+            if (userRole === 'am') {
+                if (tabId === 'tab-nhan-su' && (action === 'view' || action === 'edit')) return true;
+                return false;
+            }
+            if (Array.isArray(userPermissions)) {
+                return userPermissions.includes(tabId);
+            }
+            if (userPermissions && typeof userPermissions === 'object') {
+                return !!(userPermissions[tabId] && userPermissions[tabId][action]);
+            }
+            return false;
+        }
 
         async function checkUserRole() {
             try {
                 const res = await fetch(getApiUrl('/api/user-role'), getFetchOptions());
                 if (res.status === 401) {
-                    // Show login overlay
                     document.querySelector('.app-layout').style.display = 'none';
                     document.getElementById('login-container').style.display = 'flex';
                     hideLoading();
@@ -3793,50 +3874,35 @@
                 if (res.ok) {
                     const data = await res.json();
                     userRole = data.role;
-                    userPermissions = data.permissions || [];
+                    userPermissions = data.permissions || {};
                     loggedInUsername = data.username;
 
-                    // Hide login overlay, show app layout
                     document.getElementById('login-container').style.display = 'none';
                     document.querySelector('.app-layout').style.display = 'flex';
 
-                    // Update UI elements based on role & permissions
                     gateMenuTabs();
 
-                    if (userRole === 'admin') {
-                        // Show Google Sheets config card
-                        const configCard = document.getElementById('card-google-sheets-config');
-                        if (configCard) configCard.style.display = 'block';
-                        
-                        // Show sync buttons
-                        const headerSyncBtn = document.getElementById('header-sync-btn');
-                        if (headerSyncBtn) headerSyncBtn.style.display = 'inline-flex';
-                        
-                        const footerSyncBtn = document.getElementById('footer-sync-btn');
-                        if (footerSyncBtn) footerSyncBtn.style.display = 'inline-block';
-
-                        // Show user management card
-                        const userMgmtCard = document.getElementById('card-user-management');
-                        if (userMgmtCard) {
+                    // Show/hide Admin User Management card based on tab-sync view permission
+                    const userMgmtCard = document.getElementById('card-user-management');
+                    if (userMgmtCard) {
+                        if (userRole === 'admin' || hasActionPermission('tab-sync', 'view')) {
                             userMgmtCard.style.display = 'block';
-                            loadUsersList();
+                            switchUserMgmtTab('roles'); // Default subtab
+                        } else {
+                            userMgmtCard.style.display = 'none';
                         }
-                    } else {
-                        // Hide Google Sheets config card
-                        const configCard = document.getElementById('card-google-sheets-config');
-                        if (configCard) configCard.style.display = 'none';
-                        
-                        // Show sync buttons
-                        const headerSyncBtn = document.getElementById('header-sync-btn');
-                        if (headerSyncBtn) headerSyncBtn.style.display = 'none';
-                        
-                        const footerSyncBtn = document.getElementById('footer-sync-btn');
-                        if (footerSyncBtn) footerSyncBtn.style.display = 'none';
-
-                        // Hide user management card
-                        const userMgmtCard = document.getElementById('card-user-management');
-                        if (userMgmtCard) userMgmtCard.style.display = 'none';
                     }
+
+                    // Show/hide Google Sheets config based on edit permission
+                    const configCard = document.getElementById('card-google-sheets-config');
+                    if (configCard) {
+                        if (userRole === 'admin' || hasActionPermission('tab-sync', 'view')) {
+                            configCard.style.display = 'block';
+                        } else {
+                            configCard.style.display = 'none';
+                        }
+                    }
+                    
                     return true;
                 }
             } catch (err) {
@@ -3846,7 +3912,6 @@
         }
 
         function gateMenuTabs() {
-            // Define all tab mappings
             const tabIds = [
                 'tab-introduction',
                 'tab-dashboard',
@@ -3868,8 +3933,14 @@
                 const navItem = document.getElementById('nav-' + tabId);
                 if (!navItem) return;
 
-                // Admin has all permissions. Otherwise check if tabId in userPermissions
-                const isAllowed = userRole === 'admin' || userPermissions.includes(tabId);
+                let isAllowed = false;
+                if (userRole === 'admin') {
+                    isAllowed = true;
+                } else if (Array.isArray(userPermissions)) {
+                    isAllowed = userPermissions.includes(tabId);
+                } else if (userPermissions && typeof userPermissions === 'object') {
+                    isAllowed = !!(userPermissions[tabId] && userPermissions[tabId].view);
+                }
                 
                 if (isAllowed) {
                     navItem.style.display = 'flex';
@@ -3883,11 +3954,71 @@
             const activePanel = document.querySelector('.content-panel.active');
             const activeTabId = activePanel ? activePanel.id : 'tab-dashboard';
 
-            const isCurrentAllowed = userRole === 'admin' || userPermissions.includes(activeTabId);
+            let isCurrentAllowed = false;
+            if (userRole === 'admin') {
+                isCurrentAllowed = true;
+            } else if (Array.isArray(userPermissions)) {
+                isCurrentAllowed = userPermissions.includes(activeTabId);
+            } else if (userPermissions && typeof userPermissions === 'object') {
+                isCurrentAllowed = !!(userPermissions[activeTabId] && userPermissions[activeTabId].view);
+            }
+
             if (!isCurrentAllowed && firstAllowedTab) {
                 const navBtn = document.getElementById('nav-' + firstAllowedTab);
                 if (navBtn) {
                     switchTab(firstAllowedTab, navBtn);
+                }
+            }
+
+            // Apply action permissions to UI buttons dynamically
+            const gsSaveBtn = document.querySelector('#card-google-sheets-config button');
+            if (gsSaveBtn) {
+                if (hasActionPermission('tab-sync', 'edit')) {
+                    gsSaveBtn.removeAttribute('disabled');
+                    gsSaveBtn.style.opacity = '1';
+                } else {
+                    gsSaveBtn.setAttribute('disabled', 'true');
+                    gsSaveBtn.style.opacity = '0.5';
+                }
+            }
+            
+            const telegramBtns = document.querySelectorAll('#card-telegram-ai-config button');
+            telegramBtns.forEach(btn => {
+                if (hasActionPermission('tab-sync', 'edit')) {
+                    btn.removeAttribute('disabled');
+                    btn.style.opacity = '1';
+                } else {
+                    btn.setAttribute('disabled', 'true');
+                    btn.style.opacity = '0.5';
+                }
+            });
+
+            const syncBtn = document.getElementById('footer-sync-btn');
+            if (syncBtn) {
+                if (hasActionPermission('tab-sync', 'edit')) {
+                    syncBtn.removeAttribute('disabled');
+                    syncBtn.style.opacity = '1';
+                } else {
+                    syncBtn.setAttribute('disabled', 'true');
+                    syncBtn.style.opacity = '0.5';
+                }
+            }
+
+            const headerSyncBtn = document.getElementById('header-sync-btn');
+            if (headerSyncBtn) {
+                if (hasActionPermission('tab-sync', 'edit')) {
+                    headerSyncBtn.style.display = 'inline-flex';
+                } else {
+                    headerSyncBtn.style.display = 'none';
+                }
+            }
+            
+            const addUserBtn = document.querySelector('#card-user-management button');
+            if (addUserBtn) {
+                if (hasActionPermission('tab-sync', 'add')) {
+                    addUserBtn.style.display = 'inline-flex';
+                } else {
+                    addUserBtn.style.display = 'none';
                 }
             }
         }
@@ -3964,12 +4095,125 @@
         }
 
         // USER CRUD LOGIC FOR ADMIN
-        async function loadUsersList() {
+        function renderPermissionMatrix(permissions = {}) {
+            const tbody = document.getElementById('matrix-permission-body');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            
+            const allTabs = [
+                { id: 'tab-dashboard', name: 'Tổng quan' },
+                { id: 'tab-introduction', name: 'Giới thiệu NTB' },
+                { id: 'tab-ntb-summary', name: 'Chỉ số NTB' },
+                { id: 'tab-operational', name: 'Báo cáo Vận hành' },
+                { id: 'tab-opr', name: 'OPR TTS' },
+                { id: 'tab-backlog', name: 'Giám sát Backlog' },
+                { id: 'tab-unstable-po', name: 'Bưu cục bất ổn' },
+                { id: 'tab-off-spe', name: 'OFF Tuyến SPE' },
+                { id: 'tab-volume-creation', name: 'Volume tạo đơn' },
+                { id: 'tab-fd', name: 'Chỉ số FD' },
+                { id: 'tab-nhan-su', name: 'Định biên nhân sự' },
+                { id: 'tab-sync', name: 'Đồng bộ & Cấu hình' }
+            ];
+            
+            allTabs.forEach(tab => {
+                const tr = document.createElement('tr');
+                
+                let p = { view: false, add: false, edit: false, delete: false };
+                if (permissions && permissions[tab.id]) {
+                    p = {
+                        view: !!permissions[tab.id].view,
+                        add: !!permissions[tab.id].add,
+                        edit: !!permissions[tab.id].edit,
+                        delete: !!permissions[tab.id].delete
+                    };
+                } else if (Array.isArray(permissions)) {
+                    const hasView = permissions.includes(tab.id);
+                    p = {
+                        view: hasView,
+                        add: hasView && tab.id === 'tab-sync',
+                        edit: hasView && tab.id === 'tab-sync',
+                        delete: hasView && tab.id === 'tab-sync'
+                    };
+                }
+                
+                tr.innerHTML = `
+                    <td style="text-align: left; font-weight: 600; padding: 10px; color: var(--text-primary);">${tab.name}</td>
+                    <td style="text-align: center; padding: 10px;">
+                        <input type="checkbox" class="matrix-cb" data-tab="${tab.id}" data-action="view" ${p.view ? 'checked' : ''} onchange="onViewCheckboxChange('${tab.id}', this)">
+                    </td>
+                    <td style="text-align: center; padding: 10px;">
+                        <input type="checkbox" class="matrix-cb" data-tab="${tab.id}" data-action="add" ${p.add ? 'checked' : ''}>
+                    </td>
+                    <td style="text-align: center; padding: 10px;">
+                        <input type="checkbox" class="matrix-cb" data-tab="${tab.id}" data-action="edit" ${p.edit ? 'checked' : ''}>
+                    </td>
+                    <td style="text-align: center; padding: 10px;">
+                        <input type="checkbox" class="matrix-cb" data-tab="${tab.id}" data-action="delete" ${p.delete ? 'checked' : ''}>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.onViewCheckboxChange = function(tabId, el) {
+            const row = el.closest('tr');
+            if (!el.checked) {
+                row.querySelectorAll('input[data-action="add"], input[data-action="edit"], input[data-action="delete"]').forEach(cb => {
+                    cb.checked = false;
+                });
+            }
+        }
+
+        // Auto check View if any CRUD is checked
+        document.addEventListener('change', function(e) {
+            if (e.target && e.target.classList.contains('matrix-cb')) {
+                const action = e.target.getAttribute('data-action');
+                if (action !== 'view' && e.target.checked) {
+                    const tr = e.target.closest('tr');
+                    const viewCb = tr.querySelector('input[data-action="view"]');
+                    if (viewCb) viewCb.checked = true;
+                }
+            }
+        });
+
+        let activeUserMgmtTab = 'roles';
+        let globalRolesList = {};
+        let globalStaffList = [];
+        let selectedStaffId = null;
+
+        function switchUserMgmtTab(tabName) {
+            activeUserMgmtTab = tabName;
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.style.color = 'var(--text-secondary)';
+                btn.style.borderBottomColor = 'transparent';
+            });
+
+            const activeBtn = document.getElementById(`btn-subtab-${tabName}`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+                activeBtn.style.color = 'var(--color-ghn-blue)';
+                activeBtn.style.borderBottomColor = 'var(--color-ghn-blue)';
+            }
+
+            if (tabName === 'roles') {
+                document.getElementById('subtab-content-roles').style.display = 'block';
+                document.getElementById('subtab-content-assign').style.display = 'none';
+                loadRolesList();
+            } else if (tabName === 'assign') {
+                document.getElementById('subtab-content-roles').style.display = 'none';
+                document.getElementById('subtab-content-assign').style.display = 'block';
+                loadStaffList();
+            }
+        }
+
+        async function loadRolesList() {
             try {
-                const res = await fetch(getApiUrl('/api/users'), getFetchOptions());
+                const res = await fetch(getApiUrl('/api/roles'), getFetchOptions());
                 if (res.ok) {
-                    const users = await res.json();
-                    const tbody = document.getElementById('table-users-mgmt-body');
+                    const roles = await res.json();
+                    globalRolesList = roles;
+                    const tbody = document.getElementById('table-roles-mgmt-body');
                     tbody.innerHTML = '';
 
                     const friendlyTabNames = {
@@ -3983,42 +4227,50 @@
                         'tab-off-spe': 'OFF SPE',
                         'tab-volume-creation': 'Sản lượng',
                         'tab-fd': 'Chỉ số FD',
+                        'tab-nhan-su': 'Nhân sự',
                         'tab-sync': 'Đồng bộ'
                     };
 
-                    users.forEach(u => {
+                    Object.keys(roles).forEach(roleId => {
+                        const r = roles[roleId];
                         const tr = document.createElement('tr');
                         
-                        let badgeHtml = '';
-                        if (u.role === 'admin') {
-                            badgeHtml = '<span class="status-badge stable">Admin</span>';
-                        } else {
-                            badgeHtml = '<span class="status-badge warning">Staff</span>';
-                        }
-
                         let permissionsHtml = '';
-                        if (u.role === 'admin') {
+                        if (roleId === 'admin') {
                             permissionsHtml = '<span style="color: var(--text-muted); font-style: italic;">Có toàn quyền hệ thống</span>';
                         } else {
-                            const pNames = (u.permissions || []).map(p => friendlyTabNames[p] || p);
+                            let pNames = [];
+                            if (r.permissions && typeof r.permissions === 'object') {
+                                Object.keys(r.permissions).forEach(page => {
+                                    const crud = r.permissions[page];
+                                    if (crud.view) {
+                                        let actions = [];
+                                        if (crud.add) actions.push('C');
+                                        if (crud.edit) actions.push('U');
+                                        if (crud.delete) actions.push('D');
+                                        const actionsStr = actions.length > 0 ? ` (${actions.join('')})` : '';
+                                        pNames.push((friendlyTabNames[page] || page) + actionsStr);
+                                    }
+                                });
+                            }
                             permissionsHtml = pNames.length > 0 
-                                ? pNames.map(p => `<span class="status-badge" style="background: rgba(0,123,195,0.08); color: var(--color-ghn-blue); margin-right: 4px; border: 1px solid rgba(0,123,195,0.15);">${p}</span>`).join(' ')
-                                : '<span style="color: var(--color-danger); font-size: 11px;">Không được xem tab nào</span>';
+                                ? pNames.map(p => `<span class="status-badge" style="background: rgba(0,123,195,0.08); color: var(--color-ghn-blue); margin-right: 4px; border: 1px solid rgba(0,123,195,0.15); line-height: 2.2;">${p}</span>`).join(' ')
+                                : '<span style="color: var(--color-danger); font-size: 11px;">Không có quyền truy cập</span>';
                         }
 
-                        const isSelf = u.username === loggedInUsername;
+                        const isSystemRole = ['admin', 'staff', 'am'].includes(roleId);
 
                         tr.innerHTML = `
-                            <td style="text-align: left; font-weight: 700;">
-                                ${escapeHTML(u.username)} ${isSelf ? ' <span style="color: var(--text-muted); font-weight: normal; font-size: 11px;">(Bạn)</span>' : ''}
+                            <td style="text-align: left; font-weight: 700; color: var(--text-primary);">
+                                ${escapeHTML(r.name)} <span style="color: var(--text-muted); font-weight: normal; font-size: 11px;">(${escapeHTML(roleId)})</span>
                             </td>
-                            <td style="text-align: center;">${badgeHtml}</td>
+                            <td style="text-align: left; font-size: 12px; color: var(--text-secondary);">${escapeHTML(r.description || '')}</td>
                             <td style="text-align: left; line-height: 1.8;">${permissionsHtml}</td>
                             <td style="text-align: center; display: flex; gap: 8px; justify-content: center; align-items: center;">
-                                <button class="btn btn-secondary btn-sm" onclick="editUser('${escapeHTML(u.username)}', '${escapeHTML(u.role)}', '${escapeHTML(JSON.stringify(u.permissions))}')" style="padding: 4px 8px; font-size: 11px; cursor: pointer; border-radius: 4px;">
-                                    <i class="fa-solid fa-pen-to-square"></i> Sửa
+                                <button class="btn btn-secondary btn-sm" onclick="editRole('${escapeHTML(roleId)}')" style="padding: 4px 8px; font-size: 11px; cursor: pointer; border-radius: 4px;">
+                                    <i class="fa-solid fa-pen-to-square"></i> Cấu hình
                                 </button>
-                                <button class="btn btn-secondary btn-sm" onclick="deleteUser('${escapeHTML(u.username)}')" ${isSelf ? 'disabled style="opacity: 0.5; cursor: not-allowed; padding: 4px 8px; font-size: 11px;"' : 'style="padding: 4px 8px; font-size: 11px; cursor: pointer; border-radius: 4px;"'}>
+                                <button class="btn btn-secondary btn-sm" onclick="deleteRole('${escapeHTML(roleId)}')" ${isSystemRole ? 'disabled style="opacity: 0.5; cursor: not-allowed; padding: 4px 8px; font-size: 11px;"' : 'style="padding: 4px 8px; font-size: 11px; cursor: pointer; border-radius: 4px;"'}>
                                     <i class="fa-solid fa-trash-can" style="color: var(--color-danger);"></i> Xóa
                                 </button>
                             </td>
@@ -4027,113 +4279,98 @@
                     });
                 }
             } catch (err) {
-                console.error("Lỗi load danh sách user: ", err);
+                console.error("Lỗi load danh sách vai trò: ", err);
             }
         }
 
-        function showAddUserModal() {
-            document.getElementById('user-form-title').innerText = "Thêm Người Dùng Mới";
-            document.getElementById('mgmt-username').value = '';
-            document.getElementById('mgmt-username').disabled = false;
-            document.getElementById('mgmt-password').value = '';
-            document.getElementById('mgmt-password').required = true;
-            document.getElementById('mgmt-password-help').style.display = 'none';
-            document.getElementById('mgmt-user-is-edit').value = 'false';
-            document.getElementById('mgmt-role').value = 'staff';
+        function showAddRoleModal() {
+            document.getElementById('role-form-title').innerText = "Thêm Vai Trò Mới";
+            document.getElementById('mgmt-role-id').value = '';
+            document.getElementById('mgmt-role-id').disabled = false;
+            document.getElementById('mgmt-role-name').value = '';
+            document.getElementById('mgmt-role-desc').value = '';
+            document.getElementById('mgmt-role-is-edit').value = 'false';
             
-            document.querySelectorAll('#mgmt-permissions-grid input[type="checkbox"]').forEach(cb => {
-                cb.checked = cb.value !== 'tab-sync';
-                cb.disabled = false;
-            });
-
-            document.getElementById('user-form-container').style.display = 'block';
-            document.getElementById('mgmt-username').focus();
+            renderPermissionMatrix({});
+            document.getElementById('role-form-container').style.display = 'block';
+            document.getElementById('mgmt-role-id').focus();
         }
 
-        function editUser(username, role, permissionsStr) {
-            const permissions = JSON.parse(permissionsStr);
+        function editRole(roleId) {
+            const r = globalRolesList[roleId];
+            if (!r) return;
             
-            document.getElementById('user-form-title').innerText = "Cập Nhật Người Dùng: " + username;
-            document.getElementById('mgmt-username').value = username;
-            document.getElementById('mgmt-username').disabled = true;
-            document.getElementById('mgmt-password').value = '';
-            document.getElementById('mgmt-password').required = false;
-            document.getElementById('mgmt-password-help').style.display = 'block';
-            document.getElementById('mgmt-user-is-edit').value = 'true';
-            document.getElementById('mgmt-role').value = role;
+            document.getElementById('role-form-title').innerText = "Cấu hình vai trò: " + r.name;
+            document.getElementById('mgmt-role-id').value = roleId;
+            document.getElementById('mgmt-role-id').disabled = true;
+            document.getElementById('mgmt-role-name').value = r.name;
+            document.getElementById('mgmt-role-desc').value = r.description || '';
+            document.getElementById('mgmt-role-is-edit').value = 'true';
 
-            onMgmtRoleChange(role);
+            renderPermissionMatrix(r.permissions || {});
 
-            if (role === 'admin') {
-                document.querySelectorAll('#mgmt-permissions-grid input[type="checkbox"]').forEach(cb => {
+            if (roleId === 'admin') {
+                document.querySelectorAll('.matrix-cb').forEach(cb => {
                     cb.checked = true;
                     cb.disabled = true;
                 });
             } else {
-                document.querySelectorAll('#mgmt-permissions-grid input[type="checkbox"]').forEach(cb => {
-                    cb.checked = permissions.includes(cb.value);
+                document.querySelectorAll('.matrix-cb').forEach(cb => {
                     cb.disabled = false;
                 });
             }
 
-            document.getElementById('user-form-container').style.display = 'block';
-            document.getElementById('mgmt-password').focus();
+            document.getElementById('role-form-container').style.display = 'block';
+            document.getElementById('mgmt-role-name').focus();
         }
 
-        function onMgmtRoleChange(role) {
-            if (role === 'admin') {
-                document.querySelectorAll('#mgmt-permissions-grid input[type="checkbox"]').forEach(cb => {
-                    cb.checked = true;
-                    cb.disabled = true;
-                });
-            } else {
-                document.querySelectorAll('#mgmt-permissions-grid input[type="checkbox"]').forEach(cb => {
-                    cb.disabled = false;
-                });
-            }
+        function hideRoleForm() {
+            document.getElementById('role-form-container').style.display = 'none';
         }
 
-        function hideUserForm() {
-            document.getElementById('user-form-container').style.display = 'none';
-        }
-
-        async function saveUser(event) {
+        async function saveRole(event) {
             event.preventDefault();
-            const username = document.getElementById('mgmt-username').value.trim();
-            const password = document.getElementById('mgmt-password').value;
-            const role = document.getElementById('mgmt-role').value;
-            const isEdit = document.getElementById('mgmt-user-is-edit').value === 'true';
+            const role_id = document.getElementById('mgmt-role-id').value.trim().toLowerCase();
+            const name = document.getElementById('mgmt-role-name').value.trim();
+            const description = document.getElementById('mgmt-role-desc').value.trim();
 
-            if (!username) return;
+            if (!role_id || !name) return;
 
-            const permissions = [];
-            document.querySelectorAll('#mgmt-permissions-grid input[type="checkbox"]').forEach(cb => {
-                if (cb.checked) {
-                    permissions.push(cb.value);
+            const permissions = {};
+            document.querySelectorAll('#matrix-permission-body tr').forEach(tr => {
+                const cbView = tr.querySelector('input[data-action="view"]');
+                if (cbView) {
+                    const tabId = cbView.getAttribute('data-tab');
+                    const cbAdd = tr.querySelector('input[data-action="add"]');
+                    const cbEdit = tr.querySelector('input[data-action="edit"]');
+                    const cbDelete = tr.querySelector('input[data-action="delete"]');
+                    
+                    permissions[tabId] = {
+                        view: cbView.checked,
+                        add: cbAdd.checked,
+                        edit: cbEdit.checked,
+                        delete: cbDelete.checked
+                    };
                 }
             });
 
-            const payload = { username, role, permissions };
-            if (password) payload.password = password;
+            const payload = { role_id, name, description, permissions };
 
             showLoading("Đang lưu...");
             try {
-                const res = await fetch(getApiUrl('/api/users'), getFetchOptions({
+                const res = await fetch(getApiUrl('/api/roles'), getFetchOptions({
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 }));
 
                 if (res.ok) {
-                    hideUserForm();
-                    await loadUsersList();
-                    if (username === loggedInUsername) {
-                        await checkUserRole();
-                    }
-                    alert("Đã lưu thông tin người dùng thành công!");
+                    hideRoleForm();
+                    await loadRolesList();
+                    alert("Đã lưu thông tin vai trò thành công!");
                 } else {
                     const err = await res.json();
-                    alert("Lỗi lưu người dùng: " + err.error);
+                    alert("Lỗi lưu vai trò: " + err.error);
                 }
             } catch (err) {
                 alert("Lỗi kết nối máy chủ: " + err.message);
@@ -4142,21 +4379,249 @@
             }
         }
 
-        async function deleteUser(username) {
-            if (!confirm(`Bạn có chắc chắn muốn xóa người dùng ${username} không?`)) return;
+        async function deleteRole(roleId) {
+            if (!confirm(`Bạn có chắc chắn muốn xóa vai trò '${roleId}' không? Người dùng thuộc vai trò này sẽ trở lại vai trò Nhân viên mặc định.`)) return;
             
             showLoading("Đang xóa...");
             try {
-                const res = await fetch(getApiUrl('/api/users/' + encodeURIComponent(username)), getFetchOptions({
+                const res = await fetch(getApiUrl('/api/roles/' + encodeURIComponent(roleId)), getFetchOptions({
                     method: 'DELETE'
                 }));
 
                 if (res.ok) {
-                    await loadUsersList();
-                    alert(`Đã xóa người dùng ${username} thành công!`);
+                    await loadRolesList();
+                    alert(`Đã xóa vai trò thành công!`);
                 } else {
                     const err = await res.json();
-                    alert("Lỗi xóa người dùng: " + err.error);
+                    alert("Lỗi xóa vai trò: " + err.error);
+                }
+            } catch (err) {
+                alert("Lỗi kết nối máy chủ: " + err.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function loadStaffList() {
+            try {
+                const res = await fetch(getApiUrl('/api/staff-list'), getFetchOptions());
+                if (res.ok) {
+                    const staff = await res.json();
+                    globalStaffList = staff;
+                    renderStaffList(staff);
+                }
+            } catch (err) {
+                console.error("Lỗi load danh sách nhân viên: ", err);
+            }
+        }
+
+        function renderStaffList(staff) {
+            const container = document.getElementById('staff-scroll-list');
+            container.innerHTML = '';
+
+            if (staff.length === 0) {
+                container.innerHTML = '<div style="color: var(--text-muted); font-style: italic; font-size: 11px; text-align: center; padding: 12px;">Không tìm thấy nhân viên</div>';
+                return;
+            }
+
+            staff.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'staff-item';
+                div.id = `staff-item-${item.id}`;
+                div.style.padding = '10px 12px';
+                div.style.border = '1px solid var(--border-color)';
+                div.style.borderRadius = '8px';
+                div.style.background = item.id === selectedStaffId ? 'rgba(0, 123, 195, 0.08)' : 'var(--bg-card)';
+                div.style.borderColor = item.id === selectedStaffId ? 'var(--color-ghn-blue)' : 'var(--border-color)';
+                div.style.cursor = 'pointer';
+                div.style.display = 'flex';
+                div.style.justifyContent = 'space-between';
+                div.style.alignItems = 'center';
+                div.style.transition = 'all 0.2s';
+                
+                div.onclick = () => selectStaff(item.id);
+
+                let badgeHtml = '';
+                if (item.role) {
+                    const rName = globalRolesList[item.role] ? globalRolesList[item.role].name : item.role.toUpperCase();
+                    if (item.role === 'admin') {
+                        badgeHtml = `<span class="status-badge stable" style="font-size: 9px; padding: 2px 6px;">${rName}</span>`;
+                    } else if (item.role === 'am') {
+                        badgeHtml = `<span class="status-badge stable" style="font-size: 9px; padding: 2px 6px; background-color: var(--color-indigo); color: white;">${rName}</span>`;
+                    } else {
+                        badgeHtml = `<span class="status-badge warning" style="font-size: 9px; padding: 2px 6px; background: rgba(0,123,195,0.06); color: var(--color-ghn-blue); border: 1px solid rgba(0,123,195,0.12);">${rName}</span>`;
+                    }
+                } else {
+                    badgeHtml = `<span style="font-size: 9px; color: var(--text-muted); font-style: italic;">Chưa gán</span>`;
+                }
+
+                div.innerHTML = `
+                    <div style="display: flex; flex-direction: column; gap: 2px; text-align: left;">
+                        <span style="font-weight: 700; font-size: 13px; color: var(--text-primary);">${escapeHTML(item.name)}</span>
+                        <span style="font-size: 11px; color: var(--text-muted);">${escapeHTML(item.chuc_vu)} (${escapeHTML(item.id)})</span>
+                    </div>
+                    <div>${badgeHtml}</div>
+                `;
+
+                container.appendChild(div);
+            });
+        }
+
+        function filterStaffList(query) {
+            const q = query.trim().toLowerCase();
+            if (!q) {
+                renderStaffList(globalStaffList);
+                return;
+            }
+
+            const filtered = globalStaffList.filter(item => 
+                item.name.toLowerCase().includes(q) || 
+                item.id.toLowerCase().includes(q) ||
+                item.chuc_vu.toLowerCase().includes(q)
+            );
+            renderStaffList(filtered);
+        }
+
+        function selectStaff(staffId) {
+            selectedStaffId = staffId;
+            const staff = globalStaffList.find(s => s.id === staffId);
+            if (!staff) return;
+
+            document.querySelectorAll('#staff-scroll-list > div').forEach(div => {
+                div.style.background = 'var(--bg-card)';
+                div.style.borderColor = 'var(--border-color)';
+            });
+            const activeDiv = document.getElementById(`staff-item-${staffId}`);
+            if (activeDiv) {
+                activeDiv.style.background = 'rgba(0, 123, 195, 0.08)';
+                activeDiv.style.borderColor = 'var(--color-ghn-blue)';
+            }
+
+            document.getElementById('assign-staff-name').innerText = staff.name;
+            document.getElementById('assign-staff-id').innerText = staff.id;
+            document.getElementById('assign-staff-title').innerText = staff.chuc_vu;
+
+            const rolesListContainer = document.getElementById('assign-roles-list');
+            rolesListContainer.innerHTML = '';
+
+            const roles = globalRolesList;
+            Object.keys(roles).forEach(roleId => {
+                const r = roles[roleId];
+                const div = document.createElement('div');
+                div.style.display = 'flex';
+                div.style.alignItems = 'center';
+                div.style.justifyContent = 'space-between';
+                div.style.padding = '12px';
+                div.style.border = '1px solid var(--border-color)';
+                div.style.borderRadius = '8px';
+                div.style.background = staff.role === roleId ? 'rgba(0, 123, 195, 0.04)' : 'var(--bg-card)';
+                div.style.borderColor = staff.role === roleId ? 'var(--color-ghn-blue)' : 'var(--border-color)';
+                div.style.cursor = 'pointer';
+                div.style.transition = 'all 0.2s';
+                
+                div.onclick = () => assignRoleToStaff(staff.id, roleId);
+
+                const isChecked = staff.role === roleId;
+
+                div.innerHTML = `
+                    <div style="text-align: left; display: flex; flex-direction: column; gap: 2px;">
+                        <span style="font-weight: 700; font-size: 13px; color: var(--text-primary);">${escapeHTML(r.name)} <span style="font-size: 10px; font-weight: normal; color: var(--text-muted);">(${escapeHTML(roleId)})</span></span>
+                        <span style="font-size: 11px; color: var(--text-muted);">${escapeHTML(r.description || '')}</span>
+                    </div>
+                    <div style="font-size: 18px; color: ${isChecked ? 'var(--color-ghn-blue)' : 'var(--text-muted)'};">
+                        <i class="${isChecked ? 'fa-solid fa-circle-check' : 'fa-regular fa-circle'}"></i>
+                    </div>
+                `;
+
+                rolesListContainer.appendChild(div);
+            });
+
+            document.getElementById('assign-placeholder').style.display = 'none';
+            document.getElementById('assign-details-container').style.display = 'flex';
+        }
+
+        async function assignRoleToStaff(staffId, roleId) {
+            const staff = globalStaffList.find(s => s.id === staffId);
+            if (!staff) return;
+
+            if (staff.role === roleId) return;
+
+            showLoading("Đang gán vai trò...");
+            try {
+                const res = await fetch(getApiUrl('/api/assign-role'), getFetchOptions({
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ employee_id: staffId, role: roleId })
+                }));
+
+                if (res.ok) {
+                    alert(`Đã gán vai trò thành công! Mật khẩu truy cập mặc định là '123456'.`);
+                    await loadStaffList();
+                    selectStaff(staffId);
+                } else {
+                    const err = await res.json();
+                    alert("Lỗi gán vai trò: " + err.error);
+                }
+            } catch (err) {
+                alert("Lỗi kết nối máy chủ: " + err.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function removeStaffRole() {
+            if (!selectedStaffId) return;
+            const staff = globalStaffList.find(s => s.id === selectedStaffId);
+            if (!staff) return;
+
+            if (!confirm(`Bạn có chắc chắn muốn gỡ vai trò và thu hồi quyền truy cập của nhân viên ${staff.name} không?`)) return;
+
+            showLoading("Đang thu hồi quyền...");
+            try {
+                const res = await fetch(getApiUrl('/api/assign-role'), getFetchOptions({
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ employee_id: selectedStaffId, role: 'none' })
+                }));
+
+                if (res.ok) {
+                    alert(`Đã gỡ quyền truy cập của nhân viên thành công.`);
+                    await loadStaffList();
+                    
+                    document.getElementById('assign-details-container').style.display = 'none';
+                    document.getElementById('assign-placeholder').style.display = 'flex';
+                    selectedStaffId = null;
+                } else {
+                    const err = await res.json();
+                    alert("Lỗi thu hồi quyền: " + err.error);
+                }
+            } catch (err) {
+                alert("Lỗi kết nối máy chủ: " + err.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function resetStaffPassword() {
+            if (!selectedStaffId) return;
+            const staff = globalStaffList.find(s => s.id === selectedStaffId);
+            if (!staff) return;
+
+            if (!confirm(`Bạn có muốn đặt lại mật khẩu cho nhân viên ${staff.name} về mật khẩu mặc định '123456' không?`)) return;
+
+            showLoading("Đang đặt lại mật khẩu...");
+            try {
+                const res = await fetch(getApiUrl('/api/reset-password'), getFetchOptions({
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ employee_id: selectedStaffId })
+                }));
+
+                if (res.ok) {
+                    alert(`Đã đặt lại mật khẩu về mặc định '123456' thành công!`);
+                } else {
+                    const err = await res.json();
+                    alert("Lỗi đặt lại mật khẩu: " + err.error);
                 }
             } catch (err) {
                 alert("Lỗi kết nối máy chủ: " + err.message);
@@ -4327,32 +4792,61 @@
         async function loadAllData(baseline = "") {
             showLoading("Đang tải dữ liệu báo cáo...");
             try {
-                // Fetch in parallel
-                const opsPromise = fetch(getApiUrl('/api/operational'), getFetchOptions()).then(r => r.json());
-                const oprPromise = fetch(getApiUrl('/api/opr'), getFetchOptions()).then(r => r.json());
-                const backlogPromise = fetch(getApiUrl(`/api/backlog?baseline=${baseline}`), getFetchOptions()).then(r => r.json());
-                const unstablePromise = fetch(getApiUrl('/api/unstable-po'), getFetchOptions()).then(r => r.json());
-                const offSpePromise = fetch(getApiUrl('/api/off-spe'), getFetchOptions()).then(r => r.json());
-                const volCreationPromise = fetch(getApiUrl('/api/volume-creation'), getFetchOptions()).then(r => r.json());
-                const fdPromise = fetch(getApiUrl('/api/fd'), getFetchOptions()).then(r => r.json());
+                // Try batch endpoint first (critical for Vercel - single request ensures same warm instance)
+                let batchSuccess = false;
+                try {
+                    const batchRes = await fetch(getApiUrl('/api/batch-data'), getFetchOptions());
+                    if (batchRes.ok) {
+                        const batchData = await batchRes.json();
+                        globalData.operational = batchData.operational || {};
+                        globalData.opr = batchData.opr || {};
+                        globalData.backlog = batchData.backlog || {};
+                        globalData.unstablePo = batchData.unstablePo || {};
+                        globalData.offSpe = batchData.offSpe || {};
+                        globalData.fd = batchData.fd || {};
+                        
+                        // Volume creation needs full data, fetch separately
+                        try {
+                            const volRes = await fetch(getApiUrl('/api/volume-creation'), getFetchOptions());
+                            globalData.volumeCreation = await volRes.json();
+                        } catch (volErr) {
+                            globalData.volumeCreation = batchData.volumeCreation || {};
+                        }
+                        
+                        batchSuccess = true;
+                    }
+                } catch (batchErr) {
+                    console.warn("Batch endpoint failed, falling back to parallel fetches:", batchErr);
+                }
+                
+                // Fallback: parallel fetch (used locally or if batch fails)
+                if (!batchSuccess) {
+                    const opsPromise = fetch(getApiUrl('/api/operational'), getFetchOptions()).then(r => r.json());
+                    const oprPromise = fetch(getApiUrl('/api/opr'), getFetchOptions()).then(r => r.json());
+                    const backlogPromise = fetch(getApiUrl(`/api/backlog?baseline=${baseline}`), getFetchOptions()).then(r => r.json());
+                    const unstablePromise = fetch(getApiUrl('/api/unstable-po'), getFetchOptions()).then(r => r.json());
+                    const offSpePromise = fetch(getApiUrl('/api/off-spe'), getFetchOptions()).then(r => r.json());
+                    const volCreationPromise = fetch(getApiUrl('/api/volume-creation'), getFetchOptions()).then(r => r.json());
+                    const fdPromise = fetch(getApiUrl('/api/fd'), getFetchOptions()).then(r => r.json());
 
-                const [opsData, oprData, blData, unstableData, offSpeData, volCreationData, fdData] = await Promise.all([
-                    opsPromise,
-                    oprPromise,
-                    backlogPromise,
-                    unstablePromise,
-                    offSpePromise,
-                    volCreationPromise,
-                    fdPromise
-                ]);
+                    const [opsData, oprData, blData, unstableData, offSpeData, volCreationData, fdData] = await Promise.all([
+                        opsPromise,
+                        oprPromise,
+                        backlogPromise,
+                        unstablePromise,
+                        offSpePromise,
+                        volCreationPromise,
+                        fdPromise
+                    ]);
 
-                globalData.operational = opsData;
-                globalData.opr = oprData;
-                globalData.backlog = blData;
-                globalData.unstablePo = unstableData;
-                globalData.offSpe = offSpeData;
-                globalData.volumeCreation = volCreationData;
-                globalData.fd = fdData;
+                    globalData.operational = opsData;
+                    globalData.opr = oprData;
+                    globalData.backlog = blData;
+                    globalData.unstablePo = unstableData;
+                    globalData.offSpe = offSpeData;
+                    globalData.volumeCreation = volCreationData;
+                    globalData.fd = fdData;
+                }
 
                 // Update timestamps
                 const activePanel = document.querySelector('.content-panel.active');
@@ -4369,10 +4863,10 @@
                 renderAgingDashboard();
                 renderTreoDashboard();
                 loadNtbSummaryData();
-                renderUnstablePo(unstableData);
-                renderOffSpe(offSpeData);
-                renderVolumeCreation(volCreationData);
-                renderFdDashboard(fdData);
+                renderUnstablePo(globalData.unstablePo);
+                renderOffSpe(globalData.offSpe);
+                renderVolumeCreation(globalData.volumeCreation);
+                renderFdDashboard(globalData.fd);
 
             } catch (err) {
                 console.error(err);
@@ -4532,6 +5026,21 @@
                     return;
                 }
                 
+                const syncResult = await res.json();
+                
+                // On Vercel, sync runs synchronously and the response already contains the final status.
+                // Handle completed sync directly without polling.
+                if (syncResult.status === "success") {
+                    showLoading("Đồng bộ hoàn tất! Đang tải lại dữ liệu...");
+                    await loadHistoryDropdown();
+                    await loadAllData();
+                    await loadFilesStatus();
+                    hideLoading();
+                    alert("Đồng bộ dữ liệu thành công!");
+                    return;
+                }
+                
+                // Local/non-Vercel: sync runs in background thread, poll for status
                 const pollInterval = setInterval(async () => {
                     try {
                         const statusRes = await fetch(getApiUrl('/api/sync/status'), getFetchOptions());
@@ -8405,6 +8914,8 @@
             let totalVol2026 = 0;
             let totalHcNeeded = 0;
 
+            const canEditNhanSu = hasActionPermission('tab-nhan-su', 'edit');
+
             filtered.forEach(p => {
                 const hc = p.hc_current || 0;
                 const vol2025 = p.vol_2025 || 0;
@@ -8434,6 +8945,7 @@
                         <td>${formatNumber(vol2025)}</td>
                         <td>
                             <input type="number" value="${growth}" 
+                                   ${canEditNhanSu ? '' : 'disabled'}
                                    style="width: 70px; padding: 4px 8px; border: 1px solid var(--border-color); border-radius: 4px; text-align: right;" 
                                    oninput="window.updateRowGrowth('${p.warehouse_id}', this.value)">
                         </td>

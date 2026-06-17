@@ -1,16 +1,16 @@
 Tỉnh,Quận/ huyện,Phường/xã cần tắt,"ID phường/xã
 (MÀU ĐỎ LÀ ĐANG OFF)","Bưu Cục
-Vùng để trống cột bất kỳ từ cột B-> S
+Vùng để trống cột bất kỳ từ cột B-> T
 Nhập sai format
 => KHÔNG REVIEW",Kết quả (KA) update,% Cap Down (KA),Thời gian tắt (KA),Thời gian mở (KA)
-Đắk Nông,Huyện Đắk R lấp,Thị trấn Kiến Đức,630201,Bưu Cục 01 Nguyễn Tất Thành-Đắk R lấp-Đắk Nông,DUYỆT,100%,01-06-2026,15-06-2026
-Đắk Nông,Huyện Đắk R lấp,Xã Đạo Nghĩa,630205,Bưu Cục 01 Nguyễn Tất Thành-Đắk R lấp-Đắk Nông,DUYỆT,100%,01-06-2026,15-06-2026
-Đắk Nông,Huyện Đắk R lấp,Xã Kiến Thành,630207,Bưu Cục 01 Nguyễn Tất Thành-Đắk R lấp-Đắk Nông,DUYỆT,100%,01-06-2026,15-06-2026
-Đắk Nông,Huyện Đắk R lấp,Xã Nghĩa Thắng,630208,Bưu Cục 01 Nguyễn Tất Thành-Đắk R lấp-Đắk Nông,DUYỆT,100%,01-06-2026,15-06-2026
+Đắk Nông,Huyện Đắk R lấp,Thị trấn Kiến Đức,630201,Bưu Cục 01 Nguyễn Tất Thành-Đắk R lấp-Đắk Nông,,,,
+Đắk Nông,Huyện Đắk R lấp,Xã Đạo Nghĩa,630205,Bưu Cục 01 Nguyễn Tất Thành-Đắk R lấp-Đắk Nông,,,,
+Đắk Nông,Huyện Đắk R lấp,Xã Kiến Thành,630207,Bưu Cục 01 Nguyễn Tất Thành-Đắk R lấp-Đắk Nông,,,,
+Đắk Nông,Huyện Đắk R lấp,Xã Nghĩa Thắng,630208,Bưu Cục 01 Nguyễn Tất Thành-Đắk R lấp-Đắk Nông,,,,
 Khánh Hòa,Thành phố Nha Trang,Phường Phước Tân,410106,Bưu Cục 06 Lê Hồng Phong-TP.Nha Trang-Khánh Hòa,DUYỆT,100%,09-06-2026,20-06-2026
 Khánh Hòa,Thành phố Nha Trang,Phường Phương Sài,410108,Bưu Cục 06 Lê Hồng Phong-TP.Nha Trang-Khánh Hòa,DUYỆT,100%,09-06-2026,20-06-2026
 Lâm Đồng,Huyện Di Linh,Thị trấn Di Linh,420401,Bưu Cục 1322 Hùng Vương-Di Linh-Lâm Đồng,DUYỆT,100%,12-06-2026,20-06-2026
-Lâm Đồng,Huyện Di Linh,Xã Bảo Thuận,420402,Bưu Cục 1322 Hùng Vương-Di Linh-Lâm Đồng,DUYỆT,100%,01-06-2026,15-06-2026
+Lâm Đồng,Huyện Di Linh,Xã Bảo Thuận,420402,Bưu Cục 1322 Hùng Vương-Di Linh-Lâm Đồng,DUYỆT,100%,12-06-2026,12-06-2026
 Lâm Đồng,Huyện Di Linh,Xã Đinh Lạc,420403,Bưu Cục 1322 Hùng Vương-Di Linh-Lâm Đồng,DUYỆT,100%,12-06-2026,20-06-2026
 Lâm Đồng,Huyện Di Linh,Xã Đinh Trang Thượng,420405,Bưu Cục 1322 Hùng Vương-Di Linh-Lâm Đồng,DUYỆT,100%,12-06-2026,25-06-2026
 Lâm Đồng,Huyện Di Linh,Xã Gia Bắc,420406,Bưu Cục 1322 Hùng Vương-Di Linh-Lâm Đồng,DUYỆT,100%,12-06-2026,25-06-2026
@@ -18,9 +18,9 @@ Lâm Đồng,Huyện Di Linh,Xã Gia Hiệp,420407,Bưu Cục 1322 Hùng Vương
 Lâm Đồng,Huyện Di Linh,Xã Gung Ré,420408,Bưu Cục 1322 Hùng Vương-Di Linh-Lâm Đồng,DUYỆT,100%,12-06-2026,20-06-2026
 Lâm Đồng,Huyện Di Linh,Xã Sơn Điền,420414,Bưu Cục 1322 Hùng Vương-Di Linh-Lâm Đồng,DUYỆT,100%,12-06-2026,25-06-2026
 Lâm Đồng,Huyện Di Linh,Xã Tam Bố,420415,Bưu Cục 1322 Hùng Vương-Di Linh-Lâm Đồng,DUYỆT,100%,12-06-2026,25-06-2026
-Lâm Đồng,Huyện Di Linh,Xã Tân Châu,420416,Bưu Cục 1322 Hùng Vương-Di Linh-Lâm Đồng,DUYỆT,100%,01-06-2026,15-06-2026
+Lâm Đồng,Huyện Di Linh,Xã Tân Châu,420416,Bưu Cục 1322 Hùng Vương-Di Linh-Lâm Đồng,DUYỆT,100%,12-06-2026,20-06-2026
 Lâm Đồng,Huyện Di Linh,Xã Tân Lâm,420417,Bưu Cục 1322 Hùng Vương-Di Linh-Lâm Đồng,DUYỆT,100%,12-06-2026,25-06-2026
-Lâm Đồng,Huyện Di Linh,Xã Tân Nghĩa,420418,Bưu Cục 1322 Hùng Vương-Di Linh-Lâm Đồng,DUYỆT,100%,01-06-2026,15-06-2026
+Lâm Đồng,Huyện Di Linh,Xã Tân Nghĩa,420418,Bưu Cục 1322 Hùng Vương-Di Linh-Lâm Đồng,DUYỆT,100%,12-06-2026,20-06-2026
 Lâm Đồng,Huyện Di Linh,Xã Tân Thượng,420419,Bưu Cục 1322 Hùng Vương-Di Linh-Lâm Đồng,DUYỆT,100%,12-06-2026,25-06-2026
 Lâm Đồng,Huyện Di Linh,Xã Đinh Trang Hòa,420404,Bưu Cục 231 Thôn 1-Xã Hòa Ninh-Lâm Đồng,DUYỆT,100%,07-06-2026,20-06-2026
 Lâm Đồng,Huyện Di Linh,Xã Hòa Bắc,420409,Bưu Cục 231 Thôn 1-Xã Hòa Ninh-Lâm Đồng,DUYỆT,100%,07-06-2026,20-06-2026
@@ -34,41 +34,41 @@ Lâm Đồng,Huyện Bảo Lâm,Xã Lộc Lâm,761207,Bưu Cục 337 Hùng Vươ
 Lâm Đồng,Huyện Bảo Lâm,Xã Lộc Ngãi,761209,Bưu Cục 337 Hùng Vương-Lộc Thắng-Bảo Lâm-Lâm Đồng,DUYỆT,100%,07-06-2026,20-06-2026
 Lâm Đồng,Huyện Bảo Lâm,Xã Lộc Phú,761210,Bưu Cục 337 Hùng Vương-Lộc Thắng-Bảo Lâm-Lâm Đồng,DUYỆT,100%,07-06-2026,20-06-2026
 Lâm Đồng,Huyện Bảo Lâm,Xã Lộc Quảng,761211,Bưu Cục 337 Hùng Vương-Lộc Thắng-Bảo Lâm-Lâm Đồng,DUYỆT,100%,07-06-2026,20-06-2026
-Khánh Hòa,Huyện Cam Lâm,Thị trấn Cam Đức,410901,Bưu Cục 42 Nguyễn Du-Cam Lâm-Khánh Hoà,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Huyện Cam Lâm,Xã Cam An Bắc,410902,Bưu Cục 42 Nguyễn Du-Cam Lâm-Khánh Hoà,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Huyện Cam Lâm,Xã Cam An Nam,410903,Bưu Cục 42 Nguyễn Du-Cam Lâm-Khánh Hoà,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Huyện Cam Lâm,Xã Cam Hải Đông,410904,Bưu Cục 42 Nguyễn Du-Cam Lâm-Khánh Hoà,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Huyện Cam Lâm,Xã Cam Hải Tây,410905,Bưu Cục 42 Nguyễn Du-Cam Lâm-Khánh Hoà,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Huyện Cam Lâm,Xã Cam Hiệp Bắc,410906,Bưu Cục 42 Nguyễn Du-Cam Lâm-Khánh Hoà,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Huyện Cam Lâm,Xã Cam Hiệp Nam,410907,Bưu Cục 42 Nguyễn Du-Cam Lâm-Khánh Hoà,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Huyện Cam Lâm,Xã Cam Phước Tây,410909,Bưu Cục 42 Nguyễn Du-Cam Lâm-Khánh Hoà,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Huyện Cam Lâm,Xã Cam Thành Bắc,410911,Bưu Cục 42 Nguyễn Du-Cam Lâm-Khánh Hoà,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Thành phố Cam Ranh,Phường Ba Ngòi,410601,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Thành phố Cam Ranh,Phường Cam Linh,410602,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Thành phố Cam Ranh,Phường Cam Lộc,410603,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Thành phố Cam Ranh,Phường Cam Lợi,410604,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Thành phố Cam Ranh,Phường Cam Phú,410606,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Thành phố Cam Ranh,Phường Cam Phúc Nam,410608,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Thành phố Cam Ranh,Phường Cam Thuận,410609,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Thành phố Cam Ranh,Xã Cam Bình,410610,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Thành phố Cam Ranh,Xã Cam Lập,410611,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Thành phố Cam Ranh,Xã Cam Phước Đông,410612,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Thành phố Cam Ranh,Xã Cam Thịnh Đông,410614,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Thành phố Cam Ranh,Xã Cam Thịnh Tây,410615,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Thành phố Cam Ranh,Phường Cam Nghĩa,410605,Bưu Cục 571 Hùng Vương-Cam Nghĩa-TP.Cam Ranh-Khánh Hoà,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Thành phố Cam Ranh,Phường Cam Phúc Bắc,410607,Bưu Cục 571 Hùng Vương-Cam Nghĩa-TP.Cam Ranh-Khánh Hoà,DUYỆT,100%,01-06-2026,15-06-2026
-Khánh Hòa,Thành phố Cam Ranh,Xã Cam Thành Nam,410613,Bưu Cục 571 Hùng Vương-Cam Nghĩa-TP.Cam Ranh-Khánh Hoà,DUYỆT,100%,01-06-2026,15-06-2026
+Khánh Hòa,Huyện Cam Lâm,Thị trấn Cam Đức,410901,Bưu Cục 42 Nguyễn Du-Cam Lâm-Khánh Hoà,,,,
+Khánh Hòa,Huyện Cam Lâm,Xã Cam An Bắc,410902,Bưu Cục 42 Nguyễn Du-Cam Lâm-Khánh Hoà,,,,
+Khánh Hòa,Huyện Cam Lâm,Xã Cam An Nam,410903,Bưu Cục 42 Nguyễn Du-Cam Lâm-Khánh Hoà,,,,
+Khánh Hòa,Huyện Cam Lâm,Xã Cam Hải Đông,410904,Bưu Cục 42 Nguyễn Du-Cam Lâm-Khánh Hoà,,,,
+Khánh Hòa,Huyện Cam Lâm,Xã Cam Hải Tây,410905,Bưu Cục 42 Nguyễn Du-Cam Lâm-Khánh Hoà,,,,
+Khánh Hòa,Huyện Cam Lâm,Xã Cam Hiệp Bắc,410906,Bưu Cục 42 Nguyễn Du-Cam Lâm-Khánh Hoà,,,,
+Khánh Hòa,Huyện Cam Lâm,Xã Cam Hiệp Nam,410907,Bưu Cục 42 Nguyễn Du-Cam Lâm-Khánh Hoà,,,,
+Khánh Hòa,Huyện Cam Lâm,Xã Cam Phước Tây,410909,Bưu Cục 42 Nguyễn Du-Cam Lâm-Khánh Hoà,,,,
+Khánh Hòa,Huyện Cam Lâm,Xã Cam Thành Bắc,410911,Bưu Cục 42 Nguyễn Du-Cam Lâm-Khánh Hoà,,,,
+Khánh Hòa,Thành phố Cam Ranh,Phường Ba Ngòi,410601,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,,,,
+Khánh Hòa,Thành phố Cam Ranh,Phường Cam Linh,410602,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,,,,
+Khánh Hòa,Thành phố Cam Ranh,Phường Cam Lộc,410603,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,,,,
+Khánh Hòa,Thành phố Cam Ranh,Phường Cam Lợi,410604,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,,,,
+Khánh Hòa,Thành phố Cam Ranh,Phường Cam Phú,410606,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,,,,
+Khánh Hòa,Thành phố Cam Ranh,Phường Cam Phúc Nam,410608,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,,,,
+Khánh Hòa,Thành phố Cam Ranh,Phường Cam Thuận,410609,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,,,,
+Khánh Hòa,Thành phố Cam Ranh,Xã Cam Bình,410610,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,,,,
+Khánh Hòa,Thành phố Cam Ranh,Xã Cam Lập,410611,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,,,,
+Khánh Hòa,Thành phố Cam Ranh,Xã Cam Phước Đông,410612,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,,,,
+Khánh Hòa,Thành phố Cam Ranh,Xã Cam Thịnh Đông,410614,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,,,,
+Khánh Hòa,Thành phố Cam Ranh,Xã Cam Thịnh Tây,410615,Bưu Cục 56 Phan Đình Phùng-Cam Linh-Khánh Hòa,,,,
+Khánh Hòa,Thành phố Cam Ranh,Phường Cam Nghĩa,410605,Bưu Cục 571 Hùng Vương-Cam Nghĩa-TP.Cam Ranh-Khánh Hoà,,,,
+Khánh Hòa,Thành phố Cam Ranh,Phường Cam Phúc Bắc,410607,Bưu Cục 571 Hùng Vương-Cam Nghĩa-TP.Cam Ranh-Khánh Hoà,,,,
+Khánh Hòa,Thành phố Cam Ranh,Xã Cam Thành Nam,410613,Bưu Cục 571 Hùng Vương-Cam Nghĩa-TP.Cam Ranh-Khánh Hoà,,,,
 Khánh Hòa,Thành phố Nha Trang,Phường Phước Hải,410103,Bưu Cục Đường 35 Hà Quang 1-Xã Nam Nha Trang-Khánh Hòa,DUYỆT,100%,09-06-2026,20-06-2026
-Đắk Nông,Thành phố Gia Nghĩa,Phường Nghĩa Đức,630101,Bưu Cục Hùng Vương-Nghĩa Trung-Gia Nghĩa-Đắk Nông,DUYỆT,100%,01-06-2026,15-06-2026
-Đắk Nông,Thành phố Gia Nghĩa,Phường Nghĩa Trung,630105,Bưu Cục Hùng Vương-Nghĩa Trung-Gia Nghĩa-Đắk Nông,DUYỆT,100%,01-06-2026,15-06-2026
-Đắk Nông,Thành phố Gia Nghĩa,Xã Đắk Nia,630106,Bưu Cục Hùng Vương-Nghĩa Trung-Gia Nghĩa-Đắk Nông,DUYỆT,100%,01-06-2026,15-06-2026
-Lâm Đồng,Thành phố Đà Lạt,Phường 7,420110,Bưu Cục Langbiang-Lạc Dương-Lâm Đồng,DUYỆT,100%,01-06-2026,15-06-2026
-Lâm Đồng,Huyện Lạc Dương,Thị trấn Lạc Dương,420601,Bưu Cục Langbiang-Lạc Dương-Lâm Đồng,DUYỆT,100%,01-06-2026,15-06-2026
-Lâm Đồng,Huyện Lạc Dương,Xã Đạ Chais,420602,Bưu Cục Langbiang-Lạc Dương-Lâm Đồng,DUYỆT,100%,01-06-2026,15-06-2026
-Lâm Đồng,Huyện Lạc Dương,Xã Đạ Nhim,420603,Bưu Cục Langbiang-Lạc Dương-Lâm Đồng,DUYỆT,100%,01-06-2026,15-06-2026
-Lâm Đồng,Huyện Lạc Dương,Xã Đạ Sar,420604,Bưu Cục Langbiang-Lạc Dương-Lâm Đồng,DUYỆT,100%,01-06-2026,15-06-2026
-Lâm Đồng,Huyện Lạc Dương,Xã Đưng KNớ,420605,Bưu Cục Langbiang-Lạc Dương-Lâm Đồng,DUYỆT,100%,01-06-2026,15-06-2026
-Lâm Đồng,Huyện Lạc Dương,Xã Lát,420606,Bưu Cục Langbiang-Lạc Dương-Lâm Đồng,DUYỆT,100%,01-06-2026,15-06-2026
+Đắk Nông,Thành phố Gia Nghĩa,Phường Nghĩa Đức,630101,Bưu Cục Hùng Vương-Nghĩa Trung-Gia Nghĩa-Đắk Nông,,,,
+Đắk Nông,Thành phố Gia Nghĩa,Phường Nghĩa Trung,630105,Bưu Cục Hùng Vương-Nghĩa Trung-Gia Nghĩa-Đắk Nông,,,,
+Đắk Nông,Thành phố Gia Nghĩa,Xã Đắk Nia,630106,Bưu Cục Hùng Vương-Nghĩa Trung-Gia Nghĩa-Đắk Nông,,,,
+Lâm Đồng,Thành phố Đà Lạt,Phường 7,420110,Bưu Cục Langbiang-Lạc Dương-Lâm Đồng,,,,
+Lâm Đồng,Huyện Lạc Dương,Thị trấn Lạc Dương,420601,Bưu Cục Langbiang-Lạc Dương-Lâm Đồng,,,,
+Lâm Đồng,Huyện Lạc Dương,Xã Đạ Chais,420602,Bưu Cục Langbiang-Lạc Dương-Lâm Đồng,,,,
+Lâm Đồng,Huyện Lạc Dương,Xã Đạ Nhim,420603,Bưu Cục Langbiang-Lạc Dương-Lâm Đồng,,,,
+Lâm Đồng,Huyện Lạc Dương,Xã Đạ Sar,420604,Bưu Cục Langbiang-Lạc Dương-Lâm Đồng,,,,
+Lâm Đồng,Huyện Lạc Dương,Xã Đưng KNớ,420605,Bưu Cục Langbiang-Lạc Dương-Lâm Đồng,,,,
+Lâm Đồng,Huyện Lạc Dương,Xã Lát,420606,Bưu Cục Langbiang-Lạc Dương-Lâm Đồng,,,,
 Lâm Đồng,Huyện Đơn Dương,Thị trấn D'Ran,420501,Bưu Cục TDP Nghĩa Đức-Thạnh Mỹ-Đơn Dương-Lâm Đồng,DUYỆT,100%,12-06-2026,25-06-2026
 Lâm Đồng,Huyện Đơn Dương,Thị trấn Thạnh Mỹ,420502,Bưu Cục TDP Nghĩa Đức-Thạnh Mỹ-Đơn Dương-Lâm Đồng,DUYỆT,100%,12-06-2026,25-06-2026
 Lâm Đồng,Huyện Đơn Dương,Xã Đạ Ròn,420503,Bưu Cục TDP Nghĩa Đức-Thạnh Mỹ-Đơn Dương-Lâm Đồng,DUYỆT,100%,12-06-2026,25-06-2026
@@ -79,15 +79,15 @@ Lâm Đồng,Huyện Đơn Dương,Xã Lạc Xuân,420507,Bưu Cục TDP Nghĩa 
 Lâm Đồng,Huyện Đơn Dương,Xã Pró,420508,Bưu Cục TDP Nghĩa Đức-Thạnh Mỹ-Đơn Dương-Lâm Đồng,DUYỆT,100%,12-06-2026,25-06-2026
 Lâm Đồng,Huyện Đơn Dương,Xã Quảng Lập,420509,Bưu Cục TDP Nghĩa Đức-Thạnh Mỹ-Đơn Dương-Lâm Đồng,DUYỆT,100%,12-06-2026,25-06-2026
 Lâm Đồng,Huyện Đơn Dương,Xã Tu Tra,420510,Bưu Cục TDP Nghĩa Đức-Thạnh Mỹ-Đơn Dương-Lâm Đồng,DUYỆT,100%,12-06-2026,25-06-2026
-Đắk Nông,Huyện Đắk R lấp,Xã Đắk Ru,630202,Bưu Cục Thôn 2-Xã Quảng Tín-Đắk Nông,DUYỆT,100%,01-06-2026,15-06-2026
-Đắk Nông,Huyện Đắk R lấp,Xã Đắk Sin,630203,Bưu Cục Thôn 2-Xã Quảng Tín-Đắk Nông,DUYỆT,100%,01-06-2026,15-06-2026
-Đắk Nông,Huyện Đắk R lấp,Xã Hưng Bình,630206,Bưu Cục Thôn 2-Xã Quảng Tín-Đắk Nông,DUYỆT,100%,01-06-2026,15-06-2026
-Đắk Nông,Huyện Đắk R lấp,Xã Quảng Tín,630211,Bưu Cục Thôn 2-Xã Quảng Tín-Đắk Nông,DUYỆT,100%,01-06-2026,15-06-2026
-Đắk Nông,Huyện Tuy Đức,Xã Đắk Ngo,630802,Bưu Cục Thôn 2-Xã Quảng Tín-Đắk Nông,DUYỆT,100%,01-06-2026,15-06-2026
+Đắk Nông,Huyện Đắk R lấp,Xã Đắk Ru,630202,Bưu Cục Thôn 2-Xã Quảng Tín-Đắk Nông,,,,
+Đắk Nông,Huyện Đắk R lấp,Xã Đắk Sin,630203,Bưu Cục Thôn 2-Xã Quảng Tín-Đắk Nông,,,,
+Đắk Nông,Huyện Đắk R lấp,Xã Hưng Bình,630206,Bưu Cục Thôn 2-Xã Quảng Tín-Đắk Nông,,,,
+Đắk Nông,Huyện Đắk R lấp,Xã Quảng Tín,630211,Bưu Cục Thôn 2-Xã Quảng Tín-Đắk Nông,,,,
+Đắk Nông,Huyện Tuy Đức,Xã Đắk Ngo,630802,Bưu Cục Thôn 2-Xã Quảng Tín-Đắk Nông,,,,
 Lâm Đồng,Huyện Lâm Hà,Xã Đan Phượng,421004,Bưu Cục Thôn Phúc Hưng-Xã Tân Hà Lâm Hà-Lâm Đồng,DUYỆT,100%,07-06-2026,20-06-2026
 Lâm Đồng,Huyện Lâm Hà,Xã Hoài Đức,421007,Bưu Cục Thôn Phúc Hưng-Xã Tân Hà Lâm Hà-Lâm Đồng,DUYỆT,100%,07-06-2026,20-06-2026
 Lâm Đồng,Huyện Lâm Hà,Xã Liên Hà,421008,Bưu Cục Thôn Phúc Hưng-Xã Tân Hà Lâm Hà-Lâm Đồng,DUYỆT,100%,07-06-2026,20-06-2026
 Lâm Đồng,Huyện Lâm Hà,Xã Phúc Thọ,421013,Bưu Cục Thôn Phúc Hưng-Xã Tân Hà Lâm Hà-Lâm Đồng,DUYỆT,100%,07-06-2026,20-06-2026
 Lâm Đồng,Huyện Lâm Hà,Xã Tân Hà,421014,Bưu Cục Thôn Phúc Hưng-Xã Tân Hà Lâm Hà-Lâm Đồng,DUYỆT,100%,07-06-2026,20-06-2026
 Lâm Đồng,Huyện Lâm Hà,Xã Tân Thanh,421015,Bưu Cục Thôn Phúc Hưng-Xã Tân Hà Lâm Hà-Lâm Đồng,DUYỆT,100%,07-06-2026,20-06-2026
-Đắk Nông,Thành phố Gia Nghĩa,Phường Nghĩa Tân,630103,Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng,DUYỆT,100%,01-06-2026,15-06-2026
+Đắk Nông,Thành phố Gia Nghĩa,Phường Nghĩa Tân,630103,Điểm Xử Lý Hàng TDP 8 Quốc Lộ 14-Đông Gia Nghĩa-Lâm Đồng,,,,

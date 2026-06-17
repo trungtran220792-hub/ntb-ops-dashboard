@@ -11,6 +11,15 @@ import json
 import datetime
 import pandas as pd
 import openpyxl
+import unicodedata
+import ssl
+
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    pass
+else:
+    ssl._create_default_https_context = _create_unverified_https_context
 
 # Monkey patch pd.ExcelFile and pd.read_excel to use read_only=True by default for openpyxl
 # This reduces memory consumption by 90% and prevents Render out-of-memory crashes.
@@ -120,9 +129,158 @@ def save_users(users):
         print(f"Error saving users.json: {e}")
         return False
 
+DEFAULT_ROLES = {
+    "admin": {
+        "name": "Quản trị viên",
+        "description": "Quyền cao nhất, quản lý toàn bộ hệ thống",
+        "permissions": {
+            p: {"view": True, "add": True, "edit": True, "delete": True}
+            for p in [
+                "tab-dashboard", "tab-introduction", "tab-ntb-summary", "tab-operational",
+                "tab-opr", "tab-backlog", "tab-unstable-po", "tab-off-spe",
+                "tab-volume-creation", "tab-fd", "tab-nhan-su", "tab-sync"
+            ]
+        }
+    },
+    "manager": {
+        "name": "Quản lý",
+        "description": "Quản lý hoạt động, đơn hàng, báo cáo",
+        "permissions": {
+            p: {"view": True, "add": True, "edit": True, "delete": True}
+            for p in [
+                "tab-dashboard", "tab-introduction", "tab-ntb-summary", "tab-operational",
+                "tab-opr", "tab-backlog", "tab-unstable-po", "tab-off-spe",
+                "tab-volume-creation", "tab-fd"
+            ]
+        }
+    },
+    "coordinator": {
+        "name": "Coordinator",
+        "description": "Điều hành - quản lý chuyến đi",
+        "permissions": {
+            "tab-operational": {"view": True, "add": True, "edit": True, "delete": False},
+            "tab-opr": {"view": True, "add": True, "edit": True, "delete": False},
+            "tab-backlog": {"view": True, "add": True, "edit": True, "delete": False},
+            "tab-unstable-po": {"view": True, "add": True, "edit": True, "delete": False},
+            "tab-off-spe": {"view": True, "add": True, "edit": True, "delete": False},
+            "tab-volume-creation": {"view": True, "add": True, "edit": True, "delete": False},
+            "tab-fd": {"view": True, "add": True, "edit": True, "delete": False}
+        }
+    },
+    "accountant": {
+        "name": "Accountant",
+        "description": "Kế toán - quản lý tài chính",
+        "permissions": {
+            "tab-ntb-summary": {"view": True, "add": False, "edit": False, "delete": False},
+            "tab-fd": {"view": True, "add": False, "edit": False, "delete": False}
+        }
+    },
+    "viewer": {
+        "name": "Xem",
+        "description": "Chỉ xem, không thêm/sửa/xóa",
+        "permissions": {
+            p: {"view": True, "add": False, "edit": False, "delete": False}
+            for p in [
+                "tab-dashboard", "tab-introduction", "tab-ntb-summary", "tab-operational",
+                "tab-opr", "tab-backlog", "tab-unstable-po", "tab-off-spe",
+                "tab-volume-creation", "tab-fd"
+            ]
+        }
+    },
+    "driver": {
+        "name": "Tài xế",
+        "description": "Xem chuyến đi, chi tiết chuyến",
+        "permissions": {
+            "tab-operational": {"view": True, "add": False, "edit": False, "delete": False},
+            "tab-opr": {"view": True, "add": False, "edit": False, "delete": False}
+        }
+    },
+    "vendor": {
+        "name": "Nhà cung cấp",
+        "description": "Xem chuyến đi thuộc vendor của mình",
+        "permissions": {
+            "tab-operational": {"view": True, "add": False, "edit": False, "delete": False},
+            "tab-opr": {"view": True, "add": False, "edit": False, "delete": False}
+        }
+    },
+    "am": {
+        "name": "Area Manager",
+        "description": "Quản lý khu vực (AM)",
+        "permissions": {
+            "tab-nhan-su": {"view": True, "add": False, "edit": True, "delete": False}
+        }
+    },
+    "staff": {
+        "name": "Nhân viên",
+        "description": "Quyền nhân viên cơ bản",
+        "permissions": {
+            "tab-dashboard": {"view": True, "add": False, "edit": False, "delete": False},
+            "tab-introduction": {"view": True, "add": False, "edit": False, "delete": False}
+        }
+    }
+}
+
+def load_roles():
+    roles_file = resolve_path('roles.json', write=False)
+    if not os.path.exists(roles_file):
+        save_roles(DEFAULT_ROLES)
+        return DEFAULT_ROLES
+    try:
+        with open(roles_file, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Error loading roles.json: {e}")
+        return DEFAULT_ROLES
+
+def save_roles(roles):
+    try:
+        roles_file = resolve_path('roles.json', write=True)
+        with open(roles_file, 'w', encoding='utf-8') as f:
+            json.dump(roles, f, indent=4, ensure_ascii=False)
+        return True
+    except Exception as e:
+        print(f"Error saving roles.json: {e}")
+        return False
+
+def get_user_permissions(username):
+    users = load_users()
+    user = users.get(username, {})
+    
+    role = user.get("role")
+    if not role:
+        if get_am_name_by_id(username) is not None:
+            role = "am"
+        else:
+            role = "staff"
+            
+    roles = load_roles()
+    role_config = roles.get(role, {})
+    role_perms = role_config.get("permissions", {})
+    
+    all_pages = [
+        "tab-dashboard", "tab-introduction", "tab-ntb-summary", "tab-operational",
+        "tab-opr", "tab-backlog", "tab-unstable-po", "tab-off-spe",
+        "tab-volume-creation", "tab-fd", "tab-nhan-su", "tab-sync"
+    ]
+    
+    perms_dict = {}
+    for page in all_pages:
+        page_perms = role_perms.get(page, {})
+        perms_dict[page] = {
+            "view": bool(page_perms.get("view", False)),
+            "add": bool(page_perms.get("add", False)),
+            "edit": bool(page_perms.get("edit", False)),
+            "delete": bool(page_perms.get("delete", False))
+        }
+        
+    return perms_dict
+
 def check_auth(username, password):
     users = load_users()
     if username in users and check_password_hash(users[username]["password"], password):
+        return username
+    am_name = get_am_name_by_id(username)
+    if am_name and password == "123456":
         return username
     return None
 
@@ -132,17 +290,16 @@ def is_admin():
     auth = request.authorization
     if auth:
         users = load_users()
-        return auth.username in users and users[auth.username].get("role") == "admin"
+        user = users.get(auth.username, {})
+        return user.get("role") == "admin"
     return False
 
 def requires_auth(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        # 1. Try session authentication first
         if 'username' in session:
             return f(*args, **kwargs)
             
-        # 2. Try Basic Auth (backward compatibility for automated scripts)
         auth = request.authorization
         if auth and check_auth(auth.username, auth.password):
             session['username'] = auth.username
@@ -152,8 +309,6 @@ def requires_auth(f):
             session['permissions'] = user.get("permissions", [])
             return f(*args, **kwargs)
             
-        # 3. If neither succeeds, return 401. 
-        # Add WWW-Authenticate header only if basic auth headers were provided to avoid browser dialogs in standard usage.
         headers = {}
         if request.headers.get('Authorization'):
             headers['WWW-Authenticate'] = 'Basic realm="Dashboard Login Required"'
@@ -165,11 +320,10 @@ def requires_auth(f):
         )
     return decorated
 
-def requires_permission(permission):
+def requires_permission(permission, action='view'):
     def decorator(f):
         @wraps(f)
         def decorated(*args, **kwargs):
-            # 1. Check/Authenticate session
             if 'username' not in session:
                 auth = request.authorization
                 if auth and check_auth(auth.username, auth.password):
@@ -190,9 +344,16 @@ def requires_permission(permission):
                     mimetype='application/json'
                 )
                 
-            # 2. Verify role & permission
-            user_permissions = session.get('permissions', [])
-            if session.get('role') == 'admin' or permission in user_permissions:
+            role = session.get('role')
+            username = session.get('username')
+            
+            if role == 'admin':
+                return f(*args, **kwargs)
+                
+            user_perms = get_user_permissions(username)
+            page_perms = user_perms.get(permission, {"view": False, "add": False, "edit": False, "delete": False})
+            
+            if page_perms.get(action, False):
                 return f(*args, **kwargs)
                 
             return jsonify({"error": "Quyền truy cập bị từ chối. Bạn không có quyền sử dụng chức năng này."}), 403
@@ -613,6 +774,121 @@ def download_google_sheet(url, output_path):
     except Exception as e:
         return False, mask_url(f"Lỗi kết nối khi tải: {str(e)}")
 
+def get_am_name_by_id(employee_id):
+    try:
+        ns_path = resolve_path('ops_nhan_su.csv', write=False)
+        if not os.path.exists(ns_path):
+            return None
+        df_ns = safe_read_csv(ns_path, filter_by_am=False)
+        if df_ns is not None and not df_ns.empty:
+            df_ns.columns = [c.strip() for c in df_ns.columns]
+            df_ns['ID_str'] = df_ns['ID'].astype(str).str.strip()
+            target_id = str(employee_id).strip()
+            row = df_ns[df_ns['ID_str'] == target_id]
+            if not row.empty:
+                emp_name = row.iloc[0]['Tên nhân viên'].strip()
+                chuc_vu = str(row.iloc[0]['Chức vụ']).strip().lower()
+                is_am = "manager" in chuc_vu or "am" in chuc_vu or emp_name in df_ns['AM'].dropna().unique()
+                if is_am:
+                    return emp_name
+    except Exception as e:
+        print(f"Error in get_am_name_by_id: {e}")
+    return None
+
+def get_am_warehouses(am_name):
+    try:
+        cc_path = resolve_path('ops_co_cau.csv', write=False)
+        if not os.path.exists(cc_path):
+            return set()
+        df_cc = safe_read_csv(cc_path, filter_by_am=False)
+        if df_cc is not None and not df_cc.empty:
+            df_cc.columns = [c.strip() for c in df_cc.columns]
+            def match_am(x):
+                return clean_str(x) == clean_str(am_name)
+            df_am = df_cc[df_cc['AM'].apply(match_am)]
+            return set(df_am['warehouse_id'].dropna().astype(str).str.strip().unique())
+    except Exception as e:
+        print(f"Error in get_am_warehouses: {e}")
+    return set()
+
+def get_am_provinces(am_name):
+    try:
+        cc_path = resolve_path('ops_co_cau.csv', write=False)
+        if not os.path.exists(cc_path):
+            return set()
+        df_cc = safe_read_csv(cc_path, filter_by_am=False)
+        if df_cc is not None and not df_cc.empty:
+            df_cc.columns = [c.strip() for c in df_cc.columns]
+            def match_am(x):
+                return clean_str(x) == clean_str(am_name)
+            df_am = df_cc[df_cc['AM'].apply(match_am)]
+            return set(df_am['Tỉnh'].dropna().astype(str).str.strip().unique())
+    except Exception as e:
+        print(f"Error in get_am_provinces: {e}")
+    return set()
+
+def filter_df_by_logged_in_am(df, force_am_name=None):
+    if df is None or df.empty:
+        return df
+    
+    am_name = force_am_name
+    if not am_name:
+        from flask import has_request_context, session
+        if not has_request_context():
+            return df
+        am_name = session.get('am_name')
+        
+    if not am_name:
+        return df
+        
+    df = df.copy()
+    
+    # 1. Filter by AM name column if exists
+    am_cols = [c for c in df.columns if str(c).strip() in ['AM', 'am_name', 'final_am', 'mapped_am', 'am']]
+    if am_cols:
+        col = am_cols[0]
+        def match_am(x):
+            return clean_str(x) == clean_str(am_name)
+        return df[df[col].apply(match_am)]
+        
+    # 2. Filter by warehouse_id if exists
+    wh_cols = [c for c in df.columns if str(c).strip() in ['warehouse_id', 'WarehouseID', 'mã bưu cục', 'ma_buu_cuc', 'ma_bc']]
+    if wh_cols:
+        wh_col = wh_cols[0]
+        am_whs = get_am_warehouses(am_name)
+        def match_wh(x):
+            try:
+                val = str(int(float(x))).strip()
+            except:
+                val = str(x).strip()
+            return val in am_whs
+        return df[df[wh_col].apply(match_wh)]
+        
+    # 3. Filter by Bưu cục column if exists
+    bc_cols = [c for c in df.columns if str(c).strip() in ['Bưu cục', 'buu_cuc', 'PostOffice', 'buucuc']]
+    if bc_cols:
+        bc_col = bc_cols[0]
+        am_whs = get_am_warehouses(am_name)
+        def match_bc(x):
+            if pd.isna(x):
+                return False
+            val_str = str(x).strip()
+            parts = val_str.split(" - ", 1)
+            if len(parts) == 2:
+                try:
+                    wh_id = str(int(float(parts[0].strip()))).strip()
+                    if wh_id in am_whs:
+                        return True
+                except:
+                    pass
+            for wh_id in am_whs:
+                if wh_id in val_str:
+                    return True
+            return False
+        return df[df[bc_col].apply(match_bc)]
+        
+    return df
+
 # Safe AM Name Standardization
 def standardize_am_names(df):
     if df is not None:
@@ -631,8 +907,7 @@ def standardize_am_names(df):
                 except Exception as e:
                     print(f"Error standardizing AM names in column {col}: {e}")
 
-# Safe CSV reader and percentage helpers
-def safe_read_csv(filepath, **kwargs):
+def safe_read_csv(filepath, filter_by_am=False, **kwargs):
     filename = os.path.basename(filepath)
     # Check if running on Vercel or in a read-only environment
     is_vercel = os.environ.get("VERCEL") or not os.access(os.getcwd(), os.W_OK)
@@ -653,6 +928,7 @@ def safe_read_csv(filepath, **kwargs):
             print(f"Error applying CSV kwargs to DB df for {filename}: {e}")
             return db_df
 
+    df = None
     if not is_vercel:
         # 1. Local run: prioritize local file to ensure latest synced data is read instantly
         if os.path.exists(filepath):
@@ -660,38 +936,43 @@ def safe_read_csv(filepath, **kwargs):
                 try:
                     df = pd.read_csv(filepath, encoding=encoding, **kwargs)
                     standardize_am_names(df)
-                    return df
+                    break
                 except Exception as e:
                     last_err = e
                     continue
-            print(f"Error reading local CSV {filepath}: {last_err}")
+            if df is None:
+                print(f"Error reading local CSV {filepath}: {last_err}")
             
         # 2. Fall back to database if local file does not exist
-        db_df = load_df_from_db(filename)
-        df = apply_kwargs_to_df(db_df, filename)
-        if df is not None:
-            standardize_am_names(df)
-            return df
+        if df is None:
+            db_df = load_df_from_db(filename)
+            df = apply_kwargs_to_df(db_df, filename)
+            if df is not None:
+                standardize_am_names(df)
     else:
         # 1. Vercel/Read-only: load from database first
         db_df = load_df_from_db(filename)
         df = apply_kwargs_to_df(db_df, filename)
         if df is not None:
             standardize_am_names(df)
-            return df
             
         # 2. Fall back to local file
-        if os.path.exists(filepath):
+        if df is None and os.path.exists(filepath):
             for encoding in ['utf-8', 'utf-8-sig', 'latin-1', 'cp1252']:
                 try:
                     df = pd.read_csv(filepath, encoding=encoding, **kwargs)
                     standardize_am_names(df)
-                    return df
+                    break
                 except Exception as e:
                     last_err = e
                     continue
-            print(f"Error reading CSV {filepath} from DB fallback local: {last_err}")
-    return None
+            if df is None:
+                print(f"Error reading CSV {filepath} from DB fallback local: {last_err}")
+                
+    if df is not None and filter_by_am:
+        df = filter_df_by_logged_in_am(df)
+        
+    return df
 
 
 def safe_to_numeric(series, fillna_val=0.0):
@@ -746,7 +1027,7 @@ def parse_unstable_pct(val):
 def clean_str(val):
     if pd.isna(val):
         return ""
-    return str(val).strip().lower()
+    return unicodedata.normalize('NFC', str(val).strip().lower())
 
 def safe_divide(a, b):
     if b == 0:
@@ -1500,7 +1781,7 @@ def process_opr_report(df_opr=None, df_oe=None, df_rawopr=None, am=None, provinc
 # ==========================================
 # 3. PROCESS BACKLOG AGING
 # ==========================================
-def process_aging_backlog(df_raw=None, df_co_cau=None):
+def process_aging_backlog(df_raw=None, df_co_cau=None, am=None, province=None, post_office=None):
     try:
         if df_raw is None:
             df_raw = safe_read_csv(resolve_path('aging_raw.csv', write=False))
@@ -1513,11 +1794,6 @@ def process_aging_backlog(df_raw=None, df_co_cau=None):
         df_raw = df_raw.dropna(subset=["Mã đơn"]).copy()
         df_co_cau = df_co_cau.dropna(subset=["Bưu cục"]).copy()
         
-        df_raw = df_raw.dropna(subset=["Mã đơn"])
-        df_co_cau = df_co_cau.dropna(subset=["Bưu cục"])
-        
-        # Map AM dynamically for rows where it is NaN
-        # Clean warehouse strings for merge
         df_raw['bc_clean'] = df_raw['BC'].astype(str).str.strip().str.lower()
         df_co_cau['bc_clean'] = df_co_cau['Bưu cục'].astype(str).str.strip().str.lower()
         
@@ -1533,6 +1809,8 @@ def process_aging_backlog(df_raw=None, df_co_cau=None):
         
         fallback_prov = df_raw['Tỉnh'] if 'Tỉnh' in df_raw.columns else pd.Series("Không xác định", index=df_raw.index)
         df_raw['final_province'] = df_raw['mapped_province'].fillna(fallback_prov).fillna("Không xác định")
+        
+        df_raw = apply_filters(df_raw, am=am, province=province, post_office=post_office)
         
         if 'Trạng thái' not in df_raw.columns:
             if 'Nhóm BL' in df_raw.columns:
@@ -1589,7 +1867,7 @@ def process_aging_backlog(df_raw=None, df_co_cau=None):
 # ==========================================
 # 4. PROCESS PENDING TRANSIT (TREO LUÂN CHUYỂN)
 # ==========================================
-def process_treo_backlog(df_raw=None, df_co_cau=None):
+def process_treo_backlog(df_raw=None, df_co_cau=None, am=None, province=None, post_office=None):
     try:
         if df_raw is None:
             df_raw = safe_read_csv(resolve_path('treo_stuck.csv', write=False))
@@ -1624,6 +1902,8 @@ def process_treo_backlog(df_raw=None, df_co_cau=None):
         fallback_prov = df_raw['province_name'] if 'province_name' in df_raw.columns else pd.Series(np.nan, index=df_raw.index)
         df_raw['final_am'] = df_raw['mapped_am'].fillna(fallback_am).fillna("Không xác định")
         df_raw['final_province'] = df_raw['mapped_province'].fillna(fallback_prov).fillna("Không xác định")
+        
+        df_raw = apply_filters(df_raw, am=am, province=province, post_office=post_office)
         
         # Define delay brackets based on 'Thời gian tồn đọng'
         def get_treo_bracket(t):
@@ -1739,7 +2019,7 @@ def map_po_to_am_prov(po_id, po_name, id_to_am, id_to_prov, name_to_am, name_to_
 
     return default_am, default_prov
 
-def process_unstable_po():
+def process_unstable_po(am=None, province=None, post_office=None):
     file_path = resolve_path('buu_cuc_bat_on.csv', write=False)
     try:
         df_raw = safe_read_csv(file_path, header=None)
@@ -1809,23 +2089,23 @@ def process_unstable_po():
                 for _, r in df_cc.iterrows():
                     bc_id = r.get('warehouse_id')
                     bc_name = str(r.get('Bưu cục', '')).strip()
-                    am = str(r.get('AM', '')).strip()
-                    prov = str(r.get('Tỉnh', '')).strip()
-                    if prov == 'Khánh Hoà':
-                        prov = 'Khánh Hòa'
-                    if prov == 'Bình Phước':
-                        prov = 'Lâm Đồng'
+                    am_val = str(r.get('AM', '')).strip()
+                    prov_val = str(r.get('Tỉnh', '')).strip()
+                    if prov_val == 'Khánh Hoà':
+                        prov_val = 'Khánh Hòa'
+                    if prov_val == 'Bình Phước':
+                        prov_val = 'Lâm Đồng'
                     
                     if pd.notna(bc_id):
                         try:
-                            id_to_am[int(bc_id)] = am
-                            id_to_prov[int(bc_id)] = prov
+                            id_to_am[int(bc_id)] = am_val
+                            id_to_prov[int(bc_id)] = prov_val
                         except:
                             pass
                     if bc_name:
                         name_clean = clean_po_name(bc_name)
-                        name_to_am[name_clean] = am
-                        name_to_prov[name_clean] = prov
+                        name_to_am[name_clean] = am_val
+                        name_to_prov[name_clean] = prov_val
             except Exception as e:
                 print(f"Error reading co_cau_ntb.csv in process_unstable_po: {e}")
 
@@ -1896,6 +2176,13 @@ def process_unstable_po():
             }
             processed_records.append(record)
             
+        if am:
+            processed_records = [r for r in processed_records if clean_str(r.get('am')) == clean_str(am)]
+        if province:
+            processed_records = [r for r in processed_records if clean_str(r.get('prov')) == clean_str(province)]
+        if post_office:
+            processed_records = [r for r in processed_records if clean_str(r.get('name')) == clean_str(post_office)]
+            
         # Group warning/unstable post offices by AM (only Bất ổn)
         unstable_by_am = {}
         for rec in processed_records:
@@ -1929,7 +2216,7 @@ def process_unstable_po():
         traceback.print_exc()
         return {"error": f"Lỗi xử lý bưu cục bất ổn: {str(e)}"}
 
-def process_off_spe():
+def process_off_spe(am=None, province=None, post_office=None):
     file_path = resolve_path('off_tuyen_spe.csv', write=False)
     try:
         # Load co_cau mapping for AM lookup
@@ -2053,6 +2340,16 @@ def process_off_spe():
                 "on_time": time_on_val,
                 "note": note_val
             })
+            
+        if am:
+            processed_records = [r for r in processed_records if clean_str(r.get('am')) == clean_str(am)]
+        if province:
+            processed_records = [r for r in processed_records if clean_str(r.get('province')) == clean_str(province)]
+        if post_office:
+            processed_records = [r for r in processed_records if clean_str(r.get('post_office')) == clean_str(post_office)]
+            
+        total_off = sum(1 for r in processed_records if r.get("status") == "Đang OFF")
+        total_pending = sum(1 for r in processed_records if r.get("status") == "Đang chờ duyệt")
             
         if os.path.exists(file_path):
             mtime = os.path.getmtime(file_path)
@@ -2197,7 +2494,7 @@ def calculate_trend(current_data, baseline_entry):
     
     return current_data
 
-def process_fd_report():
+def process_fd_report(am=None, province=None, post_office=None):
     import csv
     import re
     import os
@@ -2323,6 +2620,21 @@ def process_fd_report():
                 }
             else:
                 provinces_clean.append(r)
+                
+        if am:
+            am_provs = get_am_provinces(am)
+            provinces_clean = [r for r in provinces_clean if clean_str(r['province']) in [clean_str(p) for p in am_provs]]
+            sec_am_rows = [r for r in sec_am_rows if clean_str(r['am']) == clean_str(am)]
+            
+        if sec_po_rows:
+            df_pos = pd.DataFrame(sec_po_rows)
+            df_pos.rename(columns={'post_office': 'Bưu cục'}, inplace=True)
+            df_pos = apply_filters(df_pos, am=am, province=province, post_office=post_office)
+            df_pos.rename(columns={'Bưu cục': 'post_office'}, inplace=True)
+            sec_po_rows = df_pos.to_dict('records')
+                
+        if province:
+            provinces_clean = [r for r in provinces_clean if clean_str(r['province']) == clean_str(province)]
                 
         return {
             'date': date_str,
@@ -2660,13 +2972,41 @@ def get_dataframes(force=False, raw_gtc=None, raw_ltc=None, raw_co_cau=None, raw
     return DF_GTC_CACHE, DF_LTC_CACHE, DF_AGING_CACHE, DF_TREO_CACHE
 
 def apply_filters(df, am=None, province=None, post_office=None):
+    if df is None or df.empty:
+        return df
+        
+    from flask import has_request_context, session
+    if has_request_context():
+        am_name = session.get('am_name')
+        if am_name:
+            am = am_name
+
     df_filtered = df.copy()
     if am:
-        df_filtered = df_filtered[df_filtered['mapped_am'] == am]
+        df_filtered = filter_df_by_logged_in_am(df_filtered, force_am_name=am)
+
     if province:
-        df_filtered = df_filtered[df_filtered['mapped_prov'] == province]
+        prov_cols = [c for c in df_filtered.columns if str(c).strip() in ['mapped_prov', 'Tỉnh', 'province_name', 'province']]
+        if prov_cols:
+            col = prov_cols[0]
+            if col == 'mapped_prov':
+                df_filtered = df_filtered[df_filtered[col] == province]
+            else:
+                def match_prov(x):
+                    return clean_str(x) == clean_str(province)
+                df_filtered = df_filtered[df_filtered[col].apply(match_prov)]
+
     if post_office:
-        df_filtered = df_filtered[df_filtered['clean_bc'] == post_office.strip().lower()]
+        po_cols = [c for c in df_filtered.columns if str(c).strip() in ['clean_bc', 'BC', 'warehouse_name', 'Bưu cục', 'post_office']]
+        if po_cols:
+            col = po_cols[0]
+            if col == 'clean_bc':
+                df_filtered = df_filtered[df_filtered[col] == clean_str(post_office)]
+            else:
+                def match_po(x):
+                    return clean_str(x) == clean_str(post_office)
+                df_filtered = df_filtered[df_filtered[col].apply(match_po)]
+
     return df_filtered
 
 def update_all_caches():
@@ -2808,17 +3148,34 @@ def api_login():
             return jsonify({"error": "Vui lòng nhập đầy đủ mã nhân viên và mật khẩu."}), 400
             
         users = load_users()
+        am_name = get_am_name_by_id(username)
+        
+        authenticated = False
+        user_role = "staff"
+        
         if username in users and check_password_hash(users[username]["password"], password):
+            authenticated = True
+            user_role = users[username].get("role", "staff")
+        elif am_name and password == "123456":
+            authenticated = True
+            user_role = "am"
+            
+        if authenticated:
             session.clear()
             session['username'] = username
-            session['role'] = users[username].get("role", "staff")
-            session['permissions'] = users[username].get("permissions", [])
+            session['role'] = user_role
+            if am_name:
+                session['am_name'] = am_name
+                session['role'] = 'am'
+            
+            perms = get_user_permissions(username)
+            session['permissions'] = perms
             session.permanent = True
             return jsonify({
                 "success": True,
                 "username": username,
                 "role": session['role'],
-                "permissions": session['permissions']
+                "permissions": perms
             })
         return jsonify({"error": "Sai mã nhân viên hoặc mật khẩu."}), 401
     except Exception as e:
@@ -2830,7 +3187,7 @@ def api_logout():
     return jsonify({"success": True, "message": "Đăng xuất thành công."})
 
 @app.route('/api/users', methods=['GET', 'POST'])
-@requires_permission('tab-sync')
+@requires_permission('tab-sync', 'edit')
 def api_users():
     if not is_admin():
         return jsonify({"error": "Quyền truy cập bị từ chối."}), 403
@@ -2843,7 +3200,7 @@ def api_users():
             users_list.append({
                 "username": udata["username"],
                 "role": udata.get("role", "staff"),
-                "permissions": udata.get("permissions", [])
+                "permissions": get_user_permissions(uname)
             })
         return jsonify(users_list)
         
@@ -2852,7 +3209,7 @@ def api_users():
         username = data.get("username", "").strip()
         password = data.get("password", "").strip()
         role = data.get("role", "staff").strip()
-        permissions = data.get("permissions", [])
+        permissions = data.get("permissions", {})
         
         if not username:
             return jsonify({"error": "Username không được để trống."}), 400
@@ -2877,7 +3234,7 @@ def api_users():
         return jsonify({"success": True, "message": f"User {username} đã được lưu thành công."})
 
 @app.route('/api/users/<username>', methods=['DELETE'])
-@requires_permission('tab-sync')
+@requires_permission('tab-sync', 'delete')
 def api_delete_user(username):
     if not is_admin():
         return jsonify({"error": "Quyền truy cập bị từ chối."}), 403
@@ -2903,9 +3260,187 @@ def api_delete_user(username):
     save_users(users)
     return jsonify({"success": True, "message": f"User {username} đã được xóa."})
 
+@app.route('/api/roles', methods=['GET'])
+@requires_permission('tab-sync', 'view')
+def api_get_roles():
+    if not is_admin():
+        return jsonify({"error": "Quyền truy cập bị từ chối."}), 403
+    roles = load_roles()
+    return jsonify(roles)
+
+@app.route('/api/roles', methods=['POST'])
+@requires_permission('tab-sync', 'edit')
+def api_save_role():
+    if not is_admin():
+        return jsonify({"error": "Quyền truy cập bị từ chối."}), 403
+    data = request.json or {}
+    role_id = data.get("role_id", "").strip().lower()
+    role_name = data.get("name", "").strip()
+    role_desc = data.get("description", "").strip()
+    permissions = data.get("permissions", {})
+    
+    if not role_id:
+        return jsonify({"error": "Mã vai trò không được để trống."}), 400
+    if not role_name:
+        return jsonify({"error": "Tên vai trò không được để trống."}), 400
+        
+    roles = load_roles()
+    roles[role_id] = {
+        "name": role_name,
+        "description": role_desc,
+        "permissions": permissions
+    }
+    save_roles(roles)
+    return jsonify({"success": True, "message": f"Vai trò '{role_name}' đã được lưu."})
+
+@app.route('/api/roles/<role_id>', methods=['DELETE'])
+@requires_permission('tab-sync', 'delete')
+def api_delete_role(role_id):
+    if not is_admin():
+        return jsonify({"error": "Quyền truy cập bị từ chối."}), 403
+    
+    role_id = role_id.strip().lower()
+    if role_id in ['admin', 'staff', 'am']:
+        return jsonify({"error": "Không thể xóa vai trò hệ thống mặc định."}), 400
+        
+    roles = load_roles()
+    if role_id not in roles:
+        return jsonify({"error": "Vai trò không tồn tại."}), 404
+        
+    del roles[role_id]
+    save_roles(roles)
+    
+    users = load_users()
+    changed = False
+    for uname, udata in users.items():
+        if udata.get("role") == role_id:
+            udata["role"] = "staff"
+            changed = True
+    if changed:
+        save_users(users)
+        
+    return jsonify({"success": True, "message": f"Vai trò '{role_id}' đã được xóa."})
+
+@app.route('/api/staff-list', methods=['GET'])
+@requires_permission('tab-sync', 'view')
+def api_get_staff_list():
+    if not is_admin():
+        return jsonify({"error": "Quyền truy cập bị từ chối."}), 403
+    try:
+        ns_path = resolve_path('ops_nhan_su.csv', write=False)
+        df_ns = safe_read_csv(ns_path)
+        if df_ns is None or df_ns.empty:
+            return jsonify([])
+            
+        df_ns.columns = [c.strip() for c in df_ns.columns]
+        
+        active_mask = (df_ns['Trạng thái'].astype(str).str.strip() == "Đang làm việc")
+        if 'Vùng' in df_ns.columns:
+            active_mask &= (df_ns['Vùng'].astype(str).str.strip() == "NTB")
+            
+        active_df = df_ns[active_mask].copy()
+        
+        users = load_users()
+        staff_list = []
+        for _, row in active_df.iterrows():
+            eid = str(row['ID']).strip()
+            name = str(row['Tên nhân viên']).strip()
+            chuc_vu = str(row['Chức vụ']).strip()
+            
+            user_info = users.get(eid, {})
+            current_role = user_info.get("role", "")
+            if not current_role:
+                if get_am_name_by_id(eid) is not None:
+                    current_role = "am"
+                    
+            staff_list.append({
+                "id": eid,
+                "name": name,
+                "chuc_vu": chuc_vu,
+                "role": current_role
+            })
+            
+        staff_list.sort(key=lambda x: x["name"])
+        return jsonify(staff_list)
+    except Exception as e:
+        print(f"Error reading staff list: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/assign-role', methods=['POST'])
+@requires_permission('tab-sync', 'edit')
+def api_assign_role():
+    if not is_admin():
+        return jsonify({"error": "Quyền truy cập bị từ chối."}), 403
+        
+    data = request.json or {}
+    employee_id = str(data.get("employee_id", "")).strip()
+    role = str(data.get("role", "")).strip().lower()
+    
+    if not employee_id:
+        return jsonify({"error": "Mã nhân viên không được để trống."}), 400
+        
+    users = load_users()
+    
+    if not role or role == "none":
+        if employee_id in users:
+            if users[employee_id].get("role") == "admin":
+                admin_count = sum(1 for u in users.values() if u.get("role") == "admin")
+                if admin_count <= 1:
+                    return jsonify({"error": "Không thể gỡ vai trò của admin duy nhất."}), 400
+            del users[employee_id]
+            save_users(users)
+        return jsonify({"success": True, "message": "Đã gỡ vai trò của nhân viên thành công."})
+        
+    roles = load_roles()
+    if role not in roles:
+        return jsonify({"error": "Vai trò không hợp lệ hoặc không tồn tại."}), 400
+        
+    if employee_id in users:
+        users[employee_id]["role"] = role
+    else:
+        users[employee_id] = {
+            "username": employee_id,
+            "password": generate_password_hash("123456", method="pbkdf2:sha256"),
+            "role": role,
+            "permissions": {}
+        }
+        
+    save_users(users)
+    return jsonify({"success": True, "message": f"Đã gán vai trò '{roles[role]['name']}' cho nhân viên {employee_id}."})
+
+@app.route('/api/reset-password', methods=['POST'])
+@requires_permission('tab-sync', 'edit')
+def api_reset_password():
+    if not is_admin():
+        return jsonify({"error": "Quyền truy cập bị từ chối."}), 403
+        
+    data = request.json or {}
+    employee_id = str(data.get("employee_id", "")).strip()
+    
+    if not employee_id:
+        return jsonify({"error": "Mã nhân viên không được để trống."}), 400
+        
+    users = load_users()
+    if employee_id not in users:
+        return jsonify({"error": "Nhân viên chưa được khởi tạo tài khoản (chưa gán vai trò)."}), 404
+        
+    users[employee_id]["password"] = generate_password_hash("123456", method="pbkdf2:sha256")
+    save_users(users)
+    return jsonify({"success": True, "message": f"Đã đặt lại mật khẩu cho nhân viên {employee_id} về mặc định '123456'."})
+
 @app.route('/api/unstable-po')
 @requires_permission('tab-unstable-po')
 def get_unstable_po():
+    am = request.args.get('am')
+    province = request.args.get('province')
+    post_office = request.args.get('post_office')
+    
+    if session.get('am_name'):
+        am = session.get('am_name')
+        
+    if am or province or post_office:
+        return jsonify(process_unstable_po(am=am, province=province, post_office=post_office))
+        
     global UNSTABLE_PO_CACHE
     if UNSTABLE_PO_CACHE is None:
         with CACHE_LOCK:
@@ -2916,6 +3451,16 @@ def get_unstable_po():
 @app.route('/api/off-spe')
 @requires_permission('tab-off-spe')
 def get_off_spe():
+    am = request.args.get('am')
+    province = request.args.get('province')
+    post_office = request.args.get('post_office')
+    
+    if session.get('am_name'):
+        am = session.get('am_name')
+        
+    if am or province or post_office:
+        return jsonify(process_off_spe(am=am, province=province, post_office=post_office))
+        
     global OFF_SPE_CACHE
     if OFF_SPE_CACHE is None:
         with CACHE_LOCK:
@@ -2926,6 +3471,16 @@ def get_off_spe():
 @app.route('/api/fd')
 @requires_permission('tab-fd')
 def get_fd():
+    am = request.args.get('am')
+    province = request.args.get('province')
+    post_office = request.args.get('post_office')
+    
+    if session.get('am_name'):
+        am = session.get('am_name')
+        
+    if am or province or post_office:
+        return jsonify(clean_nan(process_fd_report(am=am, province=province, post_office=post_office)))
+        
     global FD_CACHE
     with CACHE_LOCK:
         if FD_CACHE is None:
@@ -2940,6 +3495,9 @@ def get_operational():
     province = request.args.get('province')
     po = request.args.get('po')
     date = request.args.get('date')
+    
+    if session.get('am_name'):
+        am = session.get('am_name')
     
     if am or province or po or date:
         df_gtc = DF_GTC_CACHE if DF_GTC_CACHE is not None else None
@@ -2969,6 +3527,9 @@ def get_opr():
     province = request.args.get('province')
     post_office = request.args.get('post_office')
     
+    if session.get('am_name'):
+        am = session.get('am_name')
+    
     if am or province or post_office:
         # Dynamically compute OPR report with filters applied
         filtered_report = process_opr_report(am=am, province=province, post_office=post_office)
@@ -2983,20 +3544,37 @@ def get_opr():
 @app.route('/api/backlog')
 @requires_permission('tab-backlog')
 def get_backlog():
-    global BACKLOG_CACHE_RAW
-    with CACHE_LOCK:
-        if BACKLOG_CACHE_RAW is None:
-            aging = process_aging_backlog()
-            treo = process_treo_backlog()
-            BACKLOG_CACHE_RAW = {
-                "aging": aging,
-                "treo": treo
-            }
+    am = request.args.get('am')
+    province = request.args.get('province')
+    post_office = request.args.get('post_office')
+    
+    if session.get('am_name'):
+        am = session.get('am_name')
         
-    if "error" in BACKLOG_CACHE_RAW["aging"]:
-        return jsonify({"error": BACKLOG_CACHE_RAW["aging"]["error"]})
-    if "error" in BACKLOG_CACHE_RAW["treo"]:
-        return jsonify({"error": BACKLOG_CACHE_RAW["treo"]["error"]})
+    if am or province or post_office:
+        aging = process_aging_backlog(am=am, province=province, post_office=post_office)
+        treo = process_treo_backlog(am=am, province=province, post_office=post_office)
+        current_data = {
+            "aging": aging,
+            "treo": treo
+        }
+    else:
+        global BACKLOG_CACHE_RAW
+        with CACHE_LOCK:
+            if BACKLOG_CACHE_RAW is None:
+                aging = process_aging_backlog()
+                treo = process_treo_backlog()
+                BACKLOG_CACHE_RAW = {
+                    "aging": aging,
+                    "treo": treo
+                }
+        import copy
+        current_data = copy.deepcopy(BACKLOG_CACHE_RAW)
+        
+    if "error" in current_data["aging"]:
+        return jsonify({"error": current_data["aging"]["error"]})
+    if "error" in current_data["treo"]:
+        return jsonify({"error": current_data["treo"]["error"]})
         
     history = load_history()
     baseline_ts = request.args.get("baseline")
@@ -3014,8 +3592,6 @@ def get_backlog():
             else:
                 baseline_entry = history[-1]
                 
-    import copy
-    current_data = copy.deepcopy(BACKLOG_CACHE_RAW)
     current_data["baseline_timestamp"] = baseline_entry["timestamp"] if baseline_entry else None
     current_data = calculate_trend(current_data, baseline_entry)
     
@@ -3034,10 +3610,10 @@ def get_user_role():
     username = session.get('username')
     if not username and request.authorization:
         username = request.authorization.username
-    role = 'admin' if is_admin() else 'staff'
-    users = load_users()
-    user = users.get(username, {})
-    permissions = user.get("permissions", [])
+    role = session.get('role', 'staff')
+    if get_am_name_by_id(username):
+        role = 'am'
+    permissions = get_user_permissions(username)
     return jsonify({"username": username, "role": role, "permissions": permissions})
 
 def mask_url(url):
@@ -3529,11 +4105,19 @@ def get_sync_status():
 @requires_permission('tab-nhan-su')
 def api_nhan_su():
     try:
+        am = request.args.get('am')
+        province = request.args.get('province')
+        post_office = request.args.get('post_office')
+        
+        if session.get('am_name'):
+            am = session.get('am_name')
+            
         ns_path = resolve_path('ops_nhan_su.csv', write=False)
         df_ns = safe_read_csv(ns_path)
         if df_ns is None or df_ns.empty:
             return jsonify({"error": "Không tìm thấy dữ liệu nhân sự (ops_nhan_su.csv). Vui lòng thực hiện Đồng bộ dữ liệu."}), 404
             
+        df_ns = apply_filters(df_ns, am=am, province=province, post_office=post_office)
         df_ns.columns = [c.strip() for c in df_ns.columns]
         
         def check_sp_team(x):
@@ -3572,6 +4156,7 @@ def api_nhan_su():
         if df_cc is None or df_cc.empty:
             return jsonify({"error": "Không tìm thấy dữ liệu cơ cấu (ops_co_cau.csv)."}), 404
             
+        df_cc = apply_filters(df_cc, am=am, province=province, post_office=post_office)
         df_cc.columns = [c.strip() for c in df_cc.columns]
         
         def clean_id(x):
@@ -4253,9 +4838,185 @@ def get_ntb_structure():
     except Exception as e:
         return jsonify({"error": f"Lỗi đọc file cơ cấu: {str(e)}"}), 500
 
+@app.route('/api/batch-data')
+@requires_auth
+def get_batch_data():
+    """
+    Load all report data in a single request.
+    Critical for Vercel: avoids multiple separate API calls hitting different cold instances.
+    Each separate API call on Vercel could hit a new serverless instance with empty caches,
+    but this single call ensures all data is loaded from the same warm instance.
+    """
+    result = {}
+    username = session.get('username', '')
+    user_perms = get_user_permissions(username)
+    role = session.get('role', 'staff')
+    is_admin_user = (role == 'admin')
+    
+    def has_perm(tab):
+        if is_admin_user:
+            return True
+        p = user_perms.get(tab, {})
+        return p.get('view', False) if isinstance(p, dict) else False
+    
+    # Operational
+    if has_perm('tab-operational'):
+        try:
+            global OPERATIONAL_CACHE, DF_GTC_CACHE, DF_LTC_CACHE, DF_TTS_CACHE
+            am = None
+            if session.get('am_name'):
+                am = session.get('am_name')
+            if am:
+                ops = process_operational_report(df_gtc=DF_GTC_CACHE, df_ltc=DF_LTC_CACHE, df_tts=DF_TTS_CACHE, am=am)
+            else:
+                with CACHE_LOCK:
+                    if OPERATIONAL_CACHE is None:
+                        OPERATIONAL_CACHE = process_operational_report()
+                ops = OPERATIONAL_CACHE
+            result['operational'] = clean_nan(ops)
+        except Exception as e:
+            result['operational'] = {"error": str(e)}
+    else:
+        result['operational'] = {"error": "No permission"}
+
+    # OPR
+    if has_perm('tab-opr'):
+        try:
+            global OPR_CACHE
+            am = None
+            if session.get('am_name'):
+                am = session.get('am_name')
+            if am:
+                result['opr'] = clean_nan(process_opr_report(am=am))
+            else:
+                with CACHE_LOCK:
+                    if OPR_CACHE is None:
+                        OPR_CACHE = process_opr_report()
+                result['opr'] = clean_nan(OPR_CACHE)
+        except Exception as e:
+            result['opr'] = {"error": str(e)}
+    else:
+        result['opr'] = {"error": "No permission"}
+
+    # Backlog
+    if has_perm('tab-backlog'):
+        try:
+            global BACKLOG_CACHE_RAW
+            am = None
+            if session.get('am_name'):
+                am = session.get('am_name')
+            if am:
+                aging = process_aging_backlog(am=am)
+                treo = process_treo_backlog(am=am)
+                current_data = {"aging": aging, "treo": treo}
+            else:
+                with CACHE_LOCK:
+                    if BACKLOG_CACHE_RAW is None:
+                        aging = process_aging_backlog()
+                        treo = process_treo_backlog()
+                        BACKLOG_CACHE_RAW = {"aging": aging, "treo": treo}
+                import copy
+                current_data = copy.deepcopy(BACKLOG_CACHE_RAW)
+            
+            if "error" not in current_data.get("aging", {}) and "error" not in current_data.get("treo", {}):
+                history = load_history()
+                baseline_entry = None
+                if history:
+                    if len(history) >= 2:
+                        baseline_entry = history[-2]
+                    else:
+                        baseline_entry = history[-1]
+                current_data["baseline_timestamp"] = baseline_entry["timestamp"] if baseline_entry else None
+                current_data = calculate_trend(current_data, baseline_entry)
+            result['backlog'] = clean_nan(current_data)
+        except Exception as e:
+            result['backlog'] = {"error": str(e)}
+    else:
+        result['backlog'] = {"error": "No permission"}
+
+    # Unstable PO
+    if has_perm('tab-unstable-po'):
+        try:
+            global UNSTABLE_PO_CACHE
+            am = None
+            if session.get('am_name'):
+                am = session.get('am_name')
+            if am:
+                result['unstablePo'] = process_unstable_po(am=am)
+            else:
+                with CACHE_LOCK:
+                    if UNSTABLE_PO_CACHE is None:
+                        UNSTABLE_PO_CACHE = process_unstable_po()
+                result['unstablePo'] = UNSTABLE_PO_CACHE
+        except Exception as e:
+            result['unstablePo'] = {"error": str(e)}
+    else:
+        result['unstablePo'] = {"error": "No permission"}
+
+    # OFF SPE
+    if has_perm('tab-off-spe'):
+        try:
+            global OFF_SPE_CACHE
+            am = None
+            if session.get('am_name'):
+                am = session.get('am_name')
+            if am:
+                result['offSpe'] = process_off_spe(am=am)
+            else:
+                with CACHE_LOCK:
+                    if OFF_SPE_CACHE is None:
+                        OFF_SPE_CACHE = process_off_spe()
+                result['offSpe'] = OFF_SPE_CACHE
+        except Exception as e:
+            result['offSpe'] = {"error": str(e)}
+    else:
+        result['offSpe'] = {"error": "No permission"}
+
+    # Volume Creation
+    if has_perm('tab-volume-creation'):
+        try:
+            global DF_TAO_DON_CACHE, DF_BUU_CUC_TYPE_MAP
+            with CACHE_LOCK:
+                if DF_TAO_DON_CACHE is None:
+                    DF_TAO_DON_CACHE = load_vols_tao_don_df()
+                if DF_BUU_CUC_TYPE_MAP is None:
+                    DF_BUU_CUC_TYPE_MAP = load_buu_cuc_type_map()
+            if DF_TAO_DON_CACHE is not None:
+                # Delegate to the existing endpoint logic via internal call
+                # Use a simplified version here
+                result['volumeCreation'] = {"loaded": True}
+            else:
+                result['volumeCreation'] = {"error": "No vols_tao_don.csv"}
+        except Exception as e:
+            result['volumeCreation'] = {"error": str(e)}
+    else:
+        result['volumeCreation'] = {"error": "No permission"}
+
+    # FD
+    if has_perm('tab-fd'):
+        try:
+            global FD_CACHE
+            am = None
+            if session.get('am_name'):
+                am = session.get('am_name')
+            if am:
+                result['fd'] = clean_nan(process_fd_report(am=am))
+            else:
+                with CACHE_LOCK:
+                    if FD_CACHE is None:
+                        FD_CACHE = process_fd_report()
+                result['fd'] = clean_nan(FD_CACHE)
+        except Exception as e:
+            result['fd'] = {"error": str(e)}
+    else:
+        result['fd'] = {"error": "No permission"}
+
+    return jsonify(result)
+
 @app.route('/api/files-status')
 @requires_permission('tab-sync')
 def get_files_status():
+
     files = [
         'ops_gtc.csv',
         'ops_ltc.csv',
@@ -4302,7 +5063,6 @@ def get_volume_creation():
     try:
         df = DF_TAO_DON_CACHE.copy()
         
-        # Get query parameters
         province = request.args.get('province')
         district = request.args.get('district')
         ward = request.args.get('ward')
@@ -4310,6 +5070,12 @@ def get_volume_creation():
         customer = request.args.get('customer')
         po_type = request.args.get('po_type')
         date_range = request.args.get('date_range', '7d')
+        am = request.args.get('am')
+        
+        if session.get('am_name'):
+            am = session.get('am_name')
+            
+        df = apply_filters(df, am=am, province=None, post_office=None)
         
         # 1. Compute dynamic dropdown options based on cascaded filtering
         provinces_opt = sorted([str(x) for x in df['Tỉnh'].dropna().unique()])
@@ -5027,5 +5793,7 @@ def send_telegram_ai_briefing():
         return jsonify({"error": f"Lỗi gửi bản tin AI: {str(e)}"}), 500
 
 if __name__ == '__main__':
-    print("Dashboard server starts on http://0.0.0.0:5000/")
-    app.run(debug=False, host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5001))
+    print(f"Dashboard server starts on http://0.0.0.0:{port}/")
+    app.run(debug=True, host='0.0.0.0', port=port)
+

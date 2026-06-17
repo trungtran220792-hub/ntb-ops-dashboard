@@ -1,0 +1,236 @@
+{
+    "admin": {
+        "name": "Quản trị viên",
+        "description": "Quyền cao nhất, quản lý toàn bộ hệ thống",
+        "permissions": {
+            "tab-dashboard": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-introduction": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-ntb-summary": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-operational": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-opr": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-backlog": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-unstable-po": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-off-spe": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-volume-creation": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-fd": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-nhan-su": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            },
+            "tab-sync": {
+                "view": true,
+                "add": true,
+                "edit": true,
+                "delete": true
+            }
+        }
+    },
+    "am": {
+        "name": "Area Manager",
+        "description": "Quản lý khu vực (AM)",
+        "permissions": {
+            "tab-dashboard": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-introduction": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-ntb-summary": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-operational": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-opr": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-backlog": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-unstable-po": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-off-spe": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-volume-creation": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-fd": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-nhan-su": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-sync": {
+                "view": false,
+                "add": false,
+                "edit": false,
+                "delete": false
+            }
+        }
+    },
+    "staff": {
+        "name": "Nhân viên",
+        "description": "Quyền nhân viên cơ bản",
+        "permissions": {
+            "tab-dashboard": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-introduction": {
+                "view": true,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-ntb-summary": {
+                "view": false,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-operational": {
+                "view": false,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-opr": {
+                "view": false,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-backlog": {
+                "view": false,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-unstable-po": {
+                "view": false,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-off-spe": {
+                "view": false,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-volume-creation": {
+                "view": false,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-fd": {
+                "view": false,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-nhan-su": {
+                "view": false,
+                "add": false,
+                "edit": false,
+                "delete": false
+            },
+            "tab-sync": {
+                "view": false,
+                "add": false,
+                "edit": false,
+                "delete": false
+            }
+        }
+    }
+}
