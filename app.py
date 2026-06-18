@@ -428,7 +428,7 @@ def csrf_referer_check():
 
 @app.before_request
 def check_cache_ttl():
-    global LAST_CACHE_UPDATE_TIME
+    global LAST_CACHE_UPDATE_TIME, LAST_CACHE_CHECK_TIME
     if request.method == 'GET' and request.path.startswith('/api/'):
         if request.path in ['/api/sync/status', '/api/history', '/api/files-status', '/api/config']:
             return
@@ -439,13 +439,25 @@ def check_cache_ttl():
         
         if is_vercel:
             with CACHE_LOCK:
-                if LAST_CACHE_UPDATE_TIME is None or (now - LAST_CACHE_UPDATE_TIME > 15):
-                    print(f"Cache TTL expired ({now - (LAST_CACHE_UPDATE_TIME or 0):.1f}s). Re-fetching from database...")
+                # To prevent querying DB multiple times for parallel API requests in one dashboard page load,
+                # we only query the DB metadata every 5 seconds.
+                if LAST_CACHE_UPDATE_TIME is None or (now - LAST_CACHE_CHECK_TIME > 5):
+                    LAST_CACHE_CHECK_TIME = now
                     try:
-                        update_all_caches()
-                        LAST_CACHE_UPDATE_TIME = now
+                        meta = load_json_from_db("sync_metadata.json")
+                        last_db_sync = meta.get("last_sync_time", 0) if meta else 0
                     except Exception as e:
-                        print(f"Error auto-updating cache on request: {e}")
+                        print(f"Error reading sync metadata from DB: {e}")
+                        last_db_sync = 0
+                    
+                    if LAST_CACHE_UPDATE_TIME is None or last_db_sync > LAST_CACHE_UPDATE_TIME or (now - LAST_CACHE_UPDATE_TIME > 600):
+                        # Force refresh if cache never loaded, DB has been synced since last load, or 10 mins passed
+                        print(f"Cache needs update (DB sync: {last_db_sync:.1f}, Last update: {LAST_CACHE_UPDATE_TIME or 0:.1f}). Re-fetching...")
+                        try:
+                            update_all_caches()
+                            LAST_CACHE_UPDATE_TIME = now
+                        except Exception as e:
+                            print(f"Error auto-updating cache on request: {e}")
 
 @app.after_request
 def add_security_headers(response):
@@ -2659,6 +2671,7 @@ OFF_SPE_CACHE = None
 FD_CACHE = None
 
 LAST_CACHE_UPDATE_TIME = None
+LAST_CACHE_CHECK_TIME = 0
 
 # Dataframe caches for NTB Summary Dashboard
 DF_GTC_CACHE = None
@@ -3807,6 +3820,25 @@ def upload_file():
         filepath = resolve_path(filename, write=True)
         file.save(filepath)
         
+        # Save to DB so other serverless instances can read it
+        try:
+            for encoding in ['utf-8-sig', 'utf-8', 'latin-1', 'cp1252']:
+                try:
+                    df = pd.read_csv(filepath, encoding=encoding)
+                    save_df_to_db(df, filename)
+                    break
+                except Exception:
+                    continue
+        except Exception as e:
+            print(f"Error saving uploaded CSV {filename} to DB: {e}")
+            
+        # Update metadata timestamp in DB so other instances invalidate their cache
+        try:
+            import time
+            save_json_to_db({"last_sync_time": time.time()}, "sync_metadata.json")
+        except Exception as e:
+            print(f"Error saving sync metadata to DB: {e}")
+            
         update_all_caches()
         if BACKLOG_CACHE_RAW and "error" not in BACKLOG_CACHE_RAW["aging"] and "error" not in BACKLOG_CACHE_RAW["treo"]:
             add_to_history(BACKLOG_CACHE_RAW["aging"], BACKLOG_CACHE_RAW["treo"])
@@ -4056,6 +4088,13 @@ def async_sync_task(is_admin_flag):
                 return
         
         ts = add_to_history(BACKLOG_CACHE_RAW["aging"], BACKLOG_CACHE_RAW["treo"])
+        
+        # Save sync metadata to DB so other serverless instances detect the update
+        try:
+            import time
+            save_json_to_db({"last_sync_time": time.time()}, "sync_metadata.json")
+        except Exception as e:
+            print(f"Error saving sync metadata to DB: {e}")
             
         SYNC_STATUS["status"] = "success"
         SYNC_STATUS["timestamp"] = ts
