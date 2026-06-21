@@ -981,6 +981,22 @@ def safe_read_csv(filepath, filter_by_am=False, **kwargs):
             if df is None:
                 print(f"Error reading CSV {filepath} from DB fallback local: {last_err}")
                 
+    if df is not None:
+        filename = os.path.basename(filepath)
+        if filename == 'aging_raw.csv':
+            column_mapping = {
+                'bc': 'BC',
+                'order_code': 'Mã đơn',
+                'Nhóm khách': 'Tệp khách',
+                'thoi_gian_nhap_bc': 'Ngày nhập BC Giao',
+                'Aging': 'Số ngày đã nhập BC',
+                'updated_time': 'Giờ câp nhật',
+                'num_deliver': 'Số lần giao',
+                'vung': 'Vùng',
+                'tinh': 'Tỉnh'
+            }
+            df.rename(columns=column_mapping, inplace=True)
+
     if df is not None and filter_by_am:
         df = filter_df_by_logged_in_am(df)
         
