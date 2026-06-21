@@ -981,14 +981,13 @@ def safe_read_csv(filepath, filter_by_am=False, **kwargs):
                 except Exception as e:
                     last_err = e
                     continue
-            if df is not None:
-                return filter_df_by_logged_in_am(df) if filter_by_am else df
         
         # 2. Fall back to database
-        db_df = load_df_from_db(filename)
-        df = apply_kwargs_to_df(db_df, filename)
-        if df is not None:
-            standardize_am_names(df)
+        if df is None:
+            db_df = load_df_from_db(filename)
+            df = apply_kwargs_to_df(db_df, filename)
+            if df is not None:
+                standardize_am_names(df)
             
         # 3. Fall back to bundled file in cwd
         if df is None and os.path.exists(filepath):
