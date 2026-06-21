@@ -543,13 +543,20 @@ def save_df_to_db(df, filename):
         return False
     table_name = filename.lower().replace(".csv", "").replace(" ", "_")
     try:
-        # Optimize writing to remote Postgres DB by batching insertions (speedup by 50x-100x)
-        df.to_sql(table_name, engine, if_exists="replace", index=False, chunksize=2000, method="multi")
+        # Optimize writing to remote Postgres DB by batching insertions
+        # Use larger chunksize (5000) to reduce number of round-trips
+        df.to_sql(table_name, engine, if_exists="replace", index=False, chunksize=5000, method="multi")
         print(f"Successfully saved {filename} to database table: {table_name}")
         return True
     except Exception as e:
-        print(f"Error saving DataFrame {filename} to DB: {e}")
-        return False
+        # Fallback: try with smaller chunksize if large batch fails (memory/packet size limit)
+        try:
+            df.to_sql(table_name, engine, if_exists="replace", index=False, chunksize=500, method="multi")
+            print(f"Saved {filename} to DB with smaller chunksize (fallback).")
+            return True
+        except Exception as e2:
+            print(f"Error saving DataFrame {filename} to DB: {e2}")
+            return False
 
 def load_df_from_db(filename):
     engine = get_db_engine()
@@ -962,13 +969,28 @@ def safe_read_csv(filepath, filter_by_am=False, **kwargs):
             if df is not None:
                 standardize_am_names(df)
     else:
-        # 1. Vercel/Read-only: load from database first
+        # Vercel/Read-only: prioritize /tmp files (just synced), then DB, then bundled files
+        # After sync, CSVs are saved to /tmp - reading from there is instant vs slow DB query
+        tmp_path = os.path.join('/tmp', filename)
+        if os.path.exists(tmp_path):
+            for encoding in ['utf-8', 'utf-8-sig', 'latin-1', 'cp1252']:
+                try:
+                    df = pd.read_csv(tmp_path, encoding=encoding, **kwargs)
+                    standardize_am_names(df)
+                    break
+                except Exception as e:
+                    last_err = e
+                    continue
+            if df is not None:
+                return filter_df_by_logged_in_am(df) if filter_by_am else df
+        
+        # 2. Fall back to database
         db_df = load_df_from_db(filename)
         df = apply_kwargs_to_df(db_df, filename)
         if df is not None:
             standardize_am_names(df)
             
-        # 2. Fall back to local file
+        # 3. Fall back to bundled file in cwd
         if df is None and os.path.exists(filepath):
             for encoding in ['utf-8', 'utf-8-sig', 'latin-1', 'cp1252']:
                 try:
@@ -2832,17 +2854,17 @@ def get_dataframes(force=False, raw_gtc=None, raw_ltc=None, raw_co_cau=None, raw
                 bc_to_am[buucuc] = am
                 bc_to_prov[buucuc] = prov
                 
-        # Delete raw and clean memory
-        del raw_gtc, raw_ltc, raw_co_cau
+        # Delete raw and clean memory (keep raw_co_cau for reuse in aging/treo)
+        del raw_gtc, raw_ltc
         if raw_tts is not None:
             del raw_tts
         gc.collect()
         
-        # 2. Load and process Aging
+        # 2. Load and process Aging (reuse df_co_cau from step 1 to avoid redundant file/DB loads)
         if raw_aging is None:
             raw_aging = safe_read_csv(resolve_path('aging_raw.csv', write=False))
         if raw_co_cau_aging is None:
-            raw_co_cau_aging = safe_read_csv(resolve_path('ops_co_cau.csv', write=False))
+            raw_co_cau_aging = raw_co_cau  # Reuse already-loaded co_cau
             
         if raw_aging is None or raw_co_cau_aging is None:
             raise FileNotFoundError("Không tìm thấy dữ liệu aging CSV (aging_raw.csv hoặc ops_co_cau.csv).")
@@ -2852,30 +2874,16 @@ def get_dataframes(force=False, raw_gtc=None, raw_ltc=None, raw_co_cau=None, raw
             df_aging['am_name'] = np.nan
         if 'Trạng thái' not in df_aging.columns:
             df_aging['Trạng thái'] = np.nan
-        df_co_cau_aging = raw_co_cau_aging.copy()
-        
-        for _, r in df_co_cau_aging.iterrows():
-            bc = str(r.get('BC', '')).strip().lower()
-            buucuc = str(r.get('Bưu cục', '')).strip().lower()
-            am = str(r.get('AM', r.get('Am', r.get('ID - Họ Tên Am', '')))).strip()
-            prov = str(r.get('Tỉnh', '')).strip()
-            if prov == 'Bình Phước':
-                prov = 'Lâm Đồng'
-            if bc and bc != 'nan':
-                bc_to_am[bc] = am
-                bc_to_prov[bc] = prov
-            if buucuc and buucuc != 'nan':
-                bc_to_am[buucuc] = am
-                bc_to_prov[buucuc] = prov
+        # bc_to_am and bc_to_prov already populated from step 1, no need to iterate again
                 
         del raw_aging, raw_co_cau_aging
         gc.collect()
         
-        # 3. Load and process Treo
+        # 3. Load and process Treo (reuse co_cau from step 1)
         if raw_treo is None:
             raw_treo = safe_read_csv(resolve_path('treo_stuck.csv', write=False))
         if raw_co_cau_treo is None:
-            raw_co_cau_treo = safe_read_csv(resolve_path('ops_co_cau.csv', write=False))
+            raw_co_cau_treo = raw_co_cau  # Reuse already-loaded co_cau
             
         if raw_treo is None or raw_co_cau_treo is None:
             raise FileNotFoundError("Không tìm thấy dữ liệu treo luân chuyển CSV (treo_stuck.csv hoặc ops_co_cau.csv).")
@@ -2885,23 +2893,9 @@ def get_dataframes(force=False, raw_gtc=None, raw_ltc=None, raw_co_cau=None, raw
             df_treo['am_name'] = np.nan
         if 'province_name' not in df_treo.columns:
             df_treo['province_name'] = np.nan
-        df_co_cau_treo = raw_co_cau_treo.copy()
-        
-        for _, r in df_co_cau_treo.iterrows():
-            bc = str(r.get('BC', '')).strip().lower()
-            buucuc = str(r.get('Bưu cục', '')).strip().lower()
-            am = str(r.get('AM', r.get('Am', r.get('ID - Họ Tên Am', '')))).strip()
-            prov = str(r.get('Tỉnh', '')).strip()
-            if prov == 'Bình Phước':
-                prov = 'Lâm Đồng'
-            if bc and bc != 'nan':
-                bc_to_am[bc] = am
-                bc_to_prov[bc] = prov
-            if buucuc and buucuc != 'nan':
-                bc_to_am[buucuc] = am
-                bc_to_prov[buucuc] = prov
+        # bc_to_am and bc_to_prov already populated from step 1, no need to iterate again
                 
-        del raw_treo, raw_co_cau_treo
+        del raw_treo, raw_co_cau_treo, raw_co_cau
         gc.collect()
         
         # 4. Final Processing & Mapping
@@ -4007,6 +4001,9 @@ def sync_sheets_directly_as_csv(url):
         
     print(f"Found {len(gid_to_filenames)} unique GIDs to download.")
     
+    # Phase 1: Download all CSVs in parallel (fast network I/O only, no DB writes)
+    pending_db_writes = []  # list of (df, filename) to write to DB later
+    
     def download_gid(gid, filenames):
         csv_url = f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}/export?format=csv&gid={gid}"
         req_csv = urllib.request.Request(csv_url, headers={'User-Agent': user_agent})
@@ -4017,24 +4014,25 @@ def sync_sheets_directly_as_csv(url):
                 csv_path = resolve_path(filename, write=True)
                 with open(csv_path, 'wb') as f:
                     f.write(content)
+                # Parse CSV into DataFrame for deferred DB write
                 try:
+                    import io
                     for encoding in ['utf-8-sig', 'utf-8', 'latin-1', 'cp1252']:
                         try:
-                            import io
                             df = pd.read_csv(io.BytesIO(content), encoding=encoding)
-                            save_df_to_db(df, filename)
+                            pending_db_writes.append((df, filename))
                             break
                         except Exception:
                             continue
                 except Exception as e:
-                    print(f"Error parsing synced CSV {filename} for DB: {e}")
+                    print(f"Error parsing synced CSV {filename}: {e}")
             return True
         except Exception as e:
             print(f"Error downloading GID {gid} for {filenames}: {e}")
             return False
             
     success_count = 0
-    with concurrent.futures.ThreadPoolExecutor(max_workers=len(gid_to_filenames)) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=min(len(gid_to_filenames), 8)) as executor:
         futures = {executor.submit(download_gid, gid, fnames): gid for gid, fnames in gid_to_filenames.items()}
         for future in concurrent.futures.as_completed(futures):
             gid = futures[future]
@@ -4046,25 +4044,42 @@ def sync_sheets_directly_as_csv(url):
                 
     if success_count == 0:
         return False, "Không tải được file CSV nào từ Google Sheets."
+    
+    # Phase 2: Batch DB writes in parallel (deferred from download phase)
+    if pending_db_writes:
+        print(f"Writing {len(pending_db_writes)} DataFrames to DB in parallel...")
+        def write_one(args):
+            df, fname = args
+            try:
+                save_df_to_db(df, fname)
+            except Exception as e:
+                print(f"Error writing {fname} to DB: {e}")
+        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as db_executor:
+            list(db_executor.map(write_one, pending_db_writes))
+        print("DB writes complete.")
         
     return True, f"Đã tải thành công {success_count} files."
 
 def async_sync_task(is_admin_flag):
     global OPERATIONAL_CACHE, OPR_CACHE, BACKLOG_CACHE_RAW, UNSTABLE_PO_CACHE, OFF_SPE_CACHE, SYNC_STATUS
+    import time
+    sync_start = time.time()
     try:
         if is_admin_flag:
             config = load_config()
             url = config.get("consolidated_url", "")
             if url and url.strip():
-                # 1. Try direct CSV sync first
+                # Phase 1: Download CSVs from Google Sheets
                 SYNC_STATUS["progress"] = "Đang tải dữ liệu trực tiếp dưới dạng CSV (Tối ưu)..."
+                t0 = time.time()
                 direct_success, direct_msg = sync_sheets_directly_as_csv(url)
+                download_elapsed = round(time.time() - t0, 1)
                 
                 if direct_success:
-                    print("Direct CSV sync succeeded:", direct_msg)
+                    print(f"Direct CSV sync succeeded in {download_elapsed}s: {direct_msg}")
                 else:
-                    print("Direct CSV sync failed, falling back to XLSX split:", direct_msg)
-                    # 2. Fallback to Excel download and split
+                    print(f"Direct CSV sync failed after {download_elapsed}s, falling back to XLSX split: {direct_msg}")
+                    # Fallback to Excel download and split
                     SYNC_STATUS["progress"] = "Đang tải file Google Sheet tổng hợp (Dự phòng XLSX)..."
                     temp_xlsx = resolve_path('downloaded_consolidated_sheet.xlsx', write=True)
                     success, msg = download_google_sheet(url, temp_xlsx)
@@ -4081,9 +4096,12 @@ def async_sync_task(is_admin_flag):
             else:
                 print("No consolidated URL configured, using existing CSV files.")
                 
+        # Phase 2: Process data and update caches
         SYNC_STATUS["progress"] = "Đang xử lý dữ liệu và cập nhật bộ nhớ đệm..."
-        
+        t1 = time.time()
         update_all_caches()
+        cache_elapsed = round(time.time() - t1, 1)
+        print(f"Cache update completed in {cache_elapsed}s")
         
         if OPERATIONAL_CACHE and "error" in OPERATIONAL_CACHE:
             SYNC_STATUS["status"] = "error"
@@ -4112,13 +4130,16 @@ def async_sync_task(is_admin_flag):
         except Exception as e:
             print(f"Error saving sync metadata to DB: {e}")
             
+        total_elapsed = round(time.time() - sync_start, 1)
         SYNC_STATUS["status"] = "success"
         SYNC_STATUS["timestamp"] = ts
-        SYNC_STATUS["progress"] = "Đồng bộ hoàn tất!"
+        SYNC_STATUS["progress"] = f"Đồng bộ hoàn tất! ({total_elapsed}s)"
+        print(f"=== SYNC COMPLETED in {total_elapsed}s ===")
         
     except Exception as e:
+        total_elapsed = round(time.time() - sync_start, 1)
         SYNC_STATUS["status"] = "error"
-        SYNC_STATUS["error"] = f"Lỗi hệ thống khi đồng bộ: {str(e)}"
+        SYNC_STATUS["error"] = f"Lỗi hệ thống khi đồng bộ ({total_elapsed}s): {str(e)}"
 
 @app.route('/api/sync', methods=['POST'])
 @requires_permission('tab-sync')
