@@ -1783,7 +1783,20 @@ def process_opr_report(df_opr=None, df_oe=None, df_rawopr=None, am=None, provinc
 
         df_opr = df_opr.dropna(subset=["vol_ltc"]).copy()
         
-        # Calculate OPR Overall
+        # Find latest date in df_opr dynamically
+        df_opr_dates = pd.to_datetime(df_opr['NgayLTC'], errors='coerce').dt.strftime('%Y-%m-%d')
+        valid_dates = df_opr_dates.dropna().unique()
+        report_date_str = max(valid_dates) if len(valid_dates) > 0 else None
+        
+        # Calculate OPR Overall (only for the latest report date if multiple dates exist)
+        if report_date_str:
+            df_opr_all_dates = df_opr.copy()
+            df_opr_dates_str = df_opr_dates
+            df_opr = df_opr[df_opr_dates == report_date_str].copy()
+        else:
+            df_opr_all_dates = df_opr.copy()
+            df_opr_dates_str = df_opr_dates
+            
         total_vol = float(df_opr['vol_ltc'].sum())
         total_ot = float(df_opr['ot'].sum())
         overall_opr = safe_divide(total_ot, total_vol)
@@ -1796,22 +1809,18 @@ def process_opr_report(df_opr=None, df_oe=None, df_rawopr=None, am=None, provinc
         
         if df_rawopr is not None and not df_rawopr.empty:
             try:
-                # Normalize dates to YYYY-MM-DD
-                df_opr_dates = pd.to_datetime(df_opr['NgayLTC'], errors='coerce').dt.strftime('%Y-%m-%d')
                 df_rawopr_dates = pd.to_datetime(df_rawopr['NgayLTC'], errors='coerce').dt.strftime('%Y-%m-%d')
                 
-                valid_dates = df_opr_dates.dropna().unique()
-                if len(valid_dates) > 0:
-                    report_date_str = max(valid_dates)
+                if report_date_str:
                     report_dt = pd.to_datetime(report_date_str)
                     
                     n1_date_str = (report_dt - pd.Timedelta(days=1)).strftime('%Y-%m-%d')
                     wk_date_str = (report_dt - pd.Timedelta(days=7)).strftime('%Y-%m-%d')
                     
-                    # Create temporary date columns
-                    df_opr_temp = df_opr.copy()
+                    # Create temporary date columns using unfiltered df_opr_all_dates
+                    df_opr_temp = df_opr_all_dates.copy()
                     df_rawopr_temp = df_rawopr.copy()
-                    df_opr_temp['NgayLTC_str'] = df_opr_dates
+                    df_opr_temp['NgayLTC_str'] = df_opr_dates_str
                     df_rawopr_temp['NgayLTC_str'] = df_rawopr_dates
                     
                     cols = ['NgayLTC_str', 'vol_ltc', 'ot']
