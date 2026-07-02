@@ -1577,14 +1577,44 @@ def process_opr_report(df_opr=None, df_oe=None, df_rawopr=None, am=None, provinc
         opr_rename = {}
         if 'ngayltc' in opr_cols_lower:
             opr_rename[opr_cols_lower['ngayltc']] = 'NgayLTC'
+            
         if 'vol_ltc' in opr_cols_lower:
             opr_rename[opr_cols_lower['vol_ltc']] = 'vol_ltc'
+        elif 'don_ltc' in opr_cols_lower:
+            opr_rename[opr_cols_lower['don_ltc']] = 'vol_ltc'
+        elif 'don ltc' in opr_cols_lower:
+            opr_rename[opr_cols_lower['don ltc']] = 'vol_ltc'
+            
         if 'ot' in opr_cols_lower:
             opr_rename[opr_cols_lower['ot']] = 'ot'
+        elif 'don_ontime' in opr_cols_lower:
+            opr_rename[opr_cols_lower['don_ontime']] = 'ot'
+        elif 'don ontime' in opr_cols_lower:
+            opr_rename[opr_cols_lower['don ontime']] = 'ot'
+            
         if 'am' in opr_cols_lower:
             opr_rename[opr_cols_lower['am']] = 'AM'
+            
         if 'ly_do_tre_12h' in opr_cols_lower:
             opr_rename[opr_cols_lower['ly_do_tre_12h']] = 'ly_do_tre_12h'
+            
+        if 'tutinh' in opr_cols_lower:
+            opr_rename[opr_cols_lower['tutinh']] = 'tutinh'
+        elif 'tu tinh' in opr_cols_lower:
+            opr_rename[opr_cols_lower['tu tinh']] = 'tutinh'
+            
+        if 'kholay' in opr_cols_lower:
+            opr_rename[opr_cols_lower['kholay']] = 'kholay'
+        elif 'kho lay' in opr_cols_lower:
+            opr_rename[opr_cols_lower['kho lay']] = 'kholay'
+            
+        if 'vung' in opr_cols_lower:
+            opr_rename[opr_cols_lower['vung']] = 'vung'
+        elif 'tuvung' in opr_cols_lower:
+            opr_rename[opr_cols_lower['tuvung']] = 'vung'
+        elif 'tu vung' in opr_cols_lower:
+            opr_rename[opr_cols_lower['tu vung']] = 'vung'
+            
         if opr_rename:
             df_opr = df_opr.rename(columns=opr_rename)
             
@@ -1643,12 +1673,44 @@ def process_opr_report(df_opr=None, df_oe=None, df_rawopr=None, am=None, provinc
             rawopr_rename = {}
             if 'ngayltc' in rawopr_cols_lower:
                 rawopr_rename[rawopr_cols_lower['ngayltc']] = 'NgayLTC'
+                
             if 'vol_ltc' in rawopr_cols_lower:
                 rawopr_rename[rawopr_cols_lower['vol_ltc']] = 'vol_ltc'
+            elif 'don_ltc' in rawopr_cols_lower:
+                rawopr_rename[rawopr_cols_lower['don_ltc']] = 'vol_ltc'
+            elif 'don ltc' in rawopr_cols_lower:
+                rawopr_rename[rawopr_cols_lower['don ltc']] = 'vol_ltc'
+                
             if 'ot' in rawopr_cols_lower:
                 rawopr_rename[rawopr_cols_lower['ot']] = 'ot'
+            elif 'don_ontime' in rawopr_cols_lower:
+                rawopr_rename[rawopr_cols_lower['don_ontime']] = 'ot'
+            elif 'don ontime' in rawopr_cols_lower:
+                rawopr_rename[rawopr_cols_lower['don ontime']] = 'ot'
+                
             if 'am' in rawopr_cols_lower:
                 rawopr_rename[rawopr_cols_lower['am']] = 'AM'
+                
+            if 'ly_do_tre_12h' in rawopr_cols_lower:
+                rawopr_rename[rawopr_cols_lower['ly_do_tre_12h']] = 'ly_do_tre_12h'
+                
+            if 'tutinh' in rawopr_cols_lower:
+                rawopr_rename[rawopr_cols_lower['tutinh']] = 'tutinh'
+            elif 'tu tinh' in rawopr_cols_lower:
+                rawopr_rename[rawopr_cols_lower['tu tinh']] = 'tutinh'
+                
+            if 'kholay' in rawopr_cols_lower:
+                rawopr_rename[rawopr_cols_lower['kholay']] = 'kholay'
+            elif 'kho lay' in rawopr_cols_lower:
+                rawopr_rename[rawopr_cols_lower['kho lay']] = 'kholay'
+                
+            if 'vung' in rawopr_cols_lower:
+                rawopr_rename[rawopr_cols_lower['vung']] = 'vung'
+            elif 'tuvung' in rawopr_cols_lower:
+                rawopr_rename[rawopr_cols_lower['tuvung']] = 'vung'
+            elif 'tu vung' in rawopr_cols_lower:
+                rawopr_rename[rawopr_cols_lower['tu vung']] = 'vung'
+                
             if rawopr_rename:
                 df_rawopr = df_rawopr.rename(columns=rawopr_rename)
                 
@@ -1782,21 +1844,35 @@ def process_opr_report(df_opr=None, df_oe=None, df_rawopr=None, am=None, provinc
         
         # Calculate Error Reasons (Sắp xếp theo tỷ trọng lỗi)
         reason_col = 'ly_do_tre_12h'
-        df_late = df_opr[df_opr[reason_col] != '0.Ontime OPR']
-        df_late = df_late.dropna(subset=[reason_col])
+        errors_list = []
+        total_late = 0.0
         
-        # Late orders column
-        if 'Đơn trễ' in df_late.columns:
-            df_late['late_orders'] = df_late['Đơn trễ']
-        else:
-            df_late['late_orders'] = df_late['vol_ltc'] - df_late['ot']
+        if reason_col in df_opr.columns:
+            df_late = df_opr[df_opr[reason_col] != '0.Ontime OPR'].copy()
+            df_late = df_late.dropna(subset=[reason_col])
             
-        total_late = float(df_late['late_orders'].sum())
-        
-        errors = df_late.groupby(reason_col).agg({'late_orders': 'sum'}).reset_index()
-        errors['weight'] = (errors['late_orders'] / total_late) * 100 if total_late > 0 else 0
-        errors = errors.sort_values(by='late_orders', ascending=False)
-        errors_list = errors.to_dict(orient='records')
+            # Late orders column
+            if 'Đơn trễ' in df_late.columns:
+                df_late['late_orders'] = df_late['Đơn trễ']
+            else:
+                df_late['late_orders'] = df_late['vol_ltc'] - df_late['ot']
+                
+            total_late = float(df_late['late_orders'].sum())
+            
+            errors = df_late.groupby(reason_col).agg({'late_orders': 'sum'}).reset_index()
+            errors['weight'] = (errors['late_orders'] / total_late) * 100 if total_late > 0 else 0
+            errors = errors.sort_values(by='late_orders', ascending=False)
+            errors_list = errors.to_dict(orient='records')
+        elif df_oe is not None and reason_col in df_oe.columns:
+            # Fallback to calculating error reasons from detailed raw n-1 sheet (df_oe)
+            df_late = df_oe.dropna(subset=[reason_col]).copy()
+            df_late['late_orders'] = 1
+            total_late = float(len(df_late))
+            
+            errors = df_late.groupby(reason_col).agg({'late_orders': 'sum'}).reset_index()
+            errors['weight'] = (errors['late_orders'] / total_late) * 100 if total_late > 0 else 0
+            errors = errors.sort_values(by='late_orders', ascending=False)
+            errors_list = errors.to_dict(orient='records')
         
         # Detail N-1 error orders
         df_oe = df_oe.dropna(subset=["madh"]).copy()
