@@ -10634,20 +10634,20 @@
   },
   "transport_costs": {
     "region": {
-      "total_cost": 2024.73,
-      "total_cost_formatted": "2.024.725.495 đ",
-      "total_trips": 2107,
+      "total_cost": 2036.82,
+      "total_cost_formatted": "2.036.823.043 đ",
+      "total_trips": 2117,
       "avg_cost_per_trip": 0.96,
-      "avg_cost_per_trip_formatted": "960.952 đ/chuyến",
+      "avg_cost_per_trip_formatted": "962.127 đ/chuyến",
       "ncc_count": 7,
       "ktc_count": 7,
       "total_trucks": 59,
-      "last_updated": "10:08 - 10/10/2026"
+      "last_updated": "07:13 - 11/10/2026"
     },
     "surge_fixed": {
-      "fixed_cost": 2024.73,
+      "fixed_cost": 2036.82,
       "fixed_cost_pct": 100.0,
-      "fixed_trips": 2107,
+      "fixed_trips": 2117,
       "surge_cost": 0.0,
       "surge_cost_pct": 0.0,
       "surge_trips": 0,
@@ -10656,12 +10656,12 @@
     "ktcs": [
       {
         "ktc": "KTC Khánh Hòa",
-        "total_cost": 704.82,
-        "total_cost_raw": 704823728.0000006,
-        "total_trips": 564,
-        "cost_per_trip": 1.25,
-        "cost_per_trip_raw": 1249687.4609929088,
-        "fixed_cost": 704.82,
+        "total_cost": 708.71,
+        "total_cost_raw": 708705792.6000004,
+        "total_trips": 571,
+        "cost_per_trip": 1.24,
+        "cost_per_trip_raw": 1241166.0115586696,
+        "fixed_cost": 708.71,
         "surge_cost": 0.0,
         "surge_pct": 0.0,
         "primary_ncc": "Mạnh Cường, Mạnh Cường (BCCK)",
@@ -10669,12 +10669,12 @@
       },
       {
         "ktc": "KTC Bình Thuận",
-        "total_cost": 609.58,
-        "total_cost_raw": 609580217.8000001,
+        "total_cost": 617.36,
+        "total_cost_raw": 617361588.9000003,
         "total_trips": 573,
-        "cost_per_trip": 1.06,
-        "cost_per_trip_raw": 1063839.8216404887,
-        "fixed_cost": 609.58,
+        "cost_per_trip": 1.08,
+        "cost_per_trip_raw": 1077419.875916231,
+        "fixed_cost": 617.36,
         "surge_cost": 0.0,
         "surge_pct": 0.0,
         "primary_ncc": "Mạnh Cường",
@@ -10690,7 +10690,7 @@
         "fixed_cost": 292.57,
         "surge_cost": 0.0,
         "surge_pct": 0.0,
-        "primary_ncc": "Mạnh Cường, NAK",
+        "primary_ncc": "NAK, Mạnh Cường",
         "truck_count": 9
       },
       {
@@ -10703,7 +10703,7 @@
         "fixed_cost": 200.59,
         "surge_cost": 0.0,
         "surge_pct": 0.0,
-        "primary_ncc": "Tốt và Rẻ, Lâm Ngọc Thành",
+        "primary_ncc": "Lâm Ngọc Thành, Tốt và Rẻ",
         "truck_count": 5
       },
       {
@@ -10716,17 +10716,17 @@
         "fixed_cost": 108.81,
         "surge_cost": 0.0,
         "surge_pct": 0.0,
-        "primary_ncc": "NAK, Công Định",
+        "primary_ncc": "Công Định, NAK",
         "truck_count": 5
       },
       {
         "ktc": "KTC Nam Nha Trang",
-        "total_cost": 56.96,
-        "total_cost_raw": 56962812.00000009,
-        "total_trips": 210,
+        "total_cost": 57.11,
+        "total_cost_raw": 57105813.60000008,
+        "total_trips": 211,
         "cost_per_trip": 0.27,
-        "cost_per_trip_raw": 271251.48571428616,
-        "fixed_cost": 56.96,
+        "cost_per_trip_raw": 270643.6663507113,
+        "fixed_cost": 57.11,
         "surge_cost": 0.0,
         "surge_pct": 0.0,
         "primary_ncc": "Mạnh Cường",
@@ -10734,12 +10734,12 @@
       },
       {
         "ktc": "KTC Bắc Nha Trang",
-        "total_cost": 51.4,
-        "total_cost_raw": 51396328.00000006,
-        "total_trips": 260,
+        "total_cost": 51.69,
+        "total_cost_raw": 51687438.40000006,
+        "total_trips": 262,
         "cost_per_trip": 0.2,
-        "cost_per_trip_raw": 197678.18461538485,
-        "fixed_cost": 51.4,
+        "cost_per_trip_raw": 197280.29923664144,
+        "fixed_cost": 51.69,
         "surge_cost": 0.0,
         "surge_pct": 0.0,
         "primary_ncc": "Mạnh Cường, Mạnh Cường (BCCK)",
@@ -10749,16 +10749,16 @@
     "nccs": [
       {
         "ncc": "Mạnh Cường",
-        "total_cost": 1423.38,
-        "total_cost_raw": 1423384222.7999966,
-        "total_trips": 1488,
+        "total_cost": 1435.48,
+        "total_cost_raw": 1435481770.4999948,
+        "total_trips": 1498,
         "cost_per_trip": 0.96,
-        "cost_per_trip_raw": 956575.4185483848,
-        "fixed_cost": 1423.38,
+        "cost_per_trip_raw": 958265.5343791688,
+        "fixed_cost": 1435.48,
         "surge_cost": 0.0,
         "surge_pct": 0.0,
         "truck_count": 38,
-        "active_ktcs": "KTC Nam Nha Trang, KTC Bình Thuận, KTC Đức Trọng, KTC Bắc Nha Trang, KTC Khánh Hòa"
+        "active_ktcs": "KTC Đức Trọng, KTC Nam Nha Trang, KTC Bắc Nha Trang, KTC Bình Thuận, KTC Khánh Hòa"
       },
       {
         "ncc": "NAK",
@@ -10810,7 +10810,7 @@
         "surge_cost": 0.0,
         "surge_pct": 0.0,
         "truck_count": 5,
-        "active_ktcs": "KTC Bắc Nha Trang, KTC Khánh Hòa"
+        "active_ktcs": "KTC Khánh Hòa, KTC Bắc Nha Trang"
       },
       {
         "ncc": "Tốt và Rẻ",
@@ -18067,7 +18067,7 @@
         "cost_str": "2.021.701 đ",
         "cost": 2021701.4,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261006JGBP3NMG",
         "ontime": ""
       },
       {
@@ -18082,7 +18082,7 @@
         "cost_str": "2.021.701 đ",
         "cost": 2021701.4,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E2610074UYRASGG",
         "ontime": ""
       },
       {
@@ -18097,7 +18097,7 @@
         "cost_str": "2.021.701 đ",
         "cost": 2021701.4,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261008YYZQUPX9",
         "ontime": ""
       },
       {
@@ -18112,7 +18112,7 @@
         "cost_str": "2.021.701 đ",
         "cost": 2021701.4,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261009XROQVTOD",
         "ontime": ""
       },
       {
@@ -18556,13 +18556,13 @@
         "date_iso": "2026-10-10",
         "truck": "72H-00679",
         "capacity": "1900",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Đông Ninh Hòa -> (KHO) Vạn Ninh -> (KHO) Tu Bông -> (KHO) Vạn Ninh -> (KHO) Đông Ninh Hòa -> Kho Trung Chuyển Khánh Hòa",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Vạn Ninh -> (KHO) Tu Bông -> (KHO) Vạn Ninh -> (KHO) Đông Ninh Hòa -> (KHO) Ninh Hòa 2 -> Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Khánh Hòa",
         "type": "Cố định",
-        "cost_str": "1.181.660 đ",
-        "cost": 1181660.0,
+        "cost_str": "1.126.792 đ",
+        "cost": 1126791.5,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261009THITHPAA",
         "ontime": ""
       },
       {
@@ -19012,7 +19012,7 @@
         "cost_str": "228.547 đ",
         "cost": 228547.2,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261008VB0926BQ",
         "ontime": ""
       },
       {
@@ -19027,7 +19027,7 @@
         "cost_str": "228.547 đ",
         "cost": 228547.2,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261009B1W4ZS52",
         "ontime": ""
       },
       {
@@ -19492,7 +19492,7 @@
         "cost_str": "233.016 đ",
         "cost": 233016.0,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261008K24PWYOW",
         "ontime": ""
       },
       {
@@ -19936,13 +19936,13 @@
         "date_iso": "2026-10-09",
         "truck": "50E-19875",
         "capacity": "1900",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Bắc Nha Trang -> (KHO) Nam Nha Trang 3 -> (KHO) Nam Nha Trang 5 -> Kho Trung Chuyển Khánh Hòa",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Bắc Nha Trang -> (KHO) Nam Nha Trang 5 -> Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Bắc Nha Trang",
         "type": "Cố định",
-        "cost_str": "298.133 đ",
-        "cost": 298132.8,
+        "cost_str": "291.110 đ",
+        "cost": 291110.4,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261008121ZJ33J",
         "ontime": ""
       },
       {
@@ -19957,7 +19957,7 @@
         "cost_str": "291.110 đ",
         "cost": 291110.4,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E2610096OZB66CL",
         "ontime": ""
       },
       {
@@ -20352,17 +20352,32 @@
       },
       {
         "ncc": "Mạnh Cường",
+        "date": "08/10/2026",
+        "date_iso": "2026-10-08",
+        "truck": "50E-19875",
+        "capacity": "1900",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Nam Nha Trang 3 -> (KHO) Nam Nha Trang 1 -> (KHO) Nam Nha Trang 5 -> Kho Trung Chuyển Khánh Hòa",
+        "ktc": "KTC Nam Nha Trang",
+        "type": "Cố định",
+        "cost_str": "278.981 đ",
+        "cost": 278980.8,
+        "trips_equivalent": 1,
+        "trip_code": "E2610073QH60MSH",
+        "ontime": ""
+      },
+      {
+        "ncc": "Mạnh Cường",
         "date": "09/10/2026",
         "date_iso": "2026-10-09",
         "truck": "50E-19875",
         "capacity": "1900",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Nam Nha Trang 3 -> (KHO) Nam Nha Trang 1 -> (KHO) Nam Nha Trang 5 -> (KHO) Nam Nha Trang 1 -> Kho Trung Chuyển Khánh Hòa",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Nam Nha Trang 3 -> (KHO) Nam Nha Trang 1 -> (KHO) Nam Nha Trang 5 -> Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Nam Nha Trang",
         "type": "Cố định",
-        "cost_str": "283.450 đ",
-        "cost": 283449.6,
+        "cost_str": "278.981 đ",
+        "cost": 278980.8,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261008LEMBF567",
         "ontime": ""
       },
       {
@@ -20791,13 +20806,13 @@
         "date_iso": "2026-10-08",
         "truck": "79H-09836",
         "capacity": "1900",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (NTH) Phan Rang -> (NTH) Bảo An -> (NTH) Thuận Nam -> (NTH) ĐL Ninh Phước -> (NTH) Phước Dinh -> (NTH) ĐL Ninh Chử -> (NTH) Bảo An -> (NTH) Phan Rang -> Kho Trung Chuyển Khánh Hòa",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (NTH) Phan Rang -> (NTH) Bảo An -> (NTH) Thuận Nam ->(NTH) Phước Dinh -> (NTH) ĐL Xuân Hải-> (NTH) ĐL Ninh Chử -> (NTH)  Ninh Chử ->(NTH) Bảo An -> (NTH) Phan Rang -> Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Khánh Hòa",
         "type": "Cố định",
-        "cost_str": "1.603.005 đ",
-        "cost": 1603005.3,
+        "cost_str": "1.775.856 đ",
+        "cost": 1775856.2,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261008UB2HC1QW",
         "ontime": ""
       },
       {
@@ -20806,13 +20821,13 @@
         "date_iso": "2026-10-09",
         "truck": "79H-09836",
         "capacity": "1900",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (NTH) Phan Rang -> (NTH) Bảo An -> (NTH) Thuận Nam -> (NTH) ĐL Ninh Chử -> (NTH) Bảo An -> (NTH) Phan Rang -> Kho Trung Chuyển Khánh Hòa",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (NTH) Phan Rang -> (NTH) Bảo An -> (NTH) Thuận Nam -> (NTH) Phước Dinh -> (NTH) ĐL Ninh Chử -> (NTH) Bảo An -> (NTH) Phan Rang -> Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Khánh Hòa",
         "type": "Cố định",
-        "cost_str": "1.588.651 đ",
-        "cost": 1588650.9,
+        "cost_str": "1.594.632 đ",
+        "cost": 1594631.9,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261008OE9FKHCK",
         "ontime": ""
       },
       {
@@ -21286,13 +21301,13 @@
         "date_iso": "2026-10-10",
         "truck": "79H-02628",
         "capacity": "1900",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Diên Khánh 2 -> (KHO) Nam Nha Trang 3 -> (KHO) Khánh Vĩnh -> (KHO) Diên Thọ -> (KHO) Diên Khánh 2 -> Kho Trung Chuyển Khánh Hòa",
-        "ktc": "KTC Nam Nha Trang",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Diên Khánh 2 -> (KHO) Diên Thọ -> (KHO) Khánh Vĩnh -> (KHO) Diên Thọ -> (KHO) Diên Khánh 2 -> Kho Trung Chuyển Khánh Hòa",
+        "ktc": "KTC Khánh Hòa",
         "type": "Cố định",
-        "cost_str": "488.376 đ",
-        "cost": 488376.0,
+        "cost_str": "363.250 đ",
+        "cost": 363249.6,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261009YQPLKWNO",
         "ontime": ""
       },
       {
@@ -21301,11 +21316,11 @@
         "date_iso": "2026-10-11",
         "truck": "79H-02628",
         "capacity": "1900",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Diên Khánh 2 -> (KHO) Nam Nha Trang 3 -> (KHO) Khánh Vĩnh -> (KHO) Diên Thọ -> (KHO) Diên Khánh 2 -> Kho Trung Chuyển Khánh Hòa",
-        "ktc": "KTC Nam Nha Trang",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Diên Khánh 2 -> (KHO) Diên Thọ -> (KHO) Khánh Vĩnh -> (KHO) Diên Thọ -> (KHO) Diên Khánh 2 -> Kho Trung Chuyển Khánh Hòa",
+        "ktc": "KTC Khánh Hòa",
         "type": "Cố định",
-        "cost_str": "488.376 đ",
-        "cost": 488376.0,
+        "cost_str": "363.250 đ",
+        "cost": 363249.6,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -21742,7 +21757,7 @@
         "cost_str": "326.861 đ",
         "cost": 326860.8,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261007EX564ZG1",
         "ontime": ""
       },
       {
@@ -21757,7 +21772,7 @@
         "cost_str": "326.861 đ",
         "cost": 326860.8,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261008AVO1DQDD",
         "ontime": ""
       },
       {
@@ -22207,7 +22222,7 @@
         "cost_str": "903.422 đ",
         "cost": 903422.4,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261008UPX2C28Q",
         "ontime": ""
       },
       {
@@ -22222,7 +22237,7 @@
         "cost_str": "903.422 đ",
         "cost": 903422.4,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E2610091G664YZ3",
         "ontime": ""
       },
       {
@@ -22657,7 +22672,7 @@
         "cost_str": "1.616.685 đ",
         "cost": 1616685.0,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261007GVR0WLUV",
         "ontime": ""
       },
       {
@@ -22666,13 +22681,13 @@
         "date_iso": "2026-10-09",
         "truck": "79H-00611",
         "capacity": "5000",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (NTH) Ninh Chử -> (NTH) Phước Dinh -> (NTH) Bảo An -> Kho Giao Hàng Nặng - Phan Rang - Ninh Thuận -> Kho Trung Chuyển Khánh Hòa",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (NTH) Phước Dinh -> (NTH) Bảo An -> Kho Giao Hàng Nặng - Phan Rang - Ninh Thuận -> Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Khánh Hòa",
         "type": "Cố định",
-        "cost_str": "1.673.760 đ",
-        "cost": 1673760.0,
+        "cost_str": "1.616.685 đ",
+        "cost": 1616685.0,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E2610087P2B7Q5F",
         "ontime": ""
       },
       {
@@ -22681,13 +22696,13 @@
         "date_iso": "2026-10-10",
         "truck": "79H-00611",
         "capacity": "5000",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (NTH) Ninh Chử -> (NTH) Phước Dinh -> (NTH) Bảo An -> Kho Giao Hàng Nặng - Phan Rang - Ninh Thuận -> Kho Trung Chuyển Khánh Hòa",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (NTH) Phước Dinh -> (NTH) Bảo An -> Kho Giao Hàng Nặng - Phan Rang - Ninh Thuận -> Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Khánh Hòa",
         "type": "Cố định",
-        "cost_str": "1.673.760 đ",
-        "cost": 1673760.0,
+        "cost_str": "1.616.685 đ",
+        "cost": 1616685.0,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261009CU9T92J6",
         "ontime": ""
       },
       {
@@ -23131,13 +23146,13 @@
         "date_iso": "2026-10-09",
         "truck": "50E-19485",
         "capacity": "1900",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Cam Lâm 2 -> (KHO) Bắc Cam Ranh -> Kho Giao Hàng Nặng - Cam Ranh - Khánh Hoà -> Kho Trung Chuyển Khánh Hòa",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Cam Lâm 2 -> (KHO) Bắc Cam Ranh ->  Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Khánh Hòa",
         "type": "Cố định",
-        "cost_str": "650.530 đ",
-        "cost": 650529.6,
+        "cost_str": "540.725 đ",
+        "cost": 540724.8,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261007TYWWGPC8",
         "ontime": ""
       },
       {
@@ -23146,13 +23161,13 @@
         "date_iso": "2026-10-10",
         "truck": "50E-19485",
         "capacity": "1900",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Cam Lâm 2 -> (KHO) Bắc Cam Ranh -> Kho Giao Hàng Nặng - Cam Ranh - Khánh Hoà -> Kho Trung Chuyển Khánh Hòa",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Cam Lâm 2 -> (KHO) Bắc Cam Ranh ->  Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Khánh Hòa",
         "type": "Cố định",
-        "cost_str": "650.530 đ",
-        "cost": 650529.6,
+        "cost_str": "540.725 đ",
+        "cost": 540724.8,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E2610087PWTCGO5",
         "ontime": ""
       },
       {
@@ -23581,13 +23596,13 @@
         "date_iso": "2026-10-08",
         "truck": "79H-00611",
         "capacity": "5000",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (NTH) Ninh Chử -> (NTH) Phước Dinh -> Kho Giao Hàng Nặng - Phan Rang - Ninh Thuận -> (NTH) Ninh Sơn -> (NTH) Ninh Chử -> (NTH) Phước Dinh -> Kho Trung Chuyển Khánh Hòa",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (NTH) Ninh Chử -> (NTH) Phước Dinh -> Kho Giao Hàng Nặng - Phan Rang - Ninh Thuận -> (NTH) Ninh Sơn -> (NTH) Phước Dinh -> (NTH) Ninh Chử -> Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Khánh Hòa",
         "type": "Cố định",
-        "cost_str": "2.352.893 đ",
-        "cost": 2352893.0,
+        "cost_str": "2.309.516 đ",
+        "cost": 2309516.0,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261007H8ZNPRVU",
         "ontime": ""
       },
       {
@@ -23596,13 +23611,13 @@
         "date_iso": "2026-10-09",
         "truck": "79H-00611",
         "capacity": "5000",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (NTH) Ninh Chử -> (NTH) Phước Dinh -> Kho Giao Hàng Nặng - Phan Rang - Ninh Thuận -> (NTH) Ninh Sơn -> (NTH) Ninh Chử -> (NTH) Phước Dinh -> Kho Trung Chuyển Khánh Hòa",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (NTH) Ninh Chử -> (NTH) Phước Dinh -> Kho Giao Hàng Nặng - Phan Rang - Ninh Thuận -> (NTH) Ninh Sơn -> (NTH) Phước Dinh -> (NTH) Ninh Chử -> Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Khánh Hòa",
         "type": "Cố định",
-        "cost_str": "2.352.893 đ",
-        "cost": 2352893.0,
+        "cost_str": "2.309.516 đ",
+        "cost": 2309516.0,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261008X3H4OTPN",
         "ontime": ""
       },
       {
@@ -23611,13 +23626,13 @@
         "date_iso": "2026-10-10",
         "truck": "79H-00611",
         "capacity": "5000",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (NTH) Ninh Chử -> (NTH) Phước Dinh -> Kho Giao Hàng Nặng - Phan Rang - Ninh Thuận -> (NTH) Ninh Sơn -> (NTH) Ninh Chử -> (NTH) Phước Dinh -> Kho Trung Chuyển Khánh Hòa",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (NTH) Ninh Chử -> (NTH) Phước Dinh -> Kho Giao Hàng Nặng - Phan Rang - Ninh Thuận -> (NTH) Ninh Sơn -> (NTH) Phước Dinh -> (NTH) Ninh Chử -> Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Khánh Hòa",
         "type": "Cố định",
-        "cost_str": "2.352.893 đ",
-        "cost": 2352893.0,
+        "cost_str": "2.309.516 đ",
+        "cost": 2309516.0,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261009D9XGZIQD",
         "ontime": ""
       },
       {
@@ -23626,11 +23641,11 @@
         "date_iso": "2026-10-11",
         "truck": "79H-00611",
         "capacity": "5000",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (NTH) Ninh Chử -> (NTH) Phước Dinh -> Kho Giao Hàng Nặng - Phan Rang - Ninh Thuận -> (NTH) Ninh Sơn -> (NTH) Ninh Chử -> (NTH) Phước Dinh -> Kho Trung Chuyển Khánh Hòa",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (NTH) Ninh Chử -> (NTH) Phước Dinh -> Kho Giao Hàng Nặng - Phan Rang - Ninh Thuận -> (NTH) Ninh Sơn -> (NTH) Phước Dinh -> (NTH) Ninh Chử -> Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Khánh Hòa",
         "type": "Cố định",
-        "cost_str": "2.352.893 đ",
-        "cost": 2352893.0,
+        "cost_str": "2.309.516 đ",
+        "cost": 2309516.0,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -24012,6 +24027,21 @@
       },
       {
         "ncc": "Mạnh Cường",
+        "date": "08/10/2026",
+        "date_iso": "2026-10-08",
+        "truck": "79H-12193",
+        "capacity": "1900",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Tây Nha Trang -> (KHO) Bắc Nha Trang -> Kho Trung Chuyển Khánh Hòa",
+        "ktc": "KTC Bắc Nha Trang",
+        "type": "Cố định",
+        "cost_str": "174.283 đ",
+        "cost": 174283.2,
+        "trips_equivalent": 1,
+        "trip_code": "E261007648TUDPS",
+        "ontime": ""
+      },
+      {
+        "ncc": "Mạnh Cường",
         "date": "09/10/2026",
         "date_iso": "2026-10-09",
         "truck": "79H-12193",
@@ -24022,7 +24052,7 @@
         "cost_str": "174.283 đ",
         "cost": 174283.2,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261008CXH3QE7E",
         "ontime": ""
       },
       {
@@ -24427,7 +24457,7 @@
         "cost_str": "1.250.926 đ",
         "cost": 1250925.5,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261009OKRL9H5R",
         "ontime": ""
       },
       {
@@ -24862,7 +24892,7 @@
         "cost_str": "125.126 đ",
         "cost": 125126.4,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261007JCMJA18T",
         "ontime": ""
       },
       {
@@ -24877,7 +24907,7 @@
         "cost_str": "125.126 đ",
         "cost": 125126.4,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261008DQGUU8Y2",
         "ontime": ""
       },
       {
@@ -25321,13 +25351,13 @@
         "date_iso": "2026-10-09",
         "truck": "79H-09836",
         "capacity": "1900",
-        "route": "Kho Trung Chuyển Khánh Hòa -> Kho Giao Hàng Nặng - Cam Ranh - Khánh Hoà -> (KHO) Cam Linh -> (KHO) Khánh Sơn -> Kho Trung Chuyển Khánh Hòa",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Cam Linh -> (KHO) Khánh Sơn -> Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Khánh Hòa",
         "type": "Cố định",
-        "cost_str": "1.035.104 đ",
-        "cost": 1035103.5,
+        "cost_str": "1.029.555 đ",
+        "cost": 1029555.0,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E2610075NSCGNMM",
         "ontime": ""
       },
       {
@@ -25342,7 +25372,7 @@
         "cost_str": "1.035.104 đ",
         "cost": 1035103.5,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E2610081J7O9UT9",
         "ontime": ""
       },
       {
@@ -26251,13 +26281,13 @@
         "date_iso": "2026-10-09",
         "truck": "79H-10144",
         "capacity": "1900",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Ninh Hòa 2 -> (KHO) Ninh Hòa 1 -> (KHO) Đông Ninh Hòa -> Kho Trung Chuyển Khánh Hòa",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Ninh Hòa 2 -> (KHO) Tân Định  -> (KHO) Đông Ninh Hòa -> Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Khánh Hòa",
         "type": "Cố định",
-        "cost_str": "650.539 đ",
-        "cost": 650539.4,
+        "cost_str": "695.227 đ",
+        "cost": 695227.4,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261007YDPYA4EL",
         "ontime": ""
       },
       {
@@ -26266,13 +26296,13 @@
         "date_iso": "2026-10-10",
         "truck": "79H-10144",
         "capacity": "1900",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Ninh Hòa 2 -> (KHO) Ninh Hòa 1 -> (KHO) Đông Ninh Hòa -> Kho Trung Chuyển Khánh Hòa",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Ninh Hòa 2 -> (KHO) Tân Định  -> (KHO) Đông Ninh Hòa -> Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Khánh Hòa",
         "type": "Cố định",
-        "cost_str": "650.539 đ",
-        "cost": 650539.4,
+        "cost_str": "695.227 đ",
+        "cost": 695227.4,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261008Z6VKH57C",
         "ontime": ""
       },
       {
@@ -26716,13 +26746,13 @@
         "date_iso": "2026-10-09",
         "truck": "79H-22264",
         "capacity": "1900",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Diên Khánh 2 -> (KHO) Tây Nha Trang -> Kho Trung Chuyển Khánh Hòa",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Diên Khánh 2 -> Kho Trung Chuyển Khánh Hòa -> (KHO) Tây Nha Trang -> Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Khánh Hòa",
         "type": "Cố định",
-        "cost_str": "136.618 đ",
-        "cost": 136617.6,
+        "cost_str": "143.002 đ",
+        "cost": 143001.6,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E2610087EQ3FBFV",
         "ontime": ""
       },
       {
@@ -26737,7 +26767,7 @@
         "cost_str": "136.618 đ",
         "cost": 136617.6,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261009FX366A1E",
         "ontime": ""
       },
       {
@@ -27177,6 +27207,21 @@
       },
       {
         "ncc": "Mạnh Cường",
+        "date": "09/10/2026",
+        "date_iso": "2026-10-09",
+        "truck": "79C-16983",
+        "capacity": "1900",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) CK Bắc Nha Trang -> Kho Trung Chuyển Khánh Hòa",
+        "ktc": "KTC Bắc Nha Trang",
+        "type": "Cố định",
+        "cost_str": "120.658 đ",
+        "cost": 120657.6,
+        "trips_equivalent": 1,
+        "trip_code": "E261008LFWT0XTL",
+        "ontime": ""
+      },
+      {
+        "ncc": "Mạnh Cường",
         "date": "10/10/2026",
         "date_iso": "2026-10-10",
         "truck": "79C-16983",
@@ -27187,7 +27232,7 @@
         "cost_str": "120.658 đ",
         "cost": 120657.6,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261009U2KCI4WN",
         "ontime": ""
       },
       {
@@ -27652,7 +27697,7 @@
         "cost_str": "292.387 đ",
         "cost": 292387.2,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261009OXAPLXQO",
         "ontime": ""
       },
       {
@@ -28111,13 +28156,13 @@
         "date_iso": "2026-10-10",
         "truck": "79H-09826",
         "capacity": "1900",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Diên Khánh 1 -> (KHO) Nam Nha Trang 2 -> (KHO) Nha Trang -> Kho Trung Chuyển Khánh Hòa",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Diên Khánh 1 -> (KHO) Nam Nha Trang 2 ->(KHO) Nam Nha Trang 1 ->  Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Nam Nha Trang",
         "type": "Cố định",
-        "cost_str": "194.712 đ",
-        "cost": 194712.0,
+        "cost_str": "252.168 đ",
+        "cost": 252168.0,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261010JPXBBU0X",
         "ontime": ""
       },
       {
@@ -28126,11 +28171,11 @@
         "date_iso": "2026-10-11",
         "truck": "79H-09826",
         "capacity": "1900",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Diên Khánh 1 -> (KHO) Nam Nha Trang 2 -> (KHO) Nha Trang -> Kho Trung Chuyển Khánh Hòa",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Diên Khánh 1 -> (KHO) Nam Nha Trang 2 ->(KHO) Nam Nha Trang 1 ->  Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Nam Nha Trang",
         "type": "Cố định",
-        "cost_str": "194.712 đ",
-        "cost": 194712.0,
+        "cost_str": "252.168 đ",
+        "cost": 252168.0,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -28141,11 +28186,11 @@
         "date_iso": "2026-10-12",
         "truck": "79H-09826",
         "capacity": "1900",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Diên Khánh 1 -> (KHO) Nam Nha Trang 2 -> (KHO) Nha Trang -> Kho Trung Chuyển Khánh Hòa",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Diên Khánh 1 -> (KHO) Nam Nha Trang 2 ->(KHO) Nam Nha Trang 1 ->  Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Nam Nha Trang",
         "type": "Cố định",
-        "cost_str": "194.712 đ",
-        "cost": 194712.0,
+        "cost_str": "252.168 đ",
+        "cost": 252168.0,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -28537,7 +28582,7 @@
         "cost_str": "194.712 đ",
         "cost": 194712.0,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261008OEH7IG0Q",
         "ontime": ""
       },
       {
@@ -29446,13 +29491,13 @@
         "date_iso": "2026-10-09",
         "truck": "79H-01908",
         "capacity": "1900",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (NTH) Phan Rang -> (NTH) Thuận Nam -> Kho Chuyển Tiếp Bình Thuận -> Kho Giao Hàng Nặng - Phan Rang - Ninh Thuận -> (KHO) ĐL Bắc Cam Ranh -> (KHO) Bắc Cam Ranh -> (KHO) Cam Lâm 2 -> Kho Trung Chuyển Khánh Hòa",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (NTH) Phan Rang -> (NTH) Thuận Nam -> Kho Chuyển Tiếp Bình Thuận -> Kho Giao Hàng Nặng - Phan Rang - Ninh Thuận -> (KHO) ĐL Bắc Cam Ranh -> (KHO) Bắc Cam Ranh -> (KHO) Cam Lâm 2 -> (KHO) Cam Lâm 1 -> Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Khánh Hòa",
         "type": "Cố định",
-        "cost_str": "3.189.937 đ",
-        "cost": 3189937.0,
+        "cost_str": "3.436.356 đ",
+        "cost": 3436355.8,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E2610087JFO21VJ",
         "ontime": ""
       },
       {
@@ -29464,10 +29509,10 @@
         "route": "Kho Trung Chuyển Khánh Hòa -> (NTH) Phan Rang -> (NTH) Thuận Nam -> Kho Chuyển Tiếp Bình Thuận -> Kho Giao Hàng Nặng - Phan Rang - Ninh Thuận -> (KHO) ĐL Bắc Cam Ranh -> (KHO) Bắc Cam Ranh -> (KHO) Cam Lâm 2 -> (KHO) Cam Lâm 1 -> Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Khánh Hòa",
         "type": "Cố định",
-        "cost_str": "3.190.500 đ",
-        "cost": 3190499.6,
+        "cost_str": "3.436.356 đ",
+        "cost": 3436355.8,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E26100906F6AZ7T",
         "ontime": ""
       },
       {
@@ -29479,8 +29524,8 @@
         "route": "Kho Trung Chuyển Khánh Hòa -> (NTH) Phan Rang -> (NTH) Thuận Nam -> Kho Chuyển Tiếp Bình Thuận -> Kho Giao Hàng Nặng - Phan Rang - Ninh Thuận -> (KHO) ĐL Bắc Cam Ranh -> (KHO) Bắc Cam Ranh -> (KHO) Cam Lâm 2 -> (KHO) Cam Lâm 1 -> Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Khánh Hòa",
         "type": "Cố định",
-        "cost_str": "3.190.500 đ",
-        "cost": 3190499.6,
+        "cost_str": "3.436.356 đ",
+        "cost": 3436355.8,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -30397,7 +30442,7 @@
         "cost_str": "449.424 đ",
         "cost": 449424.0,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E2610092K42Q0GA",
         "ontime": ""
       },
       {
@@ -31789,10 +31834,10 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Liên Hương -> Kho Giao Hàng Nặng - Tuy Phong - Bình Thuận -> (BTH) Liên Hương -> (BTH) Mũi Né -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "1.279.633 đ",
-        "cost": 1279632.7,
+        "cost_str": "1.449.493 đ",
+        "cost": 1449493.1,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E2610094I0ISH1G",
         "ontime": ""
       },
       {
@@ -31804,8 +31849,8 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Liên Hương -> Kho Giao Hàng Nặng - Tuy Phong - Bình Thuận -> (BTH) Liên Hương -> (BTH) Mũi Né -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "1.279.633 đ",
-        "cost": 1279632.7,
+        "cost_str": "1.449.493 đ",
+        "cost": 1449493.1,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -31819,8 +31864,8 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Liên Hương -> Kho Giao Hàng Nặng - Tuy Phong - Bình Thuận -> (BTH) Liên Hương -> (BTH) Mũi Né -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "1.279.633 đ",
-        "cost": 1279632.7,
+        "cost_str": "1.449.493 đ",
+        "cost": 1449493.1,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -32707,7 +32752,7 @@
         "cost_str": "487.025 đ",
         "cost": 487024.8,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E2610083SZM22R5",
         "ontime": ""
       },
       {
@@ -32722,7 +32767,7 @@
         "cost_str": "487.025 đ",
         "cost": 487024.8,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261009OCF913LW",
         "ontime": ""
       },
       {
@@ -33172,7 +33217,7 @@
         "cost_str": "398.669 đ",
         "cost": 398668.8,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261008TPAQIK0A",
         "ontime": ""
       },
       {
@@ -33187,7 +33232,7 @@
         "cost_str": "398.669 đ",
         "cost": 398668.8,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261009STIMNFCL",
         "ontime": ""
       },
       {
@@ -34117,7 +34162,7 @@
         "cost_str": "1.024.917 đ",
         "cost": 1024917.0,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E2610093JT82TBK",
         "ontime": ""
       },
       {
@@ -35959,10 +36004,10 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Hàm Liêm -> (BTH) Hàm Thuận -> (BTH) ĐG La Dạ -> (BTH) Hàm Thuận -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "834.646 đ",
-        "cost": 834645.6,
+        "cost_str": "960.410 đ",
+        "cost": 960410.4,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261008U7S3U72N",
         "ontime": ""
       },
       {
@@ -35974,10 +36019,10 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Hàm Liêm -> (BTH) Hàm Thuận -> (BTH) ĐG La Dạ -> (BTH) Hàm Thuận -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "834.646 đ",
-        "cost": 834645.6,
+        "cost_str": "960.410 đ",
+        "cost": 960410.4,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261009RU5A0LNR",
         "ontime": ""
       },
       {
@@ -35989,8 +36034,8 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Hàm Liêm -> (BTH) Hàm Thuận -> (BTH) ĐG La Dạ -> (BTH) Hàm Thuận -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "834.646 đ",
-        "cost": 834645.6,
+        "cost_str": "960.410 đ",
+        "cost": 960410.4,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -36004,8 +36049,8 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Hàm Liêm -> (BTH) Hàm Thuận -> (BTH) ĐG La Dạ -> (BTH) Hàm Thuận -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "834.646 đ",
-        "cost": 834645.6,
+        "cost_str": "960.410 đ",
+        "cost": 960410.4,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -36424,10 +36469,10 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Mũi Né -> (BTH) Liên Hương -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "1.254.255 đ",
-        "cost": 1254255.0,
+        "cost_str": "1.252.025 đ",
+        "cost": 1252025.1,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261008YAWOSWPG",
         "ontime": ""
       },
       {
@@ -36439,10 +36484,10 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Mũi Né -> (BTH) Liên Hương -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "1.254.255 đ",
-        "cost": 1254255.0,
+        "cost_str": "1.252.025 đ",
+        "cost": 1252025.1,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E2610094G0B1JKK",
         "ontime": ""
       },
       {
@@ -36454,8 +36499,8 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Mũi Né -> (BTH) Liên Hương -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "1.254.255 đ",
-        "cost": 1254255.0,
+        "cost_str": "1.252.025 đ",
+        "cost": 1252025.1,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -36469,8 +36514,8 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Mũi Né -> (BTH) Liên Hương -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "1.254.255 đ",
-        "cost": 1254255.0,
+        "cost_str": "1.252.025 đ",
+        "cost": 1252025.1,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -36904,10 +36949,10 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Tuyên Quang -> Kho Chuyển Tiếp Bình Thuận -> (BTH) Phú Thủy -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "166.622 đ",
-        "cost": 166622.4,
+        "cost_str": "181.944 đ",
+        "cost": 181944.0,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261009HZM5SLFZ",
         "ontime": ""
       },
       {
@@ -36919,8 +36964,8 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Tuyên Quang -> Kho Chuyển Tiếp Bình Thuận -> (BTH) Phú Thủy -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "166.622 đ",
-        "cost": 166622.4,
+        "cost_str": "181.944 đ",
+        "cost": 181944.0,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -36934,8 +36979,8 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Tuyên Quang -> Kho Chuyển Tiếp Bình Thuận -> (BTH) Phú Thủy -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "166.622 đ",
-        "cost": 166622.4,
+        "cost_str": "181.944 đ",
+        "cost": 181944.0,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -36949,8 +36994,8 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Tuyên Quang -> Kho Chuyển Tiếp Bình Thuận -> (BTH) Phú Thủy -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "166.622 đ",
-        "cost": 166622.4,
+        "cost_str": "181.944 đ",
+        "cost": 181944.0,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -36964,8 +37009,8 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Tuyên Quang -> Kho Chuyển Tiếp Bình Thuận -> (BTH) Phú Thủy -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "166.622 đ",
-        "cost": 166622.4,
+        "cost_str": "181.944 đ",
+        "cost": 181944.0,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -36979,8 +37024,8 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Tuyên Quang -> Kho Chuyển Tiếp Bình Thuận -> (BTH) Phú Thủy -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "166.622 đ",
-        "cost": 166622.4,
+        "cost_str": "181.944 đ",
+        "cost": 181944.0,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -36994,8 +37039,8 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Tuyên Quang -> Kho Chuyển Tiếp Bình Thuận -> (BTH) Phú Thủy -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "166.622 đ",
-        "cost": 166622.4,
+        "cost_str": "181.944 đ",
+        "cost": 181944.0,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -37009,8 +37054,8 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Tuyên Quang -> Kho Chuyển Tiếp Bình Thuận -> (BTH) Phú Thủy -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "166.622 đ",
-        "cost": 166622.4,
+        "cost_str": "181.944 đ",
+        "cost": 181944.0,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -37024,8 +37069,8 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Tuyên Quang -> Kho Chuyển Tiếp Bình Thuận -> (BTH) Phú Thủy -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "166.622 đ",
-        "cost": 166622.4,
+        "cost_str": "181.944 đ",
+        "cost": 181944.0,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -37039,8 +37084,8 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Tuyên Quang -> Kho Chuyển Tiếp Bình Thuận -> (BTH) Phú Thủy -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "166.622 đ",
-        "cost": 166622.4,
+        "cost_str": "181.944 đ",
+        "cost": 181944.0,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -37054,8 +37099,8 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Tuyên Quang -> Kho Chuyển Tiếp Bình Thuận -> (BTH) Phú Thủy -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "166.622 đ",
-        "cost": 166622.4,
+        "cost_str": "181.944 đ",
+        "cost": 181944.0,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -37069,8 +37114,8 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Tuyên Quang -> Kho Chuyển Tiếp Bình Thuận -> (BTH) Phú Thủy -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "166.622 đ",
-        "cost": 166622.4,
+        "cost_str": "181.944 đ",
+        "cost": 181944.0,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -37084,8 +37129,8 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Tuyên Quang -> Kho Chuyển Tiếp Bình Thuận -> (BTH) Phú Thủy -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "166.622 đ",
-        "cost": 166622.4,
+        "cost_str": "181.944 đ",
+        "cost": 181944.0,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -37099,8 +37144,8 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Tuyên Quang -> Kho Chuyển Tiếp Bình Thuận -> (BTH) Phú Thủy -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "166.622 đ",
-        "cost": 166622.4,
+        "cost_str": "181.944 đ",
+        "cost": 181944.0,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -37114,8 +37159,8 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Tuyên Quang -> Kho Chuyển Tiếp Bình Thuận -> (BTH) Phú Thủy -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "166.622 đ",
-        "cost": 166622.4,
+        "cost_str": "181.944 đ",
+        "cost": 181944.0,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -37129,23 +37174,8 @@
         "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Tuyên Quang -> Kho Chuyển Tiếp Bình Thuận -> (BTH) Phú Thủy -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "166.622 đ",
-        "cost": 166622.4,
-        "trips_equivalent": 1,
-        "trip_code": "",
-        "ontime": ""
-      },
-      {
-        "ncc": "Mạnh Cường",
-        "date": "26/10/2026",
-        "date_iso": "2026-10-26",
-        "truck": "79H-05493",
-        "capacity": "1900",
-        "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Tuyên Quang -> Kho Chuyển Tiếp Bình Thuận -> (BTH) Phú Thủy -> Kho Chuyển Tiếp Bình Thuận",
-        "ktc": "KTC Bình Thuận",
-        "type": "Cố định",
-        "cost_str": "166.622 đ",
-        "cost": 166622.4,
+        "cost_str": "181.944 đ",
+        "cost": 181944.0,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -37356,6 +37386,21 @@
         "type": "Cố định",
         "cost_str": "6.159.065 đ",
         "cost": 6159065.0,
+        "trips_equivalent": 1,
+        "trip_code": "",
+        "ontime": ""
+      },
+      {
+        "ncc": "Mạnh Cường",
+        "date": "09/10/2026",
+        "date_iso": "2026-10-09",
+        "truck": "79C-16989",
+        "capacity": "1400",
+        "route": "Kho Trung Chuyển Bình Thuận-> Bưu Cục Phú Quý ->Kho Trung Chuyển Bình Thuận",
+        "ktc": "KTC Bình Thuận",
+        "type": "Cố định",
+        "cost_str": "3.963.620 đ",
+        "cost": 3963620.0,
         "trips_equivalent": 1,
         "trip_code": "",
         "ontime": ""
@@ -37639,6 +37684,36 @@
         "route": "Kho Trung Chuyển Bình Thuận-> Bưu Cục Phú Quý ->Kho Trung Chuyển Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
+        "cost_str": "3.963.620 đ",
+        "cost": 3963620.0,
+        "trips_equivalent": 1,
+        "trip_code": "",
+        "ontime": ""
+      },
+      {
+        "ncc": "Mạnh Cường",
+        "date": "09/10/2026",
+        "date_iso": "2026-10-09",
+        "truck": "79C-16989",
+        "capacity": "1400",
+        "route": "Kho Trung Chuyển Bình Thuận-> Bưu Cục Phú Quý ->Kho Trung Chuyển Bình Thuận",
+        "ktc": "KTC Bình Thuận",
+        "type": "Cố định",
+        "cost_str": "727.272 đ",
+        "cost": 727272.0,
+        "trips_equivalent": 1,
+        "trip_code": "",
+        "ontime": ""
+      },
+      {
+        "ncc": "Mạnh Cường",
+        "date": "10/10/2026",
+        "date_iso": "2026-10-10",
+        "truck": "79C-16989",
+        "capacity": "1400",
+        "route": "Kho Trung Chuyển Bình Thuận-> Bưu Cục Phú Quý ->Kho Trung Chuyển Bình Thuận",
+        "ktc": "KTC Bình Thuận",
+        "type": "Cố định",
         "cost_str": "200.000 đ",
         "cost": 200000.0,
         "trips_equivalent": 1,
@@ -37724,21 +37799,6 @@
         "ncc": "Mạnh Cường",
         "date": "16/10/2026",
         "date_iso": "2026-10-16",
-        "truck": "79C-16989",
-        "capacity": "1400",
-        "route": "Kho Trung Chuyển Bình Thuận-> Bưu Cục Phú Quý ->Kho Trung Chuyển Bình Thuận",
-        "ktc": "KTC Bình Thuận",
-        "type": "Cố định",
-        "cost_str": "200.000 đ",
-        "cost": 200000.0,
-        "trips_equivalent": 1,
-        "trip_code": "",
-        "ontime": ""
-      },
-      {
-        "ncc": "Mạnh Cường",
-        "date": "17/10/2026",
-        "date_iso": "2026-10-17",
         "truck": "79C-16989",
         "capacity": "1400",
         "route": "Kho Trung Chuyển Bình Thuận-> Bưu Cục Phú Quý ->Kho Trung Chuyển Bình Thuận",
@@ -38174,6 +38234,36 @@
         "ncc": "Mạnh Cường",
         "date": "08/10/2026",
         "date_iso": "2026-10-08",
+        "truck": "79C-11913",
+        "capacity": "1900",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Ninh Hòa 2 -> Kho Trung Chuyển Khánh Hòa",
+        "ktc": "KTC Khánh Hòa",
+        "type": "Cố định",
+        "cost_str": "490.311 đ",
+        "cost": 490310.8,
+        "trips_equivalent": 1,
+        "trip_code": "E261007UY89T1CX",
+        "ontime": ""
+      },
+      {
+        "ncc": "Mạnh Cường",
+        "date": "08/10/2026",
+        "date_iso": "2026-10-08",
+        "truck": "79G-00249",
+        "capacity": "1400",
+        "route": "Kho Trung Chuyển Khánh Hòa -> Kho Giao Hàng Nặng - Cam Ranh - Khánh Hoà -> Kho Trung Chuyển Khánh Hòa",
+        "ktc": "KTC Khánh Hòa",
+        "type": "Cố định",
+        "cost_str": "576.635 đ",
+        "cost": 576635.1,
+        "trips_equivalent": 1,
+        "trip_code": "E261007Z72E22VE",
+        "ontime": ""
+      },
+      {
+        "ncc": "Mạnh Cường",
+        "date": "08/10/2026",
+        "date_iso": "2026-10-08",
         "truck": "79H-10144",
         "capacity": "1900",
         "route": "Kho Trung Chuyển Khánh Hòa -> (KHO)Nha Trang-> (KHO) Nam Nha Trang 3->(KHO) Cam Lâm 1 -> Kho Trung Chuyển Khánh Hòa",
@@ -38187,32 +38277,92 @@
       },
       {
         "ncc": "Mạnh Cường",
-        "date": "13/10/2026",
-        "date_iso": "2026-10-13",
-        "truck": "79H-09922",
-        "capacity": "1900",
-        "route": "Kho Chuyển Tiếp Bình Thuận -> Kho Giao Hàng Nặng - Phan Rang - Ninh Thuận -> Kho Chuyển Tiếp Bình Thuận",
-        "ktc": "KTC Bình Thuận",
+        "date": "09/10/2026",
+        "date_iso": "2026-10-09",
+        "truck": "79G-00249",
+        "capacity": "1400",
+        "route": "Kho Trung Chuyển Khánh Hòa -> Kho Giao Hàng Nặng - Cam Ranh - Khánh Hoà -> Kho Trung Chuyển Khánh Hòa",
+        "ktc": "KTC Khánh Hòa",
         "type": "Cố định",
-        "cost_str": "1.847.314 đ",
-        "cost": 1847314.5,
+        "cost_str": "576.635 đ",
+        "cost": 576635.1,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261008U4K4YBF8",
         "ontime": ""
       },
       {
         "ncc": "Mạnh Cường",
-        "date": "14/10/2026",
-        "date_iso": "2026-10-14",
-        "truck": "79H-09680",
+        "date": "09/10/2026",
+        "date_iso": "2026-10-09",
+        "truck": "79H-10144",
         "capacity": "1900",
-        "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Phú Thủy -> (BTH) Hàm Liêm -> (BTH) Hàm Thuận -> Kho Chuyển Tiếp Bình Thuận",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO)Nha Trang-> (KHO) Nam Nha Trang 3->(KHO) Cam Lâm 1 -> Kho Trung Chuyển Khánh Hòa",
+        "ktc": "KTC Nam Nha Trang",
+        "type": "Cố định",
+        "cost_str": "336.437 đ",
+        "cost": 336436.8,
+        "trips_equivalent": 1,
+        "trip_code": "E261008DUFH0X38",
+        "ontime": ""
+      },
+      {
+        "ncc": "Mạnh Cường",
+        "date": "09/10/2026",
+        "date_iso": "2026-10-09",
+        "truck": "79H-09922",
+        "capacity": "1900",
+        "route": "Kho Chuyển Tiếp Bình Thuận -> (BTH) Hàm Liêm -> (BTH) Hàm Thuận -> Kho Chuyển Tiếp Bình Thuận",
         "ktc": "KTC Bình Thuận",
         "type": "Cố định",
-        "cost_str": "280.277 đ",
-        "cost": 280277.2,
+        "cost_str": "372.207 đ",
+        "cost": 372206.8,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261009WI069N8C",
+        "ontime": ""
+      },
+      {
+        "ncc": "Mạnh Cường",
+        "date": "10/10/2026",
+        "date_iso": "2026-10-10",
+        "truck": "79C-11913",
+        "capacity": "1900",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) Ninh Hòa 2 -> Kho Trung Chuyển Khánh Hòa",
+        "ktc": "KTC Khánh Hòa",
+        "type": "Cố định",
+        "cost_str": "490.311 đ",
+        "cost": 490310.8,
+        "trips_equivalent": 1,
+        "trip_code": "E2610095PDBBKQL",
+        "ontime": ""
+      },
+      {
+        "ncc": "Mạnh Cường",
+        "date": "10/10/2026",
+        "date_iso": "2026-10-10",
+        "truck": "79G-00249",
+        "capacity": "1400",
+        "route": "Kho Trung Chuyển Khánh Hòa -> Kho Giao Hàng Nặng - Cam Ranh - Khánh Hoà -> Kho Trung Chuyển Khánh Hòa",
+        "ktc": "KTC Khánh Hòa",
+        "type": "Cố định",
+        "cost_str": "576.635 đ",
+        "cost": 576635.1,
+        "trips_equivalent": 1,
+        "trip_code": "E261009047S9FZJ",
+        "ontime": ""
+      },
+      {
+        "ncc": "Mạnh Cường",
+        "date": "10/10/2026",
+        "date_iso": "2026-10-10",
+        "truck": "79H-10144",
+        "capacity": "1900",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO)Nha Trang-> (KHO) Nam Nha Trang 3->(KHO) Cam Lâm 1 -> Kho Trung Chuyển Khánh Hòa",
+        "ktc": "KTC Nam Nha Trang",
+        "type": "Cố định",
+        "cost_str": "336.437 đ",
+        "cost": 336436.8,
+        "trips_equivalent": 1,
+        "trip_code": "E261009CJCBY5DM",
         "ontime": ""
       },
       {
@@ -39937,7 +40087,7 @@
         "cost_str": "123.850 đ",
         "cost": 123849.6,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E261007BA08JYAL",
         "ontime": ""
       },
       {
@@ -39946,13 +40096,13 @@
         "date_iso": "2026-10-09",
         "truck": "79C-16983",
         "capacity": "1900",
-        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) CK Bắc Nha Trang -> Kho Trung Chuyển Khánh Hòa",
+        "route": "Kho Trung Chuyển Khánh Hòa -> (KHO) CK Bắc Nha Trang -> Kho Giao Hàng Nặng - Nha Trang - Khánh Hoà -> Kho Trung Chuyển Khánh Hòa",
         "ktc": "KTC Bắc Nha Trang",
         "type": "Cố định",
-        "cost_str": "120.658 đ",
-        "cost": 120657.6,
+        "cost_str": "123.850 đ",
+        "cost": 123849.6,
         "trips_equivalent": 1,
-        "trip_code": "",
+        "trip_code": "E2610085AA4ISAJ",
         "ontime": ""
       },
       {
@@ -40271,7 +40421,7 @@
         "ontime": "100%"
       }
     ],
-    "all_trips_count": 1962
+    "all_trips_count": 1972
   },
   "kinh_doanh": {
     "am": [
